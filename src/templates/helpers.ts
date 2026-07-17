@@ -78,6 +78,7 @@ export const funnelHead = (
 <meta name="description" content="${desc}">
 ${keywords ? `<meta name="keywords" content="${keywords}">` : ''}
 <meta name="robots" content="${noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'}">
+<meta name="theme-color" content="${dark ? '#0f172a' : '#2563eb'}">
 ${canonical ? `<link rel="canonical" href="${canonical}">` : ''}
 <meta property="og:type" content="website">
 <meta property="og:title" content="${seoTitle}">

@@ -66,6 +66,73 @@ app.get('/t/insurance', (c) => html(insuranceTemplate(c.req.query())))
 app.get('/t/agency', (c) => html(agencyTemplate(c.req.query())))
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '2.2.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '2.3.0' }))
+
+// ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
+const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/brand', '/seo', '/integrations']
+const FUNNELS = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency']
+
+app.get('/sitemap.xml', (c) => {
+  const base = new URL(c.req.url).origin
+  const today = new Date().toISOString().slice(0, 10)
+  const urls = [...PAGES, ...FUNNELS.map((f) => `/t/${f}`)]
+    .map((p) => `  <url><loc>${base}${p}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>${p === '/' ? '1.0' : p.startsWith('/t/') ? '0.9' : '0.7'}</priority></url>`)
+    .join('\n')
+  return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8' } })
+})
+
+app.get('/robots.txt', (c) => {
+  const base = new URL(c.req.url).origin
+  return c.text(`User-agent: *\nAllow: /\n\n# AI / answer engines welcome (AEO + SGE)\nUser-agent: GPTBot\nAllow: /\nUser-agent: Google-Extended\nAllow: /\nUser-agent: PerplexityBot\nAllow: /\nUser-agent: ClaudeBot\nAllow: /\n\nSitemap: ${base}/sitemap.xml\n`)
+})
+
+// ── v2.3: Universal thank-you page (use ?redirect=/thank-you on any funnel) ──
+app.get('/thank-you', (c) => {
+  const q = c.req.query()
+  const name = q.headline || 'You\u2019re In! \u{1F389}'
+  const msg = q.msg || 'We got your info and a real human will reach out within one business day. Keep an eye on your inbox (and spam folder, just in case).'
+  const back = q.back || '/'
+  return html(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You | RJ Business Solutions</title><meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg"><script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>body{font-family:Inter,sans-serif}h1{font-family:Poppins,sans-serif}@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}.pop{animation:pop .6s cubic-bezier(.22,1,.36,1) both}</style></head>
+<body class="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 min-h-screen flex items-center justify-center p-6 text-white">
+<main class="max-w-lg w-full text-center">
+  <div class="pop w-24 h-24 mx-auto mb-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-2xl shadow-emerald-500/30"><i class="fas fa-check text-4xl"></i></div>
+  <h1 class="text-4xl font-extrabold mb-4">${name.replace(/</g, '&lt;')}</h1>
+  <p class="text-slate-300 leading-relaxed mb-8">${msg.replace(/</g, '&lt;')}</p>
+  <div class="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8 text-left text-sm text-slate-300 space-y-3">
+    <p class="font-bold text-white text-base"><i class="fas fa-list-check text-cyan-400 mr-2"></i>What happens next</p>
+    <p><span class="text-cyan-400 font-bold mr-2">1.</span>We review your info today.</p>
+    <p><span class="text-cyan-400 font-bold mr-2">2.</span>You get a personal reply within one business day.</p>
+    <p><span class="text-cyan-400 font-bold mr-2">3.</span>We map your exact next step together — zero pressure.</p>
+  </div>
+  <a href="${back.replace(/"/g, '')}" class="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition"><i class="fas fa-arrow-left mr-2"></i>Back to site</a>
+  <p class="text-slate-500 text-xs mt-10">&copy; ${new Date().getFullYear()} RJ Business Solutions &middot; 1342 NM 333, Tijeras, NM 87059 &middot; <a href="https://rjbusinesssolutions.org" class="underline">rjbusinesssolutions.org</a></p>
+</main>
+<script>try{if(window.gtag)gtag('event','conversion_thank_you');if(window.fbq)fbq('track','Lead')}catch(e){}</script>
+</body></html>`)
+})
+
+// ── v2.3: Branded 404 + error handler ─────────────────────────
+const errorPage = (code: number, title: string, msg: string) => `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${code} — ${title} | RJ Funnel Command Center</title><meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg"><script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>body{font-family:Inter,sans-serif}h1,p.code{font-family:Poppins,sans-serif}</style></head>
+<body class="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 min-h-screen flex items-center justify-center p-6 text-white text-center">
+<main><p class="code text-8xl font-extrabold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent mb-4">${code}</p>
+<h1 class="text-2xl font-extrabold mb-3">${title}</h1>
+<p class="text-slate-400 mb-8 max-w-md mx-auto">${msg}</p>
+<a href="/" class="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition">← Command Center</a>
+<p class="text-slate-600 text-xs mt-10">&copy; ${new Date().getFullYear()} RJ Business Solutions</p></main></body></html>`
+
+app.notFound((c) => new Response(errorPage(404, 'Page Not Found', 'That route doesn\u2019t exist (or moved). Head back to the Command Center and grab a funnel from there.'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } }))
+app.onError((err, c) => {
+  console.error('Unhandled error:', err)
+  return new Response(errorPage(500, 'Something Broke', 'Our side, not yours. The team has the error and it\u2019ll be fixed fast — try again in a minute.'), { status: 500, headers: { 'Content-Type': 'text/html; charset=utf-8' } })
+})
 
 export default app
