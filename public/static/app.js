@@ -104,6 +104,8 @@ document.querySelectorAll('[data-lead-form]').forEach(form => {
     const orig = btn ? btn.innerHTML : ''
     if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Sending…' }
     const data = { _source: location.pathname + location.search }
+    // v2.2: merge UTM / click-id attribution captured by funnel-extras.js
+    try { Object.assign(data, JSON.parse(sessionStorage.getItem('rjf_attrs') || '{}')) } catch (e) {}
     form.querySelectorAll('input, textarea, select').forEach(inp => {
       if (inp.type === 'checkbox') { data[inp.name || 'consent'] = inp.checked ? 'yes' : 'no' }
       else if (inp.name && inp.value.trim()) data[inp.name] = inp.value.trim()
@@ -114,6 +116,10 @@ document.querySelectorAll('[data-lead-form]').forEach(form => {
       if (!r.ok) throw new Error('HTTP ' + r.status)
       if (btn) { btn.innerHTML = '<i class="fas fa-check mr-2"></i>Submitted! We\'ll be in touch.'; btn.classList.add('!bg-emerald-600') }
       form.querySelectorAll('input:not([type=checkbox]), textarea').forEach(i => i.value = '')
+      // v2.2: conversion event to any loaded pixel + optional thank-you redirect (?redirect=)
+      if (window.rjfTrack) window.rjfTrack('generate_lead', { source: data._source })
+      const redirect = (window.__RJF || {}).redirect
+      if (redirect) setTimeout(() => { location.href = redirect }, 900)
     } catch (err) {
       if (btn) { btn.disabled = false; btn.innerHTML = orig }
       alert('Something went wrong sending your info — please try again or call us directly.')
@@ -162,4 +168,46 @@ if (seoForm) {
     document.getElementById('seo-output').classList.remove('hidden')
     document.getElementById('seo-output').scrollIntoView({ behavior: 'smooth' })
   })
+}
+
+// ── v2.2: Universal Stripe checkout buttons ────────────────────
+// Usage: <button data-checkout='{"priceId":"price_xxx"}'>Buy</button>
+//    or: <button data-checkout='{"name":"Setup","amount":199700,"interval":"month"}'>Subscribe</button>
+document.querySelectorAll('[data-checkout]').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    let payload
+    try { payload = JSON.parse(btn.dataset.checkout) } catch (e) { return alert('Invalid checkout config on this button.') }
+    const orig = btn.innerHTML
+    btn.disabled = true
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Opening secure checkout…'
+    try {
+      const r = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      const d = await r.json()
+      if (d.url) {
+        if (window.rjfTrack) window.rjfTrack('begin_checkout', { name: payload.name || payload.priceId })
+        location.href = d.url
+      } else {
+        alert(d.error || 'Checkout is not configured yet — add your STRIPE_SECRET_KEY (see /integrations).')
+        btn.disabled = false; btn.innerHTML = orig
+      }
+    } catch (e) {
+      alert('Could not reach checkout — please try again.')
+      btn.disabled = false; btn.innerHTML = orig
+    }
+  })
+})
+
+// ── v2.2: /integrations live status badges ─────────────────────
+const intStripe = document.getElementById('int-status-stripe')
+if (intStripe) {
+  fetch('/api/health').then(r => r.json()).then(d => {
+    const set = (el, ok, label) => {
+      el.className = ok
+        ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-full'
+        : 'bg-amber-500/10 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full'
+      el.innerHTML = el.innerHTML.split('</i>')[0] + '</i>' + label + (ok ? ': connected ✓' : ': key not set')
+    }
+    set(intStripe, d.stripe, 'Stripe')
+    set(document.getElementById('int-status-email'), d.email, 'Email')
+  }).catch(() => {})
 }

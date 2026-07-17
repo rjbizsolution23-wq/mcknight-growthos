@@ -27,6 +27,19 @@ export const funnelHead = (
   const dark = (q.theme || '').toLowerCase() === 'dark'
   const noindex = q.noindex === '1'
 
+  // v2.2 — Tracking pixels (all optional via URL params / builder)
+  const ga4 = param(q, 'ga4', '')          // G-XXXXXXX
+  const gtm = param(q, 'gtm', '')          // GTM-XXXXXX
+  const metaPixel = param(q, 'metaPixel', '') // Meta/Facebook Pixel ID
+  const ttPixel = param(q, 'ttPixel', '')  // TikTok Pixel ID
+  // v2.2 — Conversion layer config (exit-intent, sticky CTA, progress, redirect)
+  const rjfCfg: Record<string, string> = {}
+  for (const k of ['exit', 'sticky', 'progress', 'toTop'] as const) { if (q[k] === '0') rjfCfg[k] = '0' }
+  if (q.cta && q.cta.trim()) rjfCfg.ctaText = esc(q.cta.trim())
+  if (q.exitTitle && q.exitTitle.trim()) rjfCfg.exitTitle = esc(q.exitTitle.trim())
+  if (q.exitDesc && q.exitDesc.trim()) rjfCfg.exitDesc = esc(q.exitDesc.trim())
+  if (q.redirect && /^(https?:\/\/|\/)/.test(q.redirect.trim())) rjfCfg.redirect = esc(q.redirect.trim())
+
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': opts.type || 'ProfessionalService',
@@ -140,6 +153,13 @@ ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</
   }${darkCss}
 </style>
 <script defer src="/static/motion.js"></script>
+<script>window.__RJF=${JSON.stringify(rjfCfg)}</script>
+<script defer src="/static/funnel-extras.js"></script>
+${gtm ? `<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtm}');</script>` : ''}
+${ga4 ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${ga4}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga4}');</script>` : ''}
+${metaPixel ? `<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${metaPixel}');fbq('track','PageView');</script>` : ''}
+${ttPixel ? `<script>!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=['page','track','identify','instances','debug','on','off','once','ready','alias','group','enableCookie','disableCookie'];ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.load=function(e){var i='https://analytics.tiktok.com/i18n/pixel/events.js';ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;ttq._o=ttq._o||{};ttq._o[e]={};var o=document.createElement('script');o.type='text/javascript';o.async=!0;o.src=i+'?sdkid='+e+'&lib='+t;var a=document.getElementsByTagName('script')[0];a.parentNode.insertBefore(o,a)};ttq.load('${ttPixel}');ttq.page();}(window,document,'ttq');</script>` : ''}
 </head>`
 }
 

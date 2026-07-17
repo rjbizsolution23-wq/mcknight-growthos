@@ -260,6 +260,28 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
         ${field('ogImage', 'OG Share Image URL (1200×630)', 'https://yoursite.com/og.jpg')}
       </div>
       <p class="text-[11px] text-gray-500">Every generated funnel auto-includes full meta tags, OG graph, Twitter cards & JSON-LD schema. Need a standalone pack (sitemap, robots.txt, AEO blocks)? Use the <a href="/seo" class="text-blue-300 underline">SEO Engine</a>.</p>
+
+      <p class="text-sm text-white font-semibold pt-3"><i class="fas fa-chart-line text-brand-cyan mr-2"></i>Tracking Pixels (all optional — paste IDs, done)</p>
+      <div class="grid grid-cols-2 gap-3">
+        ${field('ga4', 'Google Analytics 4 ID', 'G-XXXXXXXXXX')}
+        ${field('gtm', 'Google Tag Manager ID', 'GTM-XXXXXXX')}
+        ${field('metaPixel', 'Meta (Facebook) Pixel ID', '1234567890')}
+        ${field('ttPixel', 'TikTok Pixel ID', 'CXXXXXXXXXX')}
+      </div>
+      <p class="text-[11px] text-gray-500">Leads auto-fire <code class="text-blue-300">generate_lead</code>; checkout buttons fire <code class="text-blue-300">begin_checkout</code> to every loaded pixel. UTM params + gclid/fbclid/ttclid are captured and attached to each lead automatically.</p>
+
+      <p class="text-sm text-white font-semibold pt-3"><i class="fas fa-bullseye text-brand-cyan mr-2"></i>Conversion Layer</p>
+      ${field('redirect', 'Thank-You Redirect URL (after lead submit)', 'https://yoursite.com/thank-you')}
+      ${field('cta', 'Sticky-bar / exit-popup CTA text', 'Get My Free Report \u2192')}
+      <div class="grid grid-cols-2 gap-3">
+        ${field('exitTitle', 'Exit popup headline', 'Wait \u2014 your free report\u2026')}
+        ${field('exitDesc', 'Exit popup message', 'Takes 60 seconds. Zero obligation.')}
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+        <label class="flex items-center gap-2 bg-[#060a14] border border-gray-700 rounded-lg px-3 py-2.5 cursor-pointer text-xs text-gray-300"><input type="checkbox" name="exit" value="0" class="w-4 h-4 accent-blue-500">Disable exit popup</label>
+        <label class="flex items-center gap-2 bg-[#060a14] border border-gray-700 rounded-lg px-3 py-2.5 cursor-pointer text-xs text-gray-300"><input type="checkbox" name="sticky" value="0" class="w-4 h-4 accent-blue-500">Disable sticky CTA</label>
+        <label class="flex items-center gap-2 bg-[#060a14] border border-gray-700 rounded-lg px-3 py-2.5 cursor-pointer text-xs text-gray-300"><input type="checkbox" name="progress" value="0" class="w-4 h-4 accent-blue-500">Disable progress bar</label>
+      </div>
     </fieldset>
 
     <button type="submit" class="mt-6 w-full grad-bg text-white font-bold py-4 rounded-xl text-lg hover:opacity-90"><i class="fas fa-bolt mr-2"></i>Generate My Funnel →</button>

@@ -61,6 +61,13 @@
 ### Universal Funnel Params (v2.0 — every template)
 `seoTitle, seoDesc, seoKeywords, canonical, ogImage, theme=dark, noindex=1` — every funnel auto-emits meta description, robots, OG graph, Twitter cards, and JSON-LD ProfessionalService schema; `theme=dark` flips the whole funnel to the RJ Navy dark theme.
 
+### Universal Tracking & Conversion Params (v2.2 — every template)
+- **Pixels**: `ga4=G-XXXX`, `gtm=GTM-XXXX`, `metaPixel=ID`, `ttPixel=ID` — official snippets injected server-side; leads fire `generate_lead`, checkout buttons fire `begin_checkout` to all loaded pixels via `window.rjfTrack(event, data)`
+- **Attribution**: `utm_source/medium/campaign/term/content`, `gclid`, `fbclid`, `ttclid` + first external referrer are captured (sessionStorage) and merged into every lead payload automatically
+- **Conversion layer**: `redirect=/thank-you` (post-submit redirect), `cta=Text` (sticky bar + exit popup CTA), `exitTitle=…`, `exitDesc=…`; opt-outs: `exit=0`, `sticky=0`, `progress=0`, `toTop=0`
+- **Payments anywhere**: `<button data-checkout='{"priceId":"price_xxx"}'>` or `data-checkout='{"name":"Setup","amount":199700,"interval":"month"}'` → Stripe Checkout with loading state + pixel event
+- **Auto FAQ schema**: any funnel with 2+ `<details>` FAQs gets FAQPage JSON-LD generated client-side for rich snippets
+
 ### Integrations Secrets
 Copy `.dev.vars.example` → `.dev.vars` locally; production via `wrangler pages secret put`: `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL`, `LEAD_FROM_EMAIL`.
 
@@ -110,6 +117,7 @@ Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coachin
 ## Deployment
 - **Platform**: Cloudflare Pages (ready) — currently running in sandbox via PM2 + wrangler pages dev
 - **Status**: ✅ Active (sandbox)
+- **Version**: 2.2.0 — Conversion Layer (`/static/funnel-extras.js`): exit-intent popup (desktop mouse-out + mobile fast-scroll fallback, once per session), sticky mobile CTA bar, scroll progress bar, back-to-top, auto FAQPage JSON-LD from `<details>` FAQs; one-line tracking pixels via URL params (`ga4`, `gtm`, `metaPixel`, `ttPixel`) with auto `generate_lead` / `begin_checkout` events (`window.rjfTrack`); UTM + gclid/fbclid/ttclid attribution auto-captured and attached to every lead; thank-you `redirect` param; universal `data-checkout` Stripe buttons; live status badges on /integrations; conversion-layer params (`cta`, `exitTitle`, `exitDesc`, `exit=0`, `sticky=0`, `progress=0`, `toTop=0`) + full Builder fields for all of it
 - **Version**: 2.1.0 — RJ Design System: glassmorphism (`.glass`/`.glass-dark` auto-applied to hero cards & pills), framer-style motion engine (`/static/motion.js` — scroll reveals w/ stagger, hero gradient blobs, animated stat counters w/ expo-out easing, hover-lift cards), shadcn polish (focus-visible rings, input focus shadows, CTA shine sweep, spring transitions), icon micro-animations, auto © copyright footer on all 15 funnels + Command Center, full `prefers-reduced-motion` support
 - **Version**: 2.0.0 — SEO/AEO/SGE engine, Stripe + email integrations, dark mode, 50 niche emails, 10 industry compliance packs
 - **Version**: 1.2.0 — 15 live templates + Brand Kit Vault + full RJ Blue rebrand
