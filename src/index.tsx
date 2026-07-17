@@ -6,6 +6,7 @@ import { creditPage } from './pages/credit'
 import { emailsPage } from './pages/emails'
 import { compliancePage } from './pages/compliance'
 import { builderPage } from './pages/builder'
+import { brandPage } from './pages/brand'
 import { eventLandingTemplate } from './templates/eventLanding'
 import { sponsorDeckTemplate } from './templates/sponsorDeck'
 import { taxLeadTemplate } from './templates/taxLead'
@@ -35,6 +36,7 @@ app.get('/credit', (c) => html(creditPage()))
 app.get('/emails', (c) => html(emailsPage()))
 app.get('/compliance', (c) => html(compliancePage()))
 app.get('/builder', (c) => html(builderPage()))
+app.get('/brand', (c) => html(brandPage()))
 
 // ── Live funnel templates (parameterized via query string) ───
 app.get('/t/event-landing', (c) => html(eventLandingTemplate(c.req.query())))
@@ -56,6 +58,6 @@ app.get('/t/insurance', (c) => html(insuranceTemplate(c.req.query())))
 app.get('/t/agency', (c) => html(agencyTemplate(c.req.query())))
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '1.1.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '1.2.0' }))
 
 export default app

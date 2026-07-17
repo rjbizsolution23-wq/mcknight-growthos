@@ -12,6 +12,21 @@ document.addEventListener('click', (e) => {
   })
 })
 
+// Brand kit color swatches — copy hex directly from data-copy-text
+document.addEventListener('click', (e) => {
+  const sw = e.target.closest('[data-copy-text]')
+  if (!sw) return
+  navigator.clipboard.writeText(sw.dataset.copyText).then(() => {
+    const label = sw.parentElement && sw.parentElement.querySelector('.font-mono')
+    if (label) {
+      const orig = label.textContent
+      label.textContent = 'Copied!'
+      label.classList.add('text-emerald-400')
+      setTimeout(() => { label.textContent = orig; label.classList.remove('text-emerald-400') }, 1200)
+    }
+  })
+})
+
 // Tabs
 document.addEventListener('click', (e) => {
   const tab = e.target.closest('[data-tab]')

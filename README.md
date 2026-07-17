@@ -18,6 +18,7 @@
 | `/tax` | Tax hub — 12 prohibited claims, compliant headline/CTA formulas, IRS programs education, pricing tiers, pre-launch checklist |
 | `/credit` | Credit Repair hub — CROA six requirements, FCRA disputable vs. not, 15 banned claims, pricing benchmarks, CRC SaaS-liability lesson, 15 required docs, state CSO map |
 | `/builder` | Funnel Builder — pick a template, fill fields, generate a customized live funnel with shareable URL + iframe preview |
+| `/brand` | **Brand Kit Vault (v1.2)** — full RJ Business Solutions master brand kit: logo assets (URL/markdown/HTML/alt), 14 click-to-copy color swatches + gradients + CSS vars + Tailwind palette, fonts, business info, Rick Jefferson bios (short/medium/long), voice & taglines, 15 service categories + descriptions, 3 hero copy options, DFY Social Growth offer ($1,997/$997mo), CTA bank, about sections, social bios, email signatures, footer block, SEO meta pack, OG tags, JSON-LD Organization + Person schemas, nav structure, trust copy, master block — everything one-click copyable |
 | `/emails` | Email Vault — 42 fully-written emails/SMS across 6 sequences with one-click copy |
 | `/compliance` | Compliance Vault — verbatim disclaimers (TCPA, CAN-SPAM, FTC, CROA, Circular 230/OIC), launch checklists, hard stops |
 
@@ -87,7 +88,8 @@
 ## Deployment
 - **Platform**: Cloudflare Pages (ready) — currently running in sandbox via PM2 + wrangler pages dev
 - **Status**: ✅ Active (sandbox)
-- **Version**: 1.1.0 — 15 live templates
+- **Version**: 1.2.0 — 15 live templates + Brand Kit Vault + full RJ Blue rebrand
+- **v1.2 rebrand**: Command Center shell now runs the official RJ Blue + White system — logo in nav, `#2563eb → #0ea5e9` gradients, `rj.*` Tailwind palette, Space Grotesk headings, full brand footer (address, socials, © 2026, policy links), SEO meta description, OG/Twitter cards, and inline JSON-LD Organization schema in `<head>`
 - **Last Updated**: 2026-07-17
 
 ---
