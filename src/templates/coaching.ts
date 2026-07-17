@@ -9,7 +9,7 @@ export const coachingTemplate = (q: Record<string, string | undefined>) => {
   const clientCount = param(q, 'clientCount', '215')
   const investment = param(q, 'investment', '$12,000')
 
-  return `${funnelHead(`${programName} — Application`)}
+  return `${funnelHead(`${programName} — Application`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO -->
@@ -132,7 +132,7 @@ export const coachingTemplate = (q: Record<string, string | undefined>) => {
     <div class="bg-white rounded-3xl border border-gray-200 p-8 md:p-10 shadow-xl">
       <h2 class="text-3xl font-extrabold text-center mb-2">Apply for Your Strategy Session</h2>
       <p class="text-center text-gray-600 mb-8">15 minutes. Your numbers on the table. You\'ll leave with clarity whether we work together or not.</p>
-      <form class="space-y-4" onsubmit="event.preventDefault();alert('Template demo — connect this form to your application CRM/webhook before launch.')">
+      <form class="space-y-4" data-lead-form>
         <div class="grid md:grid-cols-2 gap-4">
           <input required placeholder="Full Name" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">
           <input required type="email" placeholder="Email" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">

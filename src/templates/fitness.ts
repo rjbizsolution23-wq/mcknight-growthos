@@ -11,7 +11,7 @@ export const fitnessTemplate = (q: Record<string, string | undefined>) => {
   const spots = param(q, 'spots', '15')
   const deadline = q.deadline && q.deadline.trim() ? q.deadline.trim() : defaultDeadline()
 
-  return `${funnelHead(`${programName} — ${coachName}`)}
+  return `${funnelHead(`${programName} — ${coachName}`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO -->

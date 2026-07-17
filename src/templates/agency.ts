@@ -9,7 +9,7 @@ export const agencyTemplate = (q: Record<string, string | undefined>) => {
   const avgRoas = param(q, 'avgRoas', '5.4x')
   const retainer = param(q, 'retainer', '$2,500/mo')
 
-  return `${funnelHead(`${agencyName} — Book a Growth Audit`)}
+  return `${funnelHead(`${agencyName} — Book a Growth Audit`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO -->
@@ -144,7 +144,7 @@ export const agencyTemplate = (q: Record<string, string | undefined>) => {
     <div class="bg-white rounded-3xl border border-gray-200 p-8 md:p-10 shadow-xl">
       <h2 class="text-3xl font-extrabold text-center mb-2">Book Your Free Growth Audit</h2>
       <p class="text-center text-gray-600 mb-8">30 minutes. We analyze your market, your current funnel, and your competitors\' ad spend — you keep the findings either way.</p>
-      <form class="space-y-4" onsubmit="event.preventDefault();alert('Template demo — connect this form to your calendar/CRM webhook before launch.')">
+      <form class="space-y-4" data-lead-form>
         <div class="grid md:grid-cols-2 gap-4">
           <input required placeholder="Full Name" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">
           <input required type="tel" placeholder="Phone" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">

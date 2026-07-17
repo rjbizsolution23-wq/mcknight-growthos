@@ -10,7 +10,7 @@ export const creditServiceTemplate = (q: Record<string, string | undefined>) => 
   const acceleratedSetup = param(q, 'acceleratedSetup', '$249')
   const flatPrice = param(q, 'flatPrice', '$1,095')
 
-  return `${funnelHead(`${companyName} — Free Credit Analysis`)}
+  return `${funnelHead(`${companyName} — Free Credit Analysis`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO -->

@@ -60,6 +60,8 @@ ${extraHead}
         ['/builder', 'Builder', 'builder'],
         ['/emails', 'Email Vault', 'emails'],
         ['/compliance', 'Compliance Vault', 'compliance'],
+        ['/seo', 'SEO Engine', 'seo'],
+        ['/integrations', 'Integrations', 'integrations'],
         ['/brand', 'Brand Kit', 'brand'],
       ].map(([href, label, key]) =>
         `<a href="${href}" class="px-3 py-1.5 rounded-lg ${active === key ? 'grad-bg text-white font-semibold' : 'text-gray-300 hover:text-white hover:bg-gray-800'}">${label}</a>`

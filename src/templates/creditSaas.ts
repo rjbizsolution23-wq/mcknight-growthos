@@ -7,7 +7,7 @@ export const creditSaasTemplate = (q: Record<string, string | undefined>) => {
   const growthPrice = param(q, 'growthPrice', '$197')
   const scalePrice = param(q, 'scalePrice', '$397')
 
-  return `${funnelHead(`${productName} — Compliance-First Credit Repair Software`)}
+  return `${funnelHead(`${productName} — Compliance-First Credit Repair Software`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- HERO -->

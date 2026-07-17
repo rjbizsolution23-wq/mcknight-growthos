@@ -9,7 +9,7 @@ export const insuranceTemplate = (q: Record<string, string | undefined>) => {
   const startingPrice = param(q, 'startingPrice', '$23/mo')
   const phone = param(q, 'phone', '(505) 555-0166')
 
-  return `${funnelHead(`${agencyName} — Free ${productLine} Quote`)}
+  return `${funnelHead(`${agencyName} — Free ${productLine} Quote`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO -->
@@ -97,7 +97,7 @@ export const insuranceTemplate = (q: Record<string, string | undefined>) => {
     <div class="rounded-3xl border-4 border-orange-500 p-8 md:p-10 shadow-xl">
       <h2 class="text-3xl font-extrabold text-center mb-2">Get Your Free ${productLine.charAt(0).toUpperCase() + productLine.slice(1)} Quote</h2>
       <p class="text-center text-gray-600 mb-8">5 minutes · ${carrierCount} carriers compared · no credit impact · no obligation.</p>
-      <form class="space-y-4" onsubmit="event.preventDefault();alert('Template demo — connect this form to your quoting CRM/webhook before launch.')">
+      <form class="space-y-4" data-lead-form>
         <div class="grid md:grid-cols-2 gap-4">
           <input required placeholder="Full Name" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">
           <input required type="tel" placeholder="Phone" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">

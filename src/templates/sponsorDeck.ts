@@ -13,7 +13,7 @@ export const sponsorDeckTemplate = (q: Record<string, string | undefined>) => {
   const titleSpots = param(q, 'titleSpots', '1')
   const goldSpots = param(q, 'goldSpots', '2')
 
-  return `${funnelHead(`Sponsor ${eventName}`)}
+  return `${funnelHead(`Sponsor ${eventName}`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] EVENT OVERVIEW -->

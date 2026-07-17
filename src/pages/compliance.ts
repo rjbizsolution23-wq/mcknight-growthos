@@ -1,4 +1,5 @@
 import { shell, copyBlock } from './layout'
+import { complianceNicheTabs, complianceNichePanels } from './complianceNiche'
 
 const tabBtn = (id: string, label: string, active = false) =>
   `<button data-tab="${id}" class="px-4 py-2 rounded-lg text-sm ${active ? 'grad-bg text-white font-semibold' : 'text-gray-300 hover:bg-gray-800'}">${label}</button>`
@@ -15,6 +16,7 @@ export const compliancePage = () => shell('Compliance Vault', 'compliance', `
   ${tabBtn('creditdisc', 'Credit Repair (CROA)', false)}
   ${tabBtn('eventsdisc', 'Events & Earnings', false)}
   ${tabBtn('checklists', 'Launch Checklists', false)}
+  ${complianceNicheTabs.map(([id, label]) => tabBtn(id, label, false)).join('')}
 </nav>
 
 <!-- UNIVERSAL -->
@@ -212,4 +214,6 @@ GUARANTEE RULES:
     </ul>
   </div>
 </div>
+
+${complianceNichePanels}
 `)

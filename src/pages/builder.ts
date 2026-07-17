@@ -246,6 +246,22 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
       ${field('retainer', 'Monthly Retainer', '$2,500/mo')}
     </fieldset>
 
+    <fieldset id="builder-universal" class="mt-6 pt-5 border-t border-blue-900/50 space-y-3">
+      <p class="text-sm text-white font-semibold"><i class="fas fa-sliders text-brand-cyan mr-2"></i>Universal Options — SEO / Theme (all templates)</p>
+      <label class="flex items-center gap-3 bg-[#060a14] border border-gray-700 rounded-lg px-3 py-3 cursor-pointer">
+        <input type="checkbox" name="theme" value="dark" class="w-4 h-4 accent-blue-500">
+        <span class="text-sm text-gray-200"><i class="fas fa-moon text-blue-400 mr-2"></i><strong>Dark background mode</strong> — render the funnel on the RJ Navy dark theme</span>
+      </label>
+      ${field('seoTitle', 'SEO Title (≤60 chars — overrides page title, OG & Twitter)', 'Sell Your ABQ Home in 11 Days — Summit Realty')}
+      ${field('seoDesc', 'SEO Meta Description (140–160 chars)', 'Free 24-hour home value report from Albuquerque\u2019s data-driven listing team...')}
+      ${field('seoKeywords', 'SEO Keywords (comma-separated)', 'sell my house albuquerque, home value report')}
+      <div class="grid grid-cols-2 gap-3">
+        ${field('canonical', 'Canonical URL', 'https://yoursite.com/sell')}
+        ${field('ogImage', 'OG Share Image URL (1200×630)', 'https://yoursite.com/og.jpg')}
+      </div>
+      <p class="text-[11px] text-gray-500">Every generated funnel auto-includes full meta tags, OG graph, Twitter cards & JSON-LD schema. Need a standalone pack (sitemap, robots.txt, AEO blocks)? Use the <a href="/seo" class="text-blue-300 underline">SEO Engine</a>.</p>
+    </fieldset>
+
     <button type="submit" class="mt-6 w-full grad-bg text-white font-bold py-4 rounded-xl text-lg hover:opacity-90"><i class="fas fa-bolt mr-2"></i>Generate My Funnel →</button>
     <p class="text-xs text-gray-500 mt-3 text-center">The generated URL carries your inputs as parameters — bookmark or share it. Templates ship with example proof data; replace with your verified numbers before real launch.</p>
   </form>

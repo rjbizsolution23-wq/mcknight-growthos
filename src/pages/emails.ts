@@ -1,4 +1,5 @@
 import { shell, copyBlock } from './layout'
+import { nicheTabs, nichePanels } from './emailsNiche'
 
 const tabBtn = (id: string, label: string, active = false) =>
   `<button data-tab="${id}" class="px-4 py-2 rounded-lg text-sm ${active ? 'grad-bg text-white font-semibold' : 'text-gray-300 hover:bg-gray-800'}">${label}</button>`
@@ -16,6 +17,7 @@ export const emailsPage = () => shell('Email Vault', 'emails', `
   ${tabBtn('tax', 'Tax Lead Nurture (7)', false)}
   ${tabBtn('creditb2c', 'Credit B2C Nurture (8)', false)}
   ${tabBtn('creditb2b', 'Credit SaaS Nurture (6)', false)}
+  ${nicheTabs.map(([id, label]) => tabBtn(id, label, false)).join('')}
 </nav>
 
 <!-- SPONSOR OUTREACH -->
@@ -703,4 +705,6 @@ Questions? Reply — a human answers.
 
 [Company] · [Physical Address] · Unsubscribe: [link]`)}
 </div>
+
+${nichePanels}
 `)

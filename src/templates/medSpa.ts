@@ -10,7 +10,7 @@ export const medSpaTemplate = (q: Record<string, string | undefined>) => {
   const provider = param(q, 'provider', 'Dr. Elena Vasquez, MD')
   const deadline = q.deadline && q.deadline.trim() ? q.deadline.trim() : defaultDeadline()
 
-  return `${funnelHead(`${spaName} — New Client Offer`)}
+  return `${funnelHead(`${spaName} — New Client Offer`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO -->
@@ -108,7 +108,7 @@ export const medSpaTemplate = (q: Record<string, string | undefined>) => {
     <div class="rounded-3xl border-4 border-orange-500 p-8 md:p-10 shadow-xl">
       <h2 class="text-3xl font-extrabold text-center mb-2">Book Your ${offerPrice} New Client Session</h2>
       <p class="text-center text-gray-600 mb-8">${offerValue} value · consultation + full session + written treatment plan · limited new-client slots per week.</p>
-      <form class="space-y-4" onsubmit="event.preventDefault();alert('Template demo — connect this form to your booking system/webhook before launch.')">
+      <form class="space-y-4" data-lead-form>
         <div class="grid md:grid-cols-2 gap-4">
           <input required placeholder="Full Name" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">
           <input required type="tel" placeholder="Phone" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">

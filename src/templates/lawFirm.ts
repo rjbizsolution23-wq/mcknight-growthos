@@ -9,7 +9,7 @@ export const lawFirmTemplate = (q: Record<string, string | undefined>) => {
   const years = param(q, 'years', '22')
   const phone = param(q, 'phone', '(505) 555-0199')
 
-  return `${funnelHead(`${firmName} — Free Case Review`)}
+  return `${funnelHead(`${firmName} — Free Case Review`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO -->
@@ -112,7 +112,7 @@ export const lawFirmTemplate = (q: Record<string, string | undefined>) => {
     <div class="bg-white rounded-3xl border-4 border-orange-500 p-8 md:p-10 shadow-xl">
       <h2 class="text-3xl font-extrabold text-center mb-2">Get Your Free Case Review</h2>
       <p class="text-center text-gray-600 mb-8">Confidential. No obligation. An attorney responds — usually within the hour during business hours.</p>
-      <form class="space-y-4" onsubmit="event.preventDefault();alert('Template demo — connect this form to your intake CRM/webhook before launch.')">
+      <form class="space-y-4" data-lead-form>
         <div class="grid md:grid-cols-2 gap-4">
           <input required placeholder="Full Name" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">
           <input required type="tel" placeholder="Phone" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">

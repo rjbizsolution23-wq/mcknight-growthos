@@ -12,7 +12,7 @@ export const ecommerceTemplate = (q: Record<string, string | undefined>) => {
   const rating = param(q, 'rating', '4.8')
   const deadline = q.deadline && q.deadline.trim() ? q.deadline.trim() : defaultDeadline()
 
-  return `${funnelHead(`${productName} — ${brandName}`)}
+  return `${funnelHead(`${productName} — ${brandName}`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO -->

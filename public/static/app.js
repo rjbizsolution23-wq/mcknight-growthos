@@ -66,6 +66,12 @@ if (builderForm) {
     fieldset.querySelectorAll('input, textarea, select').forEach(inp => {
       if (inp.value.trim()) params.set(inp.name, inp.value.trim())
     })
+    // Universal options (SEO + dark theme) — apply to every template
+    const universal = document.getElementById('builder-universal')
+    if (universal) universal.querySelectorAll('input, textarea, select').forEach(inp => {
+      if (inp.type === 'checkbox') { if (inp.checked) params.set(inp.name, inp.value) }
+      else if (inp.value.trim()) params.set(inp.name, inp.value.trim())
+    })
     const url = `/t/${t}?${params.toString()}`
     const frame = document.getElementById('builder-preview')
     const link = document.getElementById('builder-link')
@@ -89,3 +95,71 @@ document.querySelectorAll('[data-countdown]').forEach(el => {
   }
   tick(); setInterval(tick, 1000)
 })
+
+// ── v2.0: Lead capture forms → POST /api/lead ─────────────────
+document.querySelectorAll('[data-lead-form]').forEach(form => {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const btn = form.querySelector('[type="submit"], button:not([type])')
+    const orig = btn ? btn.innerHTML : ''
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Sending…' }
+    const data = { _source: location.pathname + location.search }
+    form.querySelectorAll('input, textarea, select').forEach(inp => {
+      if (inp.type === 'checkbox') { data[inp.name || 'consent'] = inp.checked ? 'yes' : 'no' }
+      else if (inp.name && inp.value.trim()) data[inp.name] = inp.value.trim()
+    })
+    const endpoint = form.dataset.leadForm && form.dataset.leadForm.startsWith('http') ? form.dataset.leadForm : '/api/lead'
+    try {
+      const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+      if (!r.ok) throw new Error('HTTP ' + r.status)
+      if (btn) { btn.innerHTML = '<i class="fas fa-check mr-2"></i>Submitted! We\'ll be in touch.'; btn.classList.add('!bg-emerald-600') }
+      form.querySelectorAll('input:not([type=checkbox]), textarea').forEach(i => i.value = '')
+    } catch (err) {
+      if (btn) { btn.disabled = false; btn.innerHTML = orig }
+      alert('Something went wrong sending your info — please try again or call us directly.')
+    }
+  })
+})
+
+// ── v2.0: SEO Pack Generator (/seo page) ──────────────────────
+const seoForm = document.getElementById('seo-form')
+if (seoForm) {
+  seoForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const params = new URLSearchParams()
+    seoForm.querySelectorAll('input, textarea, select').forEach(i => { if (i.name && i.value.trim()) params.set(i.name, i.value.trim()) })
+    const r = await fetch('/api/seo-pack?' + params.toString())
+    const d = await r.json()
+    if (!d.ok) return alert('Generation failed')
+
+    const metaLines = Object.entries(d.meta).filter(([k]) => k !== 'title').map(([k, v]) =>
+      k === 'canonical' ? `<link rel="canonical" href="${v}">` : (v ? `<meta name="${k}" content="${v}">` : '')
+    ).filter(Boolean)
+    const ogLines = Object.entries(d.openGraph).map(([k, v]) => `<meta property="${k}" content="${v}">`)
+    const twLines = Object.entries(d.twitter).map(([k, v]) => `<meta name="${k}" content="${v}">`)
+    const schema = JSON.parse(JSON.stringify(d.jsonLd)); schema['@type'] = params.get('niche') || schema['@type']
+
+    document.getElementById('seo-out-head').textContent =
+      `<title>${d.meta.title}</title>\n` + metaLines.join('\n') + '\n' + ogLines.join('\n') + '\n' + twLines.join('\n') +
+      `\n<script type="application/ld+json">\n${JSON.stringify(schema, null, 2)}\n<\/script>`
+    document.getElementById('seo-out-schema').textContent = JSON.stringify(schema, null, 2)
+    document.getElementById('seo-out-sitemap').textContent = d.sitemapXml
+    document.getElementById('seo-out-robots').textContent = d.robotsTxt
+
+    const name = params.get('name'), city = params.get('city') || '', desc = params.get('desc')
+    document.getElementById('seo-out-aeo').textContent =
+`<!-- AEO Answer Block — place high on the page, wrap FAQ in FAQPage schema -->
+<section id="quick-answer">
+  <h2>What is ${name}?</h2>
+  <p>${desc} ${city ? 'Serving ' + city + ' and surrounding areas.' : ''}</p>
+
+  <h2>How much does ${name} cost?</h2>
+  <p>[Direct 40–60 word answer with a real price range — AI engines quote this verbatim.]</p>
+
+  <h2>Why choose ${name}${city ? ' in ' + city : ''}?</h2>
+  <p>[3 concrete differentiators with numbers — stats get cited by AI Overviews.]</p>
+</section>`
+    document.getElementById('seo-output').classList.remove('hidden')
+    document.getElementById('seo-output').scrollIntoView({ behavior: 'smooth' })
+  })
+}

@@ -8,7 +8,7 @@ export const taxLeadTemplate = (q: Record<string, string | undefined>) => {
   const casesHandled = param(q, 'casesHandled', '2,400+')
   const phone = param(q, 'phone', '(505) 555-0134')
 
-  return `${funnelHead(`${firmName} — Free Tax Case Evaluation`)}
+  return `${funnelHead(`${firmName} — Free Tax Case Evaluation`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO + FORM -->
@@ -23,7 +23,7 @@ export const taxLeadTemplate = (q: Record<string, string | undefined>) => {
         <li><i class="fas fa-check text-emerald-400 mr-2"></i>Confidential · No-obligation · No IRS-style pressure</li>
       </ul>
     </div>
-    <form id="lead-form" class="bg-white text-gray-900 rounded-3xl p-8 shadow-2xl" onsubmit="event.preventDefault(); alert('Template form — wire to your CRM/API before launch.')">
+    <form id="lead-form" class="bg-white text-gray-900 rounded-3xl p-8 shadow-2xl" data-lead-form>
       <h2 class="font-bold text-xl mb-4">Get My Free Case Evaluation</h2>
       <div class="grid grid-cols-2 gap-3 mb-3">
         <input required name="firstName" placeholder="First Name" class="border border-gray-300 rounded-lg px-3 py-2.5 text-sm w-full">

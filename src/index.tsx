@@ -7,6 +7,9 @@ import { emailsPage } from './pages/emails'
 import { compliancePage } from './pages/compliance'
 import { builderPage } from './pages/builder'
 import { brandPage } from './pages/brand'
+import { seoPage } from './pages/seo'
+import { integrationsPage } from './pages/integrations'
+import { api } from './api'
 import { eventLandingTemplate } from './templates/eventLanding'
 import { sponsorDeckTemplate } from './templates/sponsorDeck'
 import { taxLeadTemplate } from './templates/taxLead'
@@ -37,6 +40,11 @@ app.get('/emails', (c) => html(emailsPage()))
 app.get('/compliance', (c) => html(compliancePage()))
 app.get('/builder', (c) => html(builderPage()))
 app.get('/brand', (c) => html(brandPage()))
+app.get('/seo', (c) => html(seoPage()))
+app.get('/integrations', (c) => html(integrationsPage()))
+
+// ── API layer: Stripe checkout + lead capture + SEO pack ─────
+app.route('/api', api)
 
 // ── Live funnel templates (parameterized via query string) ───
 app.get('/t/event-landing', (c) => html(eventLandingTemplate(c.req.query())))
@@ -58,6 +66,6 @@ app.get('/t/insurance', (c) => html(insuranceTemplate(c.req.query())))
 app.get('/t/agency', (c) => html(agencyTemplate(c.req.query())))
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '1.2.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '2.0.0' }))
 
 export default app

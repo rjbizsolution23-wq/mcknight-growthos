@@ -45,8 +45,24 @@
 | `/t/insurance` | Insurance/financial services quote (multi-carrier, TCPA + no-lead-resale) | `agencyName, productLine, state, familiesServed, carrierCount, startingPrice, phone` |
 | `/t/agency` | Marketing agency growth audit (3-engine mechanism, performance guarantee) | `agencyName, niche, service, clientCount, leadsGenerated, avgRoas, retainer` |
 
-### API
+### v2.0 Pages
+| Path | What it is |
+|---|---|
+| `/seo` | **SEO · AEO · SGE Engine** — full search-pack generator (meta, OG graph, Twitter cards, JSON-LD by niche, sitemap.xml, AI-crawler robots.txt, AEO answer blocks), 2026 Search Trinity checklists (SEO/AEO/SGE), copy-paste schema library (FAQPage, AggregateRating, HowTo, BreadcrumbList) |
+| `/integrations` | **Stripe + Email integration hub** — setup guides, live config status badges, drop-in checkout buttons, 3-tier pricing wiring, lead-form snippets, secrets reference |
+
+### API (v2.0)
 - `GET /health` — health check JSON
+- `GET /api/health` — integration status (stripe/email configured?)
+- `POST /api/lead` — lead capture → branded RJ Blue email via Resend (graceful no-key fallback; all 8 lead funnels wired via `data-lead-form`)
+- `POST /api/checkout` — Stripe Checkout Session (priceId mode OR ad-hoc `{name, amount, interval?}` for one-time & subscriptions)
+- `GET /api/seo-pack` — machine-readable SEO pack (`?name=&desc=&url=&city=&niche=&keywords=&logo=`)
+
+### Universal Funnel Params (v2.0 — every template)
+`seoTitle, seoDesc, seoKeywords, canonical, ogImage, theme=dark, noindex=1` — every funnel auto-emits meta description, robots, OG graph, Twitter cards, and JSON-LD ProfessionalService schema; `theme=dark` flips the whole funnel to the RJ Navy dark theme.
+
+### Integrations Secrets
+Copy `.dev.vars.example` → `.dev.vars` locally; production via `wrangler pages secret put`: `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL`, `LEAD_FROM_EMAIL`.
 
 ## Email Sequences Included (Email Vault)
 1. **Sponsor Cold Outreach** — 6 touches (Day 0→21, incl. Loom script + breakup)
@@ -55,6 +71,12 @@
 4. **Tax Lead Nurture** — 7 emails (compliance-wired, disclaimers baked in)
 5. **Credit B2C Nurture** — 8 emails (CROA-wired)
 6. **Credit SaaS Trial Nurture** — 6 emails
+
+### v2.0 — Niche Sequences (10 industries × 5 touches = 50 emails)
+Real Estate (seller nurture, Fair-Housing-safe) · Fitness (FTC results-vary wired) · Coaching (earnings-claim compliant) · E-commerce (cart + post-purchase) · SaaS (trial-to-paid) · Law Firm (attorney-advertising labeled) · Home Services (estimate follow-up, license-wired) · Med Spa (HIPAA-aware) · Insurance (producer-license wired) · Agency (audit-call close)
+
+## Compliance Vault (v2.0 — 10 industry packs added)
+Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coaching (earnings claims/click-to-cancel) · E-commerce (Consumer Review Rule/Mail Order Rule) · SaaS (GDPR/CCPA/negative option) · Law (Model Rules 7.1–7.3) · Home Services (licensing/cooling-off) · Med Spa (HIPAA marketing/before-after) · Insurance (DOI/CMS Medicare) · Agency (results claims/contracts)
 
 ## Data Architecture
 - **Storage**: none required — all content is statically generated server-side; template customization travels in the URL query string (shareable, bookmarkable, stateless)
@@ -88,6 +110,7 @@
 ## Deployment
 - **Platform**: Cloudflare Pages (ready) — currently running in sandbox via PM2 + wrangler pages dev
 - **Status**: ✅ Active (sandbox)
+- **Version**: 2.0.0 — SEO/AEO/SGE engine, Stripe + email integrations, dark mode, 50 niche emails, 10 industry compliance packs
 - **Version**: 1.2.0 — 15 live templates + Brand Kit Vault + full RJ Blue rebrand
 - **v1.2 rebrand**: Command Center shell now runs the official RJ Blue + White system — logo in nav, `#2563eb → #0ea5e9` gradients, `rj.*` Tailwind palette, Space Grotesk headings, full brand footer (address, socials, © 2026, policy links), SEO meta description, OG/Twitter cards, and inline JSON-LD Organization schema in `<head>`
 - **Last Updated**: 2026-07-17

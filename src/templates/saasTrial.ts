@@ -10,7 +10,7 @@ export const saasTrialTemplate = (q: Record<string, string | undefined>) => {
   const teamPrice = param(q, 'teamPrice', '$149')
   const trialDays = param(q, 'trialDays', '14')
 
-  return `${funnelHead(`${productName} — Free ${trialDays}-Day Trial`)}
+  return `${funnelHead(`${productName} — Free ${trialDays}-Day Trial`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO -->

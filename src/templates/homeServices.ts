@@ -11,7 +11,7 @@ export const homeServicesTemplate = (q: Record<string, string | undefined>) => {
   const phone = param(q, 'phone', '(505) 555-0142')
   const deadline = q.deadline && q.deadline.trim() ? q.deadline.trim() : defaultDeadline()
 
-  return `${funnelHead(`${companyName} — Free ${service} Estimate`)}
+  return `${funnelHead(`${companyName} — Free ${service} Estimate`, q)}
 <body class="bg-white text-gray-900">
 
 <!-- [1] HERO -->
@@ -103,7 +103,7 @@ export const homeServicesTemplate = (q: Record<string, string | undefined>) => {
     <div class="rounded-3xl border-4 border-orange-500 p-8 md:p-10 shadow-xl">
       <h2 class="text-3xl font-extrabold text-center mb-2">Claim Your Free Estimate + ${discount}</h2>
       <p class="text-center text-gray-600 mb-8">30–45 minute inspection · written line-item quote · zero pressure, zero obligation.</p>
-      <form class="space-y-4" onsubmit="event.preventDefault();alert('Template demo — connect this form to your CRM/webhook before launch.')">
+      <form class="space-y-4" data-lead-form>
         <div class="grid md:grid-cols-2 gap-4">
           <input required placeholder="Full Name" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">
           <input required type="tel" placeholder="Phone" class="w-full border border-gray-300 rounded-xl px-4 py-3.5 text-sm">
