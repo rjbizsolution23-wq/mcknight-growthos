@@ -34,8 +34,16 @@ tailwind.config = {
   h1,h2,h3,h4 { font-family:'Space Grotesk','Poppins',sans-serif; }
   .grad-text { background:linear-gradient(135deg,#2563eb,#0ea5e9); -webkit-background-clip:text; background-clip:text; color:transparent; }
   .grad-bg { background:linear-gradient(135deg,#2563eb 0%,#0ea5e9 100%); }
-  .card { background:#0b1226; border:1px solid #1e3a8a55; border-radius:1rem; }
-  .card:hover { border-color:#0ea5e9; }
+  .card { background:#0b1226; border:1px solid #1e3a8a55; border-radius:1rem; transition:transform .3s cubic-bezier(.22,1,.36,1),border-color .25s ease,box-shadow .3s ease; }
+  .card:hover { border-color:#0ea5e9; transform:translateY(-3px); box-shadow:0 18px 45px -16px rgba(14,165,233,.25); }
+  .glass-dark { background:rgba(8,14,30,.55); backdrop-filter:blur(18px) saturate(150%); -webkit-backdrop-filter:blur(18px) saturate(150%); border:1px solid rgba(255,255,255,.12); }
+  a,button { transition:transform .25s cubic-bezier(.22,1,.36,1),background-color .2s ease,color .2s ease,border-color .2s ease,opacity .2s ease; }
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible { outline:2px solid #0ea5e9; outline-offset:2px; border-radius:8px; }
+  input:focus,select:focus,textarea:focus { border-color:#0ea5e9 !important; box-shadow:0 0 0 3px rgba(14,165,233,.18); outline:none; }
+  ::selection { background:#2563eb; color:#fff; }
+  .mo-reveal { opacity:0; transform:translateY(22px); transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1); transition-delay:var(--mo-delay,0ms); }
+  .mo-reveal.mo-in { opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce) { .mo-reveal { opacity:1; transform:none; transition:none; } .card,.card:hover,a,button { transition:none; transform:none; } }
   .copy-block { position:relative; }
   .copy-btn { position:absolute; top:.5rem; right:.5rem; }
   pre { white-space:pre-wrap; word-break:break-word; }
@@ -102,6 +110,20 @@ ${content}
   </div>
 </footer>
 <script src="/static/app.js"></script>
+<script>
+// Command Center scroll reveal (lightweight)
+(() => {
+  const els = []
+  document.querySelectorAll('main section, main .card').forEach((el, i) => {
+    el.classList.add('mo-reveal'); el.style.setProperty('--mo-delay', Math.min((i % 8) * 55, 380) + 'ms'); els.push(el)
+  })
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('mo-in'); io.unobserve(e.target) } }), { threshold: .08, rootMargin: '0px 0px -6% 0px' })
+    els.forEach(el => io.observe(el))
+    requestAnimationFrame(() => els.forEach(el => { if (el.getBoundingClientRect().top < innerHeight) el.classList.add('mo-in') }))
+  } else els.forEach(el => el.classList.add('mo-in'))
+})()
+</script>
 </body>
 </html>`
 

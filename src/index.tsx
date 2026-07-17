@@ -66,6 +66,6 @@ app.get('/t/insurance', (c) => html(insuranceTemplate(c.req.query())))
 app.get('/t/agency', (c) => html(agencyTemplate(c.req.query())))
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '2.0.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '2.1.0' }))
 
 export default app

@@ -110,6 +110,7 @@ Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coachin
 ## Deployment
 - **Platform**: Cloudflare Pages (ready) — currently running in sandbox via PM2 + wrangler pages dev
 - **Status**: ✅ Active (sandbox)
+- **Version**: 2.1.0 — RJ Design System: glassmorphism (`.glass`/`.glass-dark` auto-applied to hero cards & pills), framer-style motion engine (`/static/motion.js` — scroll reveals w/ stagger, hero gradient blobs, animated stat counters w/ expo-out easing, hover-lift cards), shadcn polish (focus-visible rings, input focus shadows, CTA shine sweep, spring transitions), icon micro-animations, auto © copyright footer on all 15 funnels + Command Center, full `prefers-reduced-motion` support
 - **Version**: 2.0.0 — SEO/AEO/SGE engine, Stripe + email integrations, dark mode, 50 niche emails, 10 industry compliance packs
 - **Version**: 1.2.0 — 15 live templates + Brand Kit Vault + full RJ Blue rebrand
 - **v1.2 rebrand**: Command Center shell now runs the official RJ Blue + White system — logo in nav, `#2563eb → #0ea5e9` gradients, `rj.*` Tailwind palette, Space Grotesk headings, full brand footer (address, socials, © 2026, policy links), SEO meta description, OG/Twitter cards, and inline JSON-LD Organization schema in `<head>`
