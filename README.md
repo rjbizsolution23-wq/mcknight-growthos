@@ -2,7 +2,7 @@
 
 ## Project Overview
 - **Name**: RJ Funnel Command Center (webapp)
-- **Goal**: A living funnel system for three verticals — Events/Tickets/Sponsors, Tax Services, and Credit Repair — with live customizable templates, complete email sequence vaults, and a compliance/disclaimer library.
+- **Goal**: A living funnel system — 15 live parameterized funnel templates spanning Events/Tickets/Sponsors, Tax Services, Credit Repair, and the top 10 business niches — plus complete email sequence vaults and a compliance/disclaimer library.
 - **Built by**: RJ Business Solutions · 1342 NM 333, Tijeras, New Mexico 87059 · rjbusinesssolutions.org
 
 ## URLs
@@ -29,6 +29,20 @@
 | `/t/tax-lead` | Tax resolution lead funnel (Circular 230/FTC/TSR compliant) | `firmName, credential, state, years, casesHandled, phone` |
 | `/t/credit-service` | B2C credit repair funnel (CROA post-service billing, honest FAQ) | `companyName, state, clientsHelped, essentialPrice, essentialSetup, acceleratedPrice, acceleratedSetup, flatPrice` |
 | `/t/credit-saas` | B2B credit repair SaaS funnel (compliance-first positioning) | `productName, tagline, starterPrice, growthPrice, scalePrice` |
+
+### Top-10 Niche Funnel Templates (v1.1 — all full funnels: hero → pain → mechanism → authority → proof → offer/pricing → FAQ → final CTA)
+| Path | Niche | Key params |
+|---|---|---|
+| `/t/real-estate` | Real estate seller lead gen (home value report magnet, TCPA form) | `agentName, brokerage, city, homesSold, avgDays, avgOver, phone` |
+| `/t/fitness` | Fitness/weight-loss coaching cohort (3-pillar system, action guarantee) | `programName, coachName, promise, audience, price, vipPrice, clientCount, spots, deadline` |
+| `/t/coaching` | High-ticket coaching/consulting (application-only, 4-quarter roadmap) | `programName, coachName, promise, audience, clientCount, revenue, investment` |
+| `/t/ecommerce` | E-commerce/DTC product page (comparison table, bundle stack, FTC-safe) | `productName, brandName, promise, category, price, compareAt, bundlePrice, reviews, rating, deadline` |
+| `/t/saas-trial` | SaaS free-trial funnel (no-CC trial, 3-tier pricing) | `productName, tagline, audience, userCount, trialDays, starterPrice, proPrice, teamPrice` |
+| `/t/law-firm` | Law firm case review (contingency, bar-ad disclaimers) | `firmName, practiceArea, city, recovered, casesWon, years, phone` |
+| `/t/home-services` | Home services free estimate (roofing/HVAC/solar; insurance-claim help) | `companyName, service, city, jobsDone, years, warranty, discount, phone, deadline` |
+| `/t/med-spa` | Med spa new-client offer (physician-directed, medical screening) | `spaName, treatment, city, provider, offerPrice, offerValue, clientCount, deadline` |
+| `/t/insurance` | Insurance/financial services quote (multi-carrier, TCPA + no-lead-resale) | `agencyName, productLine, state, familiesServed, carrierCount, startingPrice, phone` |
+| `/t/agency` | Marketing agency growth audit (3-engine mechanism, performance guarantee) | `agencyName, niche, service, clientCount, leadsGenerated, avgRoas, retainer` |
 
 ### API
 - `GET /health` — health check JSON
@@ -73,6 +87,7 @@
 ## Deployment
 - **Platform**: Cloudflare Pages (ready) — currently running in sandbox via PM2 + wrangler pages dev
 - **Status**: ✅ Active (sandbox)
+- **Version**: 1.1.0 — 15 live templates
 - **Last Updated**: 2026-07-17
 
 ---

@@ -2,9 +2,9 @@ import { shell } from './layout'
 
 export const dashboardPage = () => shell('Dashboard', 'dashboard', `
 <section id="hero-section" class="text-center py-10">
-  <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-4"><i class="fas fa-bolt mr-1"></i>SUPREME FUNNEL SYSTEM v1.0 — LOADED</p>
+  <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-4"><i class="fas fa-bolt mr-1"></i>SUPREME FUNNEL SYSTEM v1.1 — 15 LIVE TEMPLATES LOADED</p>
   <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">The <span class="grad-text">Funnel Command Center</span></h1>
-  <p class="text-gray-400 max-w-2xl mx-auto text-lg">Three compliance-engineered funnel systems. Live templates. Email vaults. Legal disclaimer libraries. Built for Events &amp; Sponsors, Tax Services, and Credit Repair — ready to customize and deploy.</p>
+  <p class="text-gray-400 max-w-2xl mx-auto text-lg">15 compliance-engineered live funnel templates across events, tax, credit, and the top 10 business niches — plus email vaults, legal disclaimer libraries, and a parameterized funnel builder. Customize and deploy.</p>
 </section>
 
 <section id="vertical-cards" class="grid md:grid-cols-3 gap-6 mb-12">
@@ -70,6 +70,16 @@ export const dashboardPage = () => shell('Dashboard', 'dashboard', `
       ['/t/tax-lead', 'Tax Resolution Lead Funnel', 'fa-scale-balanced', 'Circular 230 + FTC compliant: education-first, IRS programs explained, disclaimered'],
       ['/t/credit-service', 'Credit Repair Service Funnel', 'fa-chart-line', 'CROA-compliant B2C funnel: post-service billing, rights disclosures, honest FAQ'],
       ['/t/credit-saas', 'Credit Repair SaaS Funnel', 'fa-laptop-code', 'B2B software funnel: compliance-first positioning, post-CRC-settlement safe'],
+      ['/t/real-estate', 'Real Estate Seller Lead Funnel', 'fa-house', 'Home value report lead magnet: data-driven positioning, TCPA consent, agent authority'],
+      ['/t/fitness', 'Fitness Coaching Funnel', 'fa-dumbbell', 'Cohort enrollment funnel: 3-pillar mechanism, action guarantee, health disclaimers'],
+      ['/t/coaching', 'High-Ticket Coaching Funnel', 'fa-chess-king', 'Application-only advisory funnel: 4-quarter roadmap, qualification criteria, strategy session'],
+      ['/t/ecommerce', 'E-commerce Product Funnel', 'fa-cart-shopping', 'DTC sales page: comparison table, bundle offer stack, ice-test guarantee, FTC-safe'],
+      ['/t/saas-trial', 'SaaS Free Trial Funnel', 'fa-bolt', 'No-credit-card trial funnel: 3-step onboarding story, 3-tier pricing, churn-safe FAQ'],
+      ['/t/law-firm', 'Law Firm Case Review Funnel', 'fa-gavel', 'PI lead gen: contingency positioning, 24/7 CTA, bar-advertising disclaimers baked in'],
+      ['/t/home-services', 'Home Services Estimate Funnel', 'fa-house-chimney', 'Free inspection funnel: no-pressure process, insurance-claim help, countdown offer'],
+      ['/t/med-spa', 'Med Spa New Client Funnel', 'fa-spa', 'Discounted first-session offer: physician-directed authority, medical screening language'],
+      ['/t/insurance', 'Insurance Quote Funnel', 'fa-shield-heart', 'Multi-carrier quote funnel: independent-agent positioning, TCPA consent, no-exam angle'],
+      ['/t/agency', 'Marketing Agency Audit Funnel', 'fa-rocket', 'Growth audit funnel: 3-engine mechanism, performance guarantee, area exclusivity'],
     ].map(([href, title, icon, desc]) => `
     <a href="${href}" target="_blank" class="card p-5 block group">
       <h3 class="font-bold text-white text-sm mb-1 group-hover:text-brand-cyan"><i class="fas ${icon} text-brand-cyan mr-2"></i>${title} <i class="fas fa-arrow-up-right-from-square text-xs text-gray-600 ml-1"></i></h3>
