@@ -1,0 +1,9 @@
+{
+  "name": "rj-seo-keeper",
+  "main": "index.ts",
+  "compatibility_date": "2024-01-01",
+  "triggers": {
+    // Daily at 06:07 UTC — submits sitemap URLs to IndexNow + warms funnel cache
+    "crons": ["7 6 * * *"]
+  }
+}

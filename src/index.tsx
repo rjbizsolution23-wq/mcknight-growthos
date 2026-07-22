@@ -9,7 +9,7 @@ import { builderPage } from './pages/builder'
 import { brandPage } from './pages/brand'
 import { seoPage } from './pages/seo'
 import { integrationsPage } from './pages/integrations'
-import { api } from './api'
+import { api, INDEXNOW_KEY } from './api'
 import { eventLandingTemplate } from './templates/eventLanding'
 import { sponsorDeckTemplate } from './templates/sponsorDeck'
 import { taxLeadTemplate } from './templates/taxLead'
@@ -66,7 +66,7 @@ app.get('/t/insurance', (c) => html(insuranceTemplate(c.req.query())))
 app.get('/t/agency', (c) => html(agencyTemplate(c.req.query())))
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '2.4.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '2.5.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
 const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/brand', '/seo', '/integrations']
@@ -80,6 +80,9 @@ app.get('/sitemap.xml', (c) => {
     .join('\n')
   return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>`, { headers: { 'Content-Type': 'application/xml; charset=utf-8' } })
 })
+
+// IndexNow key verification file (search engines fetch this to validate ownership)
+app.get(`/${INDEXNOW_KEY}.txt`, (c) => c.text(INDEXNOW_KEY))
 
 app.get('/robots.txt', (c) => {
   const base = new URL(c.req.url).origin

@@ -137,5 +137,33 @@ api.get('/seo-pack', (c) => {
   })
 })
 
+// ── v2.5: SEO Ping — submits all site URLs to IndexNow (Bing/Yandex/Seznam/Naver
+// share the index) so new/updated funnels get discovered within hours, not weeks.
+// Called manually (POST /api/seo-ping) or daily by the rj-seo-keeper Worker cron.
+export const INDEXNOW_KEY = '0ba4bc5051534cffb4f950503fd5563d'
+
+api.post('/seo-ping', async (c) => {
+  const origin = new URL(c.req.url).origin
+  // Never ping localhost/sandbox — engines would reject and it pollutes quota
+  if (!/rjbusinesssolutions\.org|pages\.dev/.test(origin)) {
+    return c.json({ ok: false, skipped: true, reason: 'non-production origin' })
+  }
+  const pages = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/brand', '/seo', '/integrations']
+  const funnels = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency']
+  const urlList = [...pages, ...funnels.map((f) => `/t/${f}`)].map((p) => origin + p)
+
+  const results: Record<string, unknown> = {}
+  try {
+    const r = await fetch('https://www.bing.com/indexnow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ host: new URL(origin).host, key: INDEXNOW_KEY, keyLocation: `${origin}/${INDEXNOW_KEY}.txt`, urlList })
+    })
+    results.indexnow = { status: r.status, ok: r.status === 200 || r.status === 202 }
+  } catch (e) { results.indexnow = { error: String(e) } }
+
+  return c.json({ ok: true, submitted: urlList.length, origin, results, at: new Date().toISOString() })
+})
+
 // ── Health ─────────────────────────────────────────────────────
 api.get('/health', (c) => c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY }))

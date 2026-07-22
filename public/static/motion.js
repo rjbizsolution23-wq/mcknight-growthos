@@ -196,4 +196,59 @@
       btn.addEventListener('mouseleave', () => { if (raf) { cancelAnimationFrame(raf); raf = null } btn.style.transform = '' })
     })
   }
+
+  // ── 9 · v2.5: 3D tilt on lifted cards (premium depth) ─────────
+  if (!reduced && window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.mo-lift').forEach(card => {
+      card.classList.add('rj-tilt')
+      let raf = null
+      card.addEventListener('mousemove', (e) => {
+        if (raf) return
+        raf = requestAnimationFrame(() => {
+          const r = card.getBoundingClientRect()
+          const rx = ((e.clientY - r.top) / r.height - 0.5) * -6
+          const ry = ((e.clientX - r.left) / r.width - 0.5) * 8
+          card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-5px)`
+          raf = null
+        })
+      })
+      card.addEventListener('mouseleave', () => { if (raf) { cancelAnimationFrame(raf); raf = null } card.style.transform = '' })
+    })
+  }
+
+  // ── 10 · v2.5: conic glow border on hero glass cards ──────────
+  if (hero) {
+    let glowed = 0
+    hero.querySelectorAll('.glass-dark, .glass').forEach(el => {
+      if (glowed < 2 && el.getBoundingClientRect().width > 180) { el.classList.add('rj-glow-border'); glowed++ }
+    })
+  }
+
+  // ── 11 · v2.5: animated gradient text on hero stat numbers ────
+  if (hero) {
+    hero.querySelectorAll('[data-counted], strong, b').forEach(el => {
+      const t = (el.textContent || '').trim()
+      if (/^[$]?[\d,.]+[%+xXMKmk+]*$/.test(t) && t.length <= 10) el.classList.add('rj-grad-text')
+    })
+  }
+
+  // ── 12 · v2.5: scroll parallax on hero blobs ──────────────────
+  if (!reduced && hero) {
+    const blobs = hero.querySelectorAll('.mo-blob')
+    if (blobs.length) {
+      let praf = null
+      window.addEventListener('scroll', () => {
+        if (praf) return
+        praf = requestAnimationFrame(() => {
+          const y = window.scrollY
+          blobs.forEach((b, i) => { b.style.marginTop = (y * (i ? 0.12 : -0.08)) + 'px' })
+          praf = null
+        })
+      }, { passive: true })
+    }
+  }
+
+  // ── 13 · v2.5: blur-in reveal on every 3rd revealed block ─────
+  document.querySelectorAll('.mo-reveal').forEach((el, i) => { if (i % 3 === 1) el.classList.add('rj-blur') })
+
 })()

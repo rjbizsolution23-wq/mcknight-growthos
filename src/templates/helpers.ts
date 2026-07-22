@@ -173,6 +173,40 @@ ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</
   /* Magnetic buttons (behavior via motion.js) */
   .rj-magnetic { will-change:transform; }
 
+  /* ── v2.5 PREMIUM PACK ── */
+  /* 3D tilt cards (behavior via motion.js) */
+  .rj-tilt { transform-style:preserve-3d; transition:transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s ease; }
+
+  /* Conic border glow — rotating gradient ring on hero glass cards */
+  .rj-glow-border { position:relative; }
+  .rj-glow-border::before { content:''; position:absolute; inset:-1.5px; border-radius:inherit; padding:1.5px; background:conic-gradient(from var(--rj-ang,0deg),rgba(14,165,233,0),rgba(14,165,233,.85),rgba(0,51,153,.9),rgba(245,158,11,.65),rgba(14,165,233,0)); -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; animation:rjSpin 5s linear infinite; pointer-events:none; }
+  @property --rj-ang { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+  @keyframes rjSpin { to { --rj-ang:360deg; } }
+  @supports not (background:conic-gradient(from var(--rj-ang,0deg),#000,#fff)) { .rj-glow-border::before { animation:none; opacity:.55; } }
+
+  /* Animated gradient text — for stat numbers + key headline words */
+  .rj-grad-text { background:linear-gradient(100deg,#60a5fa 10%,#0ea5e9 35%,#93c5fd 55%,#0ea5e9 75%,#60a5fa 90%); background-size:220% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:rjGradSlide 5s ease-in-out infinite; }
+  @keyframes rjGradSlide { 0%,100% { background-position:0% 0; } 50% { background-position:100% 0; } }
+
+  /* Blur-in reveal variant — sections drift in from soft focus */
+  .mo-reveal.rj-blur { filter:blur(10px); }
+  .mo-reveal.rj-blur.mo-in { filter:blur(0); transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1),filter .8s ease; transition-delay:var(--mo-delay,0ms); }
+
+  /* Shimmer skeleton for images while loading */
+  img[loading=lazy] { background:linear-gradient(100deg,rgba(148,163,184,.08) 40%,rgba(148,163,184,.22) 50%,rgba(148,163,184,.08) 60%); background-size:200% 100%; animation:rjShimmer 1.6s linear infinite; }
+  @keyframes rjShimmer { to { background-position:-200% 0; } }
+
+  /* Marquee (logo strips / social proof rows tagged by motion.js) */
+  .rj-marquee { display:flex; gap:2.5rem; width:max-content; animation:rjMarquee 26s linear infinite; }
+  .rj-marquee:hover { animation-play-state:paused; }
+  @keyframes rjMarquee { to { transform:translateX(-50%); } }
+
+  @media (prefers-reduced-motion:reduce) {
+    .rj-glow-border::before,.rj-grad-text,.rj-marquee,img[loading=lazy] { animation:none; }
+    .rj-tilt { transform:none !important; }
+    .mo-reveal.rj-blur { filter:none; }
+  }
+
   /* framer-style scroll reveal (elements tagged by motion.js) */
   .mo-reveal { opacity:0; transform:translateY(26px) scale(.985); transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1); transition-delay:var(--mo-delay,0ms); will-change:opacity,transform; }
   .mo-reveal.mo-in { opacity:1; transform:none; }
