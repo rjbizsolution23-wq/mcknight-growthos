@@ -2,9 +2,9 @@ import { shell } from './layout'
 
 export const dashboardPage = () => shell('Dashboard', 'dashboard', `
 <section id="hero-section" class="text-center py-10">
-  <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-4"><i class="fas fa-bolt mr-1"></i>SUPREME FUNNEL SYSTEM v1.1 — 15 LIVE TEMPLATES LOADED</p>
+  <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-4"><i class="fas fa-bolt mr-1"></i>SUPREME FUNNEL SYSTEM v3.0 — 20 LIVE TEMPLATES · WHITE-LABEL READY</p>
   <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">The <span class="grad-text">Funnel Command Center</span></h1>
-  <p class="text-gray-400 max-w-2xl mx-auto text-lg">15 compliance-engineered live funnel templates across events, tax, credit, and the top 10 business niches — plus email vaults, legal disclaimer libraries, and a parameterized funnel builder. Customize and deploy.</p>
+  <p class="text-gray-400 max-w-2xl mx-auto text-lg">20 compliance-engineered live funnel templates across events, tax, credit, and every major local-business niche — all white-label ready with client logo + brand color injection — plus email vaults, legal disclaimer libraries, and a parameterized funnel builder. Customize and deploy.</p>
 </section>
 
 <section id="vertical-cards" class="grid md:grid-cols-3 gap-6 mb-12">
@@ -80,6 +80,11 @@ export const dashboardPage = () => shell('Dashboard', 'dashboard', `
       ['/t/med-spa', 'Med Spa New Client Funnel', 'fa-spa', 'Discounted first-session offer: physician-directed authority, medical screening language'],
       ['/t/insurance', 'Insurance Quote Funnel', 'fa-shield-heart', 'Multi-carrier quote funnel: independent-agent positioning, TCPA consent, no-exam angle'],
       ['/t/agency', 'Marketing Agency Audit Funnel', 'fa-rocket', 'Growth audit funnel: 3-engine mechanism, performance guarantee, area exclusivity'],
+      ['/t/restaurant', 'Restaurant VIP Table Funnel', 'fa-utensils', 'First-visit VIP offer: countdown, signature dishes, priority-seating list, table-ready texts'],
+      ['/t/dental', 'Dental New Patient Funnel', 'fa-tooth', '$99 new-patient special: empathy-first copy, included-services stack, urgency triage select'],
+      ['/t/auto-services', 'Auto Repair Inspection Funnel', 'fa-car', 'Intro inspection + oil change offer: photo-proof trust angle, warranty positioning, vehicle capture'],
+      ['/t/salon', 'Salon New Guest Funnel', 'fa-scissors', 'First-visit discount + free treatment: redo promise, service selector, stylist matching'],
+      ['/t/mortgage', 'Mortgage Pre-Approval Funnel', 'fa-house-chimney', '60-second rate check: soft-pull messaging, program stack, NMLS + Equal Housing compliance'],
     ].map(([href, title, icon, desc]) => `
     <a href="${href}" target="_blank" class="card p-5 block group">
       <h3 class="font-bold text-white text-sm mb-1 group-hover:text-brand-cyan"><i class="fas ${icon} text-brand-cyan mr-2"></i>${title} <i class="fas fa-arrow-up-right-from-square text-xs text-gray-600 ml-1"></i></h3>

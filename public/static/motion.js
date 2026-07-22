@@ -251,4 +251,25 @@
   // ── 13 · v2.5: blur-in reveal on every 3rd revealed block ─────
   document.querySelectorAll('.mo-reveal').forEach((el, i) => { if (i % 3 === 1) el.classList.add('rj-blur') })
 
+
+  // ── 14 · v3.0: WHITE-LABEL — client logo injection ────────────
+  const wl = window.__RJF || {}
+  if (wl.bizLogo && hero) {
+    // Hero: client logo badge above the headline
+    const h1el = hero.querySelector('h1')
+    if (h1el && !hero.querySelector('.rj-client-logo')) {
+      const img = document.createElement('img')
+      img.src = wl.bizLogo
+      img.alt = 'Business logo'
+      img.className = 'rj-client-logo'
+      img.style.cssText = 'display:block;margin:0 auto 22px;max-height:72px;max-width:220px;object-fit:contain;border-radius:12px;position:relative;z-index:1'
+      h1el.parentNode.insertBefore(img, h1el)
+    }
+    // Footer: client logo replaces the RJ logo (RJ stays as text credit line)
+    const wm = document.querySelector('.mo-copyright img')
+    if (wm) { wm.src = wl.bizLogo; wm.alt = 'Business logo' }
+    const tag = document.querySelector('.mo-copyright p')
+    if (tag) tag.style.display = 'none'
+  }
+
 })()

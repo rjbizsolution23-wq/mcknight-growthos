@@ -149,7 +149,7 @@ api.post('/seo-ping', async (c) => {
     return c.json({ ok: false, skipped: true, reason: 'non-production origin' })
   }
   const pages = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/brand', '/seo', '/integrations']
-  const funnels = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency']
+  const funnels = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency', 'restaurant', 'dental', 'auto-services', 'salon', 'mortgage']
   const urlList = [...pages, ...funnels.map((f) => `/t/${f}`)].map((p) => origin + p)
 
   const results: Record<string, unknown> = {}

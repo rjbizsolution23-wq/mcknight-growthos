@@ -2,7 +2,7 @@
 
 ## Project Overview
 - **Name**: RJ Funnel Command Center (webapp)
-- **Goal**: A living funnel system — 15 live parameterized funnel templates spanning Events/Tickets/Sponsors, Tax Services, Credit Repair, and the top 10 business niches — plus complete email sequence vaults and a compliance/disclaimer library.
+- **Goal**: A living all-in-one funnel system — 20 live parameterized funnel templates spanning Events/Tickets/Sponsors, Tax Services, Credit Repair, and every major local-business niche — white-label ready (client logo + brand color injection) so RJ Business Solutions can sell each funnel as a client’s own branded system, plus complete email sequence vaults and a compliance/disclaimer library.
 - **Built by**: RJ Business Solutions · 1342 NM 333, Tijeras, New Mexico 87059 · rjbusinesssolutions.org
 
 ## URLs
@@ -45,6 +45,11 @@
 | `/t/med-spa` | Med spa new-client offer (physician-directed, medical screening) | `spaName, treatment, city, provider, offerPrice, offerValue, clientCount, deadline` |
 | `/t/insurance` | Insurance/financial services quote (multi-carrier, TCPA + no-lead-resale) | `agencyName, productLine, state, familiesServed, carrierCount, startingPrice, phone` |
 | `/t/agency` | Marketing agency growth audit (3-engine mechanism, performance guarantee) | `agencyName, niche, service, clientCount, leadsGenerated, avgRoas, retainer` |
+| `/t/restaurant` | Restaurant VIP first-visit offer (priority seating, table-ready texts) | `bizName, cuisine, city, offer, offerValue, rating, reviewCount, deadline` |
+| `/t/dental` | Dental $99 new-patient special (empathy copy, urgency triage) | `practice, dentist, city, offer, offerPrice, offerValue, patientCount, deadline` |
+| `/t/auto-services` | Auto repair intro inspection + oil change (photo-proof trust, warranty) | `shopName, city, service, offer, offerValue, warranty, rating, reviewCount, deadline` |
+| `/t/salon` | Salon new-guest offer (redo promise, stylist matching, service selector) | `salonName, city, specialty, offer, offerValue, stylistCount, rating, reviewCount, deadline` |
+| `/t/mortgage` | Mortgage 60-second pre-approval (soft-pull, NMLS/Equal Housing compliant) | `loName, company, nmls, city, rate, program, closedCount, avgDays, deadline` |
 
 ### v2.0 Pages
 | Path | What it is |
@@ -61,6 +66,12 @@
 
 ### Universal Funnel Params (v2.0 — every template)
 `seoTitle, seoDesc, seoKeywords, canonical, ogImage, theme=dark, noindex=1` — every funnel auto-emits meta description, robots, OG graph, Twitter cards, and JSON-LD ProfessionalService schema; `theme=dark` flips the whole funnel to the RJ Navy dark theme.
+
+### White-Label Client Branding (v3.0 — every template)
+- `bizLogo=https://…` — client logo injected into the funnel hero (above the H1) and swapped into the footer
+- `brandColor=16a34a` (6-digit hex, `#` optional) — re-skins every CTA button, pulse glow, focus ring, text selection, and gradient stat text to the client’s color
+- `accentColor=0ea5e9` — optional secondary color for gradients (defaults to brandColor)
+- Builder has dedicated **White-Label Client Branding** fields — fill them in, generate, and hand the client a funnel that looks 100% theirs
 
 ### Universal Tracking & Conversion Params (v2.2 — every template)
 - **Pixels**: `ga4=G-XXXX`, `gtm=GTM-XXXX`, `metaPixel=ID`, `ttPixel=ID` — official snippets injected server-side; leads fire `generate_lead`, checkout buttons fire `begin_checkout` to all loaded pixels via `window.rjfTrack(event, data)`
@@ -118,6 +129,7 @@ Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coachin
 ## Deployment
 - **Platform**: Cloudflare Pages — LIVE on Rick’s own Cloudflare account (project: rj-funnel-command-center)
 - **Status**: ✅ LIVE in production — https://rj-funnel-command-center.pages.dev
+- **Version**: 3.0.0 — All-In-One System: **white-label client branding** on every funnel (`bizLogo`, `brandColor`, `accentColor` URL params → server-side brand CSS override + motion.js client-logo injection into hero & footer), **5 new premium templates** (restaurant VIP table, dental new-patient, auto-repair inspection, salon new-guest, mortgage pre-approval — all with schema.org types, FAQ JSON-LD, countdown urgency, TCPA-consent forms, compliance language), dashboard now 20 live templates, Builder gains 5 template fieldsets + White-Label Branding section, sitemap/seo-ping/SEO-keeper auto-include all 30 URLs
 - **Version**: 2.5.0 — Premium Pack + SEO Keeper: 3D tilt cards (perspective rotate-on-cursor), conic rotating glow borders on hero glass cards, animated gradient text on hero stats, scroll-parallax hero blobs, blur-in reveal variant, image shimmer skeletons, marquee utility; IndexNow integration (key file route + POST /api/seo-ping) and **rj-seo-keeper Cloudflare Worker** — daily cron (06:07 UTC) fetches the live sitemap, submits all 25 URLs to IndexNow (Bing/Yandex/Seznam/Naver shared index, multi-endpoint fallback) and warms the top 16 funnel pages for fast crawler responses; manual trigger at rj-seo-keeper.rickjefferson.workers.dev/run
 - **Version**: 2.4.0 — Supreme Brand Integration: real RJ logo favicon (white serif RJ monogram on royal-blue radial gradient matching the official logo), BRAND config in helpers (single source of truth), Playfair Display luxury display font on funnel H1s, Glassmorphism 3.0 (Supreme liquid-glass spec), aurora ambient hero layer, kinetic char-by-char H1 typography, magnetic CTA buttons, branded footer block (logo + “Empowering Generational Wealth” tagline) on all 15 funnels, GEO meta (geo.region/placename/position/ICBM) on every page, Organization schema upgraded with logo ImageObject + full NM address + areaServed, apple-touch-icon + theme-color #003399
 - **Version**: 2.3.0 — Gap-Closure: dead-CTA rescue (all 16 placeholder `href="#"` buy/apply buttons across 7 funnels now open a glass lead-capture modal wired to /api/lead with attribution + pixel events), `/sitemap.xml` (all 25 URLs, auto-origin), `/robots.txt` (AI crawlers welcomed: GPTBot, Google-Extended, PerplexityBot, ClaudeBot), universal `/thank-you` page (customizable via `?headline=&msg=&back=`, fires conversion pixels), branded 404 + 500 error pages (app.notFound/onError), `theme-color` meta on all funnels
@@ -126,7 +138,7 @@ Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coachin
 - **Version**: 2.0.0 — SEO/AEO/SGE engine, Stripe + email integrations, dark mode, 50 niche emails, 10 industry compliance packs
 - **Version**: 1.2.0 — 15 live templates + Brand Kit Vault + full RJ Blue rebrand
 - **v1.2 rebrand**: Command Center shell now runs the official RJ Blue + White system — logo in nav, `#2563eb → #0ea5e9` gradients, `rj.*` Tailwind palette, Space Grotesk headings, full brand footer (address, socials, © 2026, policy links), SEO meta description, OG/Twitter cards, and inline JSON-LD Organization schema in `<head>`
-- **Last Updated**: 2026-07-17
+- **Last Updated**: 2026-07-22
 
 ---
 ⚠️ All templates and disclaimers are compliance-engineered from primary sources (CROA 15 U.S.C. §1679, Circular 230, TSR 16 C.F.R. 310, FTC Act §5, FCRA, GLBA, TCPA, CAN-SPAM) but are **not legal advice** — attorney review in your state is required before launch.

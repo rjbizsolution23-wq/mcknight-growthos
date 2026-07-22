@@ -60,6 +60,27 @@ export const funnelHead = (
   if (q.exitDesc && q.exitDesc.trim()) rjfCfg.exitDesc = esc(q.exitDesc.trim())
   if (q.redirect && /^(https?:\/\/|\/)/.test(q.redirect.trim())) rjfCfg.redirect = esc(q.redirect.trim())
 
+  // v3.0 — WHITE-LABEL LAYER: client branding via URL params (sellable all-in-one)
+  //   bizLogo   — client logo URL → injected top-of-hero + footer by motion.js
+  //   brandColor — primary hex → remaps CTA/accent colors across the funnel
+  //   accentColor — secondary hex for gradients (defaults to brandColor)
+  const bizLogo = q.bizLogo && /^https?:\/\//.test(q.bizLogo.trim()) ? esc(q.bizLogo.trim()) : ''
+  const brandColor = q.brandColor && /^#?[0-9a-fA-F]{6}$/.test(q.brandColor.trim()) ? '#' + q.brandColor.trim().replace('#', '') : ''
+  const accentColor = q.accentColor && /^#?[0-9a-fA-F]{6}$/.test(q.accentColor.trim()) ? '#' + q.accentColor.trim().replace('#', '') : brandColor
+  if (bizLogo) rjfCfg.bizLogo = bizLogo
+  if (brandColor) rjfCfg.brandColor = brandColor
+
+  // Brand override CSS — remaps the funnel's orange/blue CTA system to client colors
+  const brandCss = brandColor ? `
+  :root { --rj-client:${brandColor}; --rj-client-2:${accentColor}; }
+  .pulse-glow, .bg-orange-500, [class*="bg-orange-5"] { background-color:${brandColor} !important; background-image:none !important; }
+  .bg-orange-600, .hover\\:bg-orange-600:hover { background-color:${accentColor} !important; }
+  .text-orange-400, .text-orange-500, .text-orange-300 { color:${brandColor} !important; }
+  @keyframes pulseglow { 0%,100% { box-shadow:0 0 0 0 ${brandColor}99; } 50% { box-shadow:0 0 0 12px transparent; } }
+  ::selection { background:${brandColor}; }
+  input:focus,select:focus,textarea:focus { border-color:${brandColor} !important; box-shadow:0 0 0 3px ${brandColor}2e; }
+  .rj-grad-text { background:linear-gradient(100deg,${brandColor} 10%,${accentColor} 50%,${brandColor} 90%); background-size:220% 100%; -webkit-background-clip:text; background-clip:text; }` : ''
+
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': opts.type || 'ProfessionalService',
@@ -234,7 +255,7 @@ ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</
     .mo-blob,.pulse-glow,.pulse-glow::after,.rj-aurora { animation:none; }
     .rj-kinetic .rj-ch { opacity:1; transform:none; animation:none; }
     a,button,i.fas,i.far,i.fab { transition:none; }
-  }${darkCss}
+  }${darkCss}${brandCss}
 </style>
 <script defer src="/static/motion.js"></script>
 <script>window.__RJF=${JSON.stringify(rjfCfg)}</script>

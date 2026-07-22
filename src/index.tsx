@@ -25,6 +25,11 @@ import { homeServicesTemplate } from './templates/homeServices'
 import { medSpaTemplate } from './templates/medSpa'
 import { insuranceTemplate } from './templates/insurance'
 import { agencyTemplate } from './templates/agency'
+import { restaurantTemplate } from './templates/restaurant'
+import { dentalTemplate } from './templates/dental'
+import { autoServicesTemplate } from './templates/autoServices'
+import { salonTemplate } from './templates/salon'
+import { mortgageTemplate } from './templates/mortgage'
 
 const app = new Hono()
 
@@ -64,13 +69,18 @@ app.get('/t/home-services', (c) => html(homeServicesTemplate(c.req.query())))
 app.get('/t/med-spa', (c) => html(medSpaTemplate(c.req.query())))
 app.get('/t/insurance', (c) => html(insuranceTemplate(c.req.query())))
 app.get('/t/agency', (c) => html(agencyTemplate(c.req.query())))
+app.get('/t/restaurant', (c) => html(restaurantTemplate(c.req.query())))
+app.get('/t/dental', (c) => html(dentalTemplate(c.req.query())))
+app.get('/t/auto-services', (c) => html(autoServicesTemplate(c.req.query())))
+app.get('/t/salon', (c) => html(salonTemplate(c.req.query())))
+app.get('/t/mortgage', (c) => html(mortgageTemplate(c.req.query())))
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '2.5.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '3.0.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
 const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/brand', '/seo', '/integrations']
-const FUNNELS = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency']
+const FUNNELS = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency', 'restaurant', 'dental', 'auto-services', 'salon', 'mortgage']
 
 app.get('/sitemap.xml', (c) => {
   const base = new URL(c.req.url).origin

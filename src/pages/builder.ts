@@ -32,6 +32,11 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
         <option value="med-spa">✨ Med Spa New Client Funnel</option>
         <option value="insurance">🛡️ Insurance Quote Funnel</option>
         <option value="agency">🚀 Marketing Agency Growth Audit Funnel</option>
+        <option value="restaurant">🍽️ Restaurant VIP Table Funnel</option>
+        <option value="dental">🦷 Dental New Patient Funnel</option>
+        <option value="auto-services">🚗 Auto Repair Inspection Funnel</option>
+        <option value="salon">✂️ Salon New Guest Funnel</option>
+        <option value="mortgage">🏦 Mortgage Pre-Approval Funnel</option>
       </select>
     </label>
 
@@ -246,6 +251,78 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
       ${field('retainer', 'Monthly Retainer', '$2,500/mo')}
     </fieldset>
 
+    <fieldset data-fields-for="restaurant" class="space-y-3 hidden">
+      ${field('bizName', 'Restaurant Name', 'Casa Bella Trattoria')}
+      ${field('cuisine', 'Cuisine', 'wood-fired Italian')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('offer', 'VIP Offer', 'Free appetizer + dessert for two')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('offerValue', 'Offer Value', '$34')}
+        ${field('rating', 'Star Rating', '4.8')}
+        ${field('reviewCount', 'Review Count', '1,240+')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="dental" class="space-y-3 hidden">
+      ${field('practice', 'Practice Name', 'Bright Smile Dental')}
+      ${field('dentist', 'Dentist Name', 'Dr. Sarah Chen, DDS')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('offer', 'New Patient Offer', 'Exam + X-Rays + Cleaning')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('offerPrice', 'Offer Price', '$99')}
+        ${field('offerValue', 'Regular Value', '$395')}
+        ${field('patientCount', 'Patients Served', '12,000+')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="auto-services" class="space-y-3 hidden">
+      ${field('shopName', 'Shop Name', 'Precision Auto Care')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('service', 'Service Type', 'full-service auto repair')}
+      ${field('offer', 'Intro Offer', '$29 Full-Vehicle Inspection + Oil Change')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('offerValue', 'Offer Value', '$129')}
+        ${field('rating', 'Star Rating', '4.9')}
+        ${field('reviewCount', 'Review Count', '870+')}
+      </div>
+      ${field('warranty', 'Warranty', '24-month / 24,000-mile')}
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="salon" class="space-y-3 hidden">
+      ${field('salonName', 'Salon Name', 'Luxe Studio Salon')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('specialty', 'Specialty', 'balayage & precision color')}
+      ${field('offer', 'New Guest Offer', '30% Off Your First Color + Free Deep-Conditioning Treatment')}
+      <div class="grid grid-cols-4 gap-3">
+        ${field('offerValue', 'Offer Value', '$85')}
+        ${field('stylistCount', 'Stylists', '9')}
+        ${field('rating', 'Star Rating', '4.9')}
+        ${field('reviewCount', 'Reviews', '640+')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="mortgage" class="space-y-3 hidden">
+      ${field('loName', 'Loan Officer Name', 'Marcus Reed')}
+      ${field('company', 'Company Name', 'Summit Home Lending')}
+      <div class="grid grid-cols-2 gap-3">
+        ${field('nmls', 'NMLS Number', 'NMLS #123456')}
+        ${field('city', 'City', 'Albuquerque')}
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        ${field('rate', 'Sample Rate (APR)', '5.99%')}
+        ${field('program', 'Program Focus', 'first-time buyer')}
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        ${field('closedCount', 'Families Funded', '1,400+')}
+        ${field('avgDays', 'Avg Days to Close', '18')}
+      </div>
+      ${field('deadline', 'Rate Lock Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
     <fieldset id="builder-universal" class="mt-6 pt-5 border-t border-blue-900/50 space-y-3">
       <p class="text-sm text-white font-semibold"><i class="fas fa-sliders text-brand-cyan mr-2"></i>Universal Options — SEO / Theme (all templates)</p>
       <label class="flex items-center gap-3 bg-[#060a14] border border-gray-700 rounded-lg px-3 py-3 cursor-pointer">
@@ -260,6 +337,14 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
         ${field('ogImage', 'OG Share Image URL (1200×630)', 'https://yoursite.com/og.jpg')}
       </div>
       <p class="text-[11px] text-gray-500">Every generated funnel auto-includes full meta tags, OG graph, Twitter cards & JSON-LD schema. Need a standalone pack (sitemap, robots.txt, AEO blocks)? Use the <a href="/seo" class="text-blue-300 underline">SEO Engine</a>.</p>
+
+      <p class="text-sm text-white font-semibold pt-3"><i class="fas fa-paintbrush text-brand-cyan mr-2"></i>White-Label Client Branding <span class="text-[10px] text-amber-400 font-mono ml-1">SELL-READY</span></p>
+      ${field('bizLogo', 'Client Logo URL (https… — injected into hero + footer)', 'https://client-site.com/logo.png')}
+      <div class="grid grid-cols-2 gap-3">
+        ${field('brandColor', 'Client Brand Color (6-digit hex)', '#16a34a')}
+        ${field('accentColor', 'Accent Color (optional, defaults to brand)', '#0ea5e9')}
+      </div>
+      <p class="text-[11px] text-gray-500">White-label mode re-skins every CTA, glow, focus ring & gradient to the client\u2019s colors and swaps in their logo — sell any funnel as their own branded system.</p>
 
       <p class="text-sm text-white font-semibold pt-3"><i class="fas fa-chart-line text-brand-cyan mr-2"></i>Tracking Pixels (all optional — paste IDs, done)</p>
       <div class="grid grid-cols-2 gap-3">
