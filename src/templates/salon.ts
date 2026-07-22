@@ -37,7 +37,7 @@ export const salonTemplate = (q: Record<string, string | undefined>) => {
     <div class="grid md:grid-cols-3 gap-6">
       ${[
         ['fa-comments', 'Real Consultations', 'Every appointment starts with a sit-down consult \u2014 inspo photos welcome. We map your color journey before touching a strand.'],
-        ['fa-award', 'Master-Trained Stylists', 'Our team trains quarterly with national color educators. ${specialty.charAt(0).toUpperCase() + specialty.slice(1)} is our signature.'],
+        ['fa-award', 'Master-Trained Stylists', `Our team trains quarterly with national color educators. ${specialty.charAt(0).toUpperCase() + specialty.slice(1)} is our signature.`],
         ['fa-hand-holding-heart', 'The Redo Promise', 'Not 100% in love within 7 days? Come back and we\u2019ll adjust it free. No awkwardness, ever.'],
       ].map(([icon, title, body]) => `
       <article class="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm">

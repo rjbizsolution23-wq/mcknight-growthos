@@ -35,7 +35,7 @@ export const restaurantTemplate = (q: Record<string, string | undefined>) => {
     <div class="grid md:grid-cols-3 gap-5">
       ${[
         ['fa-fire', 'Made from scratch, daily', 'Dough, sauces, and desserts made in-house every morning \u2014 nothing frozen, nothing shipped in.'],
-        ['fa-seedling', 'Local ingredients first', 'We buy from ${city}-area farms and name them on the menu. You taste the difference.'],
+        ['fa-seedling', 'Local ingredients first', `We buy from ${city}-area farms and name them on the menu. You taste the difference.`],
         ['fa-heart', 'Hospitality that remembers you', 'Your server knows the menu cold \u2014 and by visit two, they know your favorite table.'],
       ].map(([icon, title, body]) => `
       <article class="bg-white rounded-2xl p-6 border border-gray-200 text-center">

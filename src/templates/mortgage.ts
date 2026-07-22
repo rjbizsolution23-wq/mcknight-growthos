@@ -38,7 +38,7 @@ export const mortgageTemplate = (q: Record<string, string | undefined>) => {
       ${[
         ['fa-bolt', 'Same-Day Pre-Approval', 'Apply in the morning, shop with a letter by the afternoon. Sellers take your offer seriously from day one.'],
         ['fa-layer-group', 'Every Program, One Place', 'Conventional, FHA, VA, USDA, jumbo, and down-payment assistance \u2014 we shop 40+ lenders so you don\u2019t have to.'],
-        ['fa-phone', 'A Human Who Answers', '${loName} personally guides your file. Nights-and-weekends availability, because homes don\u2019t wait for business hours.'],
+        ['fa-phone', 'A Human Who Answers', `${loName} personally guides your file. Nights-and-weekends availability, because homes don\u2019t wait for business hours.`],
       ].map(([icon, title, body]) => `
       <article class="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm">
         <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl mb-4"><i class="fas ${icon}"></i></div>
@@ -71,7 +71,7 @@ export const mortgageTemplate = (q: Record<string, string | undefined>) => {
     <div class="space-y-3">
       ${[
         ['Will checking my rate hurt my credit?', 'No. The 60-second pre-qualification uses a soft pull that never affects your score. A full credit pull only happens later, with your written consent.'],
-        ['How much do I need for a down payment?', 'Possibly less than you think \u2014 FHA starts at 3.5%, VA and USDA can be 0% down, and ${city} down-payment assistance programs may cover the rest.'],
+        ['How much do I need for a down payment?', `Possibly less than you think \u2014 FHA starts at 3.5%, VA and USDA can be 0% down, and ${city} down-payment assistance programs may cover the rest.`],
         ['I\u2019m self-employed \u2014 can I still qualify?', 'Yes. Bank-statement and 1099 programs are built for business owners. Bring 12\u201324 months of statements and we\u2019ll find your fit.'],
         ['What if my credit isn\u2019t perfect?', 'We fund loans down to 580 FICO on some programs, and if you\u2019re not ready yet, you\u2019ll get a free action plan to get there \u2014 no charge, no obligation.'],
       ].map(([question, a]) => `

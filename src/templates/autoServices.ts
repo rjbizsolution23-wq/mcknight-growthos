@@ -38,7 +38,7 @@ export const autoServicesTemplate = (q: Record<string, string | undefined>) => {
       ${[
         ['fa-camera', 'Photo & Video Proof', 'Every recommended repair comes with photos or video of YOUR vehicle \u2014 no mystery upsells, ever.'],
         ['fa-file-invoice-dollar', 'Upfront Digital Estimates', 'Approve or decline each line item from your phone. Nothing gets touched without your OK.'],
-        ['fa-user-check', 'ASE-Certified Techs', 'Master-certified technicians and a ${warranty} nationwide warranty on parts and labor.'],
+        ['fa-user-check', 'ASE-Certified Techs', `Master-certified technicians and a ${warranty} nationwide warranty on parts and labor.`],
       ].map(([icon, title, body]) => `
       <article class="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm">
         <div class="w-14 h-14 mx-auto rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-2xl mb-4"><i class="fas ${icon}"></i></div>
@@ -69,7 +69,7 @@ export const autoServicesTemplate = (q: Record<string, string | undefined>) => {
         ['Is there a catch with the intro offer?', 'No. It\u2019s how we earn new customers. You get the inspection and oil change at the intro price \u2014 whether or not you approve any repairs.'],
         ['How long does the inspection take?', 'About 60\u201390 minutes. Comfortable waiting area with Wi-Fi, or we\u2019ll text you when it\u2019s done if you drop off.'],
         ['Do you work on all makes and models?', 'Yes \u2014 domestic, Asian, and European vehicles, including diesel trucks and hybrids.'],
-        ['What if you find something serious?', 'You get photos, a plain-English explanation, and a written estimate. You decide \u2014 zero pressure, and the ${warranty} warranty covers anything we fix.'],
+        ['What if you find something serious?', `You get photos, a plain-English explanation, and a written estimate. You decide \u2014 zero pressure, and the ${warranty} warranty covers anything we fix.`],
       ].map(([question, a]) => `
       <details class="bg-white rounded-xl border border-gray-200 p-5 group">
         <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">${question}<i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i></summary>
