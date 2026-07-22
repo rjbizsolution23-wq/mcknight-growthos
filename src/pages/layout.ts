@@ -17,6 +17,12 @@ export const shell = (title: string, active: string, content: string, extraHead 
 <meta name="twitter:description" content="AI-powered automation, credit technology, funnels, and growth systems for businesses ready to scale.">
 <meta name="twitter:image" content="https://storage.googleapis.com/msgsndr/qQnxRHDtyx0uydPd5sRl/media/67eb83c5e519ed689430646b.jpeg">
 <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="apple-touch-icon" href="https://storage.googleapis.com/msgsndr/qQnxRHDtyx0uydPd5sRl/media/67eb83c5e519ed689430646b.jpeg">
+<meta name="theme-color" content="#003399">
+<meta name="geo.region" content="US-NM">
+<meta name="geo.placename" content="Tijeras, New Mexico">
+<meta name="geo.position" content="35.0620;-106.3861">
+<meta name="ICBM" content="35.0620, -106.3861">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"RJ Business Solutions","legalName":"RJ Business Solutions","url":"https://rjbusinesssolutions.org","logo":"https://storage.googleapis.com/msgsndr/qQnxRHDtyx0uydPd5sRl/media/67eb83c5e519ed689430646b.jpeg","email":"support@rjbusinesssolutions.org","founder":{"@type":"Person","name":"Rick Jefferson","url":"https://www.linkedin.com/in/rick-jefferson-314998235"},"address":{"@type":"PostalAddress","streetAddress":"1342 NM 333","addressLocality":"Tijeras","addressRegion":"NM","postalCode":"87059","addressCountry":"US"},"sameAs":["https://www.linkedin.com/in/rick-jefferson-314998235","https://www.tiktok.com/@rick_jeff_solution","https://twitter.com/ricksolutions1"],"contactPoint":{"@type":"ContactPoint","contactType":"Customer Support","email":"support@rjbusinesssolutions.org"}}</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">

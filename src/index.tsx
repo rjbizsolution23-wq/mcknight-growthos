@@ -66,7 +66,7 @@ app.get('/t/insurance', (c) => html(insuranceTemplate(c.req.query())))
 app.get('/t/agency', (c) => html(agencyTemplate(c.req.query())))
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '2.3.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '2.4.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
 const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/brand', '/seo', '/integrations']

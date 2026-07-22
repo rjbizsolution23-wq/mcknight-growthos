@@ -133,13 +133,67 @@
     counters.forEach(c => { c.el.style.fontVariantNumeric = 'tabular-nums'; cio.observe(c.el) })
   }
 
-  // ── 5 · Copyright line on every funnel footer ────────────────
+  // ── 5 · Branded copyright block on every funnel footer (RJ logo + tagline) ──
   const footer = document.querySelector('body > footer, footer:last-of-type')
   if (footer && !footer.querySelector('.mo-copyright')) {
-    const p = document.createElement('p')
-    p.className = 'mo-copyright'
-    p.style.cssText = 'margin-top:14px;font-size:11px;opacity:.75'
-    p.innerHTML = `© ${new Date().getFullYear()} All rights reserved. · Funnel system by <a href="https://rjbusinesssolutions.org" style="text-decoration:underline">RJ Business Solutions</a>`
-    footer.appendChild(p)
+    const wrap = document.createElement('div')
+    wrap.className = 'mo-copyright'
+    wrap.style.cssText = 'margin-top:18px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;opacity:.8'
+    wrap.innerHTML =
+      `<img src="https://storage.googleapis.com/msgsndr/qQnxRHDtyx0uydPd5sRl/media/67eb83c5e519ed689430646b.jpeg" alt="RJ Business Solutions logo" loading="lazy" style="width:44px;height:44px;border-radius:10px;object-fit:cover;box-shadow:0 4px 14px rgba(0,51,153,.35)">` +
+      `<p style="margin:0;letter-spacing:.14em;text-transform:uppercase;font-size:9px;opacity:.85">Empowering Generational Wealth</p>` +
+      `<p style="margin:0">© ${new Date().getFullYear()} All rights reserved. · Funnel system by <a href="https://rjbusinesssolutions.org" style="text-decoration:underline">RJ Business Solutions</a></p>`
+    footer.appendChild(wrap)
+  }
+
+  // ── 6 · Aurora ambient layer in hero (Supreme spec) ────────────
+  if (hero && !reduced && !hero.querySelector('.rj-aurora')) {
+    const au = document.createElement('div')
+    au.className = 'rj-aurora'
+    au.setAttribute('aria-hidden', 'true')
+    hero.prepend(au)
+  }
+
+  // ── 7 · Kinetic hero typography — char-by-char reveal on the H1 ──
+  const h1 = hero ? hero.querySelector('h1') : document.querySelector('h1')
+  if (h1 && !reduced && h1.textContent.trim().length > 0 && h1.textContent.trim().length <= 120 && !h1.querySelector('img,svg')) {
+    const walk = (node, state) => {
+      Array.from(node.childNodes).forEach(child => {
+        if (child.nodeType === 3) {
+          const frag = document.createDocumentFragment()
+          child.textContent.split('').forEach(ch => {
+            if (ch === ' ') { frag.appendChild(document.createTextNode(' ')); return }
+            const s = document.createElement('span')
+            s.className = 'rj-ch'
+            s.style.setProperty('--ch-d', Math.min(state.i * 22, 1200) + 'ms')
+            s.textContent = ch
+            frag.appendChild(s)
+            state.i++
+          })
+          node.replaceChild(frag, child)
+        } else if (child.nodeType === 1 && !child.classList.contains('rj-ch')) walk(child, state)
+      })
+    }
+    walk(h1, { i: 0 })
+    h1.classList.add('rj-kinetic')
+  }
+
+  // ── 8 · Magnetic buttons (Supreme spec) — primary CTAs follow the cursor ──
+  if (!reduced && window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.pulse-glow, a[class*="grad-bg"], button[type="submit"]').forEach(btn => {
+      btn.classList.add('rj-magnetic')
+      let raf = null
+      btn.addEventListener('mousemove', (e) => {
+        if (raf) return
+        raf = requestAnimationFrame(() => {
+          const r = btn.getBoundingClientRect()
+          const dx = (e.clientX - r.left - r.width / 2) / (r.width / 2)
+          const dy = (e.clientY - r.top - r.height / 2) / (r.height / 2)
+          btn.style.transform = `translate(${dx * 5}px, ${dy * 4}px) scale(1.02)`
+          raf = null
+        })
+      })
+      btn.addEventListener('mouseleave', () => { if (raf) { cancelAnimationFrame(raf); raf = null } btn.style.transform = '' })
+    })
   }
 })()
