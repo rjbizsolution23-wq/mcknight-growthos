@@ -8,8 +8,9 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { pushLeadToGHL, ghlStatus, ghlConfigured, type GhlEnv } from './ghl'
 import { generateFunnelCopy, generateLeadInsights, aiConfigured, type AiEnv } from './ai'
+import { fanOutLead, hooksConfigured, type HooksEnv, type HookResult } from './hooks'
 
-type Bindings = GhlEnv & AiEnv & {
+type Bindings = GhlEnv & AiEnv & HooksEnv & {
   STRIPE_SECRET_KEY?: string
   RESEND_API_KEY?: string
   LEAD_NOTIFY_EMAIL?: string
@@ -66,6 +67,13 @@ api.post('/lead', async (c) => {
   // ── v3.3: permanent D1 storage → powers the /leads Lead Inbox CRM ──
   const db = await saveLeadToD1(c.env, clean, ghl.contactId)
 
+  // ── v3.4: Integration fan-out (Zapier/Make webhook, Slack, Discord,
+  // Telegram, Twilio SMS, Airtable) — all configured channels fire in
+  // parallel; failures are reported but never break the lead.
+  let hooks: HookResult[] = []
+  try { hooks = await fanOutLead(c.env, clean) } catch { /* never throws, belt+suspenders */ }
+  const hooksOut = hooks.length ? Object.fromEntries(hooks.map((h) => [h.channel, h.ok ? true : (h.error || false)])) : undefined
+
   const key = c.env?.RESEND_API_KEY
   const to = c.env?.LEAD_NOTIFY_EMAIL || 'support@rjbusinesssolutions.org'
   const from = c.env?.LEAD_FROM_EMAIL || 'RJ Funnels <onboarding@resend.dev>'
@@ -73,7 +81,7 @@ api.post('/lead', async (c) => {
   if (!key) {
     // No email key configured — accept the lead so funnels never break,
     // flag that delivery is not wired yet.
-    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: ghl.ok ? 'Lead synced to GoHighLevel. Set RESEND_API_KEY to also enable email delivery.' : 'Lead accepted. Set RESEND_API_KEY and/or GHL_API_KEY to enable delivery (see /integrations).' })
+    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: ghl.ok ? 'Lead synced to GoHighLevel. Set RESEND_API_KEY to also enable email delivery.' : 'Lead accepted. Set RESEND_API_KEY and/or GHL_API_KEY to enable delivery (see /integrations).' })
   }
 
   const rows = Object.entries(clean)
@@ -96,9 +104,27 @@ api.post('/lead', async (c) => {
   })
   if (!res.ok) {
     const err = await res.text()
-    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: 'Lead accepted; email delivery failed', providerError: err.slice(0, 300) }, 200)
+    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: 'Lead accepted; email delivery failed', providerError: err.slice(0, 300) }, 200)
   }
-  return c.json({ ok: true, delivered: true, stored: db.saved, leadId: db.id, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, opportunity: ghl.opportunity, workflow: ghl.workflow, error: ghl.error } : undefined })
+  return c.json({ ok: true, delivered: true, stored: db.saved, leadId: db.id, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, opportunity: ghl.opportunity, workflow: ghl.workflow, error: ghl.error } : undefined })
+})
+
+// ── v3.4: GET /api/hooks/status — which fan-out channels are configured ──
+api.get('/hooks/status', (c) => c.json({ ok: true, channels: hooksConfigured(c.env) }))
+
+// ── v3.4: POST /api/hooks/test — send a test alert through every configured channel ──
+api.post('/hooks/test', async (c) => {
+  const cfg = hooksConfigured(c.env)
+  const anyOn = Object.values(cfg).some(Boolean)
+  if (!anyOn) return c.json({ ok: false, error: 'No integrations configured yet — set at least one secret (see /integrations).', channels: cfg }, 400)
+  const results = await fanOutLead(c.env, {
+    name: 'Integration Test',
+    email: 'test@rjbusinesssolutions.org',
+    phone: '+15055550100',
+    _source: '/t/integration-test',
+    _utm_campaign: 'hooks-test'
+  })
+  return c.json({ ok: results.every((r) => r.ok), results })
 })
 
 // ── v3.3: Lead Inbox CRM API (D1-backed) ─────────────────────
@@ -301,4 +327,4 @@ api.post('/seo-ping', async (c) => {
 })
 
 // ── Health ─────────────────────────────────────────────────────
-api.get('/health', (c) => c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env) }))
+api.get('/health', (c) => c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), hooks: hooksConfigured(c.env) }))

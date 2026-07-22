@@ -273,7 +273,38 @@ if (intStripe) {
     }
     set(intStripe, d.stripe, 'Stripe')
     set(document.getElementById('int-status-email'), d.email, 'Email')
+    // v3.4: fan-out channel badges
+    if (d.hooks) {
+      const labels = { webhook: 'Zapier/Make', slack: 'Slack', discord: 'Discord', telegram: 'Telegram', twilio: 'Twilio SMS', airtable: 'Airtable' }
+      Object.keys(labels).forEach(k => {
+        const el = document.getElementById('int-status-' + k)
+        if (el) set(el, d.hooks[k], labels[k])
+      })
+    }
   }).catch(() => {})
+
+  // v3.4: test-all-channels button
+  const hooksBtn = document.getElementById('btn-hooks-test')
+  if (hooksBtn) hooksBtn.addEventListener('click', async () => {
+    const out = document.getElementById('hooks-test-out')
+    hooksBtn.disabled = true
+    hooksBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Sending…'
+    out.classList.remove('hidden')
+    out.textContent = 'Firing test alert to every configured channel…'
+    try {
+      const r = await fetch('/api/hooks/test', { method: 'POST' })
+      const d = await r.json()
+      if (d.results && d.results.length) {
+        out.textContent = d.results.map(x => (x.ok ? '✓ ' + x.channel + ': delivered' : '✗ ' + x.channel + ': ' + (x.error || 'failed'))).join('\n')
+      } else {
+        out.textContent = '⚠ ' + (d.error || 'No channels configured yet — set at least one secret above.')
+      }
+    } catch (e) {
+      out.textContent = '⚠ Could not reach the test endpoint.'
+    }
+    hooksBtn.disabled = false
+    hooksBtn.innerHTML = '<i class="fas fa-paper-plane mr-1"></i>Send Test Alert'
+  })
   // v3.1: GoHighLevel deep status (live API connection check, not just key presence)
   const intGhl = document.getElementById('int-status-ghl')
   if (intGhl) {

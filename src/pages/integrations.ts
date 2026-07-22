@@ -2,12 +2,95 @@ import { shell, copyBlock } from './layout'
 
 export const integrationsPage = () => shell('Integrations', 'integrations', `
 <section id="int-hero" class="mb-10">
-  <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2"><i class="fas fa-plug grad-text mr-2"></i>Integrations — <span class="grad-text">GoHighLevel, Stripe & Email</span></h1>
-  <p class="text-gray-400 max-w-3xl">CRM sync, payments and lead delivery are wired into every funnel out of the box. Add your secrets and you're live — no code changes.</p>
-  <div id="int-status" class="mt-4 flex gap-3 text-xs flex-wrap">
+  <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2"><i class="fas fa-plug grad-text mr-2"></i>Integration <span class="grad-text">Hub</span></h1>
+  <p class="text-gray-400 max-w-3xl">GoHighLevel, Stripe, Email, Zapier/Make, Slack, Discord, Telegram, Twilio SMS and Airtable — all wired into every funnel out of the box. On each lead, every configured channel fires <strong class="text-white">in parallel</strong>. Add only the secrets you want; nothing can ever break a funnel.</p>
+  <div id="int-status" class="mt-4 flex gap-2 text-xs flex-wrap">
     <span id="int-status-ghl" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fas fa-arrows-rotate mr-1"></i>GoHighLevel: checking…</span>
     <span id="int-status-stripe" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fab fa-stripe mr-1"></i>Stripe: checking…</span>
     <span id="int-status-email" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fas fa-envelope mr-1"></i>Email: checking…</span>
+    <span id="int-status-webhook" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fas fa-bolt mr-1"></i>Zapier/Make: checking…</span>
+    <span id="int-status-slack" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fab fa-slack mr-1"></i>Slack: checking…</span>
+    <span id="int-status-discord" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fab fa-discord mr-1"></i>Discord: checking…</span>
+    <span id="int-status-telegram" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fab fa-telegram mr-1"></i>Telegram: checking…</span>
+    <span id="int-status-twilio" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fas fa-comment-sms mr-1"></i>Twilio SMS: checking…</span>
+    <span id="int-status-airtable" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fas fa-table mr-1"></i>Airtable: checking…</span>
+  </div>
+</section>
+
+<!-- v3.4 FAN-OUT HUB -->
+<section id="int-fanout" class="mb-12">
+  <h2 class="text-2xl font-bold text-white mb-2"><i class="fas fa-tower-broadcast text-brand-cyan mr-2"></i>Lead Fan-Out <span class="text-[10px] text-amber-400 font-mono ml-1 align-middle">v3.4 · 6 CHANNELS</span></h2>
+  <p class="text-gray-400 text-sm mb-5 max-w-3xl">Every lead simultaneously: saved to D1 → synced to GHL → emailed → <strong class="text-white">broadcast to every channel below that has secrets set</strong>. Test everything at once with the button at the bottom.</p>
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
+
+    <div class="card p-5">
+      <h3 class="font-bold text-white text-sm mb-2"><i class="fas fa-bolt text-amber-400 mr-2"></i>Zapier / Make / n8n <span class="text-[9px] font-mono bg-blue-900/60 text-blue-300 px-1.5 py-0.5 rounded">6,000+ APPS</span></h3>
+      <p class="text-xs text-gray-400 mb-3">Generic JSON webhook → connect leads to Google Sheets, HubSpot, Salesforce, Notion, anything. Payload: <code class="text-blue-300">{event, at, funnel, lead{…}}</code></p>
+      <ol class="text-[11px] text-gray-400 space-y-1 list-decimal list-inside mb-2">
+        <li>Zapier: create Zap → trigger “Webhooks by Zapier → Catch Hook” → copy URL</li>
+        <li>Make: add “Custom webhook” module → copy URL</li>
+        <li><code class="text-blue-300">wrangler pages secret put LEAD_WEBHOOK_URL</code></li>
+      </ol>
+    </div>
+
+    <div class="card p-5">
+      <h3 class="font-bold text-white text-sm mb-2"><i class="fab fa-slack text-purple-400 mr-2"></i>Slack Alerts</h3>
+      <p class="text-xs text-gray-400 mb-3">Rich lead card in any channel — name, funnel, contact info, campaign + link to the Lead Inbox.</p>
+      <ol class="text-[11px] text-gray-400 space-y-1 list-decimal list-inside mb-2">
+        <li>api.slack.com/apps → Create App → Incoming Webhooks → On</li>
+        <li>“Add New Webhook to Workspace” → pick channel → copy URL</li>
+        <li><code class="text-blue-300">wrangler pages secret put SLACK_WEBHOOK_URL</code></li>
+      </ol>
+    </div>
+
+    <div class="card p-5">
+      <h3 class="font-bold text-white text-sm mb-2"><i class="fab fa-discord text-indigo-400 mr-2"></i>Discord Alerts</h3>
+      <p class="text-xs text-gray-400 mb-3">Branded embed card per lead — great for team servers or client war-rooms.</p>
+      <ol class="text-[11px] text-gray-400 space-y-1 list-decimal list-inside mb-2">
+        <li>Channel → ⚙️ Edit Channel → Integrations → Webhooks → New</li>
+        <li>Copy Webhook URL</li>
+        <li><code class="text-blue-300">wrangler pages secret put DISCORD_WEBHOOK_URL</code></li>
+      </ol>
+    </div>
+
+    <div class="card p-5">
+      <h3 class="font-bold text-white text-sm mb-2"><i class="fab fa-telegram text-sky-400 mr-2"></i>Telegram Alerts</h3>
+      <p class="text-xs text-gray-400 mb-3">Lead pings straight to your phone (or a client group chat) via your own bot.</p>
+      <ol class="text-[11px] text-gray-400 space-y-1 list-decimal list-inside mb-2">
+        <li>Message <code class="text-blue-300">@BotFather</code> → /newbot → copy token</li>
+        <li>Message your bot once, then visit <code class="text-blue-300">api.telegram.org/bot&lt;TOKEN&gt;/getUpdates</code> → copy <code class="text-blue-300">chat.id</code></li>
+        <li>Set <code class="text-blue-300">TELEGRAM_BOT_TOKEN</code> + <code class="text-blue-300">TELEGRAM_CHAT_ID</code></li>
+      </ol>
+    </div>
+
+    <div class="card p-5">
+      <h3 class="font-bold text-white text-sm mb-2"><i class="fas fa-comment-sms text-red-400 mr-2"></i>Twilio SMS <span class="text-[9px] font-mono bg-emerald-900/60 text-emerald-300 px-1.5 py-0.5 rounded">SPEED-TO-LEAD</span></h3>
+      <p class="text-xs text-gray-400 mb-3">Text alert the second a lead lands — calling within 5 minutes multiplies contact rates.</p>
+      <ol class="text-[11px] text-gray-400 space-y-1 list-decimal list-inside mb-2">
+        <li>console.twilio.com → copy Account SID + Auth Token</li>
+        <li>Buy/verify a From number; To = your cell</li>
+        <li>Set <code class="text-blue-300">TWILIO_ACCOUNT_SID</code>, <code class="text-blue-300">TWILIO_AUTH_TOKEN</code>, <code class="text-blue-300">TWILIO_FROM</code>, <code class="text-blue-300">TWILIO_TO</code></li>
+      </ol>
+    </div>
+
+    <div class="card p-5">
+      <h3 class="font-bold text-white text-sm mb-2"><i class="fas fa-table text-yellow-400 mr-2"></i>Airtable Rows <span class="text-[9px] font-mono bg-blue-900/60 text-blue-300 px-1.5 py-0.5 rounded">CLIENT-SHAREABLE</span></h3>
+      <p class="text-xs text-gray-400 mb-3">Every lead appended to a base — share a filtered view with each client, zero exports.</p>
+      <ol class="text-[11px] text-gray-400 space-y-1 list-decimal list-inside mb-2">
+        <li>airtable.com/create/tokens → PAT with <code class="text-blue-300">data.records:write</code> scope + your base</li>
+        <li>Base with fields: Name, Email, Phone, Funnel, Source, Campaign, Payload, Created At</li>
+        <li>Set <code class="text-blue-300">AIRTABLE_API_KEY</code>, <code class="text-blue-300">AIRTABLE_BASE_ID</code> (appXXXX from base URL), optional <code class="text-blue-300">AIRTABLE_TABLE</code> (default “Leads”)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="card p-5 flex flex-wrap items-center gap-4">
+    <div class="flex-1 min-w-[240px]">
+      <h3 class="font-bold text-white text-sm mb-1"><i class="fas fa-vial-circle-check text-brand-success mr-2"></i>Test all channels at once</h3>
+      <p class="text-xs text-gray-400">Sends a sample “Integration Test” lead through every configured channel and reports per-channel results. Nothing is saved to your Lead Inbox.</p>
+    </div>
+    <button id="btn-hooks-test" class="grad-bg text-white text-sm font-bold px-5 py-2.5 rounded-lg hover:opacity-90"><i class="fas fa-paper-plane mr-1"></i>Send Test Alert</button>
+    <pre id="hooks-test-out" class="w-full text-xs text-gray-300 bg-[#060a14] border border-blue-900/40 rounded-lg p-3 hidden whitespace-pre-wrap"></pre>
   </div>
 </section>
 
@@ -163,6 +246,16 @@ document.querySelectorAll('[data-tier]').forEach(btn => btn.addEventListener('cl
         <tr><td class="py-2 pr-4 font-mono text-blue-300">GHL_PIPELINE_ID</td><td class="py-2 pr-4">/api/lead</td><td class="py-2 pr-4">Auto-opportunities (optional)</td><td class="py-2 font-mono">wrangler pages secret put GHL_PIPELINE_ID</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">GHL_STAGE_ID</td><td class="py-2 pr-4">/api/lead</td><td class="py-2 pr-4">Pipeline stage (with pipeline)</td><td class="py-2 font-mono">wrangler pages secret put GHL_STAGE_ID</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">GHL_WORKFLOW_ID</td><td class="py-2 pr-4">/api/lead</td><td class="py-2 pr-4">Workflow enrollment (optional)</td><td class="py-2 font-mono">wrangler pages secret put GHL_WORKFLOW_ID</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">LEAD_WEBHOOK_URL</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Zapier / Make / n8n / custom webhook</td><td class="py-2 font-mono">wrangler pages secret put LEAD_WEBHOOK_URL</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">SLACK_WEBHOOK_URL</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Slack lead alerts</td><td class="py-2 font-mono">wrangler pages secret put SLACK_WEBHOOK_URL</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">DISCORD_WEBHOOK_URL</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Discord lead alerts</td><td class="py-2 font-mono">wrangler pages secret put DISCORD_WEBHOOK_URL</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">TELEGRAM_BOT_TOKEN</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Telegram alerts (with chat id)</td><td class="py-2 font-mono">wrangler pages secret put TELEGRAM_BOT_TOKEN</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">TELEGRAM_CHAT_ID</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Destination chat/group</td><td class="py-2 font-mono">wrangler pages secret put TELEGRAM_CHAT_ID</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">TWILIO_ACCOUNT_SID</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">SMS alerts (with 3 below)</td><td class="py-2 font-mono">wrangler pages secret put TWILIO_ACCOUNT_SID</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">TWILIO_AUTH_TOKEN</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Twilio auth</td><td class="py-2 font-mono">wrangler pages secret put TWILIO_AUTH_TOKEN</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">TWILIO_FROM / TWILIO_TO</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Sender number / your cell</td><td class="py-2 font-mono">wrangler pages secret put TWILIO_FROM · …TWILIO_TO</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">AIRTABLE_API_KEY</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Airtable rows (with base id)</td><td class="py-2 font-mono">wrangler pages secret put AIRTABLE_API_KEY</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">AIRTABLE_BASE_ID / AIRTABLE_TABLE</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Base (appXXXX) / table (default “Leads”)</td><td class="py-2 font-mono">wrangler pages secret put AIRTABLE_BASE_ID</td></tr>
       </tbody>
     </table>
   </div>

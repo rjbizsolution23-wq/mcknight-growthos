@@ -103,6 +103,16 @@ Never blocks the funnel — if GHL is down/unconfigured, leads are still accepte
 ### Integrations Secrets
 Copy `.dev.vars.example` → `.dev.vars` locally; production via `wrangler pages secret put`: `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL`, `LEAD_FROM_EMAIL`.
 
+## v3.4 — Integration Hub (Lead Fan-Out)
+On every lead, all configured channels fire **in parallel** (none can break a funnel):
+- **Zapier / Make / n8n** — `LEAD_WEBHOOK_URL` receives `{event:'lead.created', at, funnel, lead{…}}` → connect to 6,000+ apps
+- **Slack** — `SLACK_WEBHOOK_URL` → Block Kit lead card (name/funnel/contact/campaign + Lead Inbox link)
+- **Discord** — `DISCORD_WEBHOOK_URL` → branded embed card
+- **Telegram** — `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` → phone-speed alerts
+- **Twilio SMS** — `TWILIO_ACCOUNT_SID/AUTH_TOKEN/FROM/TO` → speed-to-lead text alerts
+- **Airtable** — `AIRTABLE_API_KEY` + `AIRTABLE_BASE_ID` (+`AIRTABLE_TABLE`, default “Leads”) → client-shareable base rows
+- APIs: `GET /api/hooks/status` (configured channels) · `POST /api/hooks/test` (test alert through every channel w/ per-channel results) · /integrations has live badges per channel + a one-click “Send Test Alert” button; lead responses include `hooks:{channel:true|error}`
+
 ## v3.3 — Cloudflare-Native Layer (D1 + Workers AI)
 - **Lead Inbox CRM (`/leads`)** — every lead from all 30 funnels auto-stored in Cloudflare D1 (`rj-funnel-leads` DB): stats cards, funnel/status/search filters, clickable pipeline statuses (new → contacted → qualified → won/lost), CSV export (`/api/leads/export.csv`, 5K rows, full UTM + GHL attribution)
 - **AI Lead Insights** — one click on /leads: Workers AI (llama-4-scout, runs on the same Cloudflare account — zero API keys) summarizes volume, names the top 3 leads to call first, flags campaign patterns (`POST /api/ai/insights`)
@@ -158,6 +168,7 @@ Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coachin
 ## Deployment
 - **Platform**: Cloudflare Pages — LIVE on Rick’s own Cloudflare account (project: rj-funnel-command-center)
 - **Status**: ✅ LIVE in production — https://rj-funnel-command-center.pages.dev
+- **Version**: 3.4.0 — Integration Hub: parallel lead fan-out to 6 new channels (Zapier/Make/n8n generic webhook, Slack Block Kit cards, Discord embeds, Telegram bot alerts, Twilio SMS speed-to-lead, Airtable rows), `GET /api/hooks/status` + `POST /api/hooks/test`, /integrations redesigned as Integration Hub (9 live status badges, per-channel setup guides, test-all button), 13 new optional secrets in `.dev.vars.example`, health exposes per-channel config — all channels never-throw so funnels can’t break
 - **Version**: 3.3.0 — Cloudflare-Native Layer: **D1 database** (permanent lead storage on every form submit + short funnel links `/f/{code}` with click tracking) + **Workers AI LLM** (llama-4-scout, zero API keys — AI Copy Fill in Builder writes every template field from a one-line client brief; AI Lead Insights on /leads names who to call first), new **/leads Lead Inbox CRM** (stats, filters, pipeline statuses, CSV export with full UTM/GHL attribution), lead API (`/api/leads[.../stats|/:id|/export.csv]`), links API (`/api/links`), fixed wedding-venue `style` param shadowing form.style (now `venueStyle`)
 - **Version**: 3.2.0 — Niche Expansion Pack: **10 new premium templates** (chiropractic new-patient, pet care/vet, landscaping design, cleaning service, childcare enrollment, tutoring assessment, CPA tax savings, photography mini-session, wedding venue tour, moving company quote — each with unique gradient color scheme, schema.org type, FAQ JSON-LD, countdown urgency, TCPA-consent lead forms), dashboard now 30 live templates, Builder gains 10 template fieldsets, sitemap/seo-ping/SEO-keeper auto-include all 40 URLs
 - **Version**: 3.1.0 — GoHighLevel Integration: full LeadConnector API v2 sync on every lead (contact upsert w/ dedupe → auto-tags incl. funnel slug + UTM campaign + custom `?ghlTag=` per-link tags → attribution note → optional pipeline opportunity → optional workflow enrollment), `GET /api/ghl/status` live connection check, GoHighLevel section on /integrations (setup guide, test curls, pipeline/workflow ID discovery commands, live status badge), Builder GHL tags field, 5 new secrets (`GHL_API_KEY`, `GHL_LOCATION_ID`, `GHL_PIPELINE_ID`, `GHL_STAGE_ID`, `GHL_WORKFLOW_ID`), graceful no-config fallback so funnels never break
