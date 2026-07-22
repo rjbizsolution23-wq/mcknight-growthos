@@ -2,7 +2,7 @@ import { shell } from './layout'
 
 export const dashboardPage = () => shell('Dashboard', 'dashboard', `
 <section id="hero-section" class="text-center py-10">
-  <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-4"><i class="fas fa-bolt mr-1"></i>SUPREME FUNNEL SYSTEM v3.4 — 30 TEMPLATES · D1 CRM · WORKERS AI · 9 INTEGRATIONS</p>
+  <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-4"><i class="fas fa-bolt mr-1"></i>SUPREME FUNNEL SYSTEM v3.5 — 30 TEMPLATES · D1 CRM · WORKERS AI · 9 INTEGRATIONS · ENTERPRISE SECURITY · AI SOCIAL POSTS</p>
   <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">The <span class="grad-text">Funnel Command Center</span></h1>
   <p class="text-gray-400 max-w-2xl mx-auto text-lg">30 compliance-engineered live funnel templates across events, tax, credit, and every major local-business niche — all white-label ready with client logo + brand color injection — plus email vaults, legal disclaimer libraries, and a parameterized funnel builder. Customize and deploy.</p>
 </section>

@@ -8,6 +8,15 @@ export const leadsPage = () => shell('Lead Inbox', 'leads', `
   <p class="text-gray-400 max-w-3xl">Every form submission from all 30 funnels lands here automatically — stored in your Cloudflare D1 database. Filter, work the pipeline, export CSV for clients, and let AI tell you who to call first.</p>
 </section>
 
+<section id="admin-lock" class="card p-4 mb-6 hidden border !border-amber-700/60">
+  <div class="flex items-center flex-wrap gap-3">
+    <p class="text-sm text-amber-300 font-semibold"><i class="fas fa-lock mr-2"></i>This inbox is protected by an admin key.</p>
+    <input id="admin-key-input" type="password" placeholder="Enter ADMIN_API_KEY…" class="bg-[#060a14] border border-amber-800/60 rounded-lg px-3 py-2 text-sm text-white w-64">
+    <button id="btn-unlock" class="grad-bg text-white text-sm font-semibold px-4 py-2 rounded-lg hover:opacity-90"><i class="fas fa-unlock mr-1"></i>Unlock</button>
+    <span id="unlock-status" class="text-xs text-gray-500"></span>
+  </div>
+</section>
+
 <section id="lead-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
   <div class="card p-5 text-center"><p class="text-3xl font-extrabold grad-text" id="stat-total">—</p><p class="text-xs text-gray-500 mt-1">Total Leads</p></div>
   <div class="card p-5 text-center"><p class="text-3xl font-extrabold text-brand-success" id="stat-today">—</p><p class="text-xs text-gray-500 mt-1">Today</p></div>
@@ -32,7 +41,7 @@ export const leadsPage = () => shell('Lead Inbox', 'leads', `
     <option value="new">New</option><option value="contacted">Contacted</option><option value="qualified">Qualified</option><option value="won">Won</option><option value="lost">Lost</option>
   </select>
   <button id="btn-refresh" class="text-sm text-gray-300 border border-gray-700 px-3 py-2 rounded-lg hover:bg-gray-800"><i class="fas fa-rotate mr-1"></i>Refresh</button>
-  <a href="/api/leads/export.csv" class="ml-auto text-sm text-brand-cyan border border-blue-800 px-3 py-2 rounded-lg hover:bg-blue-900/30"><i class="fas fa-file-csv mr-1"></i>Export CSV</a>
+  <a href="/api/leads/export.csv" id="csv-link" class="ml-auto text-sm text-brand-cyan border border-blue-800 px-3 py-2 rounded-lg hover:bg-blue-900/30"><i class="fas fa-file-csv mr-1"></i>Export CSV</a>
 </section>
 
 <section id="lead-table-wrap" class="card p-0 overflow-x-auto mb-10">
@@ -60,12 +69,22 @@ export const leadsPage = () => shell('Lead Inbox', 'leads', `
 <script>
 (function(){
   var offset = 0, limit = 50, total = 0;
+  // v3.5: admin key (only needed when ADMIN_API_KEY secret is set server-side)
+  var KEY_STORE = 'rjf_admin_key';
+  function adminKey(){ try { return localStorage.getItem(KEY_STORE) || ''; } catch(e){ return ''; } }
+  function hdrs(extra){ var h = extra || {}; var k = adminKey(); if (k) h['x-admin-key'] = k; return h; }
+  function syncCsvLink(){ var a = document.getElementById('csv-link'); var k = adminKey(); a.href = '/api/leads/export.csv' + (k ? '?key=' + encodeURIComponent(k) : ''); }
+  function showLock(msg){
+    document.getElementById('admin-lock').classList.remove('hidden');
+    if (msg) document.getElementById('unlock-status').textContent = msg;
+  }
+  function handle401(){ showLock(adminKey() ? 'Key rejected — check it and try again.' : ''); showEmpty('Locked — enter your admin key above to view leads.'); }
   var STATUSES = ['new','contacted','qualified','won','lost'];
   var COLORS = { 'new':'bg-blue-900/60 text-blue-300', contacted:'bg-amber-900/60 text-amber-300', qualified:'bg-purple-900/60 text-purple-300', won:'bg-emerald-900/60 text-emerald-300', lost:'bg-gray-800 text-gray-500' };
   function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
 
   function loadStats(){
-    fetch('/api/leads/stats').then(function(r){return r.json();}).then(function(d){
+    fetch('/api/leads/stats', { headers: hdrs() }).then(function(r){ if(r.status===401){ handle401(); throw new Error('401'); } return r.json(); }).then(function(d){
       if(!d.ok) return;
       document.getElementById('stat-total').textContent = d.total;
       document.getElementById('stat-today').textContent = d.today;
@@ -82,7 +101,7 @@ export const leadsPage = () => shell('Lead Inbox', 'leads', `
     var q = document.getElementById('f-search').value.trim(); if(q) p.set('q', q);
     var fn = document.getElementById('f-funnel').value; if(fn) p.set('funnel', fn);
     var st = document.getElementById('f-status').value; if(st) p.set('status', st);
-    fetch('/api/leads?'+p.toString()).then(function(r){return r.json();}).then(function(d){
+    fetch('/api/leads?'+p.toString(), { headers: hdrs() }).then(function(r){ if(r.status===401){ handle401(); throw new Error('401'); } return r.json(); }).then(function(d){
       if(!d.ok){ showEmpty(d.error||'Error loading leads'); return; }
       total = d.total;
       document.getElementById('lead-count').textContent = 'Showing ' + (d.leads.length ? (offset+1)+'–'+(offset+d.leads.length) : 0) + ' of ' + total;
@@ -107,7 +126,7 @@ export const leadsPage = () => shell('Lead Inbox', 'leads', `
       }).join('');
       tb.querySelectorAll('.lead-status').forEach(function(btn){
         btn.addEventListener('click', function(){
-          fetch('/api/leads/'+btn.dataset.lead, { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ status: btn.dataset.status }) }).then(function(){ loadLeads(); loadStats(); });
+          fetch('/api/leads/'+btn.dataset.lead, { method:'PATCH', headers: hdrs({'Content-Type':'application/json'}), body: JSON.stringify({ status: btn.dataset.status }) }).then(function(r){ if(r.status===401) handle401(); loadLeads(); loadStats(); });
         });
       });
     }).catch(function(){ showEmpty('Could not reach the leads API.'); });
@@ -125,14 +144,28 @@ export const leadsPage = () => shell('Lead Inbox', 'leads', `
     var btn=this, out=document.getElementById('insights-out');
     btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin mr-1"></i>Analyzing…';
     out.classList.remove('hidden'); out.textContent='Thinking…';
-    fetch('/api/ai/insights', { method:'POST' }).then(function(r){return r.json();}).then(function(d){
+    fetch('/api/ai/insights', { method:'POST', headers: hdrs() }).then(function(r){ if(r.status===401){ handle401(); return { ok:false, error:'Locked — enter your admin key above.' }; } return r.json(); }).then(function(d){
       out.textContent = d.ok ? d.insights : ('⚠ ' + (d.error||'AI unavailable'));
     }).catch(function(){
       out.textContent = '⚠ AI unavailable in this environment — works in production on Cloudflare.';
     }).finally(function(){ btn.disabled=false; btn.innerHTML='<i class="fas fa-wand-magic-sparkles mr-1"></i>Analyze My Leads'; });
   });
 
-  loadStats(); loadLeads();
+  document.getElementById('btn-unlock').addEventListener('click', function(){
+    var v = document.getElementById('admin-key-input').value.trim();
+    if(!v) return;
+    try { localStorage.setItem(KEY_STORE, v); } catch(e){}
+    document.getElementById('unlock-status').textContent = 'Checking…';
+    fetch('/api/leads/stats', { headers: hdrs() }).then(function(r){
+      if(r.status===401){ document.getElementById('unlock-status').textContent = '❌ Wrong key.'; return; }
+      document.getElementById('unlock-status').textContent = '✅ Unlocked!';
+      document.getElementById('admin-lock').classList.add('hidden');
+      syncCsvLink(); offset=0; loadStats(); loadLeads();
+    }).catch(function(){ document.getElementById('unlock-status').textContent = 'Network error.'; });
+  });
+  document.getElementById('admin-key-input').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('btn-unlock').click(); });
+
+  syncCsvLink(); loadStats(); loadLeads();
 })();
 </script>
 `)

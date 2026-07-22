@@ -7,7 +7,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { pushLeadToGHL, ghlStatus, ghlConfigured, type GhlEnv } from './ghl'
-import { generateFunnelCopy, generateLeadInsights, aiConfigured, type AiEnv } from './ai'
+import { generateFunnelCopy, generateLeadInsights, generateSocialPosts, aiConfigured, type AiEnv } from './ai'
 import { fanOutLead, hooksConfigured, type HooksEnv, type HookResult } from './hooks'
 
 type Bindings = GhlEnv & AiEnv & HooksEnv & {
@@ -15,7 +15,39 @@ type Bindings = GhlEnv & AiEnv & HooksEnv & {
   RESEND_API_KEY?: string
   LEAD_NOTIFY_EMAIL?: string
   LEAD_FROM_EMAIL?: string
+  ADMIN_API_KEY?: string
   DB?: D1Database
+}
+
+// ── v3.5: Enterprise security layer ─────────────────────────
+// Admin gate: when ADMIN_API_KEY is set, lead data / links / insights
+// require it (x-admin-key header, Bearer token, or ?key= for CSV links).
+// When unset (fresh install), endpoints stay open so nothing bricks —
+// /api/health reports adminLock:false so you know to set it.
+const adminOK = (c: { env?: Bindings; req: { header: (k: string) => string | undefined; query: (k: string) => string | undefined } }): boolean => {
+  const key = c.env?.ADMIN_API_KEY
+  if (!key) return true
+  const given = c.req.header('x-admin-key') || (c.req.header('authorization') || '').replace(/^Bearer\s+/i, '') || c.req.query('key') || ''
+  if (given.length !== key.length) return false
+  // constant-time compare
+  let diff = 0
+  for (let i = 0; i < key.length; i++) diff |= key.charCodeAt(i) ^ given.charCodeAt(i)
+  return diff === 0
+}
+const requireAdmin = (c: any): Response | null =>
+  adminOK(c) ? null : c.json({ ok: false, error: 'Unauthorized — provide x-admin-key header (ADMIN_API_KEY)' }, 401)
+
+// Per-isolate sliding-window rate limiter for lead submissions (anti-abuse;
+// each edge isolate keeps its own window — lightweight, no KV round-trip).
+const rlMap = new Map<string, number[]>()
+const rateLimited = (ip: string, limit = 10, windowMs = 60_000): boolean => {
+  const now = Date.now()
+  const hits = (rlMap.get(ip) || []).filter((t) => now - t < windowMs)
+  if (hits.length >= limit) { rlMap.set(ip, hits); return true }
+  hits.push(now)
+  rlMap.set(ip, hits)
+  if (rlMap.size > 5000) rlMap.clear() // memory guard
+  return false
 }
 
 // ── v3.3: D1 lead persistence (never throws — funnels never break) ──
@@ -46,11 +78,21 @@ api.use('*', cors())
 
 // ── POST /api/lead — capture funnel form + email notification ──
 api.post('/lead', async (c) => {
+  // v3.5: rate limit per IP (10/min) — stops bot floods, invisible to real users
+  const ip = c.req.header('cf-connecting-ip') || c.req.header('x-forwarded-for') || 'unknown'
+  if (rateLimited(ip)) return c.json({ ok: false, error: 'Too many submissions — please wait a minute and try again.' }, 429)
+
   let data: Record<string, string>
   try {
     data = await c.req.json()
   } catch {
     return c.json({ ok: false, error: 'Invalid JSON body' }, 400)
+  }
+
+  // v3.5: honeypot — hidden "_website" field humans never see; bots fill it.
+  // Silently accept (bot thinks it worked) but store/deliver nothing.
+  if (typeof data._website === 'string' && data._website.trim()) {
+    return c.json({ ok: true, delivered: true })
   }
 
   // Basic validation + sanitization
@@ -130,6 +172,7 @@ api.post('/hooks/test', async (c) => {
 // ── v3.3: Lead Inbox CRM API (D1-backed) ─────────────────────
 // GET /api/leads?funnel=&status=&q=&limit=&offset= — filtered list
 api.get('/leads', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
   if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
   const q = c.req.query()
   const limit = Math.min(parseInt(q.limit || '50', 10) || 50, 200)
@@ -147,6 +190,7 @@ api.get('/leads', async (c) => {
 
 // GET /api/leads/stats — dashboard numbers
 api.get('/leads/stats', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
   if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
   const [total, today, week, byFunnel, byStatus] = await Promise.all([
     c.env.DB.prepare('SELECT COUNT(*) as n FROM leads').first<{ n: number }>(),
@@ -160,6 +204,7 @@ api.get('/leads/stats', async (c) => {
 
 // PATCH /api/leads/:id — update pipeline status
 api.patch('/leads/:id', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
   if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
   const id = parseInt(c.req.param('id'), 10)
   if (!Number.isFinite(id)) return c.json({ ok: false, error: 'bad id' }, 400)
@@ -173,6 +218,7 @@ api.patch('/leads/:id', async (c) => {
 
 // GET /api/leads/export.csv — CSV download for spreadsheets/clients
 api.get('/leads/export.csv', async (c) => {
+  if (!adminOK(c)) return c.text('Unauthorized — append ?key=YOUR_ADMIN_API_KEY', 401)
   if (!c.env?.DB) return c.text('D1 not bound', 503)
   const rows = await c.env.DB.prepare('SELECT id, name, email, phone, funnel, source, utm_campaign, utm_source, utm_medium, ghl_contact_id, status, created_at FROM leads ORDER BY id DESC LIMIT 5000').all()
   const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`
@@ -197,6 +243,7 @@ api.post('/links', async (c) => {
 
 // GET /api/links — recent saved links + click counts
 api.get('/links', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
   if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
   const rows = await c.env.DB.prepare('SELECT code, template, params, label, clicks, created_at FROM funnel_links ORDER BY created_at DESC LIMIT 100').all()
   return c.json({ ok: true, links: rows.results })
@@ -214,8 +261,27 @@ api.post('/ai/copy', async (c) => {
   return c.json(result, result.ok ? 200 : 502)
 })
 
+// v3.5: POST /api/ai/social { template, params?, brief? } → platform-specific promo posts
+// Builds a UTM-tracked funnel link and asks the LLM for FB/IG/LinkedIn/X/TikTok posts.
+api.post('/ai/social', async (c) => {
+  if (!aiConfigured(c.env)) return c.json({ ok: false, error: 'Workers AI not bound (run in Cloudflare environment)' }, 503)
+  let body: { template?: string; params?: string; brief?: string }
+  try { body = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  if (!body.template || !/^[a-zA-Z]{1,40}$/.test(body.template)) return c.json({ ok: false, error: 'template required' }, 400)
+  const origin = new URL(c.req.url).origin
+  // UTM-tracked link so every social click is attributed in the Lead Inbox
+  const qs = new URLSearchParams(body.params || '')
+  qs.set('utm_source', 'social')
+  qs.set('utm_medium', 'organic')
+  qs.set('utm_campaign', `${body.template}-social`)
+  const funnelUrl = `${origin}/t/${body.template}?${qs.toString()}`
+  const result = await generateSocialPosts(c.env, body.template.slice(0, 40), funnelUrl, body.brief || '')
+  return c.json(result.ok ? { ...result, funnelUrl } : result, result.ok ? 200 : 502)
+})
+
 // POST /api/ai/insights — AI summary + call-first priorities from D1 leads
 api.post('/ai/insights', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
   if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
   if (!aiConfigured(c.env)) return c.json({ ok: false, error: 'Workers AI not bound (run in Cloudflare environment)' }, 503)
   const rows = await c.env.DB.prepare('SELECT name, email, phone, funnel, utm_campaign, status, created_at FROM leads ORDER BY id DESC LIMIT 60').all()
@@ -327,4 +393,4 @@ api.post('/seo-ping', async (c) => {
 })
 
 // ── Health ─────────────────────────────────────────────────────
-api.get('/health', (c) => c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), hooks: hooksConfigured(c.env) }))
+api.get('/health', (c) => c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env) }))

@@ -186,6 +186,7 @@
       '<input name="name" required placeholder="Full name" style="width:100%;box-sizing:border-box;background:#0b1226;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;color:#e2e8f0;font-size:14px;margin-bottom:10px">' +
       '<input name="email" type="email" required placeholder="Email address" style="width:100%;box-sizing:border-box;background:#0b1226;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;color:#e2e8f0;font-size:14px;margin-bottom:10px">' +
       '<input name="phone" type="tel" placeholder="Phone (optional)" style="width:100%;box-sizing:border-box;background:#0b1226;border:1px solid #1e3a8a;border-radius:10px;padding:12px 14px;color:#e2e8f0;font-size:14px;margin-bottom:14px">' +
+      '<input name="_website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:1px;width:1px;opacity:0;pointer-events:none">' +
       '<button type="submit" style="width:100%;background:linear-gradient(135deg,#2563eb,#0ea5e9);color:#fff;font-weight:800;font-size:15px;padding:13px;border-radius:12px;border:none;cursor:pointer">' + ((window.__RJF || {}).ctaText || 'Send It \u2192') + '</button>' +
       '<p style="color:#475569;font-size:10px;text-align:center;margin:10px 0 0">Protected by our privacy policy. Unsubscribe anytime.</p>' +
       '</form></div>'

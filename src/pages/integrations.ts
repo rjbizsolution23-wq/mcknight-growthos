@@ -256,6 +256,7 @@ document.querySelectorAll('[data-tier]').forEach(btn => btn.addEventListener('cl
         <tr><td class="py-2 pr-4 font-mono text-blue-300">TWILIO_FROM / TWILIO_TO</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Sender number / your cell</td><td class="py-2 font-mono">wrangler pages secret put TWILIO_FROM · …TWILIO_TO</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">AIRTABLE_API_KEY</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Airtable rows (with base id)</td><td class="py-2 font-mono">wrangler pages secret put AIRTABLE_API_KEY</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">AIRTABLE_BASE_ID / AIRTABLE_TABLE</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Base (appXXXX) / table (default “Leads”)</td><td class="py-2 font-mono">wrangler pages secret put AIRTABLE_BASE_ID</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-amber-300">ADMIN_API_KEY</td><td class="py-2 pr-4">/api/leads* · /api/links · /api/ai/insights</td><td class="py-2 pr-4"><i class="fas fa-lock mr-1"></i>Locks the Lead Inbox + CSV export behind a key (recommended for production)</td><td class="py-2 font-mono">wrangler pages secret put ADMIN_API_KEY</td></tr>
       </tbody>
     </table>
   </div>

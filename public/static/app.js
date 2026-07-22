@@ -143,6 +143,47 @@ if (builderForm) {
     slBtn.disabled = false
     slBtn.innerHTML = '<i class="fas fa-link mr-1"></i>Save Short Link'
   })
+
+  // ── v3.5: AI Social Posts (FB/IG/LinkedIn/X/TikTok w/ UTM-tracked link) ──
+  const socBtn = document.getElementById('btn-ai-social')
+  if (socBtn) socBtn.addEventListener('click', async () => {
+    const out = document.getElementById('social-posts-out')
+    const link = document.getElementById('builder-link')
+    const url = link.getAttribute('href') || ''
+    const m = url.match(/^\/t\/([a-z0-9-]+)\??(.*)$/)
+    const escHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+    if (!m) { out.className = 'mt-3 text-xs text-amber-400'; out.textContent = 'Generate a funnel first — then AI writes posts promoting it.'; out.classList.remove('hidden'); return }
+    const brief = (document.getElementById('ai-brief') ? document.getElementById('ai-brief').value : '').trim()
+    socBtn.disabled = true
+    socBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Writing 5 posts…'
+    out.className = 'mt-3 text-xs text-blue-300'; out.textContent = 'AI is writing platform-specific promo posts…'; out.classList.remove('hidden')
+    try {
+      const res = await fetch('/api/ai/social', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ template: m[1], params: m[2] || '', brief }) })
+      const d = await res.json()
+      if (d.ok && d.posts) {
+        const META = { facebook: ['fab fa-facebook', 'Facebook', 'text-blue-400'], instagram: ['fab fa-instagram', 'Instagram', 'text-pink-400'], linkedin: ['fab fa-linkedin', 'LinkedIn', 'text-sky-400'], x: ['fab fa-x-twitter', 'X (Twitter)', 'text-gray-300'], tiktok: ['fab fa-tiktok', 'TikTok Script', 'text-teal-300'] }
+        out.className = 'mt-3 space-y-3'
+        out.innerHTML = Object.keys(META).filter(p => d.posts[p]).map(p =>
+          '<div class="bg-[#060a14] border border-blue-900/40 rounded-lg p-3">'
+          + '<div class="flex items-center justify-between mb-2"><span class="text-xs font-bold ' + META[p][2] + '"><i class="' + META[p][0] + ' mr-1.5"></i>' + META[p][1] + '</span>'
+          + '<button type="button" data-copy-post="' + p + '" class="text-[10px] text-gray-400 border border-gray-700 px-2 py-1 rounded hover:bg-gray-800"><i class="fas fa-copy mr-1"></i>Copy</button></div>'
+          + '<pre class="text-[11px] text-gray-300 whitespace-pre-wrap font-sans" data-post="' + p + '">' + escHtml(d.posts[p]) + '</pre></div>'
+        ).join('') + '<p class="text-[10px] text-gray-500">Links carry utm_source=social — every click and lead is attributed in your Lead Inbox.</p>'
+        out.querySelectorAll('[data-copy-post]').forEach(btn => btn.addEventListener('click', () => {
+          const pre = out.querySelector('[data-post="' + btn.dataset.copyPost + '"]')
+          navigator.clipboard.writeText(pre.textContent).then(() => { btn.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!'; setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy' }, 1500) })
+        }))
+      } else {
+        out.className = 'mt-3 text-xs text-amber-400'
+        out.textContent = '⚠ ' + (d.error || 'AI unavailable — works in production on Cloudflare.')
+      }
+    } catch (e) {
+      out.className = 'mt-3 text-xs text-amber-400'
+      out.textContent = '⚠ AI unavailable in this environment — works in production on Cloudflare.'
+    }
+    socBtn.disabled = false
+    socBtn.innerHTML = '<i class="fas fa-wand-magic-sparkles mr-1"></i>AI Social Posts'
+  })
 }
 
 // Countdown timers on templates (data-deadline attr = ISO date)
@@ -160,6 +201,14 @@ document.querySelectorAll('[data-countdown]').forEach(el => {
 
 // ── v2.0: Lead capture forms → POST /api/lead ─────────────────
 document.querySelectorAll('[data-lead-form]').forEach(form => {
+  // v3.5: spam honeypot — invisible field humans never fill, bots auto-fill
+  if (!form.querySelector('input[name="_website"]')) {
+    const hp = document.createElement('input')
+    hp.type = 'text'; hp.name = '_website'; hp.value = ''
+    hp.tabIndex = -1; hp.autocomplete = 'off'; hp.setAttribute('aria-hidden', 'true')
+    hp.style.cssText = 'position:absolute;left:-9999px;top:-9999px;height:1px;width:1px;opacity:0;pointer-events:none'
+    form.appendChild(hp)
+  }
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
     const btn = form.querySelector('[type="submit"], button:not([type])')

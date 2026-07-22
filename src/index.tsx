@@ -111,7 +111,7 @@ app.get('/f/:code', async (c) => {
 })
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '3.4.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '3.5.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
 const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations']

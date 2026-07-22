@@ -35,3 +35,9 @@ TWILIO_TO=+15055550199
 AIRTABLE_API_KEY=patXXXX.xxxx
 AIRTABLE_BASE_ID=appXXXXXXXX
 AIRTABLE_TABLE=Leads
+
+# ── v3.5 Enterprise security ──────────────────────────────────
+# Locks /api/leads, /api/leads/stats, /api/leads/:id, /api/leads/export.csv,
+# /api/links (GET) and /api/ai/insights behind a key. Leave unset = open (dev).
+# Production: npx wrangler pages secret put ADMIN_API_KEY --project-name rj-funnel-command-center
+ADMIN_API_KEY=pick-a-long-random-string

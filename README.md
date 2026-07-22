@@ -8,7 +8,7 @@
 ## URLs
 - **Production (custom domain)**: https://funnels.rjbusinesssolutions.org
 - **Sandbox (dev preview)**: https://3000-iegrgivf1owthq4y7nq1l-583b4d74.sandbox.novita.ai
-- **Production**: not yet deployed (Cloudflare Pages ready)
+- **Version**: v3.5.0 (Enterprise + Social Pack) — live
 
 ## Currently Completed Features
 ### Command Center Pages
@@ -101,7 +101,23 @@ Never blocks the funnel — if GHL is down/unconfigured, leads are still accepte
 - **Auto FAQ schema**: any funnel with 2+ `<details>` FAQs gets FAQPage JSON-LD generated client-side for rich snippets
 
 ### Integrations Secrets
-Copy `.dev.vars.example` → `.dev.vars` locally; production via `wrangler pages secret put`: `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL`, `LEAD_FROM_EMAIL`.
+Copy `.dev.vars.example` → `.dev.vars` locally; production via `wrangler pages secret put`: `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL`, `LEAD_FROM_EMAIL`, **`ADMIN_API_KEY`** (v3.5 — locks the Lead Inbox).
+
+## v3.5 — Enterprise + Social Pack
+**Enterprise security (lead data is now lockable):**
+- **ADMIN_API_KEY lock** — set the secret and every lead-data endpoint requires it: `GET /api/leads`, `GET /api/leads/stats`, `PATCH /api/leads/:id`, `GET /api/leads/export.csv` (`?key=`), `GET /api/links`, `POST /api/ai/insights`. Accepted as `x-admin-key` header, `Authorization: Bearer`, or `?key=` (CSV). Constant-time compare. **Unset = open** (nothing bricks; `/api/health` reports `adminLock:false` so you know).
+- **/leads unlock UI** — when locked, the Lead Inbox shows a key prompt; the key is remembered in the browser (localStorage) and sent on every request + appended to the CSV link.
+- **Rate limiting** — `POST /api/lead` limited to 10/min per IP (429 after) — stops form-spam floods.
+- **Spam honeypot** — invisible `_website` field auto-injected into every lead form (and rescue modal); bots that fill it get a fake success and the lead is silently dropped (never stored, never fanned out).
+
+**Social-media ready:**
+- **AI Social Posts** (`POST /api/ai/social {template, params?, brief?}`) — Workers AI writes 5 platform-native promo posts per funnel: Facebook, Instagram (w/ hashtags), LinkedIn, X (≤260 chars), TikTok (15-sec video script). Every post embeds a **UTM-tracked funnel link** (`utm_source=social&utm_campaign={template}-social`) so every click and lead is attributed in the Lead Inbox.
+- **Builder integration** — generate a funnel → click “AI Social Posts” → 5 posts render with one-click copy buttons.
+
+**Activate the lock in production:**
+```bash
+npx wrangler pages secret put ADMIN_API_KEY --project-name rj-funnel-command-center
+```
 
 ## v3.4 — Integration Hub (Lead Fan-Out)
 On every lead, all configured channels fire **in parallel** (none can break a funnel):
@@ -168,6 +184,7 @@ Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coachin
 ## Deployment
 - **Platform**: Cloudflare Pages — LIVE on Rick’s own Cloudflare account (project: rj-funnel-command-center)
 - **Status**: ✅ LIVE in production — https://rj-funnel-command-center.pages.dev
+- **Version**: 3.5.0 — Enterprise + Social Pack: **ADMIN_API_KEY lock** on all lead-data endpoints (`/api/leads*`, `/api/links`, `/api/ai/insights`; header/Bearer/`?key=` for CSV; constant-time compare; unset = open with `adminLock:false` on health), /leads unlock UI (localStorage key, auto-sent headers, keyed CSV link), **rate limiting** (10 leads/min/IP → 429), **spam honeypot** (`_website` auto-injected into every lead form + rescue modal; bot fills = silent drop), **AI Social Posts** (`POST /api/ai/social` — Workers AI writes FB/IG/LinkedIn/X/TikTok promo posts per funnel with UTM-tracked links `utm_campaign={template}-social`; Builder button with per-platform copy buttons), hardened social JSON parser (truncation repair + wrapper unwrap)
 - **Version**: 3.4.0 — Integration Hub: parallel lead fan-out to 6 new channels (Zapier/Make/n8n generic webhook, Slack Block Kit cards, Discord embeds, Telegram bot alerts, Twilio SMS speed-to-lead, Airtable rows), `GET /api/hooks/status` + `POST /api/hooks/test`, /integrations redesigned as Integration Hub (9 live status badges, per-channel setup guides, test-all button), 13 new optional secrets in `.dev.vars.example`, health exposes per-channel config — all channels never-throw so funnels can’t break
 - **Version**: 3.3.0 — Cloudflare-Native Layer: **D1 database** (permanent lead storage on every form submit + short funnel links `/f/{code}` with click tracking) + **Workers AI LLM** (llama-4-scout, zero API keys — AI Copy Fill in Builder writes every template field from a one-line client brief; AI Lead Insights on /leads names who to call first), new **/leads Lead Inbox CRM** (stats, filters, pipeline statuses, CSV export with full UTM/GHL attribution), lead API (`/api/leads[.../stats|/:id|/export.csv]`), links API (`/api/links`), fixed wedding-venue `style` param shadowing form.style (now `venueStyle`)
 - **Version**: 3.2.0 — Niche Expansion Pack: **10 new premium templates** (chiropractic new-patient, pet care/vet, landscaping design, cleaning service, childcare enrollment, tutoring assessment, CPA tax savings, photography mini-session, wedding venue tour, moving company quote — each with unique gradient color scheme, schema.org type, FAQ JSON-LD, countdown urgency, TCPA-consent lead forms), dashboard now 30 live templates, Builder gains 10 template fieldsets, sitemap/seo-ping/SEO-keeper auto-include all 40 URLs
