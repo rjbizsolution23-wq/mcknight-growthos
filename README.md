@@ -6,6 +6,7 @@
 - **Built by**: RJ Business Solutions · 1342 NM 333, Tijeras, New Mexico 87059 · rjbusinesssolutions.org
 
 ## URLs
+- **Production (custom domain)**: https://funnels.rjbusinesssolutions.org
 - **Sandbox (dev preview)**: https://3000-iegrgivf1owthq4y7nq1l-583b4d74.sandbox.novita.ai
 - **Production**: not yet deployed (Cloudflare Pages ready)
 
