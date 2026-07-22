@@ -2,12 +2,64 @@ import { shell, copyBlock } from './layout'
 
 export const integrationsPage = () => shell('Integrations', 'integrations', `
 <section id="int-hero" class="mb-10">
-  <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2"><i class="fas fa-plug grad-text mr-2"></i>Integrations — <span class="grad-text">Stripe & Email</span></h1>
-  <p class="text-gray-400 max-w-3xl">Payments and lead delivery are wired into every funnel out of the box. Add two secrets and you're live — no code changes.</p>
-  <div id="int-status" class="mt-4 flex gap-3 text-xs">
+  <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2"><i class="fas fa-plug grad-text mr-2"></i>Integrations — <span class="grad-text">GoHighLevel, Stripe & Email</span></h1>
+  <p class="text-gray-400 max-w-3xl">CRM sync, payments and lead delivery are wired into every funnel out of the box. Add your secrets and you're live — no code changes.</p>
+  <div id="int-status" class="mt-4 flex gap-3 text-xs flex-wrap">
+    <span id="int-status-ghl" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fas fa-arrows-rotate mr-1"></i>GoHighLevel: checking…</span>
     <span id="int-status-stripe" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fab fa-stripe mr-1"></i>Stripe: checking…</span>
     <span id="int-status-email" class="bg-gray-800 text-gray-400 px-3 py-1.5 rounded-full"><i class="fas fa-envelope mr-1"></i>Email: checking…</span>
   </div>
+</section>
+
+<!-- GOHIGHLEVEL -->
+<section id="int-ghl" class="mb-12">
+  <h2 class="text-2xl font-bold text-white mb-4"><i class="fas fa-arrows-rotate text-brand-cyan mr-2"></i>GoHighLevel CRM Sync <span class="text-[10px] text-amber-400 font-mono ml-1 align-middle">v3.1 · API v2</span></h2>
+  <div class="grid lg:grid-cols-2 gap-6 mb-4">
+    <div class="card p-6">
+      <h3 class="font-bold text-white mb-3">1 · Setup (5 minutes, works with your existing sub-account)</h3>
+      <ol class="text-sm text-gray-300 space-y-2 list-decimal list-inside">
+        <li>In your GHL sub-account: <span class="text-blue-300">Settings → Private Integrations → Create</span></li>
+        <li>Scopes: <code class="text-blue-300">contacts.write</code>, <code class="text-blue-300">contacts.readonly</code>, <code class="text-blue-300">opportunities.write</code>, <code class="text-blue-300">locations.readonly</code> (+ <code class="text-blue-300">workflows.readonly</code> if enrolling)</li>
+        <li>Copy the <code class="text-blue-300">pit-…</code> token + your <strong>Location ID</strong> (Settings → Business Profile)</li>
+        <li>Local: add both to <code class="text-blue-300">.dev.vars</code> · Production:<br><code class="text-blue-300">npx wrangler pages secret put GHL_API_KEY</code><br><code class="text-blue-300">npx wrangler pages secret put GHL_LOCATION_ID</code></li>
+        <li>Verify: open <a href="/api/ghl/status" target="_blank" class="text-blue-300 underline">/api/ghl/status</a> → <code class="text-emerald-300">connected: true</code></li>
+      </ol>
+      <div class="mt-4 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 text-xs text-amber-200">
+        <i class="fas fa-shield-halved mr-1"></i><strong>Security:</strong> the PIT token lives server-side only (Cloudflare secret) — never in frontend code, never in a funnel URL, never in git.
+      </div>
+    </div>
+    <div class="card p-6">
+      <h3 class="font-bold text-white mb-3">2 · What happens on every lead — automatically</h3>
+      <ul class="text-sm text-gray-300 space-y-2">
+        <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Contact upsert</strong> — dedupes by email/phone, so existing GHL contacts get updated, not duplicated</li>
+        <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Auto-tags</strong> — <code class="text-blue-300">rj-funnel</code> + <code class="text-blue-300">funnel-{slug}</code> (e.g. <code>funnel-mortgage</code>) + offer tag + <code>utm-{campaign}</code> → trigger your existing GHL automations off these</li>
+        <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Attribution note</strong> — full form details + UTM/gclid/fbclid/ttclid + source URL pinned to the contact</li>
+        <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Opportunity</strong> (optional) — auto-created in your pipeline when <code class="text-blue-300">GHL_PIPELINE_ID</code> + <code class="text-blue-300">GHL_STAGE_ID</code> are set</li>
+        <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Workflow enrollment</strong> (optional) — every lead dropped into the workflow in <code class="text-blue-300">GHL_WORKFLOW_ID</code></li>
+        <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Never breaks the funnel</strong> — if GHL is down or unconfigured, the lead is still accepted + emailed</li>
+      </ul>
+      <p class="text-xs text-gray-500 mt-3">Per-funnel custom tags: add <code class="text-blue-300">?ghlTag=client-acme,spring-promo</code> to any funnel URL (or the Builder field) — those tags ride along on every lead from that link. Perfect for white-label client attribution.</p>
+    </div>
+  </div>
+  ${copyBlock('int-ghl-test', 'Test the GHL sync from terminal (after secrets are set)', `# 1. Connection check
+curl https://funnels.rjbusinesssolutions.org/api/ghl/status
+
+# 2. Fire a test lead — watch it land in GHL Contacts with tags rj-funnel + funnel-mortgage
+curl -X POST https://funnels.rjbusinesssolutions.org/api/lead \\
+  -H "Content-Type: application/json" \\
+  -d '{"name":"GHL Test Lead","email":"ghltest@example.com","phone":"+15055550100","_source":"/t/mortgage?utm_campaign=test","utm_campaign":"test"}'`)}
+  ${copyBlock('int-ghl-ids', 'Find your Pipeline / Stage / Workflow IDs (optional extras)', `# Pipelines + stage IDs (uses your same PIT token)
+curl -H "Authorization: Bearer pit-XXXX" -H "Version: 2021-07-28" \\
+  "https://services.leadconnectorhq.com/opportunities/pipelines?locationId=YOUR_LOCATION_ID"
+
+# Workflows
+curl -H "Authorization: Bearer pit-XXXX" -H "Version: 2021-07-28" \\
+  "https://services.leadconnectorhq.com/workflows/?locationId=YOUR_LOCATION_ID"
+
+# Then:
+npx wrangler pages secret put GHL_PIPELINE_ID
+npx wrangler pages secret put GHL_STAGE_ID
+npx wrangler pages secret put GHL_WORKFLOW_ID`)}
 </section>
 
 <!-- STRIPE -->
@@ -79,7 +131,7 @@ document.querySelectorAll('[data-tier]').forEach(btn => btn.addEventListener('cl
         <li><i class="fas fa-check text-emerald-400 mr-2"></i>No API key yet? Lead still accepted (never breaks the funnel) — you just don't get the email until configured</li>
         <li><i class="fas fa-check text-emerald-400 mr-2"></i>TCPA consent checkboxes remain required on regulated verticals</li>
       </ul>
-      <p class="text-xs text-gray-500 mt-3">Want leads in a CRM/GoHighLevel instead? Point the form at your webhook: change <code>data-lead-form</code> to <code>data-lead-form="https://your-webhook-url"</code>.</p>
+      <p class="text-xs text-gray-500 mt-3">GoHighLevel sync runs automatically alongside email (see the GHL section above) — or point a form at any external webhook via <code>data-lead-form="https://your-webhook-url"</code>.</p>
     </div>
   </div>
   ${copyBlock('int-lead-test', 'Test the lead API from terminal', `curl -X POST https://YOUR-DOMAIN/api/lead \\
@@ -106,6 +158,11 @@ document.querySelectorAll('[data-tier]').forEach(btn => btn.addEventListener('cl
         <tr><td class="py-2 pr-4 font-mono text-blue-300">RESEND_API_KEY</td><td class="py-2 pr-4">/api/lead</td><td class="py-2 pr-4">Lead emails</td><td class="py-2 font-mono">wrangler pages secret put RESEND_API_KEY</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">LEAD_NOTIFY_EMAIL</td><td class="py-2 pr-4">/api/lead</td><td class="py-2 pr-4">Where leads land (default: support@rjbusinesssolutions.org)</td><td class="py-2 font-mono">wrangler pages secret put LEAD_NOTIFY_EMAIL</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">LEAD_FROM_EMAIL</td><td class="py-2 pr-4">/api/lead</td><td class="py-2 pr-4">Sender identity (verified domain)</td><td class="py-2 font-mono">wrangler pages secret put LEAD_FROM_EMAIL</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">GHL_API_KEY</td><td class="py-2 pr-4">/api/lead · /api/ghl/status</td><td class="py-2 pr-4">GHL contact sync (PIT token)</td><td class="py-2 font-mono">wrangler pages secret put GHL_API_KEY</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">GHL_LOCATION_ID</td><td class="py-2 pr-4">/api/lead</td><td class="py-2 pr-4">Your sub-account location</td><td class="py-2 font-mono">wrangler pages secret put GHL_LOCATION_ID</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">GHL_PIPELINE_ID</td><td class="py-2 pr-4">/api/lead</td><td class="py-2 pr-4">Auto-opportunities (optional)</td><td class="py-2 font-mono">wrangler pages secret put GHL_PIPELINE_ID</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">GHL_STAGE_ID</td><td class="py-2 pr-4">/api/lead</td><td class="py-2 pr-4">Pipeline stage (with pipeline)</td><td class="py-2 font-mono">wrangler pages secret put GHL_STAGE_ID</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">GHL_WORKFLOW_ID</td><td class="py-2 pr-4">/api/lead</td><td class="py-2 pr-4">Workflow enrollment (optional)</td><td class="py-2 font-mono">wrangler pages secret put GHL_WORKFLOW_ID</td></tr>
       </tbody>
     </table>
   </div>

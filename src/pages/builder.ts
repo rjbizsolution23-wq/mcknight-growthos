@@ -346,6 +346,10 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
       </div>
       <p class="text-[11px] text-gray-500">White-label mode re-skins every CTA, glow, focus ring & gradient to the client\u2019s colors and swaps in their logo — sell any funnel as their own branded system.</p>
 
+      <p class="text-sm text-white font-semibold pt-3"><i class="fas fa-arrows-rotate text-brand-cyan mr-2"></i>GoHighLevel</p>
+      ${field('ghlTag', 'GHL Tags for leads from this funnel (comma-separated)', 'client-acme, spring-promo')}
+      <p class="text-[11px] text-gray-500">Every lead auto-syncs to your GHL sub-account (contact upsert + <code class="text-blue-300">funnel-{slug}</code> tags + attribution note + optional pipeline/workflow \u2014 configure once in <a href="/integrations" class="text-blue-300 underline">Integrations</a>). Tags here ride along per-funnel-link \u2014 perfect for white-label client attribution.</p>
+
       <p class="text-sm text-white font-semibold pt-3"><i class="fas fa-chart-line text-brand-cyan mr-2"></i>Tracking Pixels (all optional — paste IDs, done)</p>
       <div class="grid grid-cols-2 gap-3">
         ${field('ga4', 'Google Analytics 4 ID', 'G-XXXXXXXXXX')}

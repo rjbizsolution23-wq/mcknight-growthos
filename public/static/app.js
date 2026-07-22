@@ -106,6 +106,8 @@ document.querySelectorAll('[data-lead-form]').forEach(form => {
     const data = { _source: location.pathname + location.search }
     // v2.2: merge UTM / click-id attribution captured by funnel-extras.js
     try { Object.assign(data, JSON.parse(sessionStorage.getItem('rjf_attrs') || '{}')) } catch (e) {}
+    // v3.1: GoHighLevel custom tags from ?ghlTag= funnel param
+    if ((window.__RJF || {}).ghlTag) data._ghlTag = window.__RJF.ghlTag
     form.querySelectorAll('input, textarea, select').forEach(inp => {
       if (inp.type === 'checkbox') { data[inp.name || 'consent'] = inp.checked ? 'yes' : 'no' }
       else if (inp.name && inp.value.trim()) data[inp.name] = inp.value.trim()
@@ -210,4 +212,17 @@ if (intStripe) {
     set(intStripe, d.stripe, 'Stripe')
     set(document.getElementById('int-status-email'), d.email, 'Email')
   }).catch(() => {})
+  // v3.1: GoHighLevel deep status (live API connection check, not just key presence)
+  const intGhl = document.getElementById('int-status-ghl')
+  if (intGhl) {
+    fetch('/api/ghl/status').then(r => r.json()).then(d => {
+      const ok = d.connected
+      intGhl.className = ok
+        ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-full'
+        : 'bg-amber-500/10 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-full'
+      intGhl.innerHTML = intGhl.innerHTML.split('</i>')[0] + '</i>GoHighLevel: ' + (ok
+        ? 'connected ✓' + (d.location && d.location.name ? ' (' + d.location.name + ')' : '') + (d.pipeline ? ' · pipeline on' : '') + (d.workflow ? ' · workflow on' : '')
+        : d.configured ? 'auth failed — check token/location' : 'keys not set')
+    }).catch(() => {})
+  }
 }

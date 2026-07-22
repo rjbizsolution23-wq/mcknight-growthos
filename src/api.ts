@@ -1,11 +1,14 @@
 // ── RJ Funnel Command Center — API layer ──────────────────────
-// Stripe checkout + email lead capture, edge-native (fetch only, no SDKs).
+// Stripe checkout + email lead capture + GoHighLevel CRM sync,
+// edge-native (fetch only, no SDKs).
 // Secrets via wrangler secret put (prod) / .dev.vars (local):
-//   STRIPE_SECRET_KEY, RESEND_API_KEY, LEAD_NOTIFY_EMAIL, LEAD_FROM_EMAIL
+//   STRIPE_SECRET_KEY, RESEND_API_KEY, LEAD_NOTIFY_EMAIL, LEAD_FROM_EMAIL,
+//   GHL_API_KEY, GHL_LOCATION_ID, GHL_PIPELINE_ID, GHL_STAGE_ID, GHL_WORKFLOW_ID
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { pushLeadToGHL, ghlStatus, ghlConfigured, type GhlEnv } from './ghl'
 
-type Bindings = {
+type Bindings = GhlEnv & {
   STRIPE_SECRET_KEY?: string
   RESEND_API_KEY?: string
   LEAD_NOTIFY_EMAIL?: string
@@ -31,6 +34,10 @@ api.post('/lead', async (c) => {
   }
   if (!Object.keys(clean).length) return c.json({ ok: false, error: 'Empty lead payload' }, 400)
 
+  // ── GoHighLevel CRM sync (contact upsert → note → opportunity → workflow) ──
+  // Runs first-class alongside email; never blocks or fails the lead.
+  const ghl = await pushLeadToGHL(c.env, clean)
+
   const key = c.env?.RESEND_API_KEY
   const to = c.env?.LEAD_NOTIFY_EMAIL || 'support@rjbusinesssolutions.org'
   const from = c.env?.LEAD_FROM_EMAIL || 'RJ Funnels <onboarding@resend.dev>'
@@ -38,7 +45,7 @@ api.post('/lead', async (c) => {
   if (!key) {
     // No email key configured — accept the lead so funnels never break,
     // flag that delivery is not wired yet.
-    return c.json({ ok: true, delivered: false, note: 'Lead accepted. Set RESEND_API_KEY to enable email delivery (see /integrations).' })
+    return c.json({ ok: true, delivered: false, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: ghl.ok ? 'Lead synced to GoHighLevel. Set RESEND_API_KEY to also enable email delivery.' : 'Lead accepted. Set RESEND_API_KEY and/or GHL_API_KEY to enable delivery (see /integrations).' })
   }
 
   const rows = Object.entries(clean)
@@ -61,10 +68,13 @@ api.post('/lead', async (c) => {
   })
   if (!res.ok) {
     const err = await res.text()
-    return c.json({ ok: true, delivered: false, note: 'Lead accepted; email delivery failed', providerError: err.slice(0, 300) }, 200)
+    return c.json({ ok: true, delivered: false, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: 'Lead accepted; email delivery failed', providerError: err.slice(0, 300) }, 200)
   }
-  return c.json({ ok: true, delivered: true })
+  return c.json({ ok: true, delivered: true, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, opportunity: ghl.opportunity, workflow: ghl.workflow, error: ghl.error } : undefined })
 })
+
+// ── GET /api/ghl/status — GHL connection health (used by /integrations badge) ──
+api.get('/ghl/status', async (c) => c.json(await ghlStatus(c.env)))
 
 // ── POST /api/checkout — Stripe Checkout Session ──────────────
 // Body: { priceId } OR { name, amount (cents), currency?, interval? ('month'|'year' for subs) }
@@ -166,4 +176,4 @@ api.post('/seo-ping', async (c) => {
 })
 
 // ── Health ─────────────────────────────────────────────────────
-api.get('/health', (c) => c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY }))
+api.get('/health', (c) => c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env) }))

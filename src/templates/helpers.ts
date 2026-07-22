@@ -59,6 +59,8 @@ export const funnelHead = (
   if (q.exitTitle && q.exitTitle.trim()) rjfCfg.exitTitle = esc(q.exitTitle.trim())
   if (q.exitDesc && q.exitDesc.trim()) rjfCfg.exitDesc = esc(q.exitDesc.trim())
   if (q.redirect && /^(https?:\/\/|\/)/.test(q.redirect.trim())) rjfCfg.redirect = esc(q.redirect.trim())
+  // v3.1 — GoHighLevel: custom tags attached to every lead from this funnel URL (comma-separated)
+  if (q.ghlTag && q.ghlTag.trim()) rjfCfg.ghlTag = esc(q.ghlTag.trim().slice(0, 200))
 
   // v3.0 — WHITE-LABEL LAYER: client branding via URL params (sellable all-in-one)
   //   bizLogo   — client logo URL → injected top-of-hero + footer by motion.js

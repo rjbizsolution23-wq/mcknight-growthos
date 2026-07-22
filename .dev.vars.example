@@ -4,3 +4,14 @@ STRIPE_SECRET_KEY=sk_test_xxx
 RESEND_API_KEY=re_xxx
 LEAD_NOTIFY_EMAIL=support@rjbusinesssolutions.org
 LEAD_FROM_EMAIL=RJ Funnels <leads@rjbusinesssolutions.org>
+
+# ── GoHighLevel (LeadConnector API v2) ──
+# GHL sub-account → Settings → Private Integrations → create token
+# Scopes: contacts.write, contacts.readonly, opportunities.write, locations.readonly, workflows.readonly
+GHL_API_KEY=pit-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+GHL_LOCATION_ID=your_location_id
+# Optional — auto-create an opportunity for every lead:
+# GHL_PIPELINE_ID=xxx
+# GHL_STAGE_ID=xxx
+# Optional — enroll every lead into a workflow:
+# GHL_WORKFLOW_ID=xxx

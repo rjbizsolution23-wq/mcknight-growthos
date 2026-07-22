@@ -205,6 +205,7 @@
       btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px"></i>Sending\u2026'
       var data = { _source: location.pathname + location.search, _offer: offer || '' }
       try { Object.assign(data, JSON.parse(sessionStorage.getItem('rjf_attrs') || '{}')) } catch (err) {}
+      if ((window.__RJF || {}).ghlTag) data._ghlTag = window.__RJF.ghlTag
       form.querySelectorAll('input').forEach(function (i) { if (i.name && i.value.trim()) data[i.name] = i.value.trim() })
       try {
         var r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })

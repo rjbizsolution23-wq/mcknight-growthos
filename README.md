@@ -67,6 +67,16 @@
 ### Universal Funnel Params (v2.0 — every template)
 `seoTitle, seoDesc, seoKeywords, canonical, ogImage, theme=dark, noindex=1` — every funnel auto-emits meta description, robots, OG graph, Twitter cards, and JSON-LD ProfessionalService schema; `theme=dark` flips the whole funnel to the RJ Navy dark theme.
 
+### GoHighLevel CRM Sync (v3.1 — every lead, automatically)
+Every `POST /api/lead` (all funnel forms + dead-CTA rescue modals) syncs to your existing GHL sub-account via **LeadConnector API v2**:
+1. **Contact upsert** — dedupes by email/phone (existing contacts updated, never duplicated)
+2. **Auto-tags** — `rj-funnel`, `funnel-{slug}` (e.g. `funnel-mortgage`), `offer-{…}`, `utm-{campaign}` + custom per-link tags via `?ghlTag=client-acme,promo` (also a Builder field)
+3. **Attribution note** — full form details + UTM/gclid/fbclid/ttclid + source URL pinned to the contact
+4. **Opportunity** (optional) — auto-created when `GHL_PIPELINE_ID` + `GHL_STAGE_ID` are set
+5. **Workflow enrollment** (optional) — via `GHL_WORKFLOW_ID`
+
+Never blocks the funnel — if GHL is down/unconfigured, leads are still accepted + emailed. Health check: `GET /api/ghl/status` (live connection test, powers the /integrations badge). Secrets: `GHL_API_KEY` (Private Integration token, scopes: contacts.write/readonly, opportunities.write, locations.readonly, workflows.readonly) + `GHL_LOCATION_ID`; set via `wrangler pages secret put …` — full setup guide with copy-paste commands on `/integrations`.
+
 ### White-Label Client Branding (v3.0 — every template)
 - `bizLogo=https://…` — client logo injected into the funnel hero (above the H1) and swapped into the footer
 - `brandColor=16a34a` (6-digit hex, `#` optional) — re-skins every CTA button, pulse glow, focus ring, text selection, and gradient stat text to the client’s color
@@ -129,6 +139,7 @@ Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coachin
 ## Deployment
 - **Platform**: Cloudflare Pages — LIVE on Rick’s own Cloudflare account (project: rj-funnel-command-center)
 - **Status**: ✅ LIVE in production — https://rj-funnel-command-center.pages.dev
+- **Version**: 3.1.0 — GoHighLevel Integration: full LeadConnector API v2 sync on every lead (contact upsert w/ dedupe → auto-tags incl. funnel slug + UTM campaign + custom `?ghlTag=` per-link tags → attribution note → optional pipeline opportunity → optional workflow enrollment), `GET /api/ghl/status` live connection check, GoHighLevel section on /integrations (setup guide, test curls, pipeline/workflow ID discovery commands, live status badge), Builder GHL tags field, 5 new secrets (`GHL_API_KEY`, `GHL_LOCATION_ID`, `GHL_PIPELINE_ID`, `GHL_STAGE_ID`, `GHL_WORKFLOW_ID`), graceful no-config fallback so funnels never break
 - **Version**: 3.0.0 — All-In-One System: **white-label client branding** on every funnel (`bizLogo`, `brandColor`, `accentColor` URL params → server-side brand CSS override + motion.js client-logo injection into hero & footer), **5 new premium templates** (restaurant VIP table, dental new-patient, auto-repair inspection, salon new-guest, mortgage pre-approval — all with schema.org types, FAQ JSON-LD, countdown urgency, TCPA-consent forms, compliance language), dashboard now 20 live templates, Builder gains 5 template fieldsets + White-Label Branding section, sitemap/seo-ping/SEO-keeper auto-include all 30 URLs
 - **Version**: 2.5.0 — Premium Pack + SEO Keeper: 3D tilt cards (perspective rotate-on-cursor), conic rotating glow borders on hero glass cards, animated gradient text on hero stats, scroll-parallax hero blobs, blur-in reveal variant, image shimmer skeletons, marquee utility; IndexNow integration (key file route + POST /api/seo-ping) and **rj-seo-keeper Cloudflare Worker** — daily cron (06:07 UTC) fetches the live sitemap, submits all 25 URLs to IndexNow (Bing/Yandex/Seznam/Naver shared index, multi-endpoint fallback) and warms the top 16 funnel pages for fast crawler responses; manual trigger at rj-seo-keeper.rickjefferson.workers.dev/run
 - **Version**: 2.4.0 — Supreme Brand Integration: real RJ logo favicon (white serif RJ monogram on royal-blue radial gradient matching the official logo), BRAND config in helpers (single source of truth), Playfair Display luxury display font on funnel H1s, Glassmorphism 3.0 (Supreme liquid-glass spec), aurora ambient hero layer, kinetic char-by-char H1 typography, magnetic CTA buttons, branded footer block (logo + “Empowering Generational Wealth” tagline) on all 15 funnels, GEO meta (geo.region/placename/position/ICBM) on every page, Organization schema upgraded with logo ImageObject + full NM address + areaServed, apple-touch-icon + theme-color #003399
