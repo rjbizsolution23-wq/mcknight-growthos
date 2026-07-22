@@ -2,7 +2,7 @@
 
 ## Project Overview
 - **Name**: RJ Funnel Command Center (webapp)
-- **Goal**: A living all-in-one funnel system — 20 live parameterized funnel templates spanning Events/Tickets/Sponsors, Tax Services, Credit Repair, and every major local-business niche — white-label ready (client logo + brand color injection) so RJ Business Solutions can sell each funnel as a client’s own branded system, plus complete email sequence vaults and a compliance/disclaimer library.
+- **Goal**: A living all-in-one funnel system — 30 live parameterized funnel templates spanning Events/Tickets/Sponsors, Tax Services, Credit Repair, and every major local-business niche — white-label ready (client logo + brand color injection) so RJ Business Solutions can sell each funnel as a client’s own branded system, plus complete email sequence vaults and a compliance/disclaimer library.
 - **Built by**: RJ Business Solutions · 1342 NM 333, Tijeras, New Mexico 87059 · rjbusinesssolutions.org
 
 ## URLs
@@ -50,6 +50,16 @@
 | `/t/auto-services` | Auto repair intro inspection + oil change (photo-proof trust, warranty) | `shopName, city, service, offer, offerValue, warranty, rating, reviewCount, deadline` |
 | `/t/salon` | Salon new-guest offer (redo promise, stylist matching, service selector) | `salonName, city, specialty, offer, offerValue, stylistCount, rating, reviewCount, deadline` |
 | `/t/mortgage` | Mortgage 60-second pre-approval (soft-pull, NMLS/Equal Housing compliant) | `loName, company, nmls, city, rate, program, closedCount, avgDays, deadline` |
+| `/t/chiropractic` | Chiropractic $49 new-patient special (drug-free pain relief, condition chips) | `clinic, doctor, city, offer, offerPrice, offerValue, patientCount, deadline` |
+| `/t/pet-care` | Pet care / vet free first wellness exam (fear-free positioning) | `bizName, city, service, offer, offerValue, petCount, rating, deadline` |
+| `/t/landscaping` | Landscaping free design consult + 3D rendering (xeriscape/curb-appeal) | `company, city, service, offer, offerValue, projectCount, years, deadline` |
+| `/t/cleaning` | Cleaning service $50-off first deep clean (re-clean guarantee, recurring upsell) | `company, city, service, offer, cleansDone, rating, guarantee, deadline` |
+| `/t/childcare` | Childcare enrollment offer (licensed ratios, curriculum, tour CTA) | `center, city, ages, offer, offerValue, familyCount, ratio, deadline` |
+| `/t/tutoring` | Tutoring free skills assessment (grade-gain proof, subject chips) | `bizName, city, subject, offer, offerValue, studentCount, gradeGain, deadline` |
+| `/t/accounting` | CPA free tax savings review (avg-savings proof, niche positioning) | `firm, cpa, city, niche, offer, avgSavings, clientCount, deadline` |
+| `/t/photography` | Photography $149 mini-session (portfolio trust, limited slots) | `studio, photographer, city, specialty, offer, offerPrice, offerValue, sessionCount, deadline` |
+| `/t/wedding-venue` | Wedding venue champagne tour + date-hold (capacity/pricing transparency) | `venue, city, style, offer, capacity, weddingCount, startingPrice, deadline` |
+| `/t/moving` | Moving company free in-home estimate (binding quote, claim-rate proof) | `company, city, service, offer, movesDone, rating, claimRate, deadline` |
 
 ### v2.0 Pages
 | Path | What it is |
@@ -139,6 +149,7 @@ Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coachin
 ## Deployment
 - **Platform**: Cloudflare Pages — LIVE on Rick’s own Cloudflare account (project: rj-funnel-command-center)
 - **Status**: ✅ LIVE in production — https://rj-funnel-command-center.pages.dev
+- **Version**: 3.2.0 — Niche Expansion Pack: **10 new premium templates** (chiropractic new-patient, pet care/vet, landscaping design, cleaning service, childcare enrollment, tutoring assessment, CPA tax savings, photography mini-session, wedding venue tour, moving company quote — each with unique gradient color scheme, schema.org type, FAQ JSON-LD, countdown urgency, TCPA-consent lead forms), dashboard now 30 live templates, Builder gains 10 template fieldsets, sitemap/seo-ping/SEO-keeper auto-include all 40 URLs
 - **Version**: 3.1.0 — GoHighLevel Integration: full LeadConnector API v2 sync on every lead (contact upsert w/ dedupe → auto-tags incl. funnel slug + UTM campaign + custom `?ghlTag=` per-link tags → attribution note → optional pipeline opportunity → optional workflow enrollment), `GET /api/ghl/status` live connection check, GoHighLevel section on /integrations (setup guide, test curls, pipeline/workflow ID discovery commands, live status badge), Builder GHL tags field, 5 new secrets (`GHL_API_KEY`, `GHL_LOCATION_ID`, `GHL_PIPELINE_ID`, `GHL_STAGE_ID`, `GHL_WORKFLOW_ID`), graceful no-config fallback so funnels never break
 - **Version**: 3.0.0 — All-In-One System: **white-label client branding** on every funnel (`bizLogo`, `brandColor`, `accentColor` URL params → server-side brand CSS override + motion.js client-logo injection into hero & footer), **5 new premium templates** (restaurant VIP table, dental new-patient, auto-repair inspection, salon new-guest, mortgage pre-approval — all with schema.org types, FAQ JSON-LD, countdown urgency, TCPA-consent forms, compliance language), dashboard now 20 live templates, Builder gains 5 template fieldsets + White-Label Branding section, sitemap/seo-ping/SEO-keeper auto-include all 30 URLs
 - **Version**: 2.5.0 — Premium Pack + SEO Keeper: 3D tilt cards (perspective rotate-on-cursor), conic rotating glow borders on hero glass cards, animated gradient text on hero stats, scroll-parallax hero blobs, blur-in reveal variant, image shimmer skeletons, marquee utility; IndexNow integration (key file route + POST /api/seo-ping) and **rj-seo-keeper Cloudflare Worker** — daily cron (06:07 UTC) fetches the live sitemap, submits all 25 URLs to IndexNow (Bing/Yandex/Seznam/Naver shared index, multi-endpoint fallback) and warms the top 16 funnel pages for fast crawler responses; manual trigger at rj-seo-keeper.rickjefferson.workers.dev/run

@@ -30,6 +30,16 @@ import { dentalTemplate } from './templates/dental'
 import { autoServicesTemplate } from './templates/autoServices'
 import { salonTemplate } from './templates/salon'
 import { mortgageTemplate } from './templates/mortgage'
+import { chiropracticTemplate } from './templates/chiropractic'
+import { petCareTemplate } from './templates/petCare'
+import { landscapingTemplate } from './templates/landscaping'
+import { cleaningTemplate } from './templates/cleaning'
+import { childcareTemplate } from './templates/childcare'
+import { tutoringTemplate } from './templates/tutoring'
+import { accountingTemplate } from './templates/accounting'
+import { photographyTemplate } from './templates/photography'
+import { weddingVenueTemplate } from './templates/weddingVenue'
+import { movingTemplate } from './templates/moving'
 
 const app = new Hono()
 
@@ -75,12 +85,24 @@ app.get('/t/auto-services', (c) => html(autoServicesTemplate(c.req.query())))
 app.get('/t/salon', (c) => html(salonTemplate(c.req.query())))
 app.get('/t/mortgage', (c) => html(mortgageTemplate(c.req.query())))
 
+// ── v3.2: 10 more premium niche funnel templates ──────────────
+app.get('/t/chiropractic', (c) => html(chiropracticTemplate(c.req.query())))
+app.get('/t/pet-care', (c) => html(petCareTemplate(c.req.query())))
+app.get('/t/landscaping', (c) => html(landscapingTemplate(c.req.query())))
+app.get('/t/cleaning', (c) => html(cleaningTemplate(c.req.query())))
+app.get('/t/childcare', (c) => html(childcareTemplate(c.req.query())))
+app.get('/t/tutoring', (c) => html(tutoringTemplate(c.req.query())))
+app.get('/t/accounting', (c) => html(accountingTemplate(c.req.query())))
+app.get('/t/photography', (c) => html(photographyTemplate(c.req.query())))
+app.get('/t/wedding-venue', (c) => html(weddingVenueTemplate(c.req.query())))
+app.get('/t/moving', (c) => html(movingTemplate(c.req.query())))
+
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '3.1.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '3.2.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
 const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/brand', '/seo', '/integrations']
-const FUNNELS = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency', 'restaurant', 'dental', 'auto-services', 'salon', 'mortgage']
+const FUNNELS = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency', 'restaurant', 'dental', 'auto-services', 'salon', 'mortgage', 'chiropractic', 'pet-care', 'landscaping', 'cleaning', 'childcare', 'tutoring', 'accounting', 'photography', 'wedding-venue', 'moving']
 
 app.get('/sitemap.xml', (c) => {
   const base = new URL(c.req.url).origin

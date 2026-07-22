@@ -2,9 +2,9 @@ import { shell } from './layout'
 
 export const dashboardPage = () => shell('Dashboard', 'dashboard', `
 <section id="hero-section" class="text-center py-10">
-  <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-4"><i class="fas fa-bolt mr-1"></i>SUPREME FUNNEL SYSTEM v3.0 — 20 LIVE TEMPLATES · WHITE-LABEL READY</p>
+  <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-4"><i class="fas fa-bolt mr-1"></i>SUPREME FUNNEL SYSTEM v3.2 — 30 LIVE TEMPLATES · WHITE-LABEL READY</p>
   <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">The <span class="grad-text">Funnel Command Center</span></h1>
-  <p class="text-gray-400 max-w-2xl mx-auto text-lg">20 compliance-engineered live funnel templates across events, tax, credit, and every major local-business niche — all white-label ready with client logo + brand color injection — plus email vaults, legal disclaimer libraries, and a parameterized funnel builder. Customize and deploy.</p>
+  <p class="text-gray-400 max-w-2xl mx-auto text-lg">30 compliance-engineered live funnel templates across events, tax, credit, and every major local-business niche — all white-label ready with client logo + brand color injection — plus email vaults, legal disclaimer libraries, and a parameterized funnel builder. Customize and deploy.</p>
 </section>
 
 <section id="vertical-cards" class="grid md:grid-cols-3 gap-6 mb-12">
@@ -85,6 +85,16 @@ export const dashboardPage = () => shell('Dashboard', 'dashboard', `
       ['/t/auto-services', 'Auto Repair Inspection Funnel', 'fa-car', 'Intro inspection + oil change offer: photo-proof trust angle, warranty positioning, vehicle capture'],
       ['/t/salon', 'Salon New Guest Funnel', 'fa-scissors', 'First-visit discount + free treatment: redo promise, service selector, stylist matching'],
       ['/t/mortgage', 'Mortgage Pre-Approval Funnel', 'fa-house-chimney', '60-second rate check: soft-pull messaging, program stack, NMLS + Equal Housing compliance'],
+      ['/t/chiropractic', 'Chiropractic New Patient Funnel', 'fa-user-doctor', '$49 exam + adjustment special: drug-free pain relief angle, condition chips, insurance-friendly FAQ'],
+      ['/t/pet-care', 'Pet Care / Vet Funnel', 'fa-paw', 'Free first wellness exam + groom discount: fear-free positioning, multi-service chips, pet-parent trust'],
+      ['/t/landscaping', 'Landscaping Design Funnel', 'fa-leaf', 'Free design consult + 3D rendering: xeriscape/curb-appeal angles, project gallery chips, seasonal urgency'],
+      ['/t/cleaning', 'Cleaning Service Funnel', 'fa-broom', '$50-off first deep clean: background-checked teams, re-clean guarantee, recurring-plan upsell'],
+      ['/t/childcare', 'Childcare Enrollment Funnel', 'fa-children', 'Free registration + first-week discount: licensed ratios, curriculum highlights, tour-booking CTA'],
+      ['/t/tutoring', 'Tutoring Assessment Funnel', 'fa-graduation-cap', 'Free skills assessment + first session free: grade-gain proof, subject chips, parent-focused FAQ'],
+      ['/t/accounting', 'CPA Tax Savings Funnel', 'fa-calculator', 'Free tax savings review: average-savings proof, niche positioning, year-round advisory upsell'],
+      ['/t/photography', 'Photography Mini-Session Funnel', 'fa-camera-retro', '$149 mini session offer: portfolio-driven trust, specialty chips, limited-slots scarcity'],
+      ['/t/wedding-venue', 'Wedding Venue Tour Funnel', 'fa-champagne-glasses', 'Champagne tour + date-hold: capacity/pricing transparency, style positioning, date-scarcity urgency'],
+      ['/t/moving', 'Moving Company Quote Funnel', 'fa-truck-fast', 'Free in-home estimate + $100 off: binding-quote promise, damage-claim-rate proof, licensed & insured'],
     ].map(([href, title, icon, desc]) => `
     <a href="${href}" target="_blank" class="card p-5 block group">
       <h3 class="font-bold text-white text-sm mb-1 group-hover:text-brand-cyan"><i class="fas ${icon} text-brand-cyan mr-2"></i>${title} <i class="fas fa-arrow-up-right-from-square text-xs text-gray-600 ml-1"></i></h3>

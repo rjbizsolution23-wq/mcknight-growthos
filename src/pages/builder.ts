@@ -37,6 +37,16 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
         <option value="auto-services">🚗 Auto Repair Inspection Funnel</option>
         <option value="salon">✂️ Salon New Guest Funnel</option>
         <option value="mortgage">🏦 Mortgage Pre-Approval Funnel</option>
+        <option value="chiropractic">🦴 Chiropractic New Patient Funnel</option>
+        <option value="pet-care">🐾 Pet Care / Vet Funnel</option>
+        <option value="landscaping">🌿 Landscaping Design Funnel</option>
+        <option value="cleaning">🧹 Cleaning Service Funnel</option>
+        <option value="childcare">🧸 Childcare Enrollment Funnel</option>
+        <option value="tutoring">🎓 Tutoring Assessment Funnel</option>
+        <option value="accounting">🧮 CPA Tax Savings Funnel</option>
+        <option value="photography">📸 Photography Mini-Session Funnel</option>
+        <option value="wedding-venue">🥂 Wedding Venue Tour Funnel</option>
+        <option value="moving">🚚 Moving Company Quote Funnel</option>
       </select>
     </label>
 
@@ -321,6 +331,137 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
         ${field('avgDays', 'Avg Days to Close', '18')}
       </div>
       ${field('deadline', 'Rate Lock Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="chiropractic" class="space-y-3 hidden">
+      ${field('clinic', 'Clinic Name', 'Align Spine & Wellness')}
+      ${field('doctor', 'Doctor Name', 'Dr. Maya Torres, DC')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('offer', 'New Patient Offer', 'Exam + Consultation + First Adjustment')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('offerPrice', 'Offer Price', '$49')}
+        ${field('offerValue', 'Offer Value', '$265')}
+        ${field('patientCount', 'Patients Helped', '8,500+')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="pet-care" class="space-y-3 hidden">
+      ${field('bizName', 'Business Name', 'Happy Tails Veterinary & Grooming')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('service', 'Services', 'veterinary care & grooming')}
+      ${field('offer', 'New Client Offer', 'Free First Wellness Exam + 20% Off First Groom')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('offerValue', 'Offer Value', '$95')}
+        ${field('petCount', 'Pets Cared For', '15,000+')}
+        ${field('rating', 'Star Rating', '4.9')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="landscaping" class="space-y-3 hidden">
+      ${field('company', 'Company Name', 'Desert Bloom Landscaping')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('service', 'Services', 'landscape design & maintenance')}
+      ${field('offer', 'Lead Offer', 'Free Design Consultation + 3D Rendering')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('offerValue', 'Offer Value', '$450')}
+        ${field('projectCount', 'Projects Completed', '1,200+')}
+        ${field('years', 'Years in Business', '15')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="cleaning" class="space-y-3 hidden">
+      ${field('company', 'Company Name', 'Spotless Pro Cleaning')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('service', 'Services', 'home & office cleaning')}
+      ${field('offer', 'First-Clean Offer', '$50 Off Your First Deep Clean')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('cleansDone', 'Cleans Completed', '22,000+')}
+        ${field('rating', 'Star Rating', '4.9')}
+        ${field('guarantee', 'Guarantee', '24-hour re-clean guarantee')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="childcare" class="space-y-3 hidden">
+      ${field('center', 'Center Name', 'Little Explorers Learning Center')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('ages', 'Ages Served', '6 weeks \u2013 5 years')}
+      ${field('offer', 'Enrollment Offer', 'Free Registration + First Week 50% Off')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('offerValue', 'Offer Value', '$275')}
+        ${field('familyCount', 'Families Served', '900+')}
+        ${field('ratio', 'Best Ratio', '1:4 infant ratio')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="tutoring" class="space-y-3 hidden">
+      ${field('bizName', 'Business Name', 'Peak Performance Tutoring')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('subject', 'Subjects', 'math, reading & test prep')}
+      ${field('offer', 'Lead Offer', 'Free Skills Assessment + First Session Free')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('offerValue', 'Offer Value', '$190')}
+        ${field('studentCount', 'Students Helped', '3,400+')}
+        ${field('gradeGain', 'Avg Grade Gain', '1.5 letter grades')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="accounting" class="space-y-3 hidden">
+      ${field('firm', 'Firm Name', 'Summit CPA Advisors')}
+      ${field('cpa', 'CPA Name', 'Daniel Ortiz, CPA')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('niche', 'Client Niche', 'small business owners & contractors')}
+      ${field('offer', 'Lead Offer', 'Free Tax Savings Review')}
+      <div class="grid grid-cols-2 gap-3">
+        ${field('avgSavings', 'Avg First-Year Savings', '$11,400')}
+        ${field('clientCount', 'Clients Served', '650+')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="photography" class="space-y-3 hidden">
+      ${field('studio', 'Studio Name', 'Golden Hour Studios')}
+      ${field('photographer', 'Photographer Name', 'Elena Vasquez')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('specialty', 'Specialty', 'family, branding & wedding photography')}
+      ${field('offer', 'Session Offer', 'Mini Session + 5 Edited Images')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('offerPrice', 'Offer Price', '$149')}
+        ${field('offerValue', 'Offer Value', '$425')}
+        ${field('sessionCount', 'Sessions Shot', '2,100+')}
+      </div>
+      ${field('deadline', 'Booking Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="wedding-venue" class="space-y-3 hidden">
+      ${field('venue', 'Venue Name', 'The Cottonwood Estate')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('style', 'Venue Style', 'garden & rustic-elegant')}
+      ${field('offer', 'Tour Offer', 'Complimentary Champagne Tour + Date-Hold')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('capacity', 'Guest Capacity', '250')}
+        ${field('weddingCount', 'Weddings Hosted', '480+')}
+        ${field('startingPrice', 'Starting Price', '$4,900')}
+      </div>
+      ${field('deadline', 'Tour Deadline (YYYY-MM-DD)', '2026-08-15')}
+    </fieldset>
+
+    <fieldset data-fields-for="moving" class="space-y-3 hidden">
+      ${field('company', 'Company Name', 'Rock Steady Moving Co.')}
+      ${field('city', 'City', 'Albuquerque')}
+      ${field('service', 'Services', 'local & long-distance moving')}
+      ${field('offer', 'Quote Offer', 'Free In-Home Estimate + $100 Off Booking')}
+      <div class="grid grid-cols-3 gap-3">
+        ${field('movesDone', 'Moves Completed', '9,800+')}
+        ${field('rating', 'Star Rating', '4.9')}
+        ${field('claimRate', 'Damage Claim Rate', '0.4%')}
+      </div>
+      ${field('deadline', 'Offer Deadline (YYYY-MM-DD)', '2026-08-15')}
     </fieldset>
 
     <fieldset id="builder-universal" class="mt-6 pt-5 border-t border-blue-900/50 space-y-3">
