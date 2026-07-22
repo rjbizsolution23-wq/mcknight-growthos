@@ -9,6 +9,7 @@ import { builderPage } from './pages/builder'
 import { brandPage } from './pages/brand'
 import { seoPage } from './pages/seo'
 import { integrationsPage } from './pages/integrations'
+import { leadsPage } from './pages/leads'
 import { api, INDEXNOW_KEY } from './api'
 import { eventLandingTemplate } from './templates/eventLanding'
 import { sponsorDeckTemplate } from './templates/sponsorDeck'
@@ -41,7 +42,8 @@ import { photographyTemplate } from './templates/photography'
 import { weddingVenueTemplate } from './templates/weddingVenue'
 import { movingTemplate } from './templates/moving'
 
-const app = new Hono()
+type AppBindings = { DB?: D1Database }
+const app = new Hono<{ Bindings: AppBindings }>()
 
 const html = (body: string) =>
   new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })
@@ -57,6 +59,7 @@ app.get('/builder', (c) => html(builderPage()))
 app.get('/brand', (c) => html(brandPage()))
 app.get('/seo', (c) => html(seoPage()))
 app.get('/integrations', (c) => html(integrationsPage()))
+app.get('/leads', (c) => html(leadsPage()))
 
 // ── API layer: Stripe checkout + lead capture + SEO pack ─────
 app.route('/api', api)
@@ -97,11 +100,21 @@ app.get('/t/photography', (c) => html(photographyTemplate(c.req.query())))
 app.get('/t/wedding-venue', (c) => html(weddingVenueTemplate(c.req.query())))
 app.get('/t/moving', (c) => html(movingTemplate(c.req.query())))
 
+// ── v3.3: short funnel links — /f/:code → saved builder config (D1) ──
+app.get('/f/:code', async (c) => {
+  const code = c.req.param('code')
+  if (!c.env?.DB || !/^[a-z0-9]{3,12}$/.test(code)) return c.redirect('/', 302)
+  const row = await c.env.DB.prepare('SELECT template, params FROM funnel_links WHERE code = ?').bind(code).first<{ template: string; params: string }>()
+  if (!row) return c.redirect('/', 302)
+  c.executionCtx?.waitUntil?.(c.env.DB.prepare('UPDATE funnel_links SET clicks = clicks + 1 WHERE code = ?').bind(code).run())
+  return c.redirect(`/t/${row.template}${row.params ? '?' + row.params : ''}`, 302)
+})
+
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '3.2.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '3.3.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
-const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/brand', '/seo', '/integrations']
+const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations']
 const FUNNELS = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency', 'restaurant', 'dental', 'auto-services', 'salon', 'mortgage', 'chiropractic', 'pet-care', 'landscaping', 'cleaning', 'childcare', 'tutoring', 'accounting', 'photography', 'wedding-venue', 'moving']
 
 app.get('/sitemap.xml', (c) => {

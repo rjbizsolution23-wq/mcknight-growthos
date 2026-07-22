@@ -2,7 +2,7 @@ import { shell } from './layout'
 
 export const dashboardPage = () => shell('Dashboard', 'dashboard', `
 <section id="hero-section" class="text-center py-10">
-  <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-4"><i class="fas fa-bolt mr-1"></i>SUPREME FUNNEL SYSTEM v3.2 — 30 LIVE TEMPLATES · WHITE-LABEL READY</p>
+  <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-4"><i class="fas fa-bolt mr-1"></i>SUPREME FUNNEL SYSTEM v3.3 — 30 LIVE TEMPLATES · D1 LEAD CRM · WORKERS AI</p>
   <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">The <span class="grad-text">Funnel Command Center</span></h1>
   <p class="text-gray-400 max-w-2xl mx-auto text-lg">30 compliance-engineered live funnel templates across events, tax, credit, and every major local-business niche — all white-label ready with client logo + brand color injection — plus email vaults, legal disclaimer libraries, and a parameterized funnel builder. Customize and deploy.</p>
 </section>
@@ -49,6 +49,10 @@ export const dashboardPage = () => shell('Dashboard', 'dashboard', `
     <a href="/builder" class="card p-6 block group">
       <h3 class="font-bold text-white mb-2 group-hover:text-brand-cyan"><i class="fas fa-wand-magic-sparkles text-brand-pink mr-2"></i>Funnel Builder</h3>
       <p class="text-gray-400 text-sm">Fill in your event, firm, or offer details — get a fully customized live funnel page with a shareable URL. Zero placeholders.</p>
+    </a>
+    <a href="/leads" class="card p-6 block group">
+      <h3 class="font-bold text-white mb-2 group-hover:text-brand-cyan"><i class="fas fa-inbox text-brand-pink mr-2"></i>Lead Inbox <span class="text-[9px] font-mono bg-emerald-900/60 text-emerald-300 px-1.5 py-0.5 rounded ml-1">NEW</span></h3>
+      <p class="text-gray-400 text-sm">Every lead from all 30 funnels, stored forever in Cloudflare D1. Pipeline statuses, filters, CSV export, and AI “who to call first” insights.</p>
     </a>
     <a href="/emails" class="card p-6 block group">
       <h3 class="font-bold text-white mb-2 group-hover:text-brand-cyan"><i class="fas fa-envelope-open-text text-brand-pink mr-2"></i>Email Vault</h3>

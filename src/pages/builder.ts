@@ -50,6 +50,16 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
       </select>
     </label>
 
+    <div id="ai-fill-panel" class="mb-6 bg-gradient-to-br from-blue-950/60 to-indigo-950/40 border border-blue-800/60 rounded-xl p-4">
+      <p class="text-sm text-white font-semibold mb-1"><i class="fas fa-brain text-brand-pink mr-2"></i>AI Copy Fill <span class="text-[10px] font-mono bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded ml-1">Workers AI · llama-3.1</span></p>
+      <p class="text-[11px] text-gray-400 mb-3">Describe the client in one line — AI writes every field below for the selected template. Compliant, specific, ready to edit.</p>
+      <div class="flex gap-2">
+        <input id="ai-brief" type="text" placeholder="e.g. Family-owned moving company in Santa Fe, 12 years, spotless reviews" class="flex-1 bg-[#060a14] border border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-200 outline-none">
+        <button type="button" id="btn-ai-fill" class="grad-bg text-white text-sm font-bold px-4 py-2.5 rounded-lg hover:opacity-90 whitespace-nowrap"><i class="fas fa-wand-magic-sparkles mr-1"></i>AI Fill</button>
+      </div>
+      <p id="ai-fill-status" class="text-[11px] mt-2 hidden"></p>
+    </div>
+
     <fieldset data-fields-for="event-landing" class="space-y-3">
       ${field('eventName', 'Event Name', 'The Funnel Growth Summit 2026')}
       ${field('date', 'Date', 'October 15–17, 2026')}
@@ -441,7 +451,7 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
     <fieldset data-fields-for="wedding-venue" class="space-y-3 hidden">
       ${field('venue', 'Venue Name', 'The Cottonwood Estate')}
       ${field('city', 'City', 'Albuquerque')}
-      ${field('style', 'Venue Style', 'garden & rustic-elegant')}
+      ${field('venueStyle', 'Venue Style', 'garden & rustic-elegant')}
       ${field('offer', 'Tour Offer', 'Complimentary Champagne Tour + Date-Hold')}
       <div class="grid grid-cols-3 gap-3">
         ${field('capacity', 'Guest Capacity', '250')}
@@ -523,6 +533,11 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
       <div class="card p-4 mb-4">
         <p class="text-xs text-gray-400 mb-1">Your funnel URL (open / share):</p>
         <a id="builder-link" href="#" target="_blank" class="text-brand-cyan text-sm break-all underline"></a>
+        <div class="flex items-center gap-2 mt-3 pt-3 border-t border-blue-900/40">
+          <input id="shortlink-label" type="text" placeholder="Label (client / campaign)" class="flex-1 bg-[#060a14] border border-gray-700 rounded-lg px-3 py-2 text-xs text-gray-200 outline-none">
+          <button type="button" id="btn-shortlink" class="text-xs font-semibold text-brand-cyan border border-blue-800 px-3 py-2 rounded-lg hover:bg-blue-900/30 whitespace-nowrap"><i class="fas fa-link mr-1"></i>Save Short Link</button>
+        </div>
+        <p id="shortlink-out" class="text-xs mt-2 hidden"></p>
       </div>
       <div class="card overflow-hidden" style="height:70vh">
         <iframe id="builder-preview" class="w-full h-full bg-white" title="Funnel preview"></iframe>

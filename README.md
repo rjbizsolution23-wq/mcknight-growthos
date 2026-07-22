@@ -103,6 +103,14 @@ Never blocks the funnel — if GHL is down/unconfigured, leads are still accepte
 ### Integrations Secrets
 Copy `.dev.vars.example` → `.dev.vars` locally; production via `wrangler pages secret put`: `STRIPE_SECRET_KEY`, `RESEND_API_KEY`, `LEAD_NOTIFY_EMAIL`, `LEAD_FROM_EMAIL`.
 
+## v3.3 — Cloudflare-Native Layer (D1 + Workers AI)
+- **Lead Inbox CRM (`/leads`)** — every lead from all 30 funnels auto-stored in Cloudflare D1 (`rj-funnel-leads` DB): stats cards, funnel/status/search filters, clickable pipeline statuses (new → contacted → qualified → won/lost), CSV export (`/api/leads/export.csv`, 5K rows, full UTM + GHL attribution)
+- **AI Lead Insights** — one click on /leads: Workers AI (llama-4-scout, runs on the same Cloudflare account — zero API keys) summarizes volume, names the top 3 leads to call first, flags campaign patterns (`POST /api/ai/insights`)
+- **AI Copy Fill in Builder** — describe the client in one line → AI writes every template field (compliant, specific, editable) (`POST /api/ai/copy {template, fields[], brief}`)
+- **Short funnel links** — save any builder config → `funnels.rjbusinesssolutions.org/f/{code}` with click tracking (`POST /api/links`, `GET /api/links`, redirect `/f/:code`)
+- **Lead API**: `GET /api/leads?funnel=&status=&q=&limit=&offset=` · `GET /api/leads/stats` · `PATCH /api/leads/:id {status}`
+- Health now reports bindings: `GET /api/health` → `{ d1: true, ai: true, … }`
+
 ## Email Sequences Included (Email Vault)
 1. **Sponsor Cold Outreach** — 6 touches (Day 0→21, incl. Loom script + breakup)
 2. **Pre-Event Nurture** — 8 emails + 4 SMS (TCPA-noted)
@@ -118,8 +126,10 @@ Real Estate (seller nurture, Fair-Housing-safe) · Fitness (FTC results-vary wir
 Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coaching (earnings claims/click-to-cancel) · E-commerce (Consumer Review Rule/Mail Order Rule) · SaaS (GDPR/CCPA/negative option) · Law (Model Rules 7.1–7.3) · Home Services (licensing/cooling-off) · Med Spa (HIPAA marketing/before-after) · Insurance (DOI/CMS Medicare) · Agency (results claims/contracts)
 
 ## Data Architecture
-- **Storage**: none required — all content is statically generated server-side; template customization travels in the URL query string (shareable, bookmarkable, stateless)
-- **Data flow**: Builder form → query params → Hono route → server-rendered custom funnel HTML
+- **Storage**: **Cloudflare D1** (`rj-funnel-leads`, id `c624734c-5fad-4f6e-a561-4b52163f1a04`) — tables: `leads` (name/email/phone/funnel/UTM/GHL id/status/full payload JSON) and `funnel_links` (short code → template+params, click counter). Migrations in `migrations/`; apply with `npx wrangler d1 migrations apply rj-funnel-leads --local|--remote`
+- **AI**: **Cloudflare Workers AI** binding (`AI`), model `@cf/meta/llama-4-scout-17b-16e-instruct` — included with the Cloudflare account, no external API key
+- **Data flow (lead)**: funnel form → POST /api/lead → GHL sync (if keys set) → **D1 insert** → email notify (if key set) → visible in /leads instantly
+- **Data flow (builder)**: Builder form → query params → Hono route → server-rendered funnel; optionally saved to D1 as a `/f/{code}` short link
 
 ## Tech Stack
 - Hono 4 + TypeScript on Cloudflare Pages architecture
@@ -134,11 +144,10 @@ Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coachin
 5. Before any real launch: replace example testimonials/metrics with verified data and get attorney review (checklists flag exactly what).
 
 ## Features Not Yet Implemented
-- Persisting saved funnel configurations (would use Cloudflare D1/KV)
 - Export funnel page as standalone HTML file download
-- Lead form → CRM/webhook wiring on templates (forms are stubbed with alerts)
 - A/B variant generator per template
-- Production deployment to Cloudflare Pages
+- Per-client login / multi-tenant lead inbox views
+- AI email sequence generator (Workers AI is wired — natural next step)
 
 ## Recommended Next Steps
 1. Deploy to Cloudflare Pages for a permanent URL
@@ -149,6 +158,7 @@ Real Estate (Fair Housing/RESPA) · Fitness (FTC health claims/DSHEA) · Coachin
 ## Deployment
 - **Platform**: Cloudflare Pages — LIVE on Rick’s own Cloudflare account (project: rj-funnel-command-center)
 - **Status**: ✅ LIVE in production — https://rj-funnel-command-center.pages.dev
+- **Version**: 3.3.0 — Cloudflare-Native Layer: **D1 database** (permanent lead storage on every form submit + short funnel links `/f/{code}` with click tracking) + **Workers AI LLM** (llama-4-scout, zero API keys — AI Copy Fill in Builder writes every template field from a one-line client brief; AI Lead Insights on /leads names who to call first), new **/leads Lead Inbox CRM** (stats, filters, pipeline statuses, CSV export with full UTM/GHL attribution), lead API (`/api/leads[.../stats|/:id|/export.csv]`), links API (`/api/links`), fixed wedding-venue `style` param shadowing form.style (now `venueStyle`)
 - **Version**: 3.2.0 — Niche Expansion Pack: **10 new premium templates** (chiropractic new-patient, pet care/vet, landscaping design, cleaning service, childcare enrollment, tutoring assessment, CPA tax savings, photography mini-session, wedding venue tour, moving company quote — each with unique gradient color scheme, schema.org type, FAQ JSON-LD, countdown urgency, TCPA-consent lead forms), dashboard now 30 live templates, Builder gains 10 template fieldsets, sitemap/seo-ping/SEO-keeper auto-include all 40 URLs
 - **Version**: 3.1.0 — GoHighLevel Integration: full LeadConnector API v2 sync on every lead (contact upsert w/ dedupe → auto-tags incl. funnel slug + UTM campaign + custom `?ghlTag=` per-link tags → attribution note → optional pipeline opportunity → optional workflow enrollment), `GET /api/ghl/status` live connection check, GoHighLevel section on /integrations (setup guide, test curls, pipeline/workflow ID discovery commands, live status badge), Builder GHL tags field, 5 new secrets (`GHL_API_KEY`, `GHL_LOCATION_ID`, `GHL_PIPELINE_ID`, `GHL_STAGE_ID`, `GHL_WORKFLOW_ID`), graceful no-config fallback so funnels never break
 - **Version**: 3.0.0 — All-In-One System: **white-label client branding** on every funnel (`bizLogo`, `brandColor`, `accentColor` URL params → server-side brand CSS override + motion.js client-logo injection into hero & footer), **5 new premium templates** (restaurant VIP table, dental new-patient, auto-repair inspection, salon new-guest, mortgage pre-approval — all with schema.org types, FAQ JSON-LD, countdown urgency, TCPA-consent forms, compliance language), dashboard now 20 live templates, Builder gains 5 template fieldsets + White-Label Branding section, sitemap/seo-ping/SEO-keeper auto-include all 30 URLs

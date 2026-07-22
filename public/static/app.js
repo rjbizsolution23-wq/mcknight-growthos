@@ -81,6 +81,68 @@ if (builderForm) {
     document.getElementById('builder-result').classList.remove('hidden')
     document.getElementById('builder-result').scrollIntoView({ behavior: 'smooth' })
   })
+
+  // ── v3.3: AI Copy Fill (Cloudflare Workers AI) ──────────────
+  const aiBtn = document.getElementById('btn-ai-fill')
+  if (aiBtn) aiBtn.addEventListener('click', async () => {
+    const t = templateSelect.value
+    const brief = (document.getElementById('ai-brief').value || '').trim()
+    const status = document.getElementById('ai-fill-status')
+    const fieldset = document.querySelector(`[data-fields-for="${t}"]`)
+    const inputs = fieldset ? [...fieldset.querySelectorAll('input[name]')] : []
+    const fields = inputs.map(i => i.name)
+    if (!brief) { status.className = 'text-[11px] mt-2 text-amber-400'; status.textContent = 'Describe the client first — one line is enough.'; status.classList.remove('hidden'); return }
+    aiBtn.disabled = true
+    aiBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Writing…'
+    status.className = 'text-[11px] mt-2 text-blue-300'; status.textContent = 'AI is writing your funnel copy…'; status.classList.remove('hidden')
+    try {
+      const res = await fetch('/api/ai/copy', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ template: t, fields, brief }) })
+      const d = await res.json()
+      if (d.ok && d.fields) {
+        let filled = 0
+        inputs.forEach(inp => { if (d.fields[inp.name]) { inp.value = d.fields[inp.name]; filled++ } })
+        status.className = 'text-[11px] mt-2 text-emerald-400'
+        status.textContent = '✓ AI filled ' + filled + ' fields — review, tweak, then Generate. (Replace proof numbers with the client\u2019s real verified data before launch.)'
+      } else {
+        status.className = 'text-[11px] mt-2 text-amber-400'
+        status.textContent = '⚠ ' + (d.error || 'AI unavailable — works in production on Cloudflare.')
+      }
+    } catch (e) {
+      status.className = 'text-[11px] mt-2 text-amber-400'
+      status.textContent = '⚠ AI unavailable in this environment — works in production on Cloudflare.'
+    }
+    aiBtn.disabled = false
+    aiBtn.innerHTML = '<i class="fas fa-wand-magic-sparkles mr-1"></i>AI Fill'
+  })
+
+  // ── v3.3: Save Short Link (Cloudflare D1) ───────────────────
+  const slBtn = document.getElementById('btn-shortlink')
+  if (slBtn) slBtn.addEventListener('click', async () => {
+    const out = document.getElementById('shortlink-out')
+    const link = document.getElementById('builder-link')
+    const url = link.getAttribute('href') || ''
+    const m = url.match(/^\/t\/([a-z0-9-]+)\??(.*)$/)
+    if (!m) { out.className = 'text-xs mt-2 text-amber-400'; out.textContent = 'Generate a funnel first.'; out.classList.remove('hidden'); return }
+    slBtn.disabled = true
+    slBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving…'
+    try {
+      const res = await fetch('/api/links', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ template: m[1], params: m[2] || '', label: (document.getElementById('shortlink-label').value || '').trim() }) })
+      const d = await res.json()
+      if (d.ok) {
+        out.className = 'text-xs mt-2 text-emerald-400'
+        out.innerHTML = '✓ Short link saved: <a href="' + d.url + '" target="_blank" class="underline text-brand-cyan">' + d.url + '</a> <button type="button" class="ml-1 text-gray-400 underline" onclick="navigator.clipboard.writeText(\'' + d.url + '\')">copy</button> — clicks are tracked in D1.'
+      } else {
+        out.className = 'text-xs mt-2 text-amber-400'
+        out.textContent = '⚠ ' + (d.error || 'Could not save link')
+      }
+    } catch (e) {
+      out.className = 'text-xs mt-2 text-amber-400'
+      out.textContent = '⚠ Short links need the D1 database — works in production on Cloudflare.'
+    }
+    out.classList.remove('hidden')
+    slBtn.disabled = false
+    slBtn.innerHTML = '<i class="fas fa-link mr-1"></i>Save Short Link'
+  })
 }
 
 // Countdown timers on templates (data-deadline attr = ISO date)

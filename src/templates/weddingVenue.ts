@@ -3,7 +3,9 @@ import { param, funnelHead, templateBadge, defaultDeadline } from './helpers'
 export const weddingVenueTemplate = (q: Record<string, string | undefined>) => {
   const venue = param(q, 'venue', 'The Cottonwood Estate')
   const city = param(q, 'city', 'Albuquerque')
-  const style = param(q, 'style', 'garden & rustic-elegant')
+  // Accepts venueStyle (builder) or legacy style param — 'style' as an input
+  // name shadows form.style in the DOM, so the builder sends venueStyle.
+  const style = param({ ...q, style: q.venueStyle || q.style }, 'style', 'garden & rustic-elegant')
   const offer = param(q, 'offer', 'Complimentary Champagne Tour + Date-Hold')
   const capacity = param(q, 'capacity', '250')
   const weddingCount = param(q, 'weddingCount', '480+')

@@ -72,6 +72,7 @@ ${extraHead}
         ['/tax', 'Tax', 'tax'],
         ['/credit', 'Credit Repair', 'credit'],
         ['/builder', 'Builder', 'builder'],
+        ['/leads', 'Lead Inbox', 'leads'],
         ['/emails', 'Email Vault', 'emails'],
         ['/compliance', 'Compliance Vault', 'compliance'],
         ['/seo', 'SEO Engine', 'seo'],
