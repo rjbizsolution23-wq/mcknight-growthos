@@ -1,17 +1,25 @@
 // Template helpers — shared by all live funnel templates
 
-// ── RJ BRAND SYSTEM (single source of truth — Supreme Builder spec) ──
+// ── McKNIGHT BRAND SYSTEM (single source of truth — GrowthOS spec) ──
+// McKnight GrowthOS · AI-Powered Conversion and Revenue Operations Platform
+// Parent: McKnight Opportunity Group · Technology: Powered by RJ Business Solutions
 export const BRAND = {
-  name: 'RJ Business Solutions',
-  tagline: 'Empowering Generational Wealth',
-  logo: 'https://storage.googleapis.com/msgsndr/qQnxRHDtyx0uydPd5sRl/media/67eb83c5e519ed689430646b.jpeg',
-  url: 'https://rjbusinesssolutions.org',
-  royal: '#003399',      // logo royal blue
-  royalDeep: '#002266',
-  navyBlack: '#000B26',  // logo outer gradient
-  blue: '#2563eb',
-  cyan: '#0ea5e9',
-  gold: '#F59E0B',       // luxury accent (Supreme palette)
+  name: 'McKnight GrowthOS',
+  parent: 'McKnight Opportunity Group',
+  poweredBy: 'RJ Business Solutions',
+  tagline: 'Turn attention into pipeline—and pipeline into growth.',
+  logo: '/static/logo.svg',
+  url: 'https://mcknight-growthos.pages.dev',
+  navy: '#0a1628',       // McKnight navy
+  deepNavy: '#050b16',   // McKnight deep navy
+  royal: '#1e3a8a',      // gradient mid-stop
+  royalDeep: '#0a1628',
+  navyBlack: '#050b16',
+  blue: '#2563eb',       // growth blue
+  cyan: '#0ea5e9',       // growth cyan (product accent)
+  indigo: '#4f46e5',     // growth indigo
+  gold: '#d4a72c',       // McKnight gold
+  goldLight: '#f4ce65',  // McKnight gold light
   address: '1342 NM 333, Tijeras, NM 87059',
   region: 'US-NM',
   placename: 'Tijeras, New Mexico',
@@ -40,10 +48,10 @@ export const funnelHead = (
   opts: { desc?: string; type?: string; faq?: Array<{ q: string; a: string }> } = {}
 ) => {
   const seoTitle = param(q, 'seoTitle', title)
-  const desc = param(q, 'seoDesc', opts.desc || (title + ' — high-converting funnel built on the RJ Business Solutions Supreme Funnel System.'))
+  const desc = param(q, 'seoDesc', opts.desc || (title + ' — conversion-focused funnel built on McKnight GrowthOS.'))
   const keywords = param(q, 'seoKeywords', '')
   const canonical = param(q, 'canonical', '')
-  const ogImage = param(q, 'ogImage', 'https://storage.googleapis.com/msgsndr/qQnxRHDtyx0uydPd5sRl/media/67eb83c5e519ed689430646b.jpeg')
+  const ogImage = param(q, 'ogImage', 'https://mcknight-growthos.pages.dev/static/logo.svg')
   const dark = (q.theme || '').toLowerCase() === 'dark'
   const noindex = q.noindex === '1'
 
@@ -109,7 +117,7 @@ export const funnelHead = (
     }))
   } : null
 
-  // Dark theme: CSS override layer flips light Tailwind utilities to RJ Navy
+  // Dark theme: CSS override layer flips light Tailwind utilities to McKnight Navy
   const darkCss = dark ? `
   html[data-theme=dark] body{background:#0f172a!important;color:#e2e8f0!important}
   [data-theme=dark] .bg-white{background:#0f172a!important}
@@ -142,7 +150,7 @@ ${canonical ? `<link rel="canonical" href="${canonical}">` : ''}
 <meta property="og:description" content="${desc}">
 <meta property="og:image" content="${ogImage}">
 ${canonical ? `<meta property="og:url" content="${canonical}">` : ''}
-<meta property="og:site_name" content="RJ Business Solutions">
+<meta property="og:site_name" content="McKnight GrowthOS">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${seoTitle}">
 <meta name="twitter:description" content="${desc}">
@@ -156,7 +164,7 @@ ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* ── RJ Design System v2.4 — Supreme spec: luxury glassmorphism 3.0 + kinetic motion ── */
+  /* ── McKnight GrowthOS Design System v1.0 — luxury glassmorphism 3.0 + kinetic motion ── */
   :root { --rj-royal:#003399; --rj-royal-deep:#002266; --rj-navy-black:#000B26; --rj-blue:#2563eb; --rj-cyan:#0ea5e9; --rj-gold:#F59E0B; }
   html { scroll-behavior:smooth; }
   body { font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden; }
@@ -181,7 +189,7 @@ ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</
   @keyframes shine { 0%,55% { left:-80%; } 100% { left:135%; } }
   @keyframes pulseglow { 0%,100% { box-shadow:0 0 0 0 rgba(249,115,22,.6);} 50% { box-shadow:0 0 0 12px rgba(249,115,22,0);} }
 
-  /* Glassmorphism 3.0 — Supreme liquid-glass spec */
+  /* Glassmorphism 3.0 — liquid-glass spec */
   .glass { background:linear-gradient(135deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.42) 50%,rgba(255,255,255,.58) 100%); backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%); border:1px solid rgba(255,255,255,.45); box-shadow:0 8px 32px rgba(0,11,38,.12), inset 0 0 0 1px rgba(255,255,255,.1); }
   .glass-dark { background:linear-gradient(135deg,rgba(255,255,255,.1) 0%,rgba(255,255,255,.05) 50%,rgba(255,255,255,.1) 100%), rgba(0,11,38,.55); backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%); border:1px solid rgba(255,255,255,.18); box-shadow:0 8px 32px rgba(0,0,0,.12), inset 0 0 0 1px rgba(255,255,255,.1); }
 

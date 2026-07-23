@@ -20,7 +20,7 @@ export const creditServiceTemplate = (q: Record<string, string | undefined>) => 
     <p class="text-xl text-blue-200 mb-8">Get a free credit analysis from our specialists. No obligation. No upfront fees. Ever.</p>
     <a href="#pricing" class="inline-block bg-blue-500 hover:bg-blue-600 text-white text-lg font-bold px-10 py-5 rounded-2xl mb-6">Get My Free Credit Analysis →</a>
     <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-blue-200">
-      <span><i class="fas fa-scale-balanced text-emerald-400 mr-1"></i>CROA-Compliant</span>
+      <span><i class="fas fa-scale-balanced text-emerald-400 mr-1"></i>CROA-Aware Workflows</span>
       <span><i class="fas fa-hand-holding-dollar text-emerald-400 mr-1"></i>No Upfront Fees</span>
       <span><i class="fas fa-door-open text-emerald-400 mr-1"></i>Cancel Anytime</span>
       <span><i class="fas fa-users text-emerald-400 mr-1"></i>${clientsHelped} clients helped</span>

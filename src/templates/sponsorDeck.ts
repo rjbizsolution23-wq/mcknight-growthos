@@ -148,7 +148,7 @@ export const sponsorDeckTemplate = (q: Record<string, string | undefined>) => {
 </section>
 
 <footer class="bg-gray-950 text-gray-500 text-xs text-center py-8 px-4 border-t border-gray-800">
-  <p>${eventName} · RJ Business Solutions · 1342 NM 333, Tijeras, New Mexico 87059 · rjbusinesssolutions.org</p>
+  <p>${eventName} · McKnight GrowthOS · Powered by RJ Business Solutions · 1342 NM 333, Tijeras, New Mexico 87059</p>
 </footer>
 
 ${templateBadge}

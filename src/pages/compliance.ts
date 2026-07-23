@@ -4,9 +4,9 @@ import { complianceNicheTabs, complianceNichePanels } from './complianceNiche'
 const tabBtn = (id: string, label: string, active = false) =>
   `<button data-tab="${id}" class="px-4 py-2 rounded-lg text-sm ${active ? 'grad-bg text-white font-semibold' : 'text-gray-300 hover:bg-gray-800'}">${label}</button>`
 
-export const compliancePage = () => shell('Compliance Vault', 'compliance', `
+export const compliancePage = () => shell('Compliance Guard', 'compliance', `
 <section id="compliance-hero" class="mb-8">
-  <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3"><i class="fas fa-shield-halved grad-text mr-2"></i>Compliance Vault</h1>
+  <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3"><i class="fas fa-shield-halved grad-text mr-2"></i>Compliance Guard</h1>
   <p class="text-gray-400 max-w-3xl">Verbatim disclaimers, consent language, and legal checklists — the armor for every launch. <span class="text-brand-warn">Everything here requires review by a licensed attorney in your state before use. Not legal advice.</span></p>
 </section>
 

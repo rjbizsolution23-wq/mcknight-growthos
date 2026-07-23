@@ -2,7 +2,7 @@ import { param, funnelHead, templateBadge } from './helpers'
 
 export const creditSaasTemplate = (q: Record<string, string | undefined>) => {
   const productName = param(q, 'productName', 'DisputeForge')
-  const tagline = param(q, 'tagline', 'The Credit Repair Software Built to Keep Your Business Compliant — and Growing')
+  const tagline = param(q, 'tagline', 'The Credit Repair Software Built with Compliance Controls — and Built to Grow')
   const starterPrice = param(q, 'starterPrice', '$97')
   const growthPrice = param(q, 'growthPrice', '$197')
   const scalePrice = param(q, 'scalePrice', '$397')
@@ -13,9 +13,9 @@ export const creditSaasTemplate = (q: Record<string, string | undefined>) => {
 <!-- HERO -->
 <header id="hero" class="bg-gray-950 text-white">
   <div class="max-w-5xl mx-auto px-4 py-16 text-center">
-    <p class="inline-block bg-blue-500/20 text-blue-400 text-sm font-semibold px-4 py-1.5 rounded-full mb-6"><i class="fas fa-shield-halved mr-2"></i>CROA-Compliant by Design · TSR-Ready Workflows</p>
+    <p class="inline-block bg-blue-500/20 text-blue-400 text-sm font-semibold px-4 py-1.5 rounded-full mb-6"><i class="fas fa-shield-halved mr-2"></i>Built with CROA-Aware Controls · TSR-Ready Workflows</p>
     <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">${tagline}</h1>
-    <p class="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">CROA-compliant billing workflows. TSR-ready client management. Built for operators who want to stay in business long-term.</p>
+    <p class="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">CROA-aware billing workflows. TSR-ready client management. Built for operators who want to stay in business long-term.</p>
     <div class="flex flex-wrap justify-center gap-4">
       <a href="#pricing" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-8 py-4 rounded-xl">Start Free Trial →</a>
       <a href="#features" class="border border-gray-600 hover:border-blue-400 text-white font-bold px-8 py-4 rounded-xl">Book a Demo →</a>
@@ -28,7 +28,7 @@ export const creditSaasTemplate = (q: Record<string, string | undefined>) => {
   <div class="max-w-4xl mx-auto px-4 text-center">
     <h2 class="text-3xl font-extrabold mb-4">Why "Compliance-First" Isn't Marketing Fluff</h2>
     <p class="text-gray-700 mb-6 max-w-2xl mx-auto">In August 2024, the CFPB reached a $2M settlement with the industry's biggest software platform — for enabling its users to collect illegal upfront fees. The platform was held liable. The CEO paid personally.</p>
-    <p class="text-gray-900 font-semibold text-lg">We built ${productName} so that the compliant way is the default way. Your business — and ours — depends on it.</p>
+    <p class="text-gray-900 font-semibold text-lg">We built ${productName} so that the compliance-aware path is the default path. Your business — and ours — depends on it.</p>
   </div>
 </section>
 
@@ -39,12 +39,12 @@ export const creditSaasTemplate = (q: Record<string, string | undefined>) => {
     <div class="grid md:grid-cols-3 gap-5">
       ${[
         ['fa-file-shield', 'Dispute Management', 'Automated dispute round tracking with FCRA-aligned letter generation — never miss a 30-day bureau deadline.'],
-        ['fa-credit-card', 'Post-Service Billing', 'Collect after each completed cycle, not before. CROA-compliant by design — billing literally cannot fire before work is logged complete.'],
+        ['fa-credit-card', 'Post-Service Billing', 'Collect after each completed cycle, not before. designed to support CROA-compliant billing — billing literally cannot fire before work is logged complete.'],
         ['fa-window-restore', 'Client Portal', 'Give clients 24/7 visibility into dispute progress. Transparency builds trust — and trust builds retention.'],
-        ['fa-file-contract', 'Compliance Documents', 'Auto-generate CROA-required disclosures: Consumer Rights Statement, Written Contract, Notice of Cancellation — compliant by default.'],
+        ['fa-file-contract', 'Compliance Documents', 'Auto-generate CROA-required disclosures: Consumer Rights Statement, Written Contract, Notice of Cancellation — generated with compliance controls.'],
         ['fa-address-book', 'CRM + Lead Management', 'Manage leads, track conversions, automate follow-up — form-first flows that keep you outside TSR telemarketing triggers.'],
         ['fa-chart-pie', 'Reporting + Analytics', 'Disputes sent, responses received, items removed, client outcomes — the data your clients want to see.'],
-        ['fa-map-location-dot', 'State Compliance Alerts', 'Get notified of state CSO law requirements in every state your clients reside — compliant everywhere you operate.'],
+        ['fa-map-location-dot', 'State Compliance Alerts', 'Get notified of state CSO law requirements in every state your clients reside — compliance-aware everywhere you operate.'],
         ['fa-graduation-cap', 'Built-In Compliance Training', 'Every user completes CROA/TSR training before billing features unlock. Protects your clients — and you.'],
         ['fa-code', 'API + White Label (Scale tier)', 'Run your agency brand on our compliance engine. API access for custom integrations.'],
       ].map(([i, t, d]) => `
@@ -151,7 +151,7 @@ export const creditSaasTemplate = (q: Record<string, string | undefined>) => {
 </section>
 
 <footer class="bg-black text-gray-600 text-xs text-center py-8 px-4">
-  <p class="mb-2">${productName} · A compliance-first platform template by RJ Business Solutions</p>
+  <p class="mb-2">${productName} · A McKnight GrowthOS platform template · Powered by RJ Business Solutions</p>
   <p class="max-w-2xl mx-auto">${productName} is software for credit repair professionals — it is not a credit repair organization and does not provide credit repair services to consumers. Operators are responsible for their own compliance with CROA, TSR, FCRA, and applicable state laws. This page is a template — attorney review required before launch.</p>
 </footer>
 

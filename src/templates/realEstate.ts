@@ -1,7 +1,7 @@
 import { param, funnelHead, templateBadge } from './helpers'
 
 export const realEstateTemplate = (q: Record<string, string | undefined>) => {
-  const agentName = param(q, 'agentName', 'Rick Jefferson')
+  const agentName = param(q, 'agentName', 'Jordan McKnight')
   const brokerage = param(q, 'brokerage', 'Summit Realty Group')
   const city = param(q, 'city', 'Albuquerque')
   const homesSold = param(q, 'homesSold', '340+')

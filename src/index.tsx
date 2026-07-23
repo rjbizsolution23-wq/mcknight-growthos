@@ -111,7 +111,7 @@ app.get('/f/:code', async (c) => {
 })
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'rj-funnel-command-center', version: '3.5.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'mcknight-growthos', version: '1.0.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
 const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations']
@@ -141,7 +141,7 @@ app.get('/thank-you', (c) => {
   const msg = q.msg || 'We got your info and a real human will reach out within one business day. Keep an eye on your inbox (and spam folder, just in case).'
   const back = q.back || '/'
   return html(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thank You | RJ Business Solutions</title><meta name="robots" content="noindex, nofollow">
+<title>Thank You | McKnight GrowthOS</title><meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="/static/favicon.svg"><script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -158,7 +158,7 @@ app.get('/thank-you', (c) => {
     <p><span class="text-cyan-400 font-bold mr-2">3.</span>We map your exact next step together — zero pressure.</p>
   </div>
   <a href="${back.replace(/"/g, '')}" class="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition"><i class="fas fa-arrow-left mr-2"></i>Back to site</a>
-  <p class="text-slate-500 text-xs mt-10">&copy; ${new Date().getFullYear()} RJ Business Solutions &middot; 1342 NM 333, Tijeras, NM 87059 &middot; <a href="https://rjbusinesssolutions.org" class="underline">rjbusinesssolutions.org</a></p>
+  <p class="text-slate-500 text-xs mt-10">&copy; ${new Date().getFullYear()} McKnight Opportunity Group &middot; Powered by RJ Business Solutions &middot; 1342 NM 333, Tijeras, NM 87059</p>
 </main>
 <script>try{if(window.gtag)gtag('event','conversion_thank_you');if(window.fbq)fbq('track','Lead')}catch(e){}</script>
 </body></html>`)
@@ -166,7 +166,7 @@ app.get('/thank-you', (c) => {
 
 // ── v2.3: Branded 404 + error handler ─────────────────────────
 const errorPage = (code: number, title: string, msg: string) => `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${code} — ${title} | RJ Funnel Command Center</title><meta name="robots" content="noindex">
+<title>${code} — ${title} | McKnight GrowthOS</title><meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="/static/favicon.svg"><script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>body{font-family:Inter,sans-serif}h1,p.code{font-family:Poppins,sans-serif}</style></head>
@@ -175,7 +175,7 @@ const errorPage = (code: number, title: string, msg: string) => `<!DOCTYPE html>
 <h1 class="text-2xl font-extrabold mb-3">${title}</h1>
 <p class="text-slate-400 mb-8 max-w-md mx-auto">${msg}</p>
 <a href="/" class="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition">← Command Center</a>
-<p class="text-slate-600 text-xs mt-10">&copy; ${new Date().getFullYear()} RJ Business Solutions</p></main></body></html>`
+<p class="text-slate-600 text-xs mt-10">&copy; ${new Date().getFullYear()} McKnight Opportunity Group · Powered by RJ Business Solutions</p></main></body></html>`
 
 app.notFound((c) => new Response(errorPage(404, 'Page Not Found', 'That route doesn\u2019t exist (or moved). Head back to the Command Center and grab a funnel from there.'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } }))
 app.onError((err, c) => {

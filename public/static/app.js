@@ -1,4 +1,4 @@
-// RJ Funnel Command Center — client JS
+// McKnight GrowthOS — client JS
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('[data-copy-target]')
   if (!btn) return
@@ -144,7 +144,7 @@ if (builderForm) {
     slBtn.innerHTML = '<i class="fas fa-link mr-1"></i>Save Short Link'
   })
 
-  // ── v3.5: AI Social Posts (FB/IG/LinkedIn/X/TikTok w/ UTM-tracked link) ──
+  // ── v3.5: Social AI Studio (FB/IG/LinkedIn/X/TikTok w/ UTM-tracked link) ──
   const socBtn = document.getElementById('btn-ai-social')
   if (socBtn) socBtn.addEventListener('click', async () => {
     const out = document.getElementById('social-posts-out')
@@ -168,7 +168,7 @@ if (builderForm) {
           + '<div class="flex items-center justify-between mb-2"><span class="text-xs font-bold ' + META[p][2] + '"><i class="' + META[p][0] + ' mr-1.5"></i>' + META[p][1] + '</span>'
           + '<button type="button" data-copy-post="' + p + '" class="text-[10px] text-gray-400 border border-gray-700 px-2 py-1 rounded hover:bg-gray-800"><i class="fas fa-copy mr-1"></i>Copy</button></div>'
           + '<pre class="text-[11px] text-gray-300 whitespace-pre-wrap font-sans" data-post="' + p + '">' + escHtml(d.posts[p]) + '</pre></div>'
-        ).join('') + '<p class="text-[10px] text-gray-500">Links carry utm_source=social — every click and lead is attributed in your Lead Inbox.</p>'
+        ).join('') + '<p class="text-[10px] text-gray-500">Links carry utm_source=social — every click and lead is attributed in your LeadFlow CRM.</p>'
         out.querySelectorAll('[data-copy-post]').forEach(btn => btn.addEventListener('click', () => {
           const pre = out.querySelector('[data-post="' + btn.dataset.copyPost + '"]')
           navigator.clipboard.writeText(pre.textContent).then(() => { btn.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!'; setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy' }, 1500) })
@@ -182,7 +182,7 @@ if (builderForm) {
       out.textContent = '⚠ AI unavailable in this environment — works in production on Cloudflare.'
     }
     socBtn.disabled = false
-    socBtn.innerHTML = '<i class="fas fa-wand-magic-sparkles mr-1"></i>AI Social Posts'
+    socBtn.innerHTML = '<i class="fas fa-wand-magic-sparkles mr-1"></i>Social AI Studio'
   })
 }
 

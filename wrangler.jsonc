@@ -1,20 +1,20 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "rj-funnel-command-center",
+  "name": "mcknight-growthos",
   "compatibility_date": "2026-07-10",
   "pages_build_output_dir": "./dist",
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  // ── v3.3: Cloudflare D1 — permanent lead storage + short funnel links ──
+  // ── Cloudflare D1 — LeadFlow CRM permanent lead storage + short funnel links ──
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "rj-funnel-leads",
-      "database_id": "c624734c-5fad-4f6e-a561-4b52163f1a04"
+      "database_name": "mcknight-growthos-leads",
+      "database_id": "404fcc20-c31f-4585-b061-40f541b1f8d5"
     }
   ],
-  // ── v3.3: Workers AI — LLM copy generation + lead insights (no API key needed) ──
+  // ── Workers AI — Conversion Intelligence + Social AI + Funnel Studio copy fill ──
   "ai": {
     "binding": "AI"
   }

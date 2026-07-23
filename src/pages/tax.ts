@@ -1,15 +1,15 @@
 import { shell, copyBlock } from './layout'
 
-export const taxPage = () => shell('Tax Funnels', 'tax', `
+export const taxPage = () => shell('McKnight Tax Growth', 'tax', `
 <section id="tax-hero" class="mb-10">
   <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3"><i class="fas fa-scale-balanced text-emerald-400 mr-2"></i>Tax Service Funnels</h1>
-  <p class="text-gray-400 max-w-3xl">Circular 230 · FTC Act · TSR · GLBA · TCPA · CAN-SPAM · IRC §7216 — all encoded. Built on the exact lessons of <span class="text-brand-warn">FTC v. American Tax Service (June 2026, $77.7M judgment, lifetime bans)</span>. Compliant first, converted second.</p>
+  <p class="text-gray-400 max-w-3xl">Circular 230 · FTC Act · TSR · GLBA · TCPA · CAN-SPAM · IRC §7216 — all encoded. Built on the exact lessons of <span class="text-brand-warn">FTC v. American Tax Service (June 2026, $77.7M judgment, lifetime bans)</span>. Compliance-aware first, conversion-focused second.</p>
 </section>
 
 <section id="tax-templates" class="grid md:grid-cols-2 gap-4 mb-12">
   <a href="/t/tax-lead" target="_blank" class="card p-6 block group">
     <h2 class="font-bold text-white mb-1 group-hover:text-brand-cyan"><i class="fas fa-window-maximize text-emerald-400 mr-2"></i>Tax Resolution Lead Funnel <i class="fas fa-arrow-up-right-from-square text-xs text-gray-600"></i></h2>
-    <p class="text-gray-400 text-sm">Free case evaluation funnel — all 8 sections: compliant hero, credibility bar, IRS notice pain block, education on real IRS programs, disclaimered proof, authority stack, compliance-first FAQ, final CTA. Customize in the <a href="/builder" class="text-brand-cyan underline">Builder</a>.</p>
+    <p class="text-gray-400 text-sm">Free case evaluation funnel — all 8 sections: compliance-aware hero, credibility bar, IRS notice pain block, education on real IRS programs, disclaimered proof, authority stack, compliance-first FAQ, final CTA. Customize in the <a href="/builder" class="text-brand-cyan underline">Builder</a>.</p>
   </a>
   <div class="card p-6">
     <h2 class="font-bold text-white mb-3"><i class="fas fa-sitemap text-emerald-400 mr-2"></i>5 Tax Funnel Types</h2>
@@ -45,9 +45,9 @@ export const taxPage = () => shell('Tax Funnels', 'tax', `
 </section>
 
 <section id="compliant-copy" class="mb-12">
-  <h2 class="text-2xl font-bold text-white mb-4"><i class="fas fa-check-double text-brand-success mr-2"></i>Compliant Copy Formulas</h2>
+  <h2 class="text-2xl font-bold text-white mb-4"><i class="fas fa-check-double text-brand-success mr-2"></i>Compliance-Aware Copy Formulas</h2>
   <div class="grid md:grid-cols-2 gap-4">
-  ${copyBlock('tax-headlines', 'Compliant Headlines (all 4 categories)', `PAIN-BASED (always compliant):
+  ${copyBlock('tax-headlines', 'Compliance-Aware Headlines (all 4 categories)', `PAIN-BASED (lowest-risk):
 "Owe Back Taxes? Here's What Your Options Actually Are."
 "IRS Letters Showing Up? Here's What to Do First."
 "Behind on Filing? Here's How to Get Current Without the Stress."
@@ -66,7 +66,7 @@ AUTHORITY-BASED:
 "Work with an IRS Enrolled Agent — Not a Call Center"
 "Licensed CPA + IRS Representation: [Firm Name] Has Handled [X] IRS Cases in [City/State]"
 "[X] Years Representing Taxpayers Before the IRS — No Upfront Fees Until We Evaluate Your Case"`)}
-  ${copyBlock('tax-ctas', 'Compliant CTAs (+ never-use list)', `✅ USE THESE:
+  ${copyBlock('tax-ctas', 'Compliance-Aware CTAs (+ never-use list)', `✅ USE THESE:
 "Get Your Free Case Evaluation →"
 "See What IRS Relief Programs You Qualify For →"
 "Talk to a Licensed Tax Professional — No Obligation →"
@@ -118,7 +118,7 @@ AUTHORITY-BASED:
 </section>
 
 <section id="tax-disclaimers" class="mb-12">
-  <h2 class="text-2xl font-bold text-white mb-4"><i class="fas fa-shield-halved text-emerald-400 mr-2"></i>Key Disclaimers (full library in <a href="/compliance" class="text-brand-cyan underline">Compliance Vault</a>)</h2>
+  <h2 class="text-2xl font-bold text-white mb-4"><i class="fas fa-shield-halved text-emerald-400 mr-2"></i>Key Disclaimers (full library in <a href="/compliance" class="text-brand-cyan underline">Compliance Guard</a>)</h2>
   ${copyBlock('oic-disclaimer', 'OIC-Specific Disclaimer (use verbatim)', `An Offer in Compromise (OIC) is an IRS program that allows eligible taxpayers to settle their tax debt for less than the full amount owed. OIC acceptance is determined solely by the IRS based on your ability to pay, income, expenses, and asset equity. Not all taxpayers qualify. The IRS accepted approximately [X]% of OIC applications in [year]. We do not guarantee OIC acceptance or any specific settlement amount without first evaluating your complete tax situation.`)}
 </section>
 

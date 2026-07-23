@@ -6,9 +6,9 @@ const field = (name: string, label: string, placeholder: string, type = 'text') 
   <input type="${type}" name="${name}" placeholder="${placeholder}" class="mt-1 w-full bg-[#060a14] border border-gray-700 focus:border-brand-cyan rounded-lg px-3 py-2.5 text-sm text-gray-200 outline-none">
 </label>`
 
-export const builderPage = () => shell('Funnel Builder', 'builder', `
+export const builderPage = () => shell('Funnel Studio', 'builder', `
 <section id="builder-hero" class="mb-8">
-  <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3"><i class="fas fa-wand-magic-sparkles grad-text mr-2"></i>Funnel Builder</h1>
+  <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3"><i class="fas fa-wand-magic-sparkles grad-text mr-2"></i>Funnel Studio</h1>
   <p class="text-gray-400 max-w-3xl">Pick a template, drop in your details, generate a fully customized live funnel page with a shareable URL. Leave any field blank to keep the polished default. Zero placeholders in the output.</p>
 </section>
 
@@ -52,7 +52,7 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
 
     <div id="ai-fill-panel" class="mb-6 bg-gradient-to-br from-blue-950/60 to-indigo-950/40 border border-blue-800/60 rounded-xl p-4">
       <p class="text-sm text-white font-semibold mb-1"><i class="fas fa-brain text-brand-pink mr-2"></i>AI Copy Fill <span class="text-[10px] font-mono bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded ml-1">Workers AI · llama-3.1</span></p>
-      <p class="text-[11px] text-gray-400 mb-3">Describe the client in one line — AI writes every field below for the selected template. Compliant, specific, ready to edit.</p>
+      <p class="text-[11px] text-gray-400 mb-3">Describe the client in one line — AI writes every field below for the selected template. Compliance-aware, specific, ready to edit.</p>
       <div class="flex gap-2">
         <input id="ai-brief" type="text" placeholder="e.g. Family-owned moving company in Santa Fe, 12 years, spotless reviews" class="flex-1 bg-[#060a14] border border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-200 outline-none">
         <button type="button" id="btn-ai-fill" class="grad-bg text-white text-sm font-bold px-4 py-2.5 rounded-lg hover:opacity-90 whitespace-nowrap"><i class="fas fa-wand-magic-sparkles mr-1"></i>AI Fill</button>
@@ -66,8 +66,8 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
       ${field('location', 'Location', 'Live Virtual + Albuquerque, NM')}
       ${field('promise', 'Big Promise Headline (≤12 words ideal)', 'Walk Away Knowing Exactly How to Fill Your Next Event...')}
       ${field('audience', 'Who It\'s For', 'coaches, consultants, and agency owners...')}
-      ${field('host', 'Host Name', 'Rick Jefferson')}
-      ${field('hostCred', 'Host Credibility Line', 'Founder of RJ Business Solutions — has built...')}
+      ${field('host', 'Host Name', 'Jordan McKnight')}
+      ${field('hostCred', 'Host Credibility Line', 'Founder of McKnight Opportunity Group — has built...')}
       <div class="grid grid-cols-3 gap-3">
         ${field('gaPrice', 'GA Price', '$97')}
         ${field('vipPrice', 'VIP Price', '$297')}
@@ -126,7 +126,7 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
 
     <fieldset data-fields-for="credit-saas" class="space-y-3 hidden">
       ${field('productName', 'Product Name', 'DisputeForge')}
-      ${field('tagline', 'Hero Tagline', 'The Credit Repair Software Built to Keep Your Business Compliant — and Growing')}
+      ${field('tagline', 'Hero Tagline', 'The Credit Repair Software Built with Compliance Controls — and Built to Grow')}
       <div class="grid grid-cols-3 gap-3">
         ${field('starterPrice', 'Starter $/mo', '$97')}
         ${field('growthPrice', 'Growth $/mo', '$197')}
@@ -135,7 +135,7 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
     </fieldset>
 
     <fieldset data-fields-for="real-estate" class="space-y-3 hidden">
-      ${field('agentName', 'Agent Name', 'Rick Jefferson')}
+      ${field('agentName', 'Agent Name', 'Jordan McKnight')}
       ${field('brokerage', 'Brokerage', 'Summit Realty Group')}
       ${field('city', 'City / Market', 'Albuquerque')}
       <div class="grid grid-cols-3 gap-3">
@@ -164,7 +164,7 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
 
     <fieldset data-fields-for="coaching" class="space-y-3 hidden">
       ${field('programName', 'Program Name', 'The Scale Accelerator')}
-      ${field('coachName', 'Advisor Name', 'Rick Jefferson')}
+      ${field('coachName', 'Advisor Name', 'Jordan McKnight')}
       ${field('promise', 'Big Promise Headline', 'Install the Systems That Take You From Operator to Owner...')}
       ${field('audience', 'Who It\'s For', 'founders doing $10K–$50K/month...')}
       <div class="grid grid-cols-3 gap-3">
@@ -260,7 +260,7 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
     </fieldset>
 
     <fieldset data-fields-for="agency" class="space-y-3 hidden">
-      ${field('agencyName', 'Agency Name', 'RJ Growth Partners')}
+      ${field('agencyName', 'Agency Name', 'McKnight Growth Partners')}
       ${field('niche', 'Client Niche (lowercase)', 'home service businesses')}
       ${field('service', 'Core Service (lowercase)', 'done-for-you lead generation')}
       <div class="grid grid-cols-3 gap-3">
@@ -478,7 +478,7 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
       <p class="text-sm text-white font-semibold"><i class="fas fa-sliders text-brand-cyan mr-2"></i>Universal Options — SEO / Theme (all templates)</p>
       <label class="flex items-center gap-3 bg-[#060a14] border border-gray-700 rounded-lg px-3 py-3 cursor-pointer">
         <input type="checkbox" name="theme" value="dark" class="w-4 h-4 accent-blue-500">
-        <span class="text-sm text-gray-200"><i class="fas fa-moon text-blue-400 mr-2"></i><strong>Dark background mode</strong> — render the funnel on the RJ Navy dark theme</span>
+        <span class="text-sm text-gray-200"><i class="fas fa-moon text-blue-400 mr-2"></i><strong>Dark background mode</strong> — render the funnel on the McKnight Navy dark theme</span>
       </label>
       ${field('seoTitle', 'SEO Title (≤60 chars — overrides page title, OG & Twitter)', 'Sell Your ABQ Home in 11 Days — Summit Realty')}
       ${field('seoDesc', 'SEO Meta Description (140–160 chars)', 'Free 24-hour home value report from Albuquerque\u2019s data-driven listing team...')}
@@ -487,7 +487,7 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
         ${field('canonical', 'Canonical URL', 'https://yoursite.com/sell')}
         ${field('ogImage', 'OG Share Image URL (1200×630)', 'https://yoursite.com/og.jpg')}
       </div>
-      <p class="text-[11px] text-gray-500">Every generated funnel auto-includes full meta tags, OG graph, Twitter cards & JSON-LD schema. Need a standalone pack (sitemap, robots.txt, AEO blocks)? Use the <a href="/seo" class="text-blue-300 underline">SEO Engine</a>.</p>
+      <p class="text-[11px] text-gray-500">Every generated funnel auto-includes full meta tags, OG graph, Twitter cards & JSON-LD schema. Need a standalone pack (sitemap, robots.txt, AEO blocks)? Use the <a href="/seo" class="text-blue-300 underline">SEO Intelligence</a>.</p>
 
       <p class="text-sm text-white font-semibold pt-3"><i class="fas fa-paintbrush text-brand-cyan mr-2"></i>White-Label Client Branding <span class="text-[10px] text-amber-400 font-mono ml-1">SELL-READY</span></p>
       ${field('bizLogo', 'Client Logo URL (https… — injected into hero + footer)', 'https://client-site.com/logo.png')}
@@ -539,8 +539,8 @@ export const builderPage = () => shell('Funnel Builder', 'builder', `
         </div>
         <p id="shortlink-out" class="text-xs mt-2 hidden"></p>
         <div class="flex items-center gap-2 mt-3 pt-3 border-t border-blue-900/40">
-          <p class="text-xs text-gray-400 flex-1"><i class="fas fa-share-nodes text-brand-pink mr-1"></i><span class="text-white font-semibold">Social-media ready:</span> AI writes promo posts for FB, IG, LinkedIn, X &amp; TikTok — with a UTM-tracked link so every click shows up in your Lead Inbox.</p>
-          <button type="button" id="btn-ai-social" class="text-xs font-semibold text-brand-pink border border-pink-800/60 px-3 py-2 rounded-lg hover:bg-pink-900/20 whitespace-nowrap"><i class="fas fa-wand-magic-sparkles mr-1"></i>AI Social Posts</button>
+          <p class="text-xs text-gray-400 flex-1"><i class="fas fa-share-nodes text-brand-pink mr-1"></i><span class="text-white font-semibold">Social-media ready:</span> AI writes promo posts for FB, IG, LinkedIn, X &amp; TikTok — with a UTM-tracked link so every click shows up in your LeadFlow CRM.</p>
+          <button type="button" id="btn-ai-social" class="text-xs font-semibold text-brand-pink border border-pink-800/60 px-3 py-2 rounded-lg hover:bg-pink-900/20 whitespace-nowrap"><i class="fas fa-wand-magic-sparkles mr-1"></i>Social AI Studio</button>
         </div>
         <div id="social-posts-out" class="mt-3 space-y-3 hidden"></div>
       </div>

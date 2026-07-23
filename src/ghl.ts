@@ -78,7 +78,7 @@ export const pushLeadToGHL = async (env: GhlEnv | undefined, lead: Record<string
     const { firstName, lastName } = splitName(lead.name)
 
     // ── Tags: system tag + funnel slug + offer + custom client tag ──
-    const tags = ['rj-funnel', `funnel-${slug}`]
+    const tags = ['growthos', `funnel-${slug}`]
     if (lead._offer) tags.push(`offer-${lead._offer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60)}`)
     if (lead._ghlTag) tags.push(...lead._ghlTag.split(',').map((t) => t.trim().toLowerCase().slice(0, 60)).filter(Boolean).slice(0, 5))
     if (lead.utm_campaign) tags.push(`utm-${lead.utm_campaign.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 50)}`)
@@ -90,7 +90,7 @@ export const pushLeadToGHL = async (env: GhlEnv | undefined, lead: Record<string
       lastName,
       email: lead.email || undefined,
       phone: lead.phone || undefined,
-      source: `RJ Funnel — ${slug}`,
+      source: `McKnight GrowthOS — ${slug}`,
       tags
     }
     const up = await ghlFetch(env, '/contacts/upsert', 'POST', upsertBody)
@@ -111,7 +111,7 @@ export const pushLeadToGHL = async (env: GhlEnv | undefined, lead: Record<string
       lead._offer ? `Offer clicked: ${lead._offer}` : '',
       extraLines.length ? `\n— Form details —\n${extraLines.join('\n')}` : '',
       attrLines.length ? `\n— Attribution —\n${attrLines.join('\n')}` : '',
-      `\nCaptured: ${new Date().toISOString()} via RJ Funnel Command Center`
+      `\nCaptured: ${new Date().toISOString()} via McKnight GrowthOS`
     ].filter(Boolean).join('\n')
     const note = await ghlFetch(env, `/contacts/${contactId}/notes`, 'POST', { body: noteBody.slice(0, 5000) })
     result.note = note.ok
@@ -125,7 +125,7 @@ export const pushLeadToGHL = async (env: GhlEnv | undefined, lead: Record<string
         contactId,
         name: `${lead.name || lead.email || lead.phone || 'Funnel lead'} — ${slug}`,
         status: 'open',
-        source: `RJ Funnel — ${slug}`
+        source: `McKnight GrowthOS — ${slug}`
       })
       result.opportunity = opp.ok
     }

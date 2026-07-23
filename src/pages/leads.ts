@@ -1,7 +1,7 @@
-// ── /leads — Lead Inbox CRM (v3.3, Cloudflare D1 + Workers AI) ──
+// ── /leads — LeadFlow CRM CRM (v3.3, Cloudflare D1 + Workers AI) ──
 import { shell } from './layout'
 
-export const leadsPage = () => shell('Lead Inbox', 'leads', `
+export const leadsPage = () => shell('LeadFlow CRM', 'leads', `
 <section id="leads-hero" class="py-8">
   <p class="inline-block bg-gray-800 text-brand-cyan text-xs font-mono px-3 py-1 rounded-full mb-3"><i class="fas fa-database mr-1"></i>CLOUDFLARE D1 · EVERY LEAD STORED FOREVER · AI INSIGHTS</p>
   <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2">Lead <span class="grad-text">Inbox</span></h1>
@@ -70,7 +70,7 @@ export const leadsPage = () => shell('Lead Inbox', 'leads', `
 (function(){
   var offset = 0, limit = 50, total = 0;
   // v3.5: admin key (only needed when ADMIN_API_KEY secret is set server-side)
-  var KEY_STORE = 'rjf_admin_key';
+  var KEY_STORE = 'growthos_admin_key';
   function adminKey(){ try { return localStorage.getItem(KEY_STORE) || ''; } catch(e){ return ''; } }
   function hdrs(extra){ var h = extra || {}; var k = adminKey(); if (k) h['x-admin-key'] = k; return h; }
   function syncCsvLink(){ var a = document.getElementById('csv-link'); var k = adminKey(); a.href = '/api/leads/export.csv' + (k ? '?key=' + encodeURIComponent(k) : ''); }

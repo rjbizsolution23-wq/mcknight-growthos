@@ -1,4 +1,4 @@
-// ── RJ Funnel Command Center — Workers AI (LLM) layer ─────────
+// ── McKnight GrowthOS — Workers AI (LLM) layer ─────────
 // Runs on Cloudflare Workers AI (llama-3.1-8b-instruct) — included with
 // the Cloudflare account, no external API key required.
 // v3.3.0: AI copy generation for the Builder + AI lead insights.
@@ -56,7 +56,7 @@ export const generateFunnelCopy = async (
   brief: string
 ): Promise<{ ok: boolean; fields?: Record<string, string>; error?: string }> => {
   try {
-    const system = `You are a direct-response funnel copywriter for RJ Business Solutions. You write high-converting, COMPLIANT copy for local business funnels (no guaranteed-results claims, no fake scarcity, FTC-safe). You respond with ONLY a valid JSON object — no explanations, no markdown.`
+    const system = `You are a direct-response funnel copywriter for McKnight GrowthOS. You write high-converting, compliance-aware copy for local business funnels (no guaranteed-results claims, no fake scarcity, FTC-safe). You respond with ONLY a valid JSON object — no explanations, no markdown.`
     const user = `Template: "${template}" funnel landing page.
 Client brief: ${brief.slice(0, 600)}
 
@@ -81,7 +81,7 @@ Respond with ONLY the JSON object.`
   }
 }
 
-// ── v3.5: AI Social Posts — platform-specific promo posts for a funnel ──
+// ── v3.5: Social AI Studio — platform-specific promo posts for a funnel ──
 const PLATFORMS = ['facebook', 'instagram', 'linkedin', 'x', 'tiktok'] as const
 
 export const generateSocialPosts = async (

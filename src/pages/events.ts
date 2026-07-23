@@ -1,6 +1,6 @@
 import { shell, copyBlock } from './layout'
 
-export const eventsPage = () => shell('Events & Sponsors', 'events', `
+export const eventsPage = () => shell('McKnight Event Growth', 'events', `
 <section id="events-hero" class="mb-10">
   <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3"><i class="fas fa-ticket grad-text mr-2"></i>Events · Tickets · Sponsors · High-Ticket</h1>
   <p class="text-gray-400 max-w-3xl">The 5-Stage Event Monetization Funnel + Sponsor Acquisition Machine. Brunson's Hook-Story-Offer, Hormozi's value equation, Cialdini's 7 principles — all wired into live templates below.</p>
@@ -60,7 +60,7 @@ export const eventsPage = () => shell('Events & Sponsors', 'events', `
 
 <section id="sponsor-outreach" class="mb-12">
   <h2 class="text-2xl font-bold text-white mb-2">Sponsor Cold Outreach — 6-Touch Sequence</h2>
-  <p class="text-gray-400 text-sm mb-6">Full sequence lives in the <a href="/emails" class="text-brand-cyan underline">Email Vault</a>. Touch 1 below for quick grab:</p>
+  <p class="text-gray-400 text-sm mb-6">Full sequence lives in the <a href="/emails" class="text-brand-cyan underline">Campaign Vault</a>. Touch 1 below for quick grab:</p>
   ${copyBlock('sponsor-touch1', 'Touch 1 — Day 0 Cold Email', `Subject: [First Name] — [Event Name] + [Their Brand] = 💰?
 
 Hey [First Name],

@@ -1,4 +1,4 @@
-// ── RJ Funnel Command Center — Integration Fan-Out layer ──────
+// ── McKnight GrowthOS — Integration Fan-Out layer ──────
 // v3.4.0: On every lead, notify every configured channel IN PARALLEL.
 // All integrations are optional (set only the secrets you want),
 // edge-native (fetch only, no SDKs), and NEVER throw — a failed
@@ -59,7 +59,7 @@ const safeFetch = async (channel: string, url: string, init: RequestInit, okChec
 const sendWebhook = (env: HooksEnv, lead: Record<string, string>): Promise<HookResult> =>
   safeFetch('webhook', env.LEAD_WEBHOOK_URL!, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'User-Agent': 'RJ-Funnel-Command-Center/3.4' },
+    headers: { 'Content-Type': 'application/json', 'User-Agent': 'McKnight-GrowthOS/1.0' },
     body: JSON.stringify({
       event: 'lead.created',
       at: new Date().toISOString(),
@@ -85,7 +85,7 @@ const sendSlack = (env: HooksEnv, lead: Record<string, string>): Promise<HookRes
           ...(lead.phone ? [{ type: 'mrkdwn', text: `*Phone:*\n${lead.phone}` }] : []),
           ...(lead._utm_campaign ? [{ type: 'mrkdwn', text: `*Campaign:*\n${lead._utm_campaign}` }] : [])
         ].slice(0, 10) },
-        { type: 'context', elements: [{ type: 'mrkdwn', text: `RJ Funnel Command Center · ${lead._source || ''} · <https://funnels.rjbusinesssolutions.org/leads|Open Lead Inbox>` }] }
+        { type: 'context', elements: [{ type: 'mrkdwn', text: `McKnight GrowthOS · ${lead._source || ''} · <https://mcknight-growthos.pages.dev/leads|Open LeadFlow CRM>` }] }
       ]
     })
   })
@@ -98,7 +98,7 @@ const sendDiscord = (env: HooksEnv, lead: Record<string, string>): Promise<HookR
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      username: 'RJ Funnel Alerts',
+      username: 'GrowthOS Alerts',
       embeds: [{
         title: `🔥 New Lead — ${funnel}`,
         color: 0x2563eb,
@@ -108,7 +108,7 @@ const sendDiscord = (env: HooksEnv, lead: Record<string, string>): Promise<HookR
           ...(lead.phone ? [{ name: 'Phone', value: lead.phone, inline: true }] : []),
           ...(lead._utm_campaign ? [{ name: 'Campaign', value: lead._utm_campaign, inline: true }] : [])
         ].slice(0, 8),
-        footer: { text: 'RJ Funnel Command Center' },
+        footer: { text: 'McKnight GrowthOS' },
         timestamp: new Date().toISOString()
       }]
     })
@@ -118,7 +118,7 @@ const sendDiscord = (env: HooksEnv, lead: Record<string, string>): Promise<HookR
 // ── Telegram bot — message to chat ────────────────────────────
 const sendTelegram = (env: HooksEnv, lead: Record<string, string>): Promise<HookResult> => {
   const { who, funnel, bits } = leadSummary(lead)
-  const text = `🔥 *New Funnel Lead*\n*${who.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\$&')}* — ${funnel}\n${bits ? bits.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\$&') : ''}\n\n[Open Lead Inbox](https://funnels.rjbusinesssolutions.org/leads)`
+  const text = `🔥 *New Funnel Lead*\n*${who.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\$&')}* — ${funnel}\n${bits ? bits.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\$&') : ''}\n\n[Open LeadFlow CRM](https://mcknight-growthos.pages.dev/leads)`
   return safeFetch('telegram', `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

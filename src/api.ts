@@ -1,4 +1,4 @@
-// ── RJ Funnel Command Center — API layer ──────────────────────
+// ── McKnight GrowthOS — API layer ──────────────────────
 // Stripe checkout + email lead capture + GoHighLevel CRM sync,
 // edge-native (fetch only, no SDKs).
 // Secrets via wrangler secret put (prod) / .dev.vars (local):
@@ -106,7 +106,7 @@ api.post('/lead', async (c) => {
   // Runs first-class alongside email; never blocks or fails the lead.
   const ghl = await pushLeadToGHL(c.env, clean)
 
-  // ── v3.3: permanent D1 storage → powers the /leads Lead Inbox CRM ──
+  // ── v3.3: permanent D1 storage → powers the /leads LeadFlow CRM CRM ──
   const db = await saveLeadToD1(c.env, clean, ghl.contactId)
 
   // ── v3.4: Integration fan-out (Zapier/Make webhook, Slack, Discord,
@@ -118,7 +118,7 @@ api.post('/lead', async (c) => {
 
   const key = c.env?.RESEND_API_KEY
   const to = c.env?.LEAD_NOTIFY_EMAIL || 'support@rjbusinesssolutions.org'
-  const from = c.env?.LEAD_FROM_EMAIL || 'RJ Funnels <onboarding@resend.dev>'
+  const from = c.env?.LEAD_FROM_EMAIL || 'McKnight GrowthOS <onboarding@resend.dev>'
 
   if (!key) {
     // No email key configured — accept the lead so funnels never break,
@@ -133,7 +133,7 @@ api.post('/lead', async (c) => {
     <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto">
       <div style="background:linear-gradient(135deg,#2563eb,#0ea5e9);padding:20px;border-radius:12px 12px 0 0">
         <h2 style="color:#fff;margin:0">🔥 New Funnel Lead</h2>
-        <p style="color:#dbeafe;margin:4px 0 0;font-size:13px">RJ Business Solutions — Supreme Funnel System</p>
+        <p style="color:#dbeafe;margin:4px 0 0;font-size:13px">McKnight GrowthOS · Powered by RJ Business Solutions</p>
       </div>
       <table style="width:100%;border-collapse:collapse;background:#f8fafc;border:1px solid #e2e8f0">${rows}</table>
       <p style="font-size:11px;color:#94a3b8;margin-top:12px">Source: ${(clean._source || 'funnel')} · ${new Date().toISOString()}</p>
@@ -142,7 +142,7 @@ api.post('/lead', async (c) => {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from, to: [to], subject: `🔥 New Lead — ${clean._source || 'RJ Funnel'} (${clean.name || clean.email || 'unknown'})`, html: htmlBody })
+    body: JSON.stringify({ from, to: [to], subject: `🔥 New Lead — ${clean._source || 'McKnight GrowthOS'} (${clean.name || clean.email || 'unknown'})`, html: htmlBody })
   })
   if (!res.ok) {
     const err = await res.text()
@@ -169,7 +169,7 @@ api.post('/hooks/test', async (c) => {
   return c.json({ ok: results.every((r) => r.ok), results })
 })
 
-// ── v3.3: Lead Inbox CRM API (D1-backed) ─────────────────────
+// ── v3.3: LeadFlow CRM CRM API (D1-backed) ─────────────────────
 // GET /api/leads?funnel=&status=&q=&limit=&offset= — filtered list
 api.get('/leads', async (c) => {
   const deny = requireAdmin(c); if (deny) return deny
@@ -224,7 +224,7 @@ api.get('/leads/export.csv', async (c) => {
   const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`
   const header = 'id,name,email,phone,funnel,source,utm_campaign,utm_source,utm_medium,ghl_contact_id,status,created_at'
   const csv = [header, ...rows.results.map((r: Record<string, unknown>) => [r.id, r.name, r.email, r.phone, r.funnel, r.source, r.utm_campaign, r.utm_source, r.utm_medium, r.ghl_contact_id, r.status, r.created_at].map(esc).join(','))].join('\n')
-  return new Response(csv, { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="rj-funnel-leads.csv"' } })
+  return new Response(csv, { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="leadflow-crm-export.csv"' } })
 })
 
 // ── v3.3: Short funnel links (D1-backed) ────────────────────
@@ -269,7 +269,7 @@ api.post('/ai/social', async (c) => {
   try { body = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
   if (!body.template || !/^[a-zA-Z]{1,40}$/.test(body.template)) return c.json({ ok: false, error: 'template required' }, 400)
   const origin = new URL(c.req.url).origin
-  // UTM-tracked link so every social click is attributed in the Lead Inbox
+  // UTM-tracked link so every social click is attributed in the LeadFlow CRM
   const qs = new URLSearchParams(body.params || '')
   qs.set('utm_source', 'social')
   qs.set('utm_medium', 'organic')
@@ -337,12 +337,12 @@ api.post('/checkout', async (c) => {
 api.get('/seo-pack', (c) => {
   const q = c.req.query()
   const name = (q.name || 'Your Business').slice(0, 120)
-  const desc = (q.desc || `${name} — powered by RJ Business Solutions.`).slice(0, 300)
+  const desc = (q.desc || `${name} — built with McKnight GrowthOS.`).slice(0, 300)
   const url = (q.url || 'https://example.com').slice(0, 300)
   const city = (q.city || '').slice(0, 80)
   const niche = (q.niche || 'ProfessionalService').slice(0, 60)
   const keywords = (q.keywords || '').slice(0, 400)
-  const logo = q.logo || 'https://storage.googleapis.com/msgsndr/qQnxRHDtyx0uydPd5sRl/media/67eb83c5e519ed689430646b.jpeg'
+  const logo = q.logo || 'https://mcknight-growthos.pages.dev/static/logo.svg'
 
   const org = {
     '@context': 'https://schema.org', '@type': 'LocalBusiness',
@@ -366,7 +366,7 @@ api.get('/seo-pack', (c) => {
 
 // ── v2.5: SEO Ping — submits all site URLs to IndexNow (Bing/Yandex/Seznam/Naver
 // share the index) so new/updated funnels get discovered within hours, not weeks.
-// Called manually (POST /api/seo-ping) or daily by the rj-seo-keeper Worker cron.
+// Called manually (POST /api/seo-ping) or daily by an optional SEO-keeper Worker cron.
 export const INDEXNOW_KEY = '0ba4bc5051534cffb4f950503fd5563d'
 
 api.post('/seo-ping', async (c) => {

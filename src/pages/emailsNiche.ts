@@ -249,7 +249,7 @@ Talk soon,
 [Coach Name]
 
 *Individual results vary. No specific financial outcome is promised or guaranteed.*${FOOT}`)}
-  ${copyBlock('nco3', 'Email 3 — Day 3 · Case Study (Compliant)', `Subject: [Client First Name]'s first 90 days (real numbers)
+  ${copyBlock('nco3', 'Email 3 — Day 3 · Case Study (Compliance-Aware)', `Subject: [Client First Name]'s first 90 days (real numbers)
 
 [First Name],
 

@@ -1,6 +1,6 @@
 import { shell, copyBlock } from './layout'
 
-export const integrationsPage = () => shell('Integrations', 'integrations', `
+export const integrationsPage = () => shell('Integration Hub', 'integrations', `
 <section id="int-hero" class="mb-10">
   <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2"><i class="fas fa-plug grad-text mr-2"></i>Integration <span class="grad-text">Hub</span></h1>
   <p class="text-gray-400 max-w-3xl">GoHighLevel, Stripe, Email, Zapier/Make, Slack, Discord, Telegram, Twilio SMS and Airtable — all wired into every funnel out of the box. On each lead, every configured channel fires <strong class="text-white">in parallel</strong>. Add only the secrets you want; nothing can ever break a funnel.</p>
@@ -35,7 +35,7 @@ export const integrationsPage = () => shell('Integrations', 'integrations', `
 
     <div class="card p-5">
       <h3 class="font-bold text-white text-sm mb-2"><i class="fab fa-slack text-purple-400 mr-2"></i>Slack Alerts</h3>
-      <p class="text-xs text-gray-400 mb-3">Rich lead card in any channel — name, funnel, contact info, campaign + link to the Lead Inbox.</p>
+      <p class="text-xs text-gray-400 mb-3">Rich lead card in any channel — name, funnel, contact info, campaign + link to the LeadFlow CRM.</p>
       <ol class="text-[11px] text-gray-400 space-y-1 list-decimal list-inside mb-2">
         <li>api.slack.com/apps → Create App → Incoming Webhooks → On</li>
         <li>“Add New Webhook to Workspace” → pick channel → copy URL</li>
@@ -87,7 +87,7 @@ export const integrationsPage = () => shell('Integrations', 'integrations', `
   <div class="card p-5 flex flex-wrap items-center gap-4">
     <div class="flex-1 min-w-[240px]">
       <h3 class="font-bold text-white text-sm mb-1"><i class="fas fa-vial-circle-check text-brand-success mr-2"></i>Test all channels at once</h3>
-      <p class="text-xs text-gray-400">Sends a sample “Integration Test” lead through every configured channel and reports per-channel results. Nothing is saved to your Lead Inbox.</p>
+      <p class="text-xs text-gray-400">Sends a sample “Integration Test” lead through every configured channel and reports per-channel results. Nothing is saved to your LeadFlow CRM.</p>
     </div>
     <button id="btn-hooks-test" class="grad-bg text-white text-sm font-bold px-5 py-2.5 rounded-lg hover:opacity-90"><i class="fas fa-paper-plane mr-1"></i>Send Test Alert</button>
     <pre id="hooks-test-out" class="w-full text-xs text-gray-300 bg-[#060a14] border border-blue-900/40 rounded-lg p-3 hidden whitespace-pre-wrap"></pre>
@@ -115,7 +115,7 @@ export const integrationsPage = () => shell('Integrations', 'integrations', `
       <h3 class="font-bold text-white mb-3">2 · What happens on every lead — automatically</h3>
       <ul class="text-sm text-gray-300 space-y-2">
         <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Contact upsert</strong> — dedupes by email/phone, so existing GHL contacts get updated, not duplicated</li>
-        <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Auto-tags</strong> — <code class="text-blue-300">rj-funnel</code> + <code class="text-blue-300">funnel-{slug}</code> (e.g. <code>funnel-mortgage</code>) + offer tag + <code>utm-{campaign}</code> → trigger your existing GHL automations off these</li>
+        <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Auto-tags</strong> — <code class="text-blue-300">growthos</code> + <code class="text-blue-300">funnel-{slug}</code> (e.g. <code>funnel-mortgage</code>) + offer tag + <code>utm-{campaign}</code> → trigger your existing GHL automations off these</li>
         <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Attribution note</strong> — full form details + UTM/gclid/fbclid/ttclid + source URL pinned to the contact</li>
         <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Opportunity</strong> (optional) — auto-created in your pipeline when <code class="text-blue-300">GHL_PIPELINE_ID</code> + <code class="text-blue-300">GHL_STAGE_ID</code> are set</li>
         <li><i class="fas fa-check text-emerald-400 mr-2"></i><strong>Workflow enrollment</strong> (optional) — every lead dropped into the workflow in <code class="text-blue-300">GHL_WORKFLOW_ID</code></li>
@@ -125,10 +125,10 @@ export const integrationsPage = () => shell('Integrations', 'integrations', `
     </div>
   </div>
   ${copyBlock('int-ghl-test', 'Test the GHL sync from terminal (after secrets are set)', `# 1. Connection check
-curl https://funnels.rjbusinesssolutions.org/api/ghl/status
+curl https://mcknight-growthos.pages.dev/api/ghl/status
 
-# 2. Fire a test lead — watch it land in GHL Contacts with tags rj-funnel + funnel-mortgage
-curl -X POST https://funnels.rjbusinesssolutions.org/api/lead \\
+# 2. Fire a test lead — watch it land in GHL Contacts with tags growthos + funnel-mortgage
+curl -X POST https://mcknight-growthos.pages.dev/api/lead \\
   -H "Content-Type: application/json" \\
   -d '{"name":"GHL Test Lead","email":"ghltest@example.com","phone":"+15055550100","_source":"/t/mortgage?utm_campaign=test","utm_campaign":"test"}'`)}
   ${copyBlock('int-ghl-ids', 'Find your Pipeline / Stage / Workflow IDs (optional extras)', `# Pipelines + stage IDs (uses your same PIT token)
@@ -176,7 +176,7 @@ npx wrangler pages secret put GHL_WORKFLOW_ID`)}
     </div>
   </div>
   ${copyBlock('int-stripe-button', 'Drop-in checkout button (paste into any funnel/page)', `<button onclick="fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'DFY Social Growth — Setup',amount:199700})}).then(r=>r.json()).then(d=>{if(d.url)location.href=d.url;else alert(d.error)})" style="background:linear-gradient(135deg,#2563eb,#0ea5e9);color:#fff;font-weight:700;padding:16px 40px;border-radius:16px;border:none;font-size:18px;cursor:pointer">Get Started — $1,997 →</button>`)}
-  ${copyBlock('int-stripe-tiers', 'RJ 3-tier pricing wiring (Free / Pro / Enterprise pattern)', `// Tier buttons — swap in your real Stripe Price IDs
+  ${copyBlock('int-stripe-tiers', 'GrowthOS 3-tier pricing wiring (Free / Pro / Enterprise pattern)', `// Tier buttons — swap in your real Stripe Price IDs
 const TIERS = {
   starter:    { priceId: 'price_STARTER_ID' },     // e.g. $497/mo
   pro:        { priceId: 'price_PRO_ID' },         // e.g. $997/mo  ← "Most Popular"
@@ -203,7 +203,7 @@ document.querySelectorAll('[data-tier]').forEach(btn => btn.addEventListener('cl
         <li>Production: <code class="text-blue-300">npx wrangler pages secret put RESEND_API_KEY</code></li>
       </ol>
       <div class="mt-4 bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 text-xs text-blue-200">
-        <i class="fas fa-wand-magic-sparkles mr-1"></i><strong>Already wired:</strong> all 8 lead-capture funnels (real estate, coaching, law, home services, med spa, insurance, agency, tax) POST to <code>/api/lead</code> automatically. You get a branded RJ Blue lead email for every submission.
+        <i class="fas fa-wand-magic-sparkles mr-1"></i><strong>Already wired:</strong> all 8 lead-capture funnels (real estate, coaching, law, home services, med spa, insurance, agency, tax) POST to <code>/api/lead</code> automatically. You get a branded GrowthOS lead email for every submission.
       </div>
     </div>
     <div class="card p-6">
@@ -256,7 +256,7 @@ document.querySelectorAll('[data-tier]').forEach(btn => btn.addEventListener('cl
         <tr><td class="py-2 pr-4 font-mono text-blue-300">TWILIO_FROM / TWILIO_TO</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Sender number / your cell</td><td class="py-2 font-mono">wrangler pages secret put TWILIO_FROM · …TWILIO_TO</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">AIRTABLE_API_KEY</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Airtable rows (with base id)</td><td class="py-2 font-mono">wrangler pages secret put AIRTABLE_API_KEY</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">AIRTABLE_BASE_ID / AIRTABLE_TABLE</td><td class="py-2 pr-4">/api/lead · /api/hooks/*</td><td class="py-2 pr-4">Base (appXXXX) / table (default “Leads”)</td><td class="py-2 font-mono">wrangler pages secret put AIRTABLE_BASE_ID</td></tr>
-        <tr><td class="py-2 pr-4 font-mono text-amber-300">ADMIN_API_KEY</td><td class="py-2 pr-4">/api/leads* · /api/links · /api/ai/insights</td><td class="py-2 pr-4"><i class="fas fa-lock mr-1"></i>Locks the Lead Inbox + CSV export behind a key (recommended for production)</td><td class="py-2 font-mono">wrangler pages secret put ADMIN_API_KEY</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-amber-300">ADMIN_API_KEY</td><td class="py-2 pr-4">/api/leads* · /api/links · /api/ai/insights</td><td class="py-2 pr-4"><i class="fas fa-lock mr-1"></i>Locks the LeadFlow CRM + CSV export behind a key (recommended for production)</td><td class="py-2 font-mono">wrangler pages secret put ADMIN_API_KEY</td></tr>
       </tbody>
     </table>
   </div>

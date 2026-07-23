@@ -1,6 +1,6 @@
 import { shell, copyBlock } from './layout'
 
-export const creditPage = () => shell('Credit Repair Funnels', 'credit', `
+export const creditPage = () => shell('McKnight Credit Growth', 'credit', `
 <section id="credit-hero" class="mb-10">
   <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3"><i class="fas fa-chart-line text-blue-400 mr-2"></i>Credit Repair Funnels</h1>
   <p class="text-gray-400 max-w-3xl">CROA (15 U.S.C. §1679) · FCRA · TSR · FTC Act §5 · CFPB · TCPA · GLBA · ~26 state CSO laws — encoded. Engineered post <span class="text-brand-warn">CFPB v. Credit Repair Cloud ($2M, Aug 2024)</span> and <span class="text-brand-warn">FTC $10.9M pyramid scheme distribution (Mar 2026)</span>.</p>
@@ -9,7 +9,7 @@ export const creditPage = () => shell('Credit Repair Funnels', 'credit', `
 <section id="credit-templates" class="grid md:grid-cols-2 gap-4 mb-12">
   <a href="/t/credit-service" target="_blank" class="card p-6 block group">
     <h2 class="font-bold text-white mb-1 group-hover:text-brand-cyan"><i class="fas fa-user-check text-blue-400 mr-2"></i>B2C Credit Repair Service Funnel <i class="fas fa-arrow-up-right-from-square text-xs text-gray-600"></i></h2>
-    <p class="text-gray-400 text-sm">CROA-compliant consumer funnel: education-first hero, FCRA rights block, 5-step process with post-service billing, disclaimered proof, 3-tier + flat-fee pricing, 12-question honest FAQ. Customize in <a href="/builder" class="text-brand-cyan underline">Builder</a>.</p>
+    <p class="text-gray-400 text-sm">CROA-aware consumer funnel: education-first hero, FCRA rights block, 5-step process with post-service billing, disclaimered proof, 3-tier + flat-fee pricing, 12-question honest FAQ. Customize in <a href="/builder" class="text-brand-cyan underline">Builder</a>.</p>
   </a>
   <a href="/t/credit-saas" target="_blank" class="card p-6 block group">
     <h2 class="font-bold text-white mb-1 group-hover:text-brand-cyan"><i class="fas fa-laptop-code text-blue-400 mr-2"></i>B2B Credit Repair SaaS Funnel <i class="fas fa-arrow-up-right-from-square text-xs text-gray-600"></i></h2>
@@ -122,9 +122,9 @@ export const creditPage = () => shell('Credit Repair Funnels', 'credit', `
       <h3 class="font-bold text-brand-success mb-2">Safe SaaS Positioning</h3>
       <ul class="text-sm text-gray-400 space-y-1.5">
         <li>✅ "Help your clients, get paid after results"</li>
-        <li>✅ "CROA-compliant billing workflows built in"</li>
+        <li>✅ "CROA-aware billing workflows built in"</li>
         <li>✅ "Manage disputes, track results, automate compliance"</li>
-        <li>✅ "Built for TSR-compliant credit repair businesses"</li>
+        <li>✅ "Built for TSR-aware credit repair businesses"</li>
         <li>✅ Compliance training required before billing features unlock</li>
       </ul>
     </article>
@@ -167,13 +167,13 @@ export const creditPage = () => shell('Credit Repair Funnels', 'credit', `
 </section>
 
 <section id="credit-copy" class="mb-4">
-  <h2 class="text-2xl font-bold text-white mb-4"><i class="fas fa-check-double text-brand-success mr-2"></i>Compliant Copy Grab</h2>
-  ${copyBlock('credit-headlines', 'Compliant Headlines + CTAs', `EDUCATION-FIRST (safest — highest trust):
+  <h2 class="text-2xl font-bold text-white mb-4"><i class="fas fa-check-double text-brand-success mr-2"></i>Compliance-Aware Copy Grab</h2>
+  ${copyBlock('credit-headlines', 'Compliance-Aware Headlines + CTAs', `EDUCATION-FIRST (safest — highest trust):
 "Did You Know You Have the Legal Right to Dispute Inaccurate Items on Your Credit Report — For Free?"
 "3 Things on Your Credit Report That May Be Wrong Right Now (And How to Fix Them)"
 "What a 620 vs. 760 Credit Score Actually Costs You on a $300,000 Mortgage ($72,500+ Over 30 Years)"
 
-PAIN-BASED (compliant when honest):
+PAIN-BASED (lower-risk when honest):
 "Bad Credit Costing You Thousands? Here's What You Can Actually Do About It."
 "Getting Denied? Here's How to Find Out What's Hurting Your Credit — and What's Actually Fixable."
 
@@ -182,7 +182,7 @@ PROOF-BASED (with mandatory disclaimer):
 [REQUIRED: "Results may vary. Individual outcomes depend on the specific items on your credit report and whether they can be successfully disputed under the FCRA."]
 
 SOFTWARE/B2B:
-"Run a CROA-Compliant Credit Repair Business from Day One"
+"Run a CROA-Aware Credit Repair Business from Day One"
 "The Software Built for Credit Repair Professionals Who Actually Want to Stay in Business"
 
 ✅ CTAs: "Get Your Free Credit Consultation →" · "See What's Disputable on Your Report — Free Analysis →" · "Start My Free Case Review →" · "Book a Demo →"

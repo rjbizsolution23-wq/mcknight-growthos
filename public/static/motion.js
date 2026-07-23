@@ -1,4 +1,4 @@
-// ── RJ Motion Engine v2.1 — framer-style animation layer ──────
+// ── GrowthOS Motion Engine v1.0 — framer-style animation layer ──────
 // Zero dependencies. Auto-tags every funnel with scroll reveals,
 // staggered children, hover-lift cards, glass surfaces, ambient
 // gradient blobs, animated stat counters, and the © footer line.
@@ -133,20 +133,20 @@
     counters.forEach(c => { c.el.style.fontVariantNumeric = 'tabular-nums'; cio.observe(c.el) })
   }
 
-  // ── 5 · Branded copyright block on every funnel footer (RJ logo + tagline) ──
+  // ── 5 · Branded copyright block on every funnel footer (GrowthOS logo + tagline) ──
   const footer = document.querySelector('body > footer, footer:last-of-type')
   if (footer && !footer.querySelector('.mo-copyright')) {
     const wrap = document.createElement('div')
     wrap.className = 'mo-copyright'
     wrap.style.cssText = 'margin-top:18px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;opacity:.8'
     wrap.innerHTML =
-      `<img src="https://storage.googleapis.com/msgsndr/qQnxRHDtyx0uydPd5sRl/media/67eb83c5e519ed689430646b.jpeg" alt="RJ Business Solutions logo" loading="lazy" style="width:44px;height:44px;border-radius:10px;object-fit:cover;box-shadow:0 4px 14px rgba(0,51,153,.35)">` +
+      `<img src="/static/logo.svg" alt="McKnight GrowthOS logo" loading="lazy" style="width:44px;height:44px;border-radius:10px;box-shadow:0 4px 14px rgba(10,22,40,.45)">` +
       `<p style="margin:0;letter-spacing:.14em;text-transform:uppercase;font-size:9px;opacity:.85">Empowering Generational Wealth</p>` +
-      `<p style="margin:0">© ${new Date().getFullYear()} All rights reserved. · Funnel system by <a href="https://rjbusinesssolutions.org" style="text-decoration:underline">RJ Business Solutions</a></p>`
+      `<p style="margin:0">© ${new Date().getFullYear()} All rights reserved. · McKnight GrowthOS · Powered by <a href="https://rjbusinesssolutions.org" style="text-decoration:underline">RJ Business Solutions</a></p>`
     footer.appendChild(wrap)
   }
 
-  // ── 6 · Aurora ambient layer in hero (Supreme spec) ────────────
+  // ── 6 · Aurora ambient layer in hero ────────────
   if (hero && !reduced && !hero.querySelector('.rj-aurora')) {
     const au = document.createElement('div')
     au.className = 'rj-aurora'
@@ -178,7 +178,7 @@
     h1.classList.add('rj-kinetic')
   }
 
-  // ── 8 · Magnetic buttons (Supreme spec) — primary CTAs follow the cursor ──
+  // ── 8 · Magnetic buttons — primary CTAs follow the cursor ──
   if (!reduced && window.matchMedia('(pointer: fine)').matches) {
     document.querySelectorAll('.pulse-glow, a[class*="grad-bg"], button[type="submit"]').forEach(btn => {
       btn.classList.add('rj-magnetic')
@@ -265,7 +265,7 @@
       img.style.cssText = 'display:block;margin:0 auto 22px;max-height:72px;max-width:220px;object-fit:contain;border-radius:12px;position:relative;z-index:1'
       h1el.parentNode.insertBefore(img, h1el)
     }
-    // Footer: client logo replaces the RJ logo (RJ stays as text credit line)
+    // Footer: client logo replaces the GrowthOS logo (attribution stays as text credit line)
     const wm = document.querySelector('.mo-copyright img')
     if (wm) { wm.src = wl.bizLogo; wm.alt = 'Business logo' }
     const tag = document.querySelector('.mo-copyright p')

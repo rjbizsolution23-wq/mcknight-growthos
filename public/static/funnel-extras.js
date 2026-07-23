@@ -1,4 +1,4 @@
-/* RJ Funnel Extras v2.2 — conversion layer: exit-intent, sticky CTA, progress bar,
+/* McKnight GrowthOS Funnel Extras v1.0 — conversion layer: exit-intent, sticky CTA, progress bar,
    back-to-top, auto FAQ schema, UTM capture. Config via window.__RJF (set by funnelHead). */
 ;(function () {
   var CFG = window.__RJF || {}

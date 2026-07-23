@@ -4,9 +4,9 @@ import { nicheTabs, nichePanels } from './emailsNiche'
 const tabBtn = (id: string, label: string, active = false) =>
   `<button data-tab="${id}" class="px-4 py-2 rounded-lg text-sm ${active ? 'grad-bg text-white font-semibold' : 'text-gray-300 hover:bg-gray-800'}">${label}</button>`
 
-export const emailsPage = () => shell('Email Vault', 'emails', `
+export const emailsPage = () => shell('Campaign Vault', 'emails', `
 <section id="emails-hero" class="mb-8">
-  <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3"><i class="fas fa-envelope-open-text grad-text mr-2"></i>Email Vault</h1>
+  <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3"><i class="fas fa-envelope-open-text grad-text mr-2"></i>Campaign Vault</h1>
   <p class="text-gray-400 max-w-3xl">Every sequence, fully written. One-click copy. Replace bracketed fields with your data, keep the disclaimers, and ship. All marketing emails require: physical address + unsubscribe link (CAN-SPAM).</p>
 </section>
 

@@ -2,7 +2,7 @@ import { param, funnelHead, templateBadge } from './helpers'
 
 export const coachingTemplate = (q: Record<string, string | undefined>) => {
   const programName = param(q, 'programName', 'The Scale Accelerator')
-  const coachName = param(q, 'coachName', 'Rick Jefferson')
+  const coachName = param(q, 'coachName', 'Jordan McKnight')
   const promise = param(q, 'promise', 'Install the Systems That Take You From Operator to Owner in 12 Months')
   const audience = param(q, 'audience', 'founders and consultants doing $10K–$50K/month who are the bottleneck in their own business')
   const revenue = param(q, 'revenue', '$40M+')

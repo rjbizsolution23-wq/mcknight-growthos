@@ -6,8 +6,8 @@ export const eventLandingTemplate = (q: Record<string, string | undefined>) => {
   const location = param(q, 'location', 'Live Virtual + Albuquerque, NM')
   const promise = param(q, 'promise', 'Walk Away Knowing Exactly How to Fill Your Next Event and Close $10K+ Sponsors')
   const audience = param(q, 'audience', 'coaches, consultants, and agency owners running (or planning) their first paid event')
-  const host = param(q, 'host', 'Rick Jefferson')
-  const hostCred = param(q, 'hostCred', 'Founder of RJ Business Solutions — has built monetization systems for events, tax firms, and credit repair companies nationwide')
+  const host = param(q, 'host', 'Jordan McKnight')
+  const hostCred = param(q, 'hostCred', 'Builder of McKnight GrowthOS — monetization systems for events, tax firms, and credit businesses nationwide')
   const seats = param(q, 'seats', '53')
   const registered = param(q, 'registered', '1,247')
   const gaPrice = param(q, 'gaPrice', '$97')
@@ -207,7 +207,7 @@ export const eventLandingTemplate = (q: Record<string, string | undefined>) => {
 </section>
 
 <footer class="bg-gray-950 text-gray-500 text-xs text-center py-8 px-4">
-  <p class="mb-2">${eventName} · Produced by RJ Business Solutions · 1342 NM 333, Tijeras, New Mexico 87059</p>
+  <p class="mb-2">${eventName} · Produced with McKnight GrowthOS · Powered by RJ Business Solutions · 1342 NM 333, Tijeras, New Mexico 87059</p>
   <p class="max-w-2xl mx-auto">Testimonial results are not typical and are not a guarantee of your results. This page is a template — replace all example testimonials, numbers, and claims with your own verified data before publishing.</p>
 </footer>
 

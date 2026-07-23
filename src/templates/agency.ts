@@ -1,7 +1,7 @@
 import { param, funnelHead, templateBadge } from './helpers'
 
 export const agencyTemplate = (q: Record<string, string | undefined>) => {
-  const agencyName = param(q, 'agencyName', 'RJ Growth Partners')
+  const agencyName = param(q, 'agencyName', 'McKnight Growth Partners')
   const niche = param(q, 'niche', 'home service businesses')
   const service = param(q, 'service', 'done-for-you lead generation')
   const clientCount = param(q, 'clientCount', '140+')

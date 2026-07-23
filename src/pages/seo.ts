@@ -1,6 +1,6 @@
 import { shell, copyBlock } from './layout'
 
-export const seoPage = () => shell('SEO / AEO / SGE Engine', 'seo', `
+export const seoPage = () => shell('SEO Intelligence', 'seo', `
 <section id="seo-hero" class="mb-10">
   <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2"><i class="fas fa-magnifying-glass-chart grad-text mr-2"></i>SEO · AEO · SGE <span class="grad-text">Engine</span></h1>
   <p class="text-gray-400 max-w-3xl">Generate a complete search pack for any funnel or client site: meta tags, Open Graph, Twitter cards, JSON-LD schema, sitemap.xml, robots.txt (AI-crawler ready), plus AEO answer blocks engineered for Google SGE / AI Overviews, ChatGPT Search, and Perplexity.</p>
@@ -50,7 +50,7 @@ export const seoPage = () => shell('SEO / AEO / SGE Engine', 'seo', `
           <input name="keywords" placeholder="sell my house albuquerque, home value report" class="w-full bg-[#060a14] border border-blue-900/60 rounded-lg px-3 py-2 text-sm text-white"></div>
       </div>
       <div><label class="block text-xs font-semibold text-gray-300 mb-1">Logo / OG image URL</label>
-        <input name="logo" placeholder="https://... (1200×630 recommended — defaults to RJ logo)" class="w-full bg-[#060a14] border border-blue-900/60 rounded-lg px-3 py-2 text-sm text-white"></div>
+        <input name="logo" placeholder="https://... (1200×630 recommended — defaults to GrowthOS logo)" class="w-full bg-[#060a14] border border-blue-900/60 rounded-lg px-3 py-2 text-sm text-white"></div>
       <button type="submit" class="grad-bg text-white font-bold px-6 py-3 rounded-xl w-full"><i class="fas fa-wand-magic-sparkles mr-2"></i>Generate Full SEO Pack</button>
       <p class="text-[11px] text-gray-500">Also available as API: <code class="text-blue-300">GET /api/seo-pack?name=&desc=&url=&city=&niche=&keywords=</code></p>
     </form>
@@ -90,12 +90,12 @@ export const seoPage = () => shell('SEO / AEO / SGE Engine', 'seo', `
         <tr><td class="py-2 pr-4 font-mono text-blue-300">seoKeywords</td><td class="py-2 pr-4">Meta keywords tag</td><td class="py-2 font-mono">seoKeywords=sell home,realtor</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">canonical</td><td class="py-2 pr-4">Canonical URL + og:url</td><td class="py-2 font-mono">canonical=https://mysite.com/sell</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">ogImage</td><td class="py-2 pr-4">OG + Twitter share image (1200×630)</td><td class="py-2 font-mono">ogImage=https://.../share.jpg</td></tr>
-        <tr><td class="py-2 pr-4 font-mono text-blue-300">theme=dark</td><td class="py-2 pr-4"><strong class="text-white">Dark background mode</strong> — flips the entire funnel to RJ Navy dark</td><td class="py-2 font-mono">theme=dark</td></tr>
+        <tr><td class="py-2 pr-4 font-mono text-blue-300">theme=dark</td><td class="py-2 pr-4"><strong class="text-white">Dark background mode</strong> — flips the entire funnel to McKnight Navy dark</td><td class="py-2 font-mono">theme=dark</td></tr>
         <tr><td class="py-2 pr-4 font-mono text-blue-300">noindex=1</td><td class="py-2 pr-4">Blocks indexing (drafts/tests)</td><td class="py-2 font-mono">noindex=1</td></tr>
       </tbody>
     </table></div>
   </div>
-  ${copyBlock('seo-example-url', 'Example: fully SEO-loaded dark funnel URL', `/t/real-estate?agentName=Rick Jefferson&city=Albuquerque&theme=dark&seoTitle=Sell Your ABQ Home in 11 Days — Summit Realty&seoDesc=Free 24-hour home value report from Albuquerque's #1 data-driven listing team. 340+ homes sold, 4.2% over list average.&seoKeywords=sell my house albuquerque,albuquerque realtor,home value report&canonical=https://summitrealty.com/sell&ogImage=https://summitrealty.com/og-share.jpg`)}
+  ${copyBlock('seo-example-url', 'Example: fully SEO-loaded dark funnel URL', `/t/real-estate?agentName=Jordan McKnight&city=Albuquerque&theme=dark&seoTitle=Sell Your ABQ Home in 11 Days — Summit Realty&seoDesc=Free 24-hour home value report from Albuquerque's #1 data-driven listing team. 340+ homes sold, 4.2% over list average.&seoKeywords=sell my house albuquerque,albuquerque realtor,home value report&canonical=https://summitrealty.com/sell&ogImage=https://summitrealty.com/og-share.jpg`)}
 </section>
 
 <!-- CHECKLISTS -->
