@@ -7,6 +7,7 @@
 
 ## URLs
 - **Production (custom domain)**: https://funnels.rjbusinesssolutions.org
+- **GitHub**: https://github.com/rjbizsolution23-wq/rj-funnel-command-center
 - **Sandbox (dev preview)**: https://3000-iegrgivf1owthq4y7nq1l-583b4d74.sandbox.novita.ai
 - **Version**: v3.5.0 (Enterprise + Social Pack) — live
 
