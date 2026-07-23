@@ -10,6 +10,8 @@ import { brandPage } from './pages/brand'
 import { seoPage } from './pages/seo'
 import { integrationsPage } from './pages/integrations'
 import { leadsPage } from './pages/leads'
+import { ecosystemPage, ecosystemBrandPage, ECOSYSTEM_BRANDS } from './pages/ecosystem'
+import { passportPage } from './pages/passport'
 import { api, INDEXNOW_KEY } from './api'
 import { eventLandingTemplate } from './templates/eventLanding'
 import { sponsorDeckTemplate } from './templates/sponsorDeck'
@@ -60,6 +62,12 @@ app.get('/brand', (c) => html(brandPage()))
 app.get('/seo', (c) => html(seoPage()))
 app.get('/integrations', (c) => html(integrationsPage()))
 app.get('/leads', (c) => html(leadsPage()))
+app.get('/ecosystem', (c) => html(ecosystemPage()))
+app.get('/ecosystem/:slug', (c) => {
+  const page = ecosystemBrandPage(c.req.param('slug'))
+  return page ? html(page) : c.notFound()
+})
+app.get('/passport', (c) => html(passportPage()))
 
 // ── API layer: Stripe checkout + lead capture + SEO pack ─────
 app.route('/api', api)
@@ -111,10 +119,10 @@ app.get('/f/:code', async (c) => {
 })
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'mcknight-growthos', version: '1.0.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'mcknight-growthos', version: '1.1.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
-const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations']
+const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations', '/ecosystem', '/passport', ...ECOSYSTEM_BRANDS.map((b) => `/ecosystem/${b.slug}`)]
 const FUNNELS = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency', 'restaurant', 'dental', 'auto-services', 'salon', 'mortgage', 'chiropractic', 'pet-care', 'landscaping', 'cleaning', 'childcare', 'tutoring', 'accounting', 'photography', 'wedding-venue', 'moving']
 
 app.get('/sitemap.xml', (c) => {

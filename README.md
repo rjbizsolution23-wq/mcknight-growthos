@@ -42,8 +42,31 @@ McKnight Opportunity Group
     ├── Growth Command Center    (/)             — dashboard home
     ├── Conversion Playbooks     (/t/*)          — 30 industry funnel templates
     ├── Brand Control Center     (/brand)        — brand system, voice, colors, pricing tiers
-    └── Growth Intelligence      (dashboard)     — planning assumptions (not guaranteed results)
+    ├── Growth Intelligence      (dashboard)     — planning assumptions (not guaranteed results)
+    ├── McKnight Ecosystem       (/ecosystem)    — full 10-brand portfolio map + brand funnels
+    └── Readiness Passport       (/passport)     — Business Readiness Passport + Evidence Vault
 ```
+
+### McKnight Ecosystem Layer (v1.1)
+
+The `/ecosystem` hub maps the entire McKnight Opportunity Group portfolio — every brand as its own legal entity, with its own funnel page (`/ecosystem/:slug`) covering positioning, required infrastructure, revenue ladder and compliance anchors:
+
+| Brand | Structure | Route |
+|---|---|---|
+| McKnight Opportunity Group | Parent/management company | `/ecosystem/opportunity-group` |
+| The Contracting Preacher | Consulting and education business | `/ecosystem/contracting-preacher` |
+| Contracting Preacher OS | SaaS/IP product | `/ecosystem/contracting-preacher-os` |
+| McKnight Housing Initiative | Independent nonprofit | `/ecosystem/housing-initiative` |
+| McKnight Capital Ready | Credit education & funding-readiness | `/ecosystem/capital-ready` |
+| Capital Ready Legal Network | Referral/network brand — not a law firm | `/ecosystem/capital-ready-legal` |
+| McKnight Freight Systems | Motor-carrier/transportation company | `/ecosystem/freight-systems` |
+| McKnight FleetWorks | Repair and maintenance operation | `/ecosystem/fleetworks` |
+| McKnight Early Learning Academy | Licensed childcare provider | `/ecosystem/early-learning` |
+| McKnight LearningOS | Childcare SaaS/IP product | `/ecosystem/learningos` |
+
+**Entity separation rule**: nonprofit donations, daycare tuition, trucking revenue, credit-repair payments and SaaS subscriptions are never mixed in one account.
+
+The `/passport` page hosts the **Business Readiness Passport + Evidence Vault** — 15 verified intake data groups, 17 evidence document types (each with owner/version/effective/expiration/confidentiality/verification/AI-usage metadata), the AI can/cannot governance matrix, 6 required human approval roles, the 18-item Dr. McKnight master intake package (with copy-ready request email), and a lead-capture intake form (`_source: passport-intake`). Compliance anchors cited: SAM.gov entity checklist, Grants.gov registration, HUD CHDO, FTC CROA, 49 CFR Part 376, SC ABC Quality.
 
 ### Vertical Growth Suites
 
@@ -67,6 +90,8 @@ McKnight Opportunity Group
 - ✅ Enterprise security: ADMIN_API_KEY lock, rate limiting, honeypot spam trap
 - ✅ Brand Control Center: full McKnight brand system, voice, colors, pricing architecture
 - ✅ White-label: `?brandName=&logo=&theme=dark` overrides per funnel
+- ✅ McKnight Ecosystem hub: 10 brand funnels, execution order, smart additions, brand-asset & domain checklists, verified sources (v1.1)
+- ✅ Business Readiness Passport + Evidence Vault page with governance matrix and intake capture (v1.1)
 
 ## Functional Entry Points (API)
 
@@ -102,7 +127,7 @@ McKnight Opportunity Group
 - **Platform**: Cloudflare Pages (project `mcknight-growthos`)
 - **Status**: ✅ Active — https://mcknight-growthos.pages.dev
 - **Tech Stack**: Hono 4 + TypeScript + Vite + TailwindCSS (CDN) + Cloudflare D1 + Workers AI
-- **Last Updated**: 2026-07-23
+- **Last Updated**: 2026-07-23 (v1.1.0 — Ecosystem + Passport layer)
 
 ### Local Development
 

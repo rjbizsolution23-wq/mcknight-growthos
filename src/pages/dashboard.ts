@@ -35,6 +35,20 @@ export const dashboardPage = () => shell('Growth Command Center', 'dashboard', `
   </div>
 </section>
 
+<section id="ecosystem-banner" class="mb-12">
+  <div class="bg-gradient-to-r from-[#0d1b30] via-[#101f38] to-[#0d1b30] border border-mk-gold/40 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-6">
+    <div class="flex-1">
+      <p class="text-[10px] uppercase tracking-wider font-bold text-mk-gold mb-2"><i class="fas fa-sitemap mr-1"></i> New — McKnight Opportunity Group Portfolio</p>
+      <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">The McKnight Ecosystem: <span class="grad-text">10 Brands, One Data Engine</span></h2>
+      <p class="text-gray-400 text-sm max-w-2xl">Contracting, housing, capital readiness, freight, fleet repair, early learning and two SaaS products — each its own entity, all powered by the Business Readiness Passport + Evidence Vault. See every brand funnel in one place.</p>
+    </div>
+    <div class="flex flex-col gap-3 shrink-0">
+      <a href="/ecosystem" class="gold-bg text-black font-bold px-6 py-3 rounded-xl text-sm text-center hover:opacity-90 transition"><i class="fas fa-layer-group mr-2"></i>View All Brands</a>
+      <a href="/passport" class="border border-mk-gold/50 text-mk-goldLight font-semibold px-6 py-3 rounded-xl text-sm text-center hover:bg-mk-gold/10 transition"><i class="fas fa-passport mr-2"></i>Readiness Passport</a>
+    </div>
+  </div>
+</section>
+
 <section id="vertical-cards" class="grid md:grid-cols-3 gap-6 mb-12">
   <a href="/events" class="card p-6 block group">
     <div class="grad-bg w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl mb-4"><i class="fas fa-ticket"></i></div>

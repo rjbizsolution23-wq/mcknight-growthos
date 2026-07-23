@@ -85,6 +85,8 @@ ${extraHead}
         ['/events', 'Event Growth', 'events'],
         ['/tax', 'Tax Growth', 'tax'],
         ['/credit', 'Credit Growth', 'credit'],
+        ['/ecosystem', 'Ecosystem', 'ecosystem'],
+        ['/passport', 'Passport', 'passport'],
         ['/builder', 'Funnel Studio', 'builder'],
         ['/leads', 'LeadFlow CRM', 'leads'],
         ['/emails', 'Campaign Vault', 'emails'],
@@ -118,6 +120,8 @@ ${content}
       <div>
         <p class="font-semibold text-white text-xs uppercase tracking-wide mb-3">Platform</p>
         <ul class="space-y-1.5 text-xs">
+          <li><a href="/ecosystem" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-sitemap mr-2 text-blue-500"></i>McKnight Ecosystem</a></li>
+          <li><a href="/passport" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-passport mr-2 text-blue-500"></i>Readiness Passport</a></li>
           <li><a href="/builder" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-hammer mr-2 text-blue-500"></i>Funnel Studio</a></li>
           <li><a href="/leads" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-inbox mr-2 text-blue-500"></i>LeadFlow CRM</a></li>
           <li><a href="/emails" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-envelope mr-2 text-blue-500"></i>Campaign Vault</a></li>
