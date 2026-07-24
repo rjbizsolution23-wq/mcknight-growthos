@@ -326,6 +326,31 @@ One form submit on any funnel now triggers the complete connected flow:
 
 Verified per-brand: tax-lead→capital:Intake, mortgage→mortgage:Developer Lead, real-estate→housing:Inquiry, moving→trucking:Driver/Customer Lead, auto-services→fleetrepair:Service Request, childcare→childcare:Family Inquiry, sponsor-deck→govcon:Business Intake, everything else→consulting:New Lead. All 61 routes 200.
 
+## v6.0 — Full Brand + Platform Fleet (McKnight Opportunity Group)
+
+**10 brand flagship sites**, built with a premium dark-navy brand-site engine (`src/templates/brandSites.ts`) and blueprint-verbatim configs (`src/templates/brandSiteConfigs.ts`). Each site ships: sticky glass nav, kinetic hero, stats band, 6-card services grid, portal showcase (with data-isolation note), numbered workflow strip, compliance checklist, FAQ (schema.org), lead form, and the mandated attribution footer — *"A McKnight Opportunity Group platform. Technology powered by RJ Business Solutions."*
+
+| Funnel | Brand | Accent | ClientOS Pipeline |
+|---|---|---|---|
+| `/t/opportunity-group` | McKnight Opportunity Group | Gold #d4a72c | consulting |
+| `/t/contracting-preacher` | The Contracting Preacher | Gold #d4a72c | govcon |
+| `/t/housing-initiative` | McKnight Housing Initiative | Green #16a34a | housing |
+| `/t/capital-ready` | McKnight Capital Ready | Emerald #059669 | capital |
+| `/t/mortgageos` | McKnight MortgageOS | Fintech blue #2563eb | mortgage |
+| `/t/growth-command` | McKnight GrowthOS | Cyan/indigo #0ea5e9 | consulting |
+| `/t/freight-systems` | McKnight Freight Systems | Steel blue #4682b4 | trucking |
+| `/t/fleetworks` | McKnight FleetWorks | Safety orange #f97316 | fleetrepair |
+| `/t/early-learning` | McKnight Early Learning Academy | Sky blue #38bdf8 | childcare |
+| `/t/learningos` | McKnight LearningOS | Violet #7c3aed | childcare |
+
+**Wiring**: brand sites are full funnels — leads post via `data-lead-form` → D1 → GHL → ClientOS pipeline (table above) → Zoom → hooks fan-out → email, with automation timeline logging. `BRAND_THEMES`/`FUNNEL_BRAND` (helpers.ts) stay in sync with `BRANDS`/`FUNNEL_PIPELINE` (clientos.ts). All 42 funnels in sitemap (71 routes total).
+
+**AI copy protection**: `BRAND_SITE_SLUGS` (funnels.ts) excludes the 10 flagship sites from the SEO agent (`getCopyOverrides` / `maybeRefreshFunnel` / `optimizeFunnelCopy` all guard) — blueprint taglines, compliance language and attribution are canonical and never AI-rewritten.
+
+**Compliance gates honored**: no 501(c)(3)/CHDO claims without determination; CROA prohibited claims excluded (no guaranteed deletions/score increases/funding); MortgageOS positioned as technology — NOT a lender/broker/AUS; 49 CFR 376 (truth-in-leasing) & 396 (inspection/maintenance) referenced; SC licensing/ABC Quality noted; AI drafts grants — humans verify and submit; Contracting Preacher CRM separation stated on-site. "Shared code ≠ shared unrestricted data."
+
+**Deferred (per blueprint risk tier)**: real authenticated portals (Housing Impact, Capital Ready OS, DriverHub, ServiceHub, Family/Director/Teacher/Parent portals), live payments, mortgage API productization, childcare operations — require verified credentials/licenses before public activation.
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---

@@ -31,6 +31,11 @@ import { weddingVenueTemplate } from './templates/weddingVenue'
 import { movingTemplate } from './templates/moving'
 import { webinarLiveTemplate } from './templates/webinarLive'
 import { vslTemplate } from './templates/vsl'
+import {
+  opportunityGroupSite, contractingPreacherSite, housingInitiativeSite, capitalReadySite,
+  mortgageosSite, growthCommandSite, freightSystemsSite, fleetworksSite,
+  earlyLearningSite, learningosSite,
+} from './templates/brandSiteConfigs'
 
 export const TEMPLATES: Record<string, (q: Record<string, string | undefined>) => string> = {
   'event-landing': eventLandingTemplate, 'sponsor-deck': sponsorDeckTemplate, 'tax-lead': taxLeadTemplate,
@@ -45,4 +50,10 @@ export const TEMPLATES: Record<string, (q: Record<string, string | undefined>) =
   'accounting': accountingTemplate, 'photography': photographyTemplate,
   'wedding-venue': weddingVenueTemplate, 'moving': movingTemplate,
   'webinar-live': webinarLiveTemplate, 'vsl': vslTemplate,
+  // v6.0 brand flagship sites — McKnight Opportunity Group full fleet
+  'opportunity-group': opportunityGroupSite, 'contracting-preacher': contractingPreacherSite,
+  'housing-initiative': housingInitiativeSite, 'capital-ready': capitalReadySite,
+  'mortgageos': mortgageosSite, 'growth-command': growthCommandSite,
+  'freight-systems': freightSystemsSite, 'fleetworks': fleetworksSite,
+  'early-learning': earlyLearningSite, 'learningos': learningosSite,
 }

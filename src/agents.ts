@@ -14,6 +14,8 @@
 // run triggers a background refresh (ctx.waitUntil, zero added latency)
 // — plus a Run Now button on /agents.
 
+import { BRAND_SITE_SLUGS } from './funnels'
+
 export type AgentEnv = {
   AI?: { run: (model: string, input: Record<string, unknown>) => Promise<{ response?: string }> }
   DB?: any
@@ -62,6 +64,8 @@ export const optimizeFunnelCopy = async (
   context: { views7d?: number; leads7d?: number } = {}
 ): Promise<{ ok: boolean; overrides?: Record<string, string>; error?: string }> => {
   if (!env.AI || !env.DB) return { ok: false, error: 'AI or DB binding missing' }
+  // v6.0: brand flagship sites keep blueprint-authored copy — never AI-optimized
+  if (BRAND_SITE_SLUGS.has(funnel)) return { ok: true, overrides: {} }
   try {
     const niche = funnel.replace(/-/g, ' ')
     const perf = context.views7d !== undefined
@@ -121,6 +125,7 @@ export const optimizeAllFunnels = async (env: AgentEnv, funnels: string[]): Prom
 
 // ── Read a funnel's current overrides (merged at render time) ──
 export const getCopyOverrides = async (env: AgentEnv, funnel: string): Promise<Record<string, string>> => {
+  if (BRAND_SITE_SLUGS.has(funnel)) return {} // v6.0: brand sites — blueprint copy only
   try {
     const row = await env.DB?.prepare('SELECT overrides FROM copy_overrides WHERE funnel=?').bind(funnel).first()
     if (row?.overrides) return JSON.parse(row.overrides as string)
@@ -131,6 +136,7 @@ export const getCopyOverrides = async (env: AgentEnv, funnel: string): Promise<R
 // ── Lazy weekly cron: called on funnel traffic; refreshes stale copy in
 // the background via ctx.waitUntil (no latency added to the visitor).
 export const maybeRefreshFunnel = async (env: AgentEnv, funnel: string): Promise<void> => {
+  if (BRAND_SITE_SLUGS.has(funnel)) return // v6.0: brand sites — no AI copy refresh
   try {
     const row = await env.DB?.prepare('SELECT updated_at FROM copy_overrides WHERE funnel=?').bind(funnel).first()
     const last = row?.updated_at ? new Date(String(row.updated_at) + 'Z').getTime() : 0

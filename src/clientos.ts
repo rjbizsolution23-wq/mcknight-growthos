@@ -17,14 +17,14 @@ export const LIFECYCLE_STAGES = [
 
 // ── Brand registry (portal branding + data separation labels) ──
 export const BRANDS: Record<string, { name: string; icon: string; color: string }> = {
-  growthos:      { name: 'McKnight GrowthOS',            icon: 'fa-rocket',        color: '#d4a72c' },
-  contracting:   { name: 'Contracting Preacher OS',      icon: 'fa-file-contract', color: '#2563eb' },
+  growthos:      { name: 'McKnight GrowthOS',            icon: 'fa-rocket',        color: '#0ea5e9' },
+  contracting:   { name: 'The Contracting Preacher',     icon: 'fa-file-contract', color: '#d4a72c' },
   capital:       { name: 'McKnight Capital Ready',       icon: 'fa-coins',         color: '#059669' },
-  mortgage:      { name: 'McKnight MortgageOS',          icon: 'fa-house-chimney', color: '#7c3aed' },
-  housing:       { name: 'McKnight Housing Initiative',  icon: 'fa-building',      color: '#0ea5e9' },
-  freight:       { name: 'McKnight DriverHub',           icon: 'fa-truck',         color: '#f59e0b' },
-  fleetworks:    { name: 'FleetWorks ServiceHub',        icon: 'fa-wrench',        color: '#dc2626' },
-  learning:      { name: 'McKnight LearningOS',          icon: 'fa-graduation-cap',color: '#ec4899' },
+  mortgage:      { name: 'McKnight MortgageOS',          icon: 'fa-house-chimney', color: '#2563eb' },
+  housing:       { name: 'McKnight Housing Initiative',  icon: 'fa-building',      color: '#16a34a' },
+  freight:       { name: 'McKnight Freight Systems',     icon: 'fa-truck',         color: '#4682b4' },
+  fleetworks:    { name: 'McKnight FleetWorks',          icon: 'fa-wrench',        color: '#f97316' },
+  learning:      { name: 'McKnight LearningOS',          icon: 'fa-graduation-cap',color: '#7c3aed' },
 }
 
 // ── Per-brand pipelines (blueprint section 5, verbatim stages) ─
@@ -77,6 +77,17 @@ export const FUNNEL_PIPELINE: Record<string, string> = {
   'event-landing': 'consulting', 'sponsor-deck': 'govcon',
   'law-firm': 'consulting', 'accounting': 'capital', 'insurance': 'consulting',
   'webinar-live': 'consulting', 'vsl': 'consulting',
+  // v6.0 brand flagship sites — each feeds its own brand pipeline
+  'opportunity-group': 'consulting',
+  'contracting-preacher': 'govcon',
+  'housing-initiative': 'housing',
+  'capital-ready': 'capital',
+  'mortgageos': 'mortgage',
+  'growth-command': 'consulting',
+  'freight-systems': 'trucking',
+  'fleetworks': 'fleetrepair',
+  'early-learning': 'childcare',
+  'learningos': 'childcare',
   // everything else falls through to 'consulting'
 }
 export const pipelineForFunnel = (funnel: string | undefined): string =>

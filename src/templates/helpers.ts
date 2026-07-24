@@ -38,15 +38,21 @@ export type BrandTheme = {
   color: string; color2: string   // primary + light accent
   darkText: boolean               // true → dark text on primary buttons (light colors)
 }
+// Accents per the Master Brand System (fleet blueprint §2): Contracting=Gold,
+// Housing=Community green, Capital=Emerald, MortgageOS=Fintech blue,
+// GrowthOS=Cyan/indigo, Freight=Steel blue, FleetWorks=Safety orange,
+// Early Learning=Warm sky blue, LearningOS=Violet.
 export const BRAND_THEMES: Record<string, BrandTheme> = {
-  growthos:    { key: 'growthos',    name: 'McKnight GrowthOS',           icon: 'fa-rocket',         tagline: 'Turn attention into pipeline—and pipeline into growth.', color: '#d4a72c', color2: '#f4ce65', darkText: true },
-  contracting: { key: 'contracting', name: 'Contracting Preacher OS',     icon: 'fa-file-contract',  tagline: 'Win government contracts with systems, not luck.',       color: '#2563eb', color2: '#60a5fa', darkText: false },
-  capital:     { key: 'capital',     name: 'McKnight Capital Ready',      icon: 'fa-coins',          tagline: 'Get fundable. Get funded. Stay funded.',                 color: '#059669', color2: '#34d399', darkText: false },
-  mortgage:    { key: 'mortgage',    name: 'McKnight MortgageOS',         icon: 'fa-house-chimney',  tagline: 'Mortgage technology that closes.',                       color: '#7c3aed', color2: '#a78bfa', darkText: false },
-  housing:     { key: 'housing',     name: 'McKnight Housing Initiative', icon: 'fa-building',       tagline: 'Pathways to ownership for every family.',                color: '#0ea5e9', color2: '#7dd3fc', darkText: true },
-  freight:     { key: 'freight',     name: 'McKnight DriverHub',          icon: 'fa-truck',          tagline: 'Keep America moving — drivers first.',                   color: '#f59e0b', color2: '#fcd34d', darkText: true },
-  fleetworks:  { key: 'fleetworks',  name: 'FleetWorks ServiceHub',       icon: 'fa-wrench',         tagline: 'Fleet uptime is the business.',                          color: '#dc2626', color2: '#f87171', darkText: false },
-  learning:    { key: 'learning',    name: 'McKnight LearningOS',         icon: 'fa-graduation-cap', tagline: 'Every child ready. Every family supported.',             color: '#ec4899', color2: '#f9a8d4', darkText: false },
+  mog:           { key: 'mog',           name: 'McKnight Opportunity Group',        icon: 'fa-landmark',       tagline: 'Building contracts, capital, communities, mobility and learning.', color: '#d4a72c', color2: '#f4ce65', darkText: true },
+  growthos:      { key: 'growthos',      name: 'McKnight GrowthOS',                 icon: 'fa-rocket',         tagline: 'Turn attention into pipeline—and pipeline into growth.', color: '#0ea5e9', color2: '#4f46e5', darkText: true },
+  contracting:   { key: 'contracting',   name: 'The Contracting Preacher',          icon: 'fa-file-contract',  tagline: 'Win government contracts with systems, not luck.',       color: '#d4a72c', color2: '#f4ce65', darkText: true },
+  capital:       { key: 'capital',       name: 'McKnight Capital Ready',            icon: 'fa-coins',          tagline: 'Build credit. Build capital. Build forward.',            color: '#059669', color2: '#34d399', darkText: false },
+  mortgage:      { key: 'mortgage',      name: 'McKnight MortgageOS',               icon: 'fa-house-chimney',  tagline: 'Mortgage intelligence. Faster decisions. Cleaner pipelines.', color: '#2563eb', color2: '#60a5fa', darkText: false },
+  housing:       { key: 'housing',       name: 'McKnight Housing Initiative',       icon: 'fa-building',       tagline: 'Housing stability. Community strength. Lasting opportunity.', color: '#16a34a', color2: '#4ade80', darkText: false },
+  freight:       { key: 'freight',       name: 'McKnight Freight Systems',          icon: 'fa-truck',          tagline: 'Freight moved with discipline.',                         color: '#4682b4', color2: '#7eb3dd', darkText: false },
+  fleetworks:    { key: 'fleetworks',    name: 'McKnight FleetWorks',               icon: 'fa-wrench',         tagline: 'Keep the fleet moving.',                                 color: '#f97316', color2: '#fdba74', darkText: true },
+  earlylearning: { key: 'earlylearning', name: 'McKnight Early Learning Academy',   icon: 'fa-child-reaching', tagline: 'Strong beginnings. Brighter futures.',                   color: '#38bdf8', color2: '#bae6fd', darkText: true },
+  learning:      { key: 'learning',      name: 'McKnight LearningOS',               icon: 'fa-graduation-cap', tagline: 'Childcare operations and learning, connected.',          color: '#7c3aed', color2: '#a78bfa', darkText: false },
 }
 // Funnel slug → brand key (visual). Matches FUNNEL_PIPELINE routing in clientos.ts.
 export const FUNNEL_BRAND: Record<string, string> = {
@@ -57,6 +63,17 @@ export const FUNNEL_BRAND: Record<string, string> = {
   'auto-services': 'fleetworks',
   'childcare': 'learning', 'tutoring': 'learning',
   'sponsor-deck': 'contracting',
+  // v6.0 brand flagship sites (full fleet blueprint)
+  'opportunity-group': 'mog',
+  'contracting-preacher': 'contracting',
+  'housing-initiative': 'housing',
+  'capital-ready': 'capital',
+  'mortgageos': 'mortgage',
+  'growth-command': 'growthos',
+  'freight-systems': 'freight',
+  'fleetworks': 'fleetworks',
+  'early-learning': 'earlylearning',
+  'learningos': 'learning',
   // everything else wears the flagship GrowthOS identity
 }
 export const brandThemeFor = (slug: string | undefined): BrandTheme =>
