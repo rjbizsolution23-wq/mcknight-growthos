@@ -1,31 +1,96 @@
-// ── McKnight GrowthOS — Workers AI (LLM) layer ─────────
-// Runs on Cloudflare Workers AI (llama-3.1-8b-instruct) — included with
-// the Cloudflare account, no external API key required.
-// v3.3.0: AI copy generation for the Builder + AI lead insights.
+// ── McKnight GrowthOS — Multi-Provider AI Router ─────────
+// v6.5: OpenRouter + Hugging Face + Cloudflare Workers AI in one
+// fail-soft chain. Every AI feature (Builder copy fill, social posts,
+// Change Agent, SEO agent, lead insights) routes through runLLM here.
+//   Provider order (first configured wins, failures fall through):
+//     1. OpenRouter   — OPENROUTER_API_KEY (+ optional OPENROUTER_MODEL)
+//     2. Hugging Face — HF_API_TOKEN (+ optional HF_MODEL)
+//     3. Workers AI   — AI binding (always available on Cloudflare, free)
+//   Override order with AI_PROVIDER = openrouter | huggingface | workers
+//   All keys live in the Key Vault (/integrations) — hot-swap, no redeploy.
 
 export type AiEnv = {
   AI?: { run: (model: string, input: Record<string, unknown>) => Promise<{ response?: string }> }
+  OPENROUTER_API_KEY?: string
+  OPENROUTER_MODEL?: string
+  HF_API_TOKEN?: string
+  HF_MODEL?: string
+  AI_PROVIDER?: string
 }
 
 const MODEL = '@cf/meta/llama-4-scout-17b-16e-instruct'
+const OR_DEFAULT = 'meta-llama/llama-4-scout:free'
+const HF_DEFAULT = 'meta-llama/Llama-3.1-8B-Instruct'
 
-export const aiConfigured = (env: AiEnv | undefined) => !!env?.AI
+export const aiConfigured = (env: AiEnv | undefined) => !!(env?.AI || env?.OPENROUTER_API_KEY || env?.HF_API_TOKEN)
 
-const runLLM = async (env: AiEnv, system: string, user: string, maxTokens = 900): Promise<string> => {
-  if (!env.AI) throw new Error('Workers AI binding not available')
-  const out = await env.AI.run(MODEL, {
-    messages: [
-      { role: 'system', content: system },
-      { role: 'user', content: user }
-    ],
-    max_tokens: maxTokens,
-    temperature: 0.7
+// Provider status for /api/health + /integrations badges
+export const aiProviders = (env: AiEnv | undefined) => {
+  const p = {
+    openrouter: !!env?.OPENROUTER_API_KEY,
+    huggingface: !!env?.HF_API_TOKEN,
+    workersAi: !!env?.AI,
+  }
+  return { ...p, chain: providerOrder(env).join(' → ') || 'none' }
+}
+
+const providerOrder = (env: AiEnv | undefined): string[] => {
+  const avail: string[] = []
+  if (env?.OPENROUTER_API_KEY) avail.push('openrouter')
+  if (env?.HF_API_TOKEN) avail.push('huggingface')
+  if (env?.AI) avail.push('workers')
+  const pref = (env?.AI_PROVIDER || '').toLowerCase().trim()
+  if (pref && avail.includes(pref)) return [pref, ...avail.filter((a) => a !== pref)]
+  return avail
+}
+
+// OpenAI-compatible chat call (OpenRouter + Hugging Face router share the shape)
+const chatCompletion = async (url: string, key: string, model: string, system: string, user: string, maxTokens: number, temperature: number, extra: Record<string, string> = {}): Promise<string> => {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', ...extra },
+    body: JSON.stringify({
+      model,
+      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
+      max_tokens: maxTokens,
+      temperature,
+    }),
   })
-  // Models vary: response may be a string, or an object/array — normalize to string
-  const r = out?.response as unknown
-  if (typeof r === 'string') return r.trim()
-  if (r && typeof r === 'object') return JSON.stringify(r)
-  return ''
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).slice(0, 180)}`)
+  const j = await res.json() as { choices?: Array<{ message?: { content?: string } }> }
+  const content = j?.choices?.[0]?.message?.content
+  if (!content) throw new Error('Empty completion')
+  return content.trim()
+}
+
+export const runLLM = async (env: AiEnv, system: string, user: string, maxTokens = 900, temperature = 0.7): Promise<string> => {
+  const order = providerOrder(env)
+  if (!order.length) throw new Error('No AI provider configured (add OPENROUTER_API_KEY / HF_API_TOKEN in /integrations, or deploy to Cloudflare for Workers AI)')
+  let lastErr = ''
+  for (const p of order) {
+    try {
+      if (p === 'openrouter') {
+        return await chatCompletion('https://openrouter.ai/api/v1/chat/completions', env.OPENROUTER_API_KEY!, env.OPENROUTER_MODEL || OR_DEFAULT, system, user, maxTokens, temperature, { 'HTTP-Referer': 'https://mcknight-growthos.pages.dev', 'X-Title': 'McKnight GrowthOS' })
+      }
+      if (p === 'huggingface') {
+        return await chatCompletion('https://router.huggingface.co/v1/chat/completions', env.HF_API_TOKEN!, env.HF_MODEL || HF_DEFAULT, system, user, maxTokens, temperature)
+      }
+      // workers
+      const out = await env.AI!.run(MODEL, {
+        messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
+        max_tokens: maxTokens,
+        temperature,
+      })
+      const r = out?.response as unknown
+      if (typeof r === 'string') return r.trim()
+      if (r && typeof r === 'object') return JSON.stringify(r)
+      return ''
+    } catch (e: any) {
+      lastErr = `${p}: ${String(e?.message || e).slice(0, 160)}`
+      // fall through to next provider
+    }
+  }
+  throw new Error(`All AI providers failed — last error ${lastErr}`)
 }
 
 // Extract the first JSON object from an LLM response (handles ```json fences and chatter)

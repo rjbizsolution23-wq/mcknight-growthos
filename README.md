@@ -404,6 +404,44 @@ The complete P0/P1/P2 verification framework, operationalized as a live system �
 - Change Agent system prompt now maps style vocabulary → params, so "add animations and effects" requests apply instead of being rejected.
 - Example: `/t/coaching?anim=zoom&font=elegant&particles=stars&btnFx=bounce&heroFx=spotlight&confetti=1`
 
+
+## v6.5 — Traffic Engine + Multi-Provider AI (OpenRouter · Hugging Face · Workers AI)
+
+**The full loop: post → traffic → landing page → lead → attribution.**
+
+### Traffic Command Center (`/traffic`)
+- **Campaign Launcher** — pick any of the 42 funnels, add business name + brief, and AI generates ready-to-publish posts for Facebook, Instagram, LinkedIn, X (and TikTok when returned) with a UTM-tracked funnel link baked in.
+- **UTM auto-tagging** — every campaign link carries `utm_source=social&utm_medium=organic&utm_campaign=<name>`; leads captured on the funnel inherit the tags, closing the attribution loop.
+- **Attribution panels** — leads by source / campaign / funnel (`/api/traffic/attribution?days=30`), campaign history with per-campaign lead counts.
+- **Multi-business ready** — each campaign stores `business` + `brand`, so you can run campaigns for every McKnight brand (or client) from one dashboard.
+
+### Multi-Provider AI Router (`src/ai.ts` → `runLLM`)
+Fail-soft chain — first configured provider wins, automatic fallthrough on errors:
+1. **OpenRouter** (`OPENROUTER_API_KEY`, default model `meta-llama/llama-4-scout:free`)
+2. **Hugging Face** (`HF_API_TOKEN`, default `meta-llama/Llama-3.1-8B-Instruct`)
+3. **Cloudflare Workers AI** (built-in, always available in prod)
+
+- `AI_PROVIDER` env forces preferred order (`openrouter` / `huggingface` / `workers`).
+- ALL AI features route through the chain: social posts, funnel copy refresh, lead insights, SEO agents, Change Agent.
+- `/api/health` now reports `aiProviders: {openrouter, huggingface, workersAi, chain}`.
+- Keys hot-swap via the Integration Hub vault (`/integrations`) — no redeploy needed.
+
+### New API endpoints
+| Endpoint | What it does |
+|---|---|
+| `GET /api/funnels` | Public 42-slug funnel list |
+| `POST /api/traffic/campaign` | Generate + save a social campaign (funnel, brief?, business?, brand?, campaign?, params?) |
+| `GET /api/traffic/campaigns` | Saved campaigns + per-campaign lead counts |
+| `GET /api/traffic/attribution` | Leads by source / campaign / funnel (`?days=` up to 90) |
+
+### Data
+- Migration `0007_campaigns.sql` — `campaigns` table (funnel, brand, business, campaign, funnel_url, posts JSON, brief) — applied local + remote.
+
+### Verified
+- 42/42 funnels pass the brand matrix (theme-color hex + brand name per FUNNEL_BRAND map).
+- Live prod campaign generation E2E test passed (Workers AI), test row cleaned.
+- Sitemap now 73 routes (incl. `/traffic`).
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---

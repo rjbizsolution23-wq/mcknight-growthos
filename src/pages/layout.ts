@@ -95,6 +95,7 @@ ${extraHead}
         ['/agents', 'AI Agents', 'agents'],
         ['/mailer', 'Mail Command', 'mailer'],
         ['/analytics', 'Analytics', 'analytics'],
+        ['/traffic', 'Traffic Engine', 'traffic'],
         ['/webinars', 'Webinars', 'webinars'],
         ['/clients', 'ClientOS', 'clients'],
         ['/verify', 'Fleet Verify', 'verify'],

@@ -7,7 +7,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { pushLeadToGHL, ghlStatus, ghlConfigured, type GhlEnv } from './ghl'
-import { generateFunnelCopy, generateLeadInsights, generateSocialPosts, aiConfigured, type AiEnv } from './ai'
+import { generateFunnelCopy, generateLeadInsights, generateSocialPosts, aiConfigured, aiProviders, type AiEnv } from './ai'
 import { fanOutLead, hooksConfigured, type HooksEnv, type HookResult } from './hooks'
 import { KNOWN_KEYS, KEY_GROUPS, isKnownKey, parseEnvFile, maskValue, cfg, invalidateVaultCache, loadVault } from './keys'
 import { sendMail, mailProvidersConfigured, pickProvider, campaignHtml, type MailEnv } from './mail'
@@ -334,10 +334,11 @@ api.post('/ai/copy', async (c) => {
 // v3.5: POST /api/ai/social { template, params?, brief? } → platform-specific promo posts
 // Builds a UTM-tracked funnel link and asks the LLM for FB/IG/LinkedIn/X/TikTok posts.
 api.post('/ai/social', async (c) => {
-  if (!aiConfigured(c.env)) return c.json({ ok: false, error: 'Workers AI not bound (run in Cloudflare environment)' }, 503)
+  if (!aiConfigured(c.env)) return c.json({ ok: false, error: 'No AI provider configured (Workers AI binding, OPENROUTER_API_KEY or HF_API_TOKEN)' }, 503)
   let body: { template?: string; params?: string; brief?: string }
   try { body = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
-  if (!body.template || !/^[a-zA-Z]{1,40}$/.test(body.template)) return c.json({ ok: false, error: 'template required' }, 400)
+  // v6.5 fix: allow hyphenated slugs (credit-service, capital-ready, ...)
+  if (!body.template || !/^[a-zA-Z][a-zA-Z0-9-]{0,40}$/.test(body.template)) return c.json({ ok: false, error: 'template required' }, 400)
   const origin = new URL(c.req.url).origin
   // UTM-tracked link so every social click is attributed in the LeadFlow CRM
   const qs = new URLSearchParams(body.params || '')
@@ -584,6 +585,61 @@ api.get('/analytics', async (c) => {
     conversion: vMap[f] ? +(((lMap[f] || 0) / vMap[f]) * 100).toFixed(2) : null
   })).sort((a, b) => b.views - a.views)
   return c.json({ ok: true, days, funnels, daily: daily.results })
+})
+
+// ═══ v6.5: TRAFFIC ENGINE — post → traffic → landing page loop ═══
+// GET /api/funnels — public funnel slug list (used by Traffic Command Center)
+api.get('/funnels', (c) => c.json({ ok: true, funnels: FUNNEL_SLUGS }))
+
+// POST /api/traffic/campaign { funnel, brief?, business?, brand?, campaign?, params? }
+// Generates platform posts (multi-provider AI) with a UTM-tracked funnel
+// link, SAVES the campaign, and returns everything ready to publish.
+api.post('/traffic/campaign', async (c) => {
+  if (!aiConfigured(c.env)) return c.json({ ok: false, error: 'No AI provider configured (Workers AI / OPENROUTER_API_KEY / HF_API_TOKEN)' }, 503)
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  let body: { funnel?: string; brief?: string; business?: string; brand?: string; campaign?: string; params?: string }
+  try { body = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const funnel = (body.funnel || '').trim()
+  if (!isFunnelSlug(funnel)) return c.json({ ok: false, error: 'valid funnel slug required' }, 400)
+  const campaign = (body.campaign || `${funnel}-${new Date().toISOString().slice(0, 10)}`).trim().slice(0, 60).replace(/[^a-zA-Z0-9_-]/g, '-')
+
+  const origin = new URL(c.req.url).origin
+  const qs = new URLSearchParams(body.params || '')
+  qs.set('utm_source', 'social')
+  qs.set('utm_medium', 'organic')
+  qs.set('utm_campaign', campaign)
+  const funnelUrl = `${origin}/t/${funnel}?${qs.toString()}`
+
+  const brief = [body.business ? `Business: ${body.business}` : '', body.brief || ''].filter(Boolean).join('. ')
+  const result = await generateSocialPosts(c.env, funnel, funnelUrl, brief)
+  if (!result.ok) return c.json(result, 502)
+
+  const ins = await c.env.DB.prepare('INSERT INTO campaigns (funnel, brand, business, campaign, funnel_url, posts, brief) VALUES (?,?,?,?,?,?,?)')
+    .bind(funnel, (body.brand || '').slice(0, 40), (body.business || '').slice(0, 120), campaign, funnelUrl, JSON.stringify(result.posts || {}), (body.brief || '').slice(0, 600)).run()
+  return c.json({ ok: true, id: ins.meta?.last_row_id, campaign, funnelUrl, posts: result.posts })
+})
+
+// GET /api/traffic/campaigns — saved campaigns + per-campaign lead counts
+api.get('/traffic/campaigns', async (c) => {
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const rows = await c.env.DB.prepare('SELECT id, funnel, brand, business, campaign, funnel_url, posts, brief, created_at FROM campaigns ORDER BY id DESC LIMIT 50').all()
+  const leadRows = await c.env.DB.prepare("SELECT utm_campaign, COUNT(*) n FROM leads WHERE utm_campaign IS NOT NULL AND utm_campaign != '' GROUP BY utm_campaign").all()
+  const lm: Record<string, number> = {}
+  for (const r of leadRows.results as any[]) lm[r.utm_campaign] = Number(r.n)
+  const campaigns = (rows.results as any[]).map((r) => ({ ...r, posts: JSON.parse(r.posts || '{}'), leads: lm[r.campaign] || 0 }))
+  return c.json({ ok: true, campaigns })
+})
+
+// GET /api/traffic/attribution — where leads come from (source/medium/campaign)
+api.get('/traffic/attribution', async (c) => {
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const days = Math.min(parseInt(c.req.query('days') || '30', 10) || 30, 90)
+  const [bySource, byCampaign, byFunnel] = await Promise.all([
+    c.env.DB.prepare(`SELECT COALESCE(NULLIF(utm_source,''),'direct') src, COUNT(*) n FROM leads WHERE created_at >= datetime('now', ?) GROUP BY src ORDER BY n DESC`).bind(`-${days} day`).all(),
+    c.env.DB.prepare(`SELECT utm_campaign, COUNT(*) n FROM leads WHERE utm_campaign IS NOT NULL AND utm_campaign != '' AND created_at >= datetime('now', ?) GROUP BY utm_campaign ORDER BY n DESC LIMIT 20`).bind(`-${days} day`).all(),
+    c.env.DB.prepare(`SELECT funnel, COUNT(*) n FROM leads WHERE created_at >= datetime('now', ?) GROUP BY funnel ORDER BY n DESC LIMIT 20`).bind(`-${days} day`).all(),
+  ])
+  return c.json({ ok: true, days, bySource: bySource.results, byCampaign: byCampaign.results, byFunnel: byFunnel.results })
 })
 
 // ── MAILER ─────────────────────────────────────────────────────
@@ -1195,5 +1251,5 @@ api.put('/verify/items/:id', async (c) => {
 api.get('/health', async (c) => {
   const mailConf = mailProvidersConfigured(c.env as MailEnv)
   const envAny = c.env as any
-  return c.json({ ok: true, version: '6.4.0', clientos: !!c.env?.DB, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env), mail: { providers: mailConf, active: pickProvider(c.env as MailEnv) }, vault: !!c.env?.DB, cfDeploy: cfConfigured(c.env as CfEnv), changeAgent: aiConfigured(c.env), zoom: zoomConfigured(c.env as unknown as ZoomEnv), sms: !!(envAny?.TWILIO_ACCOUNT_SID && envAny?.TWILIO_AUTH_TOKEN && envAny?.TWILIO_FROM), slack: !!envAny?.SLACK_WEBHOOK_URL })
+  return c.json({ ok: true, version: '6.5.0', clientos: !!c.env?.DB, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), aiProviders: aiProviders(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env), mail: { providers: mailConf, active: pickProvider(c.env as MailEnv) }, vault: !!c.env?.DB, cfDeploy: cfConfigured(c.env as CfEnv), changeAgent: aiConfigured(c.env), zoom: zoomConfigured(c.env as unknown as ZoomEnv), sms: !!(envAny?.TWILIO_ACCOUNT_SID && envAny?.TWILIO_AUTH_TOKEN && envAny?.TWILIO_FROM), slack: !!envAny?.SLACK_WEBHOOK_URL })
 })

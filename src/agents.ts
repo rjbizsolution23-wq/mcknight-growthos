@@ -15,13 +15,14 @@
 // — plus a Run Now button on /agents.
 
 import { BRAND_SITE_SLUGS } from './funnels'
+import { runLLM, aiConfigured, type AiEnv } from './ai'
 
-export type AgentEnv = {
-  AI?: { run: (model: string, input: Record<string, unknown>) => Promise<{ response?: string }> }
+// v6.5: AgentEnv extends AiEnv — agents route through the multi-provider
+// AI chain (OpenRouter → Hugging Face → Workers AI) via runLLM.
+export type AgentEnv = AiEnv & {
   DB?: any
 }
 
-const MODEL = '@cf/meta/llama-4-scout-17b-16e-instruct'
 export const AGENT_WEEK_MS = 7 * 24 * 3600 * 1000
 
 // Fields the agent may override per funnel — search-facing copy only.
@@ -63,7 +64,7 @@ export const optimizeFunnelCopy = async (
   funnel: string,
   context: { views7d?: number; leads7d?: number } = {}
 ): Promise<{ ok: boolean; overrides?: Record<string, string>; error?: string }> => {
-  if (!env.AI || !env.DB) return { ok: false, error: 'AI or DB binding missing' }
+  if (!aiConfigured(env) || !env.DB) return { ok: false, error: 'AI or DB binding missing' }
   // v6.0: brand flagship sites keep blueprint-authored copy — never AI-optimized
   if (BRAND_SITE_SLUGS.has(funnel)) return { ok: true, overrides: {} }
   try {
@@ -78,11 +79,7 @@ Current date: ${new Date().toISOString().slice(0, 10)} — factor in seasonality
 Write fresh search-optimized metadata. Respond with exactly this JSON:
 {"seoTitle": "<compelling <60 char title with primary keyword>", "seoDesc": "<direct-answer 120-155 char meta description a search AI would quote>", "seoKeywords": "<6-10 comma-separated keywords incl. long-tail question phrases>"}`
 
-    const out = await env.AI.run(MODEL, {
-      messages: [{ role: 'system', content: AGENT_SYSTEM }, { role: 'user', content: user }],
-      max_tokens: 500, temperature: 0.8
-    })
-    const raw = typeof out?.response === 'string' ? out.response : JSON.stringify(out?.response || '')
+    const raw = await runLLM(env, AGENT_SYSTEM, user, 500, 0.8)
     const parsed = extractJSON(raw)
     if (!parsed || !parsed.seoTitle) { await logAgent(env, 'seo-agent', funnel, 'parse_fail', raw.slice(0, 200)); return { ok: false, error: 'Could not parse agent output' } }
 

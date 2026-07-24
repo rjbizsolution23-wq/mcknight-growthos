@@ -20,6 +20,7 @@ import { deployPage } from './pages/deploy'
 import { webinarsPage } from './pages/webinars'
 import { clientsPage } from './pages/clients'
 import { verifyPage } from './pages/verify'
+import { trafficPage } from './pages/traffic'
 import { FUNNEL_SLUGS } from './funnels'
 import { TEMPLATES } from './templateRegistry'
 import { getCopyOverrides, trackView, maybeRefreshFunnel } from './agents'
@@ -55,6 +56,7 @@ app.get('/deploy', (c) => html(deployPage()))
 app.get('/webinars', (c) => html(webinarsPage()))
 app.get('/clients', (c) => html(clientsPage()))
 app.get('/verify', (c) => html(verifyPage()))
+app.get('/traffic', (c) => html(trafficPage()))
 
 // ── API layer: Stripe checkout + lead capture + SEO pack ─────
 app.route('/api', api)
@@ -81,7 +83,7 @@ app.get('/t/:slug', async (c) => {
     // Background (zero latency): count the view + weekly agent refresh
     try {
       c.executionCtx.waitUntil(trackView(c.env, slug))
-      if (c.env.AI) c.executionCtx.waitUntil(maybeRefreshFunnel(c.env, slug))
+      if (c.env.AI || (c.env as any).OPENROUTER_API_KEY || (c.env as any).HF_API_TOKEN) c.executionCtx.waitUntil(maybeRefreshFunnel(c.env, slug))
     } catch { /* executionCtx may be absent in some dev contexts */ }
   }
   return html(tpl(q))
@@ -98,10 +100,10 @@ app.get('/f/:code', async (c) => {
 })
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'mcknight-growthos', version: '6.4.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'mcknight-growthos', version: '6.5.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
-const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations', '/ecosystem', '/passport', '/agents', '/mailer', '/analytics', '/deploy', '/webinars', '/clients', '/verify', ...ECOSYSTEM_BRANDS.map((b) => `/ecosystem/${b.slug}`)]
+const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations', '/ecosystem', '/passport', '/agents', '/mailer', '/analytics', '/deploy', '/webinars', '/clients', '/verify', '/traffic', ...ECOSYSTEM_BRANDS.map((b) => `/ecosystem/${b.slug}`)]
 const FUNNELS = [...FUNNEL_SLUGS]
 
 app.get('/sitemap.xml', (c) => {

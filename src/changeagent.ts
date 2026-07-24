@@ -14,8 +14,7 @@
 
 import { FUNNEL_PARAMS, COMMON_PARAMS, allowedParams } from './paramschema'
 import { logAgent, type AgentEnv } from './agents'
-
-const MODEL = '@cf/meta/llama-4-scout-17b-16e-instruct'
+import { runLLM, aiConfigured } from './ai'
 
 const SYSTEM = `You are the Change Agent for McKnight GrowthOS funnels. Users describe changes to a funnel landing page in plain English. You translate their request into a JSON object of {parameterName: newValue} using ONLY the allowed parameters provided. Rules:
 - Only use parameter names from the allowed list. Never invent new ones.
@@ -80,7 +79,7 @@ export const processChangeRequest = async (
   funnel: string,
   request: string
 ): Promise<{ ok: boolean; changes?: Record<string, string>; summary?: string; note?: string; requestId?: number; error?: string }> => {
-  if (!env.AI || !env.DB) return { ok: false, error: 'AI or DB binding missing (deploy to Cloudflare for AI)' }
+  if (!aiConfigured(env) || !env.DB) return { ok: false, error: 'AI or DB binding missing (deploy to Cloudflare for AI, or add OPENROUTER_API_KEY / HF_API_TOKEN in /integrations)' }
   const params = [...(FUNNEL_PARAMS[funnel] || []), ...COMMON_PARAMS]
   if (!params.length) return { ok: false, error: 'Unknown funnel' }
 
@@ -103,11 +102,7 @@ User's change request:
 
 Return the JSON of parameter changes.`
 
-    const out = await env.AI.run(MODEL, {
-      messages: [{ role: 'system', content: SYSTEM }, { role: 'user', content: user }],
-      max_tokens: 700, temperature: 0.3
-    })
-    const raw = typeof out?.response === 'string' ? out.response : JSON.stringify(out?.response || '')
+    const raw = await runLLM(env, SYSTEM, user, 700, 0.3)
     const parsed = extractJSON(raw)
     if (!parsed) {
       await env.DB.prepare("INSERT INTO change_requests (funnel, request, status, error) VALUES (?,?,'rejected','parse_fail')").bind(funnel, request.slice(0, 1500)).run()
