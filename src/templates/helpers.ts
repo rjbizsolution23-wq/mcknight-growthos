@@ -29,6 +29,39 @@ export const BRAND = {
 }
 export const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
+// ── v5.1 FUNNEL BRAND THEMING — every funnel renders in its brand's colors ──
+// Mirrors ClientOS BRANDS + FUNNEL_PIPELINE: the funnel that feeds a brand's
+// pipeline also wears that brand's identity. Single source of truth here for
+// the visual layer; clientos.ts owns the CRM routing layer (kept in sync).
+export type BrandTheme = {
+  key: string; name: string; icon: string; tagline: string
+  color: string; color2: string   // primary + light accent
+  darkText: boolean               // true → dark text on primary buttons (light colors)
+}
+export const BRAND_THEMES: Record<string, BrandTheme> = {
+  growthos:    { key: 'growthos',    name: 'McKnight GrowthOS',           icon: 'fa-rocket',         tagline: 'Turn attention into pipeline—and pipeline into growth.', color: '#d4a72c', color2: '#f4ce65', darkText: true },
+  contracting: { key: 'contracting', name: 'Contracting Preacher OS',     icon: 'fa-file-contract',  tagline: 'Win government contracts with systems, not luck.',       color: '#2563eb', color2: '#60a5fa', darkText: false },
+  capital:     { key: 'capital',     name: 'McKnight Capital Ready',      icon: 'fa-coins',          tagline: 'Get fundable. Get funded. Stay funded.',                 color: '#059669', color2: '#34d399', darkText: false },
+  mortgage:    { key: 'mortgage',    name: 'McKnight MortgageOS',         icon: 'fa-house-chimney',  tagline: 'Mortgage technology that closes.',                       color: '#7c3aed', color2: '#a78bfa', darkText: false },
+  housing:     { key: 'housing',     name: 'McKnight Housing Initiative', icon: 'fa-building',       tagline: 'Pathways to ownership for every family.',                color: '#0ea5e9', color2: '#7dd3fc', darkText: true },
+  freight:     { key: 'freight',     name: 'McKnight DriverHub',          icon: 'fa-truck',          tagline: 'Keep America moving — drivers first.',                   color: '#f59e0b', color2: '#fcd34d', darkText: true },
+  fleetworks:  { key: 'fleetworks',  name: 'FleetWorks ServiceHub',       icon: 'fa-wrench',         tagline: 'Fleet uptime is the business.',                          color: '#dc2626', color2: '#f87171', darkText: false },
+  learning:    { key: 'learning',    name: 'McKnight LearningOS',         icon: 'fa-graduation-cap', tagline: 'Every child ready. Every family supported.',             color: '#ec4899', color2: '#f9a8d4', darkText: false },
+}
+// Funnel slug → brand key (visual). Matches FUNNEL_PIPELINE routing in clientos.ts.
+export const FUNNEL_BRAND: Record<string, string> = {
+  'tax-lead': 'capital', 'credit-service': 'capital', 'credit-saas': 'capital', 'accounting': 'capital',
+  'mortgage': 'mortgage',
+  'real-estate': 'housing',
+  'moving': 'freight',
+  'auto-services': 'fleetworks',
+  'childcare': 'learning', 'tutoring': 'learning',
+  'sponsor-deck': 'contracting',
+  // everything else wears the flagship GrowthOS identity
+}
+export const brandThemeFor = (slug: string | undefined): BrandTheme =>
+  BRAND_THEMES[(slug && FUNNEL_BRAND[slug]) || 'growthos']
+
 export const param = (q: Record<string, string | undefined>, key: string, fallback: string) => {
   const v = q[key]
   return v && v.trim() ? esc(v.trim()) : fallback
@@ -69,6 +102,16 @@ export const funnelHead = (
   if (q.redirect && /^(https?:\/\/|\/)/.test(q.redirect.trim())) rjfCfg.redirect = esc(q.redirect.trim())
   // v3.1 — GoHighLevel: custom tags attached to every lead from this funnel URL (comma-separated)
   if (q.ghlTag && q.ghlTag.trim()) rjfCfg.ghlTag = esc(q.ghlTag.trim().slice(0, 200))
+
+  // ── v5.1 — BRAND THEMING: funnel wears its brand's identity ──
+  // index.tsx injects q._slug; brandThemeFor maps it to the brand palette.
+  // URL param brand=<key> can force any brand (demos/white-label previews).
+  const theme = (q.brand && BRAND_THEMES[q.brand]) ? BRAND_THEMES[q.brand] : brandThemeFor(q._slug)
+  rjfCfg.brandKey = theme.key
+  rjfCfg.brandName = theme.name
+  rjfCfg.brandIcon = theme.icon
+  rjfCfg.brandTagline = theme.tagline
+  rjfCfg.brandHex = theme.color
 
   // v3.0 — WHITE-LABEL LAYER: client branding via URL params (sellable all-in-one)
   //   bizLogo   — client logo URL → injected top-of-hero + footer by motion.js
@@ -135,6 +178,25 @@ export const funnelHead = (
   .rj-aurora { background:radial-gradient(38% 45% at 22% 28%,rgba(30,58,138,.55) 0%,transparent 70%),radial-gradient(32% 40% at 78% 20%,rgba(14,165,233,.4) 0%,transparent 70%),radial-gradient(30% 42% at 60% 82%,rgba(212,167,44,.25) 0%,transparent 70%) !important; }
   .rj-grad-text { background:linear-gradient(100deg,#f4ce65 10%,#d4a72c 35%,#0ea5e9 60%,#f4ce65 90%); background-size:220% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
   .rj-glow-border::before { background:conic-gradient(from var(--rj-ang,0deg),rgba(212,167,44,0),rgba(212,167,44,.85),rgba(14,165,233,.9),rgba(30,58,138,.65),rgba(212,167,44,0)) !important; }`
+
+  // ── v5.1 Brand theme CSS — remaps CTA/accent system to the funnel's brand
+  // colors. Injected AFTER mcknightCss (so it wins over the flagship gold)
+  // and BEFORE brandCss (so a client white-label brandColor still wins).
+  const btnText = theme.darkText ? '#0a1628' : '#ffffff'
+  const brandThemeCss = theme.key === 'growthos' ? '' : `
+  :root { --mk-brand:${theme.color}; --mk-brand-2:${theme.color2}; }
+  .pulse-glow, .bg-orange-500, [class*="bg-orange-5"] { background-color:${theme.color} !important; background-image:none !important; color:${btnText} !important; }
+  .bg-orange-600, .hover\\:bg-orange-600:hover, .hover\\:bg-orange-700:hover { background-color:${theme.color2} !important; color:${btnText} !important; }
+  .text-orange-400, .text-orange-500, .text-orange-300, .text-orange-600 { color:${theme.color2} !important; }
+  .border-orange-500, .border-orange-400 { border-color:${theme.color} !important; }
+  .text-amber-300, .text-amber-400, .text-amber-500, .bg-amber-500\\/20 { color:${theme.color2} !important; }
+  @keyframes pulseglow { 0%,100% { box-shadow:0 0 0 0 ${theme.color}99; } 50% { box-shadow:0 0 0 12px transparent; } }
+  ::selection { background:${theme.color}; color:${btnText}; }
+  input:focus,select:focus,textarea:focus { border-color:${theme.color} !important; box-shadow:0 0 0 3px ${theme.color}2e !important; }
+  .rj-aurora { background:radial-gradient(38% 45% at 22% 28%,${theme.color}52 0%,transparent 70%),radial-gradient(32% 40% at 78% 20%,${theme.color2}3d 0%,transparent 70%),radial-gradient(30% 42% at 60% 82%,rgba(30,58,138,.3) 0%,transparent 70%) !important; }
+  .rj-grad-text { background:linear-gradient(100deg,${theme.color2} 10%,${theme.color} 40%,#0ea5e9 65%,${theme.color2} 90%); background-size:220% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .rj-glow-border::before { background:conic-gradient(from var(--rj-ang,0deg),${theme.color}00,${theme.color}d9,${theme.color2}e6,rgba(30,58,138,.65),${theme.color}00) !important; }
+  ::-webkit-scrollbar-thumb { background:linear-gradient(${theme.color},${theme.color2}); }`
 
   const darkCss = dark ? `
   html[data-theme=dark] body{background:#0f172a!important;color:#e2e8f0!important}
@@ -283,7 +345,7 @@ ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</
     .mo-blob,.pulse-glow,.pulse-glow::after,.rj-aurora { animation:none; }
     .rj-kinetic .rj-ch { opacity:1; transform:none; animation:none; }
     a,button,i.fas,i.far,i.fab { transition:none; }
-  }${mcknightCss}${darkCss}${brandCss}
+  }${mcknightCss}${brandThemeCss}${darkCss}${brandCss}
 </style>
 <script defer src="/static/motion.js"></script>
 <script>window.__RJF=${JSON.stringify(rjfCfg)}</script>

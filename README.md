@@ -294,6 +294,38 @@ GrowthOS is the front-end acquisition engine for the McKnight ecosystem (Contrac
 ### Deferred to future releases (per blueprint Release 2–4 phasing)
 Client portal auth, e-signatures, billing/invoicing, appointment booking engine, form builder, workflow automation designer, AI client copilot.
 
+## v5.1 — Brand-Themed Funnels + Full Workflow Wiring
+
+### Every funnel now wears its brand's colors
+All 32 funnels are automatically themed to the McKnight brand they feed — CTAs, accents, gradients, aurora backdrops, focus rings, selection color, scrollbar, plus a brand ribbon (top) and ecosystem footer strip on every page:
+
+| Brand | Color | Funnels |
+|---|---|---|
+| McKnight Capital Ready | 🟢 #059669 | tax-lead, credit-service, credit-saas, accounting |
+| McKnight MortgageOS | 🟣 #7c3aed | mortgage |
+| McKnight Housing Initiative | 🔵 #0ea5e9 | real-estate |
+| McKnight DriverHub | 🟠 #f59e0b | moving |
+| FleetWorks ServiceHub | 🔴 #dc2626 | auto-services |
+| McKnight LearningOS | 🩷 #ec4899 | childcare, tutoring |
+| Contracting Preacher OS | 🔵 #2563eb | sponsor-deck |
+| McKnight GrowthOS (flagship gold) | 🟡 #d4a72c | all remaining funnels |
+
+- Force any brand for demos: `?brand=fleetworks` on any funnel URL.
+- Client white-label (`?brandColor=` / `?bizLogo=`) still wins over brand theming.
+- The visual map (`FUNNEL_BRAND` in helpers.ts) mirrors the CRM routing map (`FUNNEL_PIPELINE` in clientos.ts) — what a visitor sees is the brand whose pipeline they land in.
+
+### Everything wired together (verified end-to-end)
+One form submit on any funnel now triggers the complete connected flow:
+1. **Lead stored** in D1 (LeadFlow CRM `/leads`)
+2. **GoHighLevel sync** (contact → note → opportunity → workflow) when configured
+3. **ClientOS conversion** — Client 360 record + opportunity in the correct brand pipeline (`/clients`)
+4. **Zoom webinar auto-registration** with unique join link when the funnel is linked to a webinar
+5. **Workflow fan-out** — Zapier/Make webhook, Slack, Discord, Telegram, Twilio SMS, Airtable
+6. **Email notification** via the active mail provider
+7. **NEW: unified timeline logging** — webinar registrations, GHL syncs and fired workflow channels are all recorded on the client's ClientOS timeline automatically
+
+Verified per-brand: tax-lead→capital:Intake, mortgage→mortgage:Developer Lead, real-estate→housing:Inquiry, moving→trucking:Driver/Customer Lead, auto-services→fleetrepair:Service Request, childcare→childcare:Family Inquiry, sponsor-deck→govcon:Business Intake, everything else→consulting:New Lead. All 61 routes 200.
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---

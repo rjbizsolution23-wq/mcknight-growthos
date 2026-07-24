@@ -171,6 +171,19 @@ api.post('/lead', async (c) => {
   try { hooks = await fanOutLead(c.env, clean) } catch { /* never throws, belt+suspenders */ }
   const hooksOut = hooks.length ? Object.fromEntries(hooks.map((h) => [h.channel, h.ok ? true : (h.error || false)])) : undefined
 
+  // ── v5.1: workflow → ClientOS timeline — every automation that fired for
+  // this lead is recorded on the client's unified timeline. Fail-soft.
+  try {
+    if (clientos?.clientId) {
+      const cid = clientos.clientId
+      const coEnv = c.env as unknown as ClientOsEnv
+      if (webinarReg?.ok) await logActivity(coEnv, cid, 'webinar', 'Registered for Zoom webinar', `Zoom ID ${webinarReg.zoomId}${joinUrl ? ' — unique join link issued' : ''}`, { actor: 'automation' })
+      if (ghl.attempted && ghl.ok) await logActivity(coEnv, cid, 'system', 'Synced to GoHighLevel CRM', `Contact ${ghl.contactId || ''}`, { actor: 'automation' })
+      const fired = hooks.filter((h) => h.ok).map((h) => h.channel)
+      if (fired.length) await logActivity(coEnv, cid, 'system', 'Workflow notifications fired', fired.join(', '), { actor: 'automation' })
+    }
+  } catch { /* timeline is bonus — never break the lead */ }
+
   const key = c.env?.RESEND_API_KEY
   const to = c.env?.LEAD_NOTIFY_EMAIL || 'support@rjbusinesssolutions.org'
   const from = c.env?.LEAD_FROM_EMAIL || 'McKnight GrowthOS <onboarding@resend.dev>'
@@ -646,7 +659,7 @@ api.post('/cf/deploy', async (c) => {
   const tpl = TEMPLATES[funnel]
 
   // Merge: agent overrides as defaults, explicit params win (same as /t/:slug)
-  const q: Record<string, string | undefined> = {}
+  const q: Record<string, string | undefined> = { _slug: funnel } // v5.1 brand theming
   if (body.params && typeof body.params === 'object') {
     for (const [k, v] of Object.entries(body.params)) if (typeof v === 'string' && v.trim()) q[k] = v.trim().slice(0, 400)
   }

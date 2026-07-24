@@ -231,3 +231,49 @@
     })
   })
 })()
+
+/* ── 9 · v5.1 BRAND IDENTITY LAYER — every funnel wears its brand ──
+   Config injected by funnelHead via window.__RJF: brandKey/brandName/
+   brandIcon/brandTagline/brandHex. Adds a top brand ribbon + footer strip,
+   and recolors the dead-CTA lead modal to the brand palette. A client
+   white-label (bizLogo/brandColor) suppresses the ribbon — client wins. */
+;(function () {
+  var CFG = window.__RJF || {}
+  if (!CFG.brandName || CFG.bizLogo || CFG.brandColor) return
+  var hex = CFG.brandHex || '#d4a72c'
+  var icon = CFG.brandIcon || 'fa-rocket'
+
+  /* top ribbon */
+  try {
+    var bar = document.createElement('div')
+    bar.id = 'rjf-brand-bar'
+    bar.style.cssText = 'position:relative;z-index:60;background:linear-gradient(90deg,#050b16,#0a1628 40%,#0a1628 60%,#050b16);border-bottom:1px solid ' + hex + '44;color:#e2e8f0;font:600 12px Inter,sans-serif;padding:8px 16px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;text-align:center'
+    bar.innerHTML =
+      '<span style="display:inline-flex;align-items:center;gap:7px"><i class="fas ' + icon + '" style="color:' + hex + '"></i><strong style="color:' + hex + '">' + CFG.brandName + '</strong></span>' +
+      '<span style="color:#475569">·</span>' +
+      '<span style="color:#94a3b8">' + (CFG.brandTagline || '') + '</span>' +
+      '<span style="color:#475569">·</span>' +
+      '<span style="color:#64748b;font-weight:500">A McKnight Opportunity Group company</span>'
+    document.body.insertBefore(bar, document.body.firstChild)
+  } catch (e) {}
+
+  /* footer strip */
+  try {
+    var foot = document.createElement('div')
+    foot.style.cssText = 'background:#050b16;border-top:1px solid ' + hex + '33;color:#64748b;font:500 11px Inter,sans-serif;padding:14px 16px;text-align:center'
+    foot.innerHTML = '<i class="fas ' + icon + '" style="color:' + hex + ';margin-right:6px"></i><span style="color:#94a3b8;font-weight:700">' + CFG.brandName + '</span> — ' + (CFG.brandTagline || '') + '<br><span style="font-size:10px">Part of the McKnight Opportunity Group ecosystem · Powered by McKnight GrowthOS · Technology by RJ Business Solutions</span>'
+    document.body.appendChild(foot)
+  } catch (e) {}
+
+  /* recolor lead-modal CTA when it opens (dead-CTA rescue modal) */
+  try {
+    var mo = new MutationObserver(function () {
+      var m = document.getElementById('rjf-lead-modal')
+      if (m) {
+        var b = m.querySelector('button[type=submit]')
+        if (b && !b.dataset.branded) { b.dataset.branded = '1'; b.style.background = 'linear-gradient(135deg,' + hex + ',' + hex + 'cc)' }
+      }
+    })
+    mo.observe(document.body, { childList: true })
+  } catch (e) {}
+})()

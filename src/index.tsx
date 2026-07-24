@@ -67,6 +67,7 @@ app.get('/t/:slug', async (c) => {
   const tpl = TEMPLATES[slug]
   if (!tpl) return c.notFound()
   const q: Record<string, string | undefined> = c.req.query()
+  q._slug = slug // v5.1: brand theming — funnel wears its brand's colors
 
   // Merge AI-agent copy overrides as new defaults; explicit URL params win.
   if (c.env?.DB) {
