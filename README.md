@@ -93,6 +93,35 @@ The `/passport` page hosts the **Business Readiness Passport + Evidence Vault** 
 - ✅ McKnight Ecosystem hub: 10 brand funnels, execution order, smart additions, brand-asset & domain checklists, verified sources (v1.1)
 - ✅ Business Readiness Passport + Evidence Vault page with governance matrix and intake capture (v1.1)
 
+
+## v2.0 — Ultimate Funnel Command
+
+All 30 funnels re-skinned in McKnight navy/gold, plus four new command layers:
+
+### 🔐 Key Vault (`/integrations`)
+- Upload a `.env` file (or paste keys) → every key auto-routes to its integration **instantly, no redeploy**
+- Vault keys (stored in D1 `settings`) override deployed secrets via a merge proxy; masked status per key, grouped by integration
+- API: `GET/POST /api/keys`, `POST /api/keys/upload` (raw .env body), `DELETE /api/keys/:name` — admin-locked when `ADMIN_API_KEY` set
+
+### 🤖 AI Agent Command (`/agents`)
+- SEO/SGE/AEO agent rewrites each funnel's `seoTitle`/`seoDesc`/`seoKeywords` **weekly** (lazy cron: auto-fires on traffic after 7 days, zero visitor latency via `waitUntil`) + manual Run Now (one or all 30)
+- Reads last-7-day views + conversion per funnel; sharpens the angle when conversion is weak; compliance-aware prompt
+- Explicit URL params always beat agent overrides — client customizations never touched; per-funnel reset
+- API: `GET /api/agents/status`, `POST /api/agents/run`, `DELETE /api/agents/overrides/:funnel`
+
+### 📬 Mail Command (`/mailer`)
+- Send branded campaigns from the platform via SMTP-relay REST APIs: **Resend, SendGrid, Mailgun, Postmark, Brevo, SMTP2GO** (Workers can't open raw SMTP sockets — same providers, same result)
+- Segment by funnel + lead status, or paste recipients; test-send to `LEAD_NOTIFY_EMAIL` first; full send log
+- API: `GET /api/mail/status`, `POST /api/mail/send`
+
+### 📊 Funnel Analytics (`/analytics`)
+- Per-funnel data separation: views, leads, conversion % + daily views chart (7/30/90-day windows)
+- View tracking fires automatically on every `/t/:slug` render
+- API: `GET /api/analytics?days=N`
+
+### New D1 tables (migration 0002)
+`settings` (key vault), `copy_overrides` (agent copy), `funnel_views` (daily counters), `agent_log`, `mail_log`
+
 ## Functional Entry Points (API)
 
 | Method | Path | Purpose |
@@ -127,7 +156,7 @@ The `/passport` page hosts the **Business Readiness Passport + Evidence Vault** 
 - **Platform**: Cloudflare Pages (project `mcknight-growthos`)
 - **Status**: ✅ Active — https://mcknight-growthos.pages.dev
 - **Tech Stack**: Hono 4 + TypeScript + Vite + TailwindCSS (CDN) + Cloudflare D1 + Workers AI
-- **Last Updated**: 2026-07-23 (v1.1.0 — Ecosystem + Passport layer)
+- **Last Updated**: 2026-07-24 (v2.0.0 — Ultimate Funnel Command)
 
 ### Local Development
 

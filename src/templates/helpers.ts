@@ -118,6 +118,24 @@ export const funnelHead = (
   } : null
 
   // Dark theme: CSS override layer flips light Tailwind utilities to McKnight Navy
+  // ── v2.0: McKnight brand layer — every funnel rendered in the McKnight
+  // navy/gold/cyan system by default. Remaps the legacy orange CTA system
+  // to McKnight Gold and hero gradients toward McKnight Navy. A client
+  // white-label brandColor (below) still wins — it is injected after this.
+  const mcknightCss = `
+  :root { --mk-navy:#0a1628; --mk-deep:#050b16; --mk-gold:#d4a72c; --mk-gold-2:#f4ce65; --mk-blue:#2563eb; --mk-cyan:#0ea5e9; }
+  .pulse-glow, .bg-orange-500, [class*="bg-orange-5"] { background-color:var(--mk-gold) !important; background-image:none !important; color:#0a1628 !important; }
+  .bg-orange-600, .hover\\:bg-orange-600:hover, .hover\\:bg-orange-700:hover { background-color:var(--mk-gold-2) !important; color:#0a1628 !important; }
+  .text-orange-400, .text-orange-500, .text-orange-300, .text-orange-600 { color:var(--mk-gold) !important; }
+  .border-orange-500, .border-orange-400 { border-color:var(--mk-gold) !important; }
+  [class*="from-gray-950"] { --tw-gradient-from:var(--mk-navy) var(--tw-gradient-from-position) !important; }
+  [class*="via-zinc-900"], [class*="via-slate-900"], [class*="via-stone-900"] { --tw-gradient-via:#0d1b30 !important; }
+  @keyframes pulseglow { 0%,100% { box-shadow:0 0 0 0 rgba(212,167,44,.55); } 50% { box-shadow:0 0 0 12px rgba(212,167,44,0); } }
+  ::selection { background:var(--mk-gold); color:#0a1628; }
+  .rj-aurora { background:radial-gradient(38% 45% at 22% 28%,rgba(30,58,138,.55) 0%,transparent 70%),radial-gradient(32% 40% at 78% 20%,rgba(14,165,233,.4) 0%,transparent 70%),radial-gradient(30% 42% at 60% 82%,rgba(212,167,44,.25) 0%,transparent 70%) !important; }
+  .rj-grad-text { background:linear-gradient(100deg,#f4ce65 10%,#d4a72c 35%,#0ea5e9 60%,#f4ce65 90%); background-size:220% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .rj-glow-border::before { background:conic-gradient(from var(--rj-ang,0deg),rgba(212,167,44,0),rgba(212,167,44,.85),rgba(14,165,233,.9),rgba(30,58,138,.65),rgba(212,167,44,0)) !important; }`
+
   const darkCss = dark ? `
   html[data-theme=dark] body{background:#0f172a!important;color:#e2e8f0!important}
   [data-theme=dark] .bg-white{background:#0f172a!important}
@@ -265,7 +283,7 @@ ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</
     .mo-blob,.pulse-glow,.pulse-glow::after,.rj-aurora { animation:none; }
     .rj-kinetic .rj-ch { opacity:1; transform:none; animation:none; }
     a,button,i.fas,i.far,i.fab { transition:none; }
-  }${darkCss}${brandCss}
+  }${mcknightCss}${darkCss}${brandCss}
 </style>
 <script defer src="/static/motion.js"></script>
 <script>window.__RJF=${JSON.stringify(rjfCfg)}</script>

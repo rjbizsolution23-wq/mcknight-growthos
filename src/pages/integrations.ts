@@ -17,6 +17,30 @@ export const integrationsPage = () => shell('Integration Hub', 'integrations', `
   </div>
 </section>
 
+<!-- v2.0 KEY VAULT -->
+<section id="int-vault" class="mb-12">
+  <h2 class="text-2xl font-bold text-white mb-2"><i class="fas fa-vault text-mk-gold mr-2"></i>Key Vault <span class="text-[10px] gold-bg text-black font-mono ml-1 align-middle px-1.5 py-0.5 rounded">v2.0 · NO REDEPLOY NEEDED</span></h2>
+  <p class="text-gray-400 text-sm mb-5 max-w-3xl">Upload your keys as a <code class="text-mk-goldLight">.env</code> file (or paste them) and every key <strong class="text-white">auto-routes to its integration instantly</strong> — email, GHL, Stripe, alerts, mailers. Vault keys override deployed secrets, take effect in seconds, and never require a redeploy.</p>
+
+  <div class="grid lg:grid-cols-2 gap-5 mb-6">
+    <div class="card p-6">
+      <h3 class="font-bold text-white text-sm mb-3"><i class="fas fa-file-arrow-up text-mk-gold mr-2"></i>Upload .env File</h3>
+      <p class="text-xs text-gray-400 mb-3">Standard <code class="text-blue-300">KEY=value</code> format — comments, quotes and <code class="text-blue-300">export</code> prefixes are handled. Unknown keys are safely ignored and reported.</p>
+      <input type="file" id="kv-file" accept=".env,.txt,text/plain" class="block w-full text-xs text-gray-400 mb-3 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-mk-gold file:text-black hover:file:opacity-90 file:cursor-pointer">
+      <button onclick="uploadEnvFile(this)" class="gold-bg text-black font-bold px-5 py-2.5 rounded-xl text-sm hover:opacity-90"><i class="fas fa-upload mr-2"></i>Upload &amp; Route Keys</button>
+    </div>
+    <div class="card p-6">
+      <h3 class="font-bold text-white text-sm mb-3"><i class="fas fa-paste text-mk-gold mr-2"></i>Or Paste Keys</h3>
+      <textarea id="kv-paste" rows="4" class="w-full bg-[#060a14] border border-blue-900/60 rounded-xl px-3 py-2.5 text-xs text-white font-mono mb-3" placeholder="RESEND_API_KEY=re_xxxx&#10;GHL_API_KEY=pit-xxxx&#10;STRIPE_SECRET_KEY=sk_live_xxxx"></textarea>
+      <button onclick="uploadEnvText(this)" class="border border-mk-gold/50 text-mk-goldLight font-semibold px-5 py-2.5 rounded-xl text-sm hover:bg-mk-gold/10"><i class="fas fa-route mr-2"></i>Route Pasted Keys</button>
+    </div>
+  </div>
+  <p id="kv-msg" class="text-sm text-gray-400 mb-5"></p>
+
+  <h3 class="font-bold text-white text-sm mb-3"><i class="fas fa-list-check text-mk-gold mr-2"></i>Key Status — All Integrations</h3>
+  <div id="kv-groups" class="space-y-4"><p class="text-gray-500 text-sm">Loading vault…</p></div>
+</section>
+
 <!-- v3.4 FAN-OUT HUB -->
 <section id="int-fanout" class="mb-12">
   <h2 class="text-2xl font-bold text-white mb-2"><i class="fas fa-tower-broadcast text-brand-cyan mr-2"></i>Lead Fan-Out <span class="text-[10px] text-amber-400 font-mono ml-1 align-middle">v3.4 · 6 CHANNELS</span></h2>
@@ -261,4 +285,60 @@ document.querySelectorAll('[data-tier]').forEach(btn => btn.addEventListener('cl
     </table>
   </div>
 </section>
+
+<script>
+var KEY_STORE='growthos_admin_key';
+function adminKey(){ return localStorage.getItem(KEY_STORE)||''; }
+function kvHdrs(extra){ var h=extra||{}; var k=adminKey(); if(k) h['x-admin-key']=k; return h; }
+function kvEsc(s){ return String(s==null?'':s).replace(/</g,'&lt;'); }
+async function loadVault(){
+  try{
+    var r=await fetch('/api/keys',{headers:kvHdrs()}); var j=await r.json();
+    if(!j.ok){ if(r.status===401){ var k=prompt('Admin key required to view the Key Vault:'); if(k){ localStorage.setItem(KEY_STORE,k); return loadVault(); } } document.getElementById('kv-groups').innerHTML='<p class="text-red-400 text-sm">'+kvEsc(j.error)+'</p>'; return; }
+    var groups=j.groups||{}; var byGroup={};
+    (j.keys||[]).forEach(function(k){ (byGroup[k.group]=byGroup[k.group]||[]).push(k); });
+    document.getElementById('kv-groups').innerHTML=Object.keys(groups).map(function(g){
+      var meta=groups[g], ks=byGroup[g]||[];
+      var conf=ks.filter(function(k){return k.configured}).length;
+      return '<div class="card p-5"><div class="flex items-center justify-between mb-3 flex-wrap gap-2"><h4 class="font-bold text-white text-sm"><i class="fas '+meta.icon+' text-mk-gold mr-2"></i>'+kvEsc(meta.title)+' <span class="text-[10px] text-gray-500 font-normal ml-1">'+kvEsc(meta.desc)+'</span></h4><span class="text-[10px] '+(conf?'text-emerald-400':'text-gray-600')+' font-mono">'+conf+'/'+ks.length+' configured</span></div><div class="overflow-x-auto"><table class="w-full text-xs"><tbody class="divide-y divide-blue-900/30">'+ks.map(function(k){
+        return '<tr><td class="py-2 pr-3 font-mono text-blue-300 whitespace-nowrap">'+kvEsc(k.name)+'</td><td class="py-2 pr-3 text-gray-400">'+kvEsc(k.label)+'</td><td class="py-2 pr-3 whitespace-nowrap">'+(k.configured?'<span class="text-emerald-400"><i class="fas fa-circle-check mr-1"></i>'+kvEsc(k.masked)+'</span> <span class="text-[9px] text-gray-600 uppercase">'+k.source+'</span>':'<span class="text-gray-600">not set</span>')+'</td><td class="py-2 whitespace-nowrap text-right"><button onclick="setKey(\\''+k.name+'\\')" class="text-mk-cyan hover:underline mr-3">set</button>'+(k.source==='vault'?'<button onclick="delKey(\\''+k.name+'\\')" class="text-red-400 hover:underline">remove</button>':'')+'</td></tr>';
+      }).join('')+'</tbody></table></div></div>';
+    }).join('');
+  }catch(e){ document.getElementById('kv-groups').innerHTML='<p class="text-red-400 text-sm">'+kvEsc(e.message)+'</p>'; }
+}
+async function uploadEnvText(btn){
+  var text=document.getElementById('kv-paste').value.trim();
+  if(!text){ document.getElementById('kv-msg').textContent='Nothing to upload'; return; }
+  await pushEnv(btn,text); document.getElementById('kv-paste').value='';
+}
+async function uploadEnvFile(btn){
+  var f=document.getElementById('kv-file').files[0];
+  if(!f){ document.getElementById('kv-msg').textContent='Choose a .env file first'; return; }
+  var text=await f.text(); await pushEnv(btn,text);
+}
+async function pushEnv(btn,text){
+  var m=document.getElementById('kv-msg'); btn.disabled=true; m.textContent='Routing keys…';
+  try{
+    var r=await fetch('/api/keys/upload',{method:'POST',headers:kvHdrs({'Content-Type':'text/plain'}),body:text});
+    var j=await r.json();
+    if(!j.ok && r.status===401){ var k=prompt('Admin key required:'); if(k){ localStorage.setItem(KEY_STORE,k); btn.disabled=false; return pushEnv(btn,text); } }
+    m.textContent=j.ok?('✅ '+j.message):('❌ '+(j.error||'failed'));
+  }catch(e){ m.textContent='Error: '+e.message; }
+  btn.disabled=false; loadVault(); if(typeof loadIntStatus==='function') try{loadIntStatus()}catch(e){}
+}
+async function setKey(name){
+  var v=prompt('Value for '+name+':'); if(!v) return;
+  var body={}; body[name]=v;
+  var r=await fetch('/api/keys',{method:'POST',headers:kvHdrs({'Content-Type':'application/json'}),body:JSON.stringify(body)});
+  var j=await r.json();
+  document.getElementById('kv-msg').textContent=j.ok?('✅ '+name+' saved — live in seconds'):('❌ '+(j.error||'failed'));
+  loadVault();
+}
+async function delKey(name){
+  if(!confirm('Remove '+name+' from the vault? (Falls back to deployed secret if one exists)')) return;
+  await fetch('/api/keys/'+name,{method:'DELETE',headers:kvHdrs()});
+  loadVault();
+}
+loadVault();
+</script>
 `)

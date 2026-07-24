@@ -9,6 +9,10 @@ import { cors } from 'hono/cors'
 import { pushLeadToGHL, ghlStatus, ghlConfigured, type GhlEnv } from './ghl'
 import { generateFunnelCopy, generateLeadInsights, generateSocialPosts, aiConfigured, type AiEnv } from './ai'
 import { fanOutLead, hooksConfigured, type HooksEnv, type HookResult } from './hooks'
+import { KNOWN_KEYS, KEY_GROUPS, isKnownKey, parseEnvFile, maskValue, cfg, invalidateVaultCache, loadVault } from './keys'
+import { sendMail, mailProvidersConfigured, pickProvider, campaignHtml, type MailEnv } from './mail'
+import { optimizeFunnelCopy, optimizeAllFunnels, getCopyOverrides, logAgent, type AgentEnv } from './agents'
+import { FUNNEL_SLUGS } from './funnels'
 
 type Bindings = GhlEnv & AiEnv & HooksEnv & {
   STRIPE_SECRET_KEY?: string
@@ -75,6 +79,14 @@ const saveLeadToD1 = async (env: Bindings, clean: Record<string, string>, ghlCon
 
 export const api = new Hono<{ Bindings: Bindings }>()
 api.use('*', cors())
+
+// ── v2.0: Key Vault middleware — merge D1-stored keys over env secrets on
+// every API request, so keys uploaded from the UI instantly power ALL
+// integrations (email, GHL, Stripe, hooks, admin lock) with zero redeploys.
+api.use('*', async (c, next) => {
+  try { (c as any).env = await cfg(c.env) } catch { /* env stays as-is */ }
+  await next()
+})
 
 // ── POST /api/lead — capture funnel form + email notification ──
 api.post('/lead', async (c) => {
@@ -392,5 +404,182 @@ api.post('/seo-ping', async (c) => {
   return c.json({ ok: true, submitted: urlList.length, origin, results, at: new Date().toISOString() })
 })
 
+// ═══════════════════════════════════════════════════════════════
+// v2.0 — ULTIMATE FUNNEL COMMAND LAYER
+// Key Vault · AI Agents · Mailer · Per-funnel Analytics
+// ═══════════════════════════════════════════════════════════════
+
+// ── KEY VAULT ──────────────────────────────────────────────────
+// GET /api/keys — grouped key registry with configured/masked status
+api.get('/keys', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const vault = await loadVault(c.env)
+  const keys = KNOWN_KEYS.map((k) => {
+    const inVault = vault[k.name]
+    const inEnv = (c.env as any)?.[k.name]
+    const val = inVault || inEnv || ''
+    return {
+      name: k.name, group: k.group, label: k.label, hint: k.hint || '',
+      configured: !!val,
+      source: inVault ? 'vault' : (inEnv ? 'secret' : ''),
+      masked: val ? (k.secret === false ? String(val).slice(0, 60) : maskValue(String(val))) : ''
+    }
+  })
+  return c.json({ ok: true, groups: KEY_GROUPS, keys })
+})
+
+// POST /api/keys { KEY: value, ... } — save individual keys to the vault
+api.post('/keys', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  let body: Record<string, string>
+  try { body = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const saved: string[] = []
+  const rejected: string[] = []
+  for (const [k, v] of Object.entries(body)) {
+    const name = k.toUpperCase().trim()
+    if (!isKnownKey(name) || typeof v !== 'string' || !v.trim()) { rejected.push(k); continue }
+    await c.env.DB.prepare('INSERT INTO settings (key, value, updated_at) VALUES (?,?,CURRENT_TIMESTAMP) ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated_at=CURRENT_TIMESTAMP').bind(name, v.trim().slice(0, 2000)).run()
+    saved.push(name)
+  }
+  invalidateVaultCache()
+  return c.json({ ok: true, saved, rejected })
+})
+
+// POST /api/keys/upload — raw .env file body → parse + route every key
+api.post('/keys/upload', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const text = (await c.req.text()).slice(0, 100_000)
+  const { accepted, unknown, skipped } = parseEnvFile(text)
+  const saved: string[] = []
+  for (const [k, v] of Object.entries(accepted)) {
+    await c.env.DB.prepare('INSERT INTO settings (key, value, updated_at) VALUES (?,?,CURRENT_TIMESTAMP) ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated_at=CURRENT_TIMESTAMP').bind(k, v).run()
+    saved.push(k)
+  }
+  invalidateVaultCache()
+  return c.json({ ok: true, saved, unknown, skippedLines: skipped, message: `${saved.length} keys routed to their integrations${unknown.length ? `; ${unknown.length} unknown keys ignored: ${unknown.slice(0, 10).join(', ')}` : ''}` })
+})
+
+// DELETE /api/keys/:name — remove a vault key (falls back to env secret if set)
+api.delete('/keys/:name', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const name = c.req.param('name').toUpperCase()
+  if (!isKnownKey(name)) return c.json({ ok: false, error: 'unknown key' }, 400)
+  await c.env.DB.prepare('DELETE FROM settings WHERE key = ?').bind(name).run()
+  invalidateVaultCache()
+  return c.json({ ok: true, deleted: name })
+})
+
+// ── AI AGENTS ──────────────────────────────────────────────────
+// GET /api/agents/status — per-funnel override freshness + recent log
+api.get('/agents/status', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const overrides = await c.env.DB.prepare('SELECT funnel, overrides, agent, updated_at FROM copy_overrides ORDER BY updated_at DESC').all()
+  const log = await c.env.DB.prepare('SELECT agent, funnel, action, detail, created_at FROM agent_log ORDER BY id DESC LIMIT 50').all()
+  return c.json({ ok: true, funnels: FUNNEL_SLUGS, overrides: overrides.results, log: log.results, ai: aiConfigured(c.env) })
+})
+
+// POST /api/agents/run { funnel? } — run SEO/SGE/AEO agent now (one or all)
+api.post('/agents/run', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!aiConfigured(c.env)) return c.json({ ok: false, error: 'Workers AI not bound (deploy to Cloudflare)' }, 503)
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  let body: { funnel?: string } = {}
+  try { body = await c.req.json() } catch { /* empty body = run all */ }
+  if (body.funnel) {
+    if (!(FUNNEL_SLUGS as readonly string[]).includes(body.funnel)) return c.json({ ok: false, error: 'unknown funnel' }, 400)
+    const r = await optimizeFunnelCopy(c.env as AgentEnv, body.funnel)
+    return c.json({ ok: r.ok, funnel: body.funnel, overrides: r.overrides, error: r.error })
+  }
+  const r = await optimizeAllFunnels(c.env as AgentEnv, [...FUNNEL_SLUGS])
+  return c.json({ ok: r.ok, optimized: r.optimized, failed: r.failed })
+})
+
+// DELETE /api/agents/overrides/:funnel — clear agent copy (back to hand-written)
+api.delete('/agents/overrides/:funnel', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const funnel = c.req.param('funnel')
+  await c.env.DB.prepare('DELETE FROM copy_overrides WHERE funnel = ?').bind(funnel).run()
+  await logAgent(c.env as AgentEnv, 'seo-agent', funnel, 'overrides_cleared')
+  return c.json({ ok: true, funnel })
+})
+
+// ── ANALYTICS (per-funnel data separation) ─────────────────────
+// GET /api/analytics — views + leads + conversion per funnel
+api.get('/analytics', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const days = Math.min(parseInt(c.req.query('days') || '30', 10) || 30, 90)
+  const [views, leads, daily] = await Promise.all([
+    c.env.DB.prepare(`SELECT funnel, SUM(views) n FROM funnel_views WHERE day >= date('now', ?) GROUP BY funnel`).bind(`-${days} day`).all(),
+    c.env.DB.prepare(`SELECT funnel, COUNT(*) n FROM leads WHERE created_at >= datetime('now', ?) GROUP BY funnel`).bind(`-${days} day`).all(),
+    c.env.DB.prepare(`SELECT day, SUM(views) views FROM funnel_views WHERE day >= date('now', ?) GROUP BY day ORDER BY day`).bind(`-${days} day`).all(),
+  ])
+  const vMap: Record<string, number> = {}; for (const r of views.results as any[]) vMap[r.funnel] = Number(r.n)
+  const lMap: Record<string, number> = {}; for (const r of leads.results as any[]) lMap[r.funnel] = Number(r.n)
+  const funnels = [...new Set([...Object.keys(vMap), ...Object.keys(lMap)])].map((f) => ({
+    funnel: f, views: vMap[f] || 0, leads: lMap[f] || 0,
+    conversion: vMap[f] ? +(((lMap[f] || 0) / vMap[f]) * 100).toFixed(2) : null
+  })).sort((a, b) => b.views - a.views)
+  return c.json({ ok: true, days, funnels, daily: daily.results })
+})
+
+// ── MAILER ─────────────────────────────────────────────────────
+// GET /api/mail/status — configured providers + audience sizes per funnel
+api.get('/mail/status', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const providers = mailProvidersConfigured(c.env as MailEnv)
+  const active = pickProvider(c.env as MailEnv)
+  let segments: any[] = []
+  let log: any[] = []
+  if (c.env?.DB) {
+    const seg = await c.env.DB.prepare("SELECT funnel, COUNT(DISTINCT email) n FROM leads WHERE email IS NOT NULL AND email != '' GROUP BY funnel ORDER BY n DESC").all()
+    segments = seg.results as any[]
+    const lg = await c.env.DB.prepare('SELECT provider, to_count, subject, funnel, ok, error, created_at FROM mail_log ORDER BY id DESC LIMIT 20').all()
+    log = lg.results as any[]
+  }
+  return c.json({ ok: true, providers, active, from: (c.env as any)?.LEAD_FROM_EMAIL || '', segments, log })
+})
+
+// POST /api/mail/send { subject, html, funnel?, status?, to?, provider?, test? }
+// funnel='' → all leads with email; funnel='mortgage' → that segment only.
+// test=true → sends only to LEAD_NOTIFY_EMAIL (safe preview).
+api.post('/mail/send', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  let body: { subject?: string; html?: string; funnel?: string; status?: string; to?: string; provider?: string; test?: boolean }
+  try { body = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  if (!body.subject?.trim() || !body.html?.trim()) return c.json({ ok: false, error: 'subject and html required' }, 400)
+
+  let recipients: string[] = []
+  if (body.test) {
+    const t = (c.env as any)?.LEAD_NOTIFY_EMAIL
+    if (!t) return c.json({ ok: false, error: 'Set LEAD_NOTIFY_EMAIL in the Key Vault to receive test sends' }, 400)
+    recipients = [t]
+  } else if (body.to?.trim()) {
+    recipients = body.to.split(/[,;\s]+/).filter((e) => /.+@.+\..+/.test(e)).slice(0, 500)
+  } else {
+    if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+    const conds: string[] = ["email IS NOT NULL AND email != ''"]
+    const binds: unknown[] = []
+    if (body.funnel?.trim()) { conds.push('funnel = ?'); binds.push(body.funnel.trim().slice(0, 60)) }
+    if (body.status?.trim()) { conds.push('status = ?'); binds.push(body.status.trim().slice(0, 20)) }
+    const rows = await c.env.DB.prepare(`SELECT DISTINCT email FROM leads WHERE ${conds.join(' AND ')} LIMIT 500`).bind(...binds).all()
+    recipients = (rows.results as any[]).map((r) => r.email)
+  }
+  if (!recipients.length) return c.json({ ok: false, error: 'No recipients match this segment' }, 400)
+
+  const html = campaignHtml(body.subject.trim().slice(0, 200), body.html.slice(0, 100_000))
+  const result = await sendMail(c.env as MailEnv, { to: recipients, subject: body.subject.trim().slice(0, 200), html, provider: body.provider })
+  try { await c.env?.DB?.prepare('INSERT INTO mail_log (provider, to_count, subject, funnel, ok, error) VALUES (?,?,?,?,?,?)').bind(result.provider, recipients.length, body.subject.trim().slice(0, 200), body.funnel || (body.test ? '(test)' : body.to ? '(manual)' : ''), result.ok ? 1 : 0, result.error || null).run() } catch { /* log only */ }
+  return c.json({ ok: result.ok, provider: result.provider, recipients: recipients.length, test: !!body.test, error: result.error })
+})
+
 // ── Health ─────────────────────────────────────────────────────
-api.get('/health', (c) => c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env) }))
+api.get('/health', async (c) => {
+  const mailConf = mailProvidersConfigured(c.env as MailEnv)
+  return c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env), mail: { providers: mailConf, active: pickProvider(c.env as MailEnv) }, vault: !!c.env?.DB })
+})

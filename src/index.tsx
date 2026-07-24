@@ -43,8 +43,13 @@ import { accountingTemplate } from './templates/accounting'
 import { photographyTemplate } from './templates/photography'
 import { weddingVenueTemplate } from './templates/weddingVenue'
 import { movingTemplate } from './templates/moving'
+import { agentsPage } from './pages/agents'
+import { mailerPage } from './pages/mailer'
+import { analyticsPage } from './pages/analytics'
+import { FUNNEL_SLUGS } from './funnels'
+import { getCopyOverrides, trackView, maybeRefreshFunnel } from './agents'
 
-type AppBindings = { DB?: D1Database }
+type AppBindings = { DB?: D1Database; AI?: any }
 const app = new Hono<{ Bindings: AppBindings }>()
 
 const html = (body: string) =>
@@ -68,45 +73,51 @@ app.get('/ecosystem/:slug', (c) => {
   return page ? html(page) : c.notFound()
 })
 app.get('/passport', (c) => html(passportPage()))
+app.get('/agents', (c) => html(agentsPage()))
+app.get('/mailer', (c) => html(mailerPage()))
+app.get('/analytics', (c) => html(analyticsPage()))
 
 // ── API layer: Stripe checkout + lead capture + SEO pack ─────
 app.route('/api', api)
 
-// ── Live funnel templates (parameterized via query string) ───
-app.get('/t/event-landing', (c) => html(eventLandingTemplate(c.req.query())))
-app.get('/t/sponsor-deck', (c) => html(sponsorDeckTemplate(c.req.query())))
-app.get('/t/tax-lead', (c) => html(taxLeadTemplate(c.req.query())))
-app.get('/t/credit-service', (c) => html(creditServiceTemplate(c.req.query())))
-app.get('/t/credit-saas', (c) => html(creditSaasTemplate(c.req.query())))
+// ── v2.0: Live funnel templates — unified registry with per-funnel view
+// tracking, AI-agent copy overrides (SEO/SGE/AEO, weekly lazy refresh),
+// and zero-latency background work via executionCtx.waitUntil.
+const TEMPLATES: Record<string, (q: Record<string, string | undefined>) => string> = {
+  'event-landing': eventLandingTemplate, 'sponsor-deck': sponsorDeckTemplate, 'tax-lead': taxLeadTemplate,
+  'credit-service': creditServiceTemplate, 'credit-saas': creditSaasTemplate,
+  'real-estate': realEstateTemplate, 'fitness': fitnessTemplate, 'coaching': coachingTemplate,
+  'ecommerce': ecommerceTemplate, 'saas-trial': saasTrialTemplate, 'law-firm': lawFirmTemplate,
+  'home-services': homeServicesTemplate, 'med-spa': medSpaTemplate, 'insurance': insuranceTemplate,
+  'agency': agencyTemplate, 'restaurant': restaurantTemplate, 'dental': dentalTemplate,
+  'auto-services': autoServicesTemplate, 'salon': salonTemplate, 'mortgage': mortgageTemplate,
+  'chiropractic': chiropracticTemplate, 'pet-care': petCareTemplate, 'landscaping': landscapingTemplate,
+  'cleaning': cleaningTemplate, 'childcare': childcareTemplate, 'tutoring': tutoringTemplate,
+  'accounting': accountingTemplate, 'photography': photographyTemplate,
+  'wedding-venue': weddingVenueTemplate, 'moving': movingTemplate,
+}
 
-// ── Top-10 niche funnel templates ─────────────────────────────
-app.get('/t/real-estate', (c) => html(realEstateTemplate(c.req.query())))
-app.get('/t/fitness', (c) => html(fitnessTemplate(c.req.query())))
-app.get('/t/coaching', (c) => html(coachingTemplate(c.req.query())))
-app.get('/t/ecommerce', (c) => html(ecommerceTemplate(c.req.query())))
-app.get('/t/saas-trial', (c) => html(saasTrialTemplate(c.req.query())))
-app.get('/t/law-firm', (c) => html(lawFirmTemplate(c.req.query())))
-app.get('/t/home-services', (c) => html(homeServicesTemplate(c.req.query())))
-app.get('/t/med-spa', (c) => html(medSpaTemplate(c.req.query())))
-app.get('/t/insurance', (c) => html(insuranceTemplate(c.req.query())))
-app.get('/t/agency', (c) => html(agencyTemplate(c.req.query())))
-app.get('/t/restaurant', (c) => html(restaurantTemplate(c.req.query())))
-app.get('/t/dental', (c) => html(dentalTemplate(c.req.query())))
-app.get('/t/auto-services', (c) => html(autoServicesTemplate(c.req.query())))
-app.get('/t/salon', (c) => html(salonTemplate(c.req.query())))
-app.get('/t/mortgage', (c) => html(mortgageTemplate(c.req.query())))
+app.get('/t/:slug', async (c) => {
+  const slug = c.req.param('slug')
+  const tpl = TEMPLATES[slug]
+  if (!tpl) return c.notFound()
+  const q: Record<string, string | undefined> = c.req.query()
 
-// ── v3.2: 10 more premium niche funnel templates ──────────────
-app.get('/t/chiropractic', (c) => html(chiropracticTemplate(c.req.query())))
-app.get('/t/pet-care', (c) => html(petCareTemplate(c.req.query())))
-app.get('/t/landscaping', (c) => html(landscapingTemplate(c.req.query())))
-app.get('/t/cleaning', (c) => html(cleaningTemplate(c.req.query())))
-app.get('/t/childcare', (c) => html(childcareTemplate(c.req.query())))
-app.get('/t/tutoring', (c) => html(tutoringTemplate(c.req.query())))
-app.get('/t/accounting', (c) => html(accountingTemplate(c.req.query())))
-app.get('/t/photography', (c) => html(photographyTemplate(c.req.query())))
-app.get('/t/wedding-venue', (c) => html(weddingVenueTemplate(c.req.query())))
-app.get('/t/moving', (c) => html(movingTemplate(c.req.query())))
+  // Merge AI-agent copy overrides as new defaults; explicit URL params win.
+  if (c.env?.DB) {
+    try {
+      const overrides = await getCopyOverrides(c.env, slug)
+      for (const [k, v] of Object.entries(overrides)) if (!q[k]) q[k] = v
+    } catch { /* funnel must always render */ }
+
+    // Background (zero latency): count the view + weekly agent refresh
+    try {
+      c.executionCtx.waitUntil(trackView(c.env, slug))
+      if (c.env.AI) c.executionCtx.waitUntil(maybeRefreshFunnel(c.env, slug))
+    } catch { /* executionCtx may be absent in some dev contexts */ }
+  }
+  return html(tpl(q))
+})
 
 // ── v3.3: short funnel links — /f/:code → saved builder config (D1) ──
 app.get('/f/:code', async (c) => {
@@ -119,11 +130,11 @@ app.get('/f/:code', async (c) => {
 })
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'mcknight-growthos', version: '1.1.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'mcknight-growthos', version: '2.0.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
-const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations', '/ecosystem', '/passport', ...ECOSYSTEM_BRANDS.map((b) => `/ecosystem/${b.slug}`)]
-const FUNNELS = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency', 'restaurant', 'dental', 'auto-services', 'salon', 'mortgage', 'chiropractic', 'pet-care', 'landscaping', 'cleaning', 'childcare', 'tutoring', 'accounting', 'photography', 'wedding-venue', 'moving']
+const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations', '/ecosystem', '/passport', '/agents', '/mailer', '/analytics', ...ECOSYSTEM_BRANDS.map((b) => `/ecosystem/${b.slug}`)]
+const FUNNELS = [...FUNNEL_SLUGS]
 
 app.get('/sitemap.xml', (c) => {
   const base = new URL(c.req.url).origin
