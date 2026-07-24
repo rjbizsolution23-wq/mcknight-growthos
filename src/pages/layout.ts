@@ -95,6 +95,7 @@ ${extraHead}
         ['/agents', 'AI Agents', 'agents'],
         ['/mailer', 'Mail Command', 'mailer'],
         ['/analytics', 'Analytics', 'analytics'],
+        ['/deploy', 'CF Deploy', 'deploy'],
         ['/integrations', 'Integration Hub', 'integrations'],
         ['/brand', 'Brand Control Center', 'brand'],
       ].map(([href, label, key]) =>
@@ -133,6 +134,7 @@ ${content}
           <li><a href="/agents" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-robot mr-2 text-blue-500"></i>AI Agent Command</a></li>
           <li><a href="/mailer" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-paper-plane mr-2 text-blue-500"></i>Mail Command</a></li>
           <li><a href="/analytics" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-chart-line mr-2 text-blue-500"></i>Funnel Analytics</a></li>
+          <li><a href="/deploy" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-cloud mr-2 text-blue-500"></i>Cloudflare Deploy</a></li>
           <li><a href="/integrations" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-plug mr-2 text-blue-500"></i>Integration Hub</a></li>
         </ul>
       </div>

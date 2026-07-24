@@ -12,7 +12,11 @@ import { fanOutLead, hooksConfigured, type HooksEnv, type HookResult } from './h
 import { KNOWN_KEYS, KEY_GROUPS, isKnownKey, parseEnvFile, maskValue, cfg, invalidateVaultCache, loadVault } from './keys'
 import { sendMail, mailProvidersConfigured, pickProvider, campaignHtml, type MailEnv } from './mail'
 import { optimizeFunnelCopy, optimizeAllFunnels, getCopyOverrides, logAgent, type AgentEnv } from './agents'
-import { FUNNEL_SLUGS } from './funnels'
+import { FUNNEL_SLUGS, isFunnelSlug } from './funnels'
+import { cfConfigured, cfVerify, deployFunnel, deleteDeployment, listDeployments, type CfEnv } from './cloudflare'
+import { processChangeRequest, revertChangeRequest, listChangeRequests } from './changeagent'
+import { FUNNEL_PARAMS, COMMON_PARAMS } from './paramschema'
+import { TEMPLATES } from './templateRegistry'
 
 type Bindings = GhlEnv & AiEnv & HooksEnv & {
   STRIPE_SECRET_KEY?: string
@@ -387,7 +391,7 @@ api.post('/seo-ping', async (c) => {
   if (!/rjbusinesssolutions\.org|pages\.dev/.test(origin)) {
     return c.json({ ok: false, skipped: true, reason: 'non-production origin' })
   }
-  const pages = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations']
+  const pages = ['/', '/deploy', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations']
   const funnels = ['event-landing', 'sponsor-deck', 'tax-lead', 'credit-service', 'credit-saas', 'real-estate', 'fitness', 'coaching', 'ecommerce', 'saas-trial', 'law-firm', 'home-services', 'med-spa', 'insurance', 'agency', 'restaurant', 'dental', 'auto-services', 'salon', 'mortgage', 'chiropractic', 'pet-care', 'landscaping', 'cleaning', 'childcare', 'tutoring', 'accounting', 'photography', 'wedding-venue', 'moving']
   const urlList = [...pages, ...funnels.map((f) => `/t/${f}`)].map((p) => origin + p)
 
@@ -578,8 +582,96 @@ api.post('/mail/send', async (c) => {
   return c.json({ ok: result.ok, provider: result.provider, recipients: recipients.length, test: !!body.test, error: result.error })
 })
 
+// ═══════════════════════════════════════════════════════════════
+// v3.0 — CLOUDFLARE DEPLOY + CHANGE AGENT
+// ═══════════════════════════════════════════════════════════════
+
+// ── CLOUDFLARE DEPLOY (user's own account) ─────────────────────
+// GET /api/cf/status — token/account verification + deployment list
+api.get('/cf/status', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const verify = await cfVerify(c.env as CfEnv)
+  const deployments = await listDeployments(c.env as CfEnv)
+  return c.json({ ok: true, configured: cfConfigured(c.env as CfEnv), verify, deployments, funnels: FUNNEL_SLUGS })
+})
+
+// POST /api/cf/deploy { funnel, name?, params? } — deploy a funnel to the
+// user's Cloudflare account as a standalone Worker. Params are baked into
+// the HTML; live copy_overrides are merged too (so agent copy ships).
+api.post('/cf/deploy', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  let body: { funnel?: string; name?: string; params?: Record<string, string> }
+  try { body = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const funnel = (body.funnel || '').trim()
+  if (!isFunnelSlug(funnel)) return c.json({ ok: false, error: 'unknown funnel' }, 400)
+  const tpl = TEMPLATES[funnel]
+
+  // Merge: agent overrides as defaults, explicit params win (same as /t/:slug)
+  const q: Record<string, string | undefined> = {}
+  if (body.params && typeof body.params === 'object') {
+    for (const [k, v] of Object.entries(body.params)) if (typeof v === 'string' && v.trim()) q[k] = v.trim().slice(0, 400)
+  }
+  try {
+    const overrides = await getCopyOverrides(c.env as AgentEnv, funnel)
+    for (const [k, v] of Object.entries(overrides)) if (!q[k]) q[k] = v
+  } catch { /* render anyway */ }
+
+  // Baked-in origin must be reachable from Cloudflare's edge — never localhost/sandbox
+  let platformOrigin = new URL(c.req.url).origin
+  if (/localhost|127\.0\.0\.1|\.sandbox\./.test(platformOrigin)) platformOrigin = 'https://mcknight-growthos.pages.dev'
+  const html = tpl(q)
+  const result = await deployFunnel(c.env as CfEnv, { funnel, html, platformOrigin, name: body.name, params: q as Record<string, string> })
+  return c.json(result, result.ok ? 200 : 502)
+})
+
+// DELETE /api/cf/deploy/:worker — remove a deployed funnel worker
+api.delete('/cf/deploy/:worker', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const r = await deleteDeployment(c.env as CfEnv, c.req.param('worker'))
+  return c.json(r, r.ok ? 200 : 502)
+})
+
+// ── CHANGE AGENT (plain-English funnel edits) ──────────────────
+// GET /api/changes?funnel= — request history
+api.get('/changes', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const funnel = c.req.query('funnel') || undefined
+  const requests = await listChangeRequests(c.env as AgentEnv, funnel)
+  return c.json({ ok: true, requests, funnels: FUNNEL_SLUGS, ai: aiConfigured(c.env) })
+})
+
+// GET /api/changes/params/:funnel — the editable param schema + live values
+api.get('/changes/params/:funnel', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const funnel = c.req.param('funnel')
+  if (!isFunnelSlug(funnel)) return c.json({ ok: false, error: 'unknown funnel' }, 400)
+  const overrides = await getCopyOverrides(c.env as AgentEnv, funnel)
+  return c.json({ ok: true, funnel, params: FUNNEL_PARAMS[funnel] || [], common: COMMON_PARAMS, live: overrides })
+})
+
+// POST /api/changes { funnel, request } — AI applies the plain-English change
+api.post('/changes', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  let body: { funnel?: string; request?: string }
+  try { body = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const funnel = (body.funnel || '').trim()
+  if (!isFunnelSlug(funnel)) return c.json({ ok: false, error: 'unknown funnel' }, 400)
+  if (!body.request?.trim()) return c.json({ ok: false, error: 'Describe the change you want' }, 400)
+  const r = await processChangeRequest(c.env as AgentEnv, funnel, body.request.trim())
+  return c.json(r, r.ok ? 200 : 422)
+})
+
+// POST /api/changes/:id/revert — undo one applied change request
+api.post('/changes/:id/revert', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const id = parseInt(c.req.param('id'), 10)
+  if (!id) return c.json({ ok: false, error: 'bad id' }, 400)
+  const r = await revertChangeRequest(c.env as AgentEnv, id)
+  return c.json(r, r.ok ? 200 : 422)
+})
+
 // ── Health ─────────────────────────────────────────────────────
 api.get('/health', async (c) => {
   const mailConf = mailProvidersConfigured(c.env as MailEnv)
-  return c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env), mail: { providers: mailConf, active: pickProvider(c.env as MailEnv) }, vault: !!c.env?.DB })
+  return c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env), mail: { providers: mailConf, active: pickProvider(c.env as MailEnv) }, vault: !!c.env?.DB, cfDeploy: cfConfigured(c.env as CfEnv), changeAgent: aiConfigured(c.env) })
 })

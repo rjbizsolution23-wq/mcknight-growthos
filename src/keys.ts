@@ -19,6 +19,7 @@ export const KEY_GROUPS: Record<string, { icon: string; title: string; desc: str
   crm:       { icon: 'fa-address-book',    title: 'CRM (GoHighLevel)',   desc: 'Contact upsert, notes, opportunities, workflows' },
   payments:  { icon: 'fa-credit-card',     title: 'Payments (Stripe)',   desc: 'Checkout sessions from funnels' },
   alerts:    { icon: 'fa-bell',            title: 'Alerts & Fan-out',    desc: 'Slack, Discord, Telegram, Twilio SMS, Zapier/Make webhook, Airtable' },
+  cloudflare: { icon: 'fa-cloud',          title: 'Cloudflare Deploy',   desc: 'Deploy any funnel to your own Cloudflare account as a standalone Worker (one click)' },
 }
 
 export const KNOWN_KEYS: KeyDef[] = [
@@ -55,6 +56,9 @@ export const KNOWN_KEYS: KeyDef[] = [
   { name: 'AIRTABLE_API_KEY',    group: 'alerts', label: 'Airtable API Key', hint: 'pat...' },
   { name: 'AIRTABLE_BASE_ID',    group: 'alerts', label: 'Airtable Base ID', hint: 'app...', secret: false },
   { name: 'AIRTABLE_TABLE',      group: 'alerts', label: 'Airtable Table Name', secret: false },
+  // Cloudflare Deploy (user's own account)
+  { name: 'CF_DEPLOY_API_TOKEN',  group: 'cloudflare', label: 'Cloudflare API Token', hint: 'Create at dash.cloudflare.com → My Profile → API Tokens → "Edit Cloudflare Workers" template' },
+  { name: 'CF_DEPLOY_ACCOUNT_ID', group: 'cloudflare', label: 'Cloudflare Account ID', hint: 'dash.cloudflare.com → Workers & Pages → right sidebar', secret: false },
 ]
 
 const KNOWN = new Set(KNOWN_KEYS.map((k) => k.name))

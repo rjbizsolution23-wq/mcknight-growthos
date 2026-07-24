@@ -122,6 +122,24 @@ All 30 funnels re-skinned in McKnight navy/gold, plus four new command layers:
 ### New D1 tables (migration 0002)
 `settings` (key vault), `copy_overrides` (agent copy), `funnel_views` (daily counters), `agent_log`, `mail_log`
 
+## v3.0 — Cloudflare Deploy + Change Agent
+
+### ☁️ Cloudflare Deploy (`/deploy`)
+- Users add **their own** `CF_DEPLOY_API_TOKEN` + `CF_DEPLOY_ACCOUNT_ID` in the Key Vault → one-click deploy any of the 30 funnels to **their Cloudflare account** as a standalone Worker with its own `*.workers.dev` URL (live in ~5s)
+- Custom params + live AI-agent copy baked into the deployed HTML; `/static/*` and `/api/lead`, `/api/checkout` etc. proxy back to the platform — **leads still flow into LeadFlow CRM, GHL, email, and alerts**
+- Deployments listed + deletable from the UI; every deploy/failure/delete persisted in D1 `cf_deployments`
+- API: `GET /api/cf/status` (token verification + list), `POST /api/cf/deploy` `{funnel, name?, params?}`, `DELETE /api/cf/deploy/:worker`
+
+### 🪄 Change Agent (`/agents`)
+- Describe any funnel change in **plain English** ("change the company to Summit Lending, city to Denver, CTA should say Book My Call") → the AI translates it into real funnel field changes and applies them **live instantly**
+- Safety rails: agent may only set fields from each funnel's real param schema (`src/paramschema.ts`, 245 per-funnel params + 17 common params) — never arbitrary HTML/JS; values escaped by templates; compliance rules enforced
+- Every request logged in D1 `change_requests` with the exact changes applied + one-click **revert** per request
+- Change Agent and SEO Agent merge into the same `copy_overrides` — neither clobbers the other; explicit URL params always win
+- API: `GET /api/changes`, `GET /api/changes/params/:funnel`, `POST /api/changes` `{funnel, request}`, `POST /api/changes/:id/revert`
+
+### New D1 tables (migration 0003)
+`cf_deployments` (every user deployment), `change_requests` (every plain-English change + revert state)
+
 ## Functional Entry Points (API)
 
 | Method | Path | Purpose |
@@ -156,7 +174,7 @@ All 30 funnels re-skinned in McKnight navy/gold, plus four new command layers:
 - **Platform**: Cloudflare Pages (project `mcknight-growthos`)
 - **Status**: ✅ Active — https://mcknight-growthos.pages.dev
 - **Tech Stack**: Hono 4 + TypeScript + Vite + TailwindCSS (CDN) + Cloudflare D1 + Workers AI
-- **Last Updated**: 2026-07-24 (v2.0.0 — Ultimate Funnel Command)
+- **Last Updated**: 2026-07-24 (v3.0.0 — Cloudflare Deploy + Change Agent)
 
 ### Local Development
 

@@ -20,6 +20,24 @@ export const agentsPage = () => shell('AI Agent Command', 'agents', `
   <span id="ag-msg" class="text-sm text-gray-400"></span>
 </section>
 
+<section id="ch-agent" class="mb-10 bg-[#0d1b30] border border-mk-gold/30 rounded-2xl p-6">
+  <h2 class="text-xl font-bold text-white mb-1"><i class="fas fa-wand-magic-sparkles text-mk-gold mr-2"></i>Change Agent <span class="text-[10px] gold-bg text-black font-mono ml-1 align-middle px-1.5 py-0.5 rounded">v3.0 · PLAIN ENGLISH</span></h2>
+  <p class="text-gray-400 text-sm mb-4 max-w-3xl">Describe any change in plain English — “change the company name to Summit Lending, make the city Denver, CTA should say Book My Call” — and the agent applies it to the live funnel instantly. Only real funnel fields can be changed (never arbitrary code), every change is logged, and one-click revert.</p>
+  <div class="grid md:grid-cols-4 gap-3 mb-3">
+    <select id="ch-funnel" class="bg-[#060a14] border border-blue-900/60 rounded-xl px-4 py-3 text-sm text-white"><option value="">Pick funnel…</option></select>
+    <textarea id="ch-request" rows="2" class="md:col-span-2 bg-[#060a14] border border-blue-900/60 rounded-xl px-4 py-3 text-sm text-white" placeholder="e.g. Change the company to Summit Home Lending, city to Denver, and make the CTA say Book My Call"></textarea>
+    <button onclick="applyChange(this)" class="gold-bg text-black font-bold px-5 py-3 rounded-xl text-sm hover:opacity-90 self-start"><i class="fas fa-bolt mr-2"></i>Apply Change</button>
+  </div>
+  <p id="ch-msg" class="text-sm text-gray-400 mb-4"></p>
+  <h3 class="font-bold text-white text-sm mb-2"><i class="fas fa-clock-rotate-left text-mk-gold mr-2"></i>Change History</h3>
+  <div class="overflow-x-auto">
+    <table class="w-full text-xs">
+      <thead><tr class="text-left text-gray-400 border-b border-blue-900/40"><th class="p-2">When (UTC)</th><th class="p-2">Funnel</th><th class="p-2">Request</th><th class="p-2">Applied</th><th class="p-2">Status</th><th class="p-2"></th></tr></thead>
+      <tbody id="ch-rows"><tr><td colspan="6" class="p-4 text-center text-gray-500">Loading…</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
 <section id="ag-table" class="mb-10">
   <h2 class="text-xl font-bold text-white mb-3"><i class="fas fa-table-list text-mk-gold mr-2"></i>Live Copy Overrides</h2>
   <div class="overflow-x-auto bg-[#0d1b30] border border-blue-900/40 rounded-2xl">
@@ -45,6 +63,7 @@ async function loadStatus(){
     var r=await fetch('/api/agents/status',{headers:hdrs()}); var j=await r.json();
     if(!j.ok){ if(r.status===401){ var k=prompt('Admin key required:'); if(k){ localStorage.setItem(KEY_STORE,k); return loadStatus(); } } document.getElementById('ag-rows').innerHTML='<tr><td colspan="4" class="p-6 text-center text-red-400">'+esc(j.error)+'</td></tr>'; return; }
     var sel=document.getElementById('ag-one'); sel.innerHTML='<option value="">Run one funnel…</option>'+j.funnels.map(function(f){return '<option>'+f+'</option>'}).join('');
+    var csel=document.getElementById('ch-funnel'); if(csel.options.length<=1) csel.innerHTML='<option value="">Pick funnel…</option>'+j.funnels.map(function(f){return '<option>'+f+'</option>'}).join('');
     var oMap={}; (j.overrides||[]).forEach(function(o){ oMap[o.funnel]=o; });
     document.getElementById('ag-rows').innerHTML=j.funnels.map(function(f){
       var o=oMap[f]; var title=''; if(o){ try{ title=(JSON.parse(o.overrides).seoTitle)||''; }catch(e){} }
@@ -73,6 +92,36 @@ async function clearOne(f){
   if(!confirm('Reset '+f+' to hand-written copy?')) return;
   await fetch('/api/agents/overrides/'+f,{method:'DELETE',headers:hdrs()}); loadStatus();
 }
+async function loadChanges(){
+  try{
+    var r=await fetch('/api/changes',{headers:hdrs()}); var j=await r.json();
+    if(!j.ok) return;
+    document.getElementById('ch-rows').innerHTML=(j.requests&&j.requests.length)?j.requests.map(function(c){
+      var ch=''; try{ var o=JSON.parse(c.changes||'{}'); ch=Object.keys(o).map(function(k){return '<span class="text-mk-goldLight">'+k+'</span>=“'+esc(o[k]).slice(0,40)+'”'}).join(', '); }catch(e){}
+      var st=c.status==='applied'?'<span class="text-emerald-400">applied</span>':c.status==='reverted'?'<span class="text-gray-500">reverted</span>':'<span class="text-red-400" title="'+esc(c.error)+'">rejected</span>';
+      return '<tr class="border-b border-blue-900/20"><td class="p-2 text-gray-500 whitespace-nowrap">'+esc(c.created_at)+'</td><td class="p-2 text-white"><a class="hover:text-mk-cyan" target="_blank" href="/t/'+esc(c.funnel)+'">'+esc(c.funnel)+'</a></td><td class="p-2 text-gray-400 max-w-[280px] truncate" title="'+esc(c.request)+'">'+esc(c.request)+'</td><td class="p-2 text-gray-300">'+(ch||'—')+'</td><td class="p-2">'+st+'</td><td class="p-2">'+(c.status==='applied'?'<button onclick="revertChange('+c.id+')" class="text-red-400 hover:underline">revert</button>':'')+'</td></tr>';
+    }).join(''):'<tr><td colspan="6" class="p-4 text-center text-gray-500">No change requests yet — try one above.</td></tr>';
+  }catch(e){}
+}
+async function applyChange(btn){
+  var f=document.getElementById('ch-funnel').value, req=document.getElementById('ch-request').value.trim();
+  var m=document.getElementById('ch-msg');
+  if(!f||!req){ m.textContent='Pick a funnel and describe the change'; return; }
+  btn.disabled=true; m.textContent='Agent is applying your change…';
+  try{
+    var r=await fetch('/api/changes',{method:'POST',headers:hdrs({'Content-Type':'application/json'}),body:JSON.stringify({funnel:f,request:req})});
+    var j=await r.json();
+    if(j.ok){ m.innerHTML='✅ '+esc(j.summary)+(j.note?' <span class="text-gray-500">('+esc(j.note)+')</span>':'')+' — <a class="text-mk-cyan underline" target="_blank" href="/t/'+f+'">view live</a>'; document.getElementById('ch-request').value=''; }
+    else m.textContent='❌ '+(j.error||'failed');
+  }catch(e){ m.textContent='Error: '+e.message; }
+  btn.disabled=false; loadChanges(); loadStatus();
+}
+async function revertChange(id){
+  if(!confirm('Revert change #'+id+'?')) return;
+  await fetch('/api/changes/'+id+'/revert',{method:'POST',headers:hdrs()});
+  loadChanges(); loadStatus();
+}
 loadStatus();
+loadChanges();
 </script>
 `)

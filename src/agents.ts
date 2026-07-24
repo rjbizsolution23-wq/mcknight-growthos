@@ -84,8 +84,15 @@ Write fresh search-optimized metadata. Respond with exactly this JSON:
 
     const overrides: Record<string, string> = {}
     for (const f of AGENT_FIELDS) if (parsed[f]) overrides[f] = parsed[f]
+    // MERGE with existing overrides (v3.0: never clobber Change Agent edits)
+    let existing: Record<string, string> = {}
+    try {
+      const row = await env.DB.prepare('SELECT overrides FROM copy_overrides WHERE funnel=?').bind(funnel).first()
+      if (row?.overrides) existing = JSON.parse(row.overrides as string)
+    } catch { /* fresh */ }
+    const merged = { ...existing, ...overrides }
     await env.DB.prepare('INSERT INTO copy_overrides (funnel, overrides, agent, updated_at) VALUES (?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(funnel) DO UPDATE SET overrides=excluded.overrides, agent=excluded.agent, updated_at=CURRENT_TIMESTAMP')
-      .bind(funnel, JSON.stringify(overrides), 'seo-agent').run()
+      .bind(funnel, JSON.stringify(merged), 'seo-agent').run()
     await logAgent(env, 'seo-agent', funnel, 'optimized', overrides.seoTitle || '')
     return { ok: true, overrides }
   } catch (e: any) {
