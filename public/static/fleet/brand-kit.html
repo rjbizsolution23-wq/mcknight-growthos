@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Contracting Preacher — Brand Kit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628;
+    --navy-2:#0F1E36;
+    --navy-3:#152947;
+    --gold:#C9A961;
+    --gold-2:#B08D3F;
+    --gold-3:#E4CB92;
+    --ivory:#F7F3EA;
+    --ivory-2:#EFE8D6;
+    --red:#8B1F1F;
+    --slate:#4A5568;
+    --slate-2:#718096;
+    --line:#E5DFD0;
+    --white:#FFFFFF;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);-webkit-font-smoothing:antialiased}
+  body{padding:64px 32px 120px}
+  .page{max-width:1360px;margin:0 auto}
+
+  /* ─── DOC HEADER ─── */
+  .doc-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--navy);padding-bottom:24px;margin-bottom:64px}
+  .doc-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .doc-head .title{font-family:var(--serif);font-size:28px;font-weight:700}
+  .doc-head .kv{display:flex;gap:32px;font-family:var(--mono);font-size:11px;color:var(--slate)}
+  .doc-head .kv b{color:var(--navy);display:block;letter-spacing:.14em;font-weight:600;text-transform:uppercase}
+
+  /* ─── SECTION ─── */
+  section{margin-bottom:96px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:32px;border-bottom:1px solid rgba(10,22,40,.12);padding-bottom:16px}
+  .sec-num{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-2);font-weight:600}
+  .sec-title{font-family:var(--serif);font-size:36px;font-weight:700;letter-spacing:-.01em}
+  .sec-sub{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+
+  /* ─── COVER ─── */
+  .cover{background:var(--navy);color:var(--ivory);border-radius:2px;padding:80px 72px;position:relative;overflow:hidden;min-height:640px;display:flex;flex-direction:column;justify-content:space-between}
+  .cover::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 85% 20%, rgba(201,169,97,.18), transparent 40%),
+    radial-gradient(circle at 15% 90%, rgba(201,169,97,.10), transparent 45%);
+    pointer-events:none}
+  .cover .corner{position:absolute;top:24px;right:24px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold);opacity:.7;text-transform:uppercase}
+  .cover .corner-l{position:absolute;top:24px;left:24px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold);opacity:.7;text-transform:uppercase}
+  .cover h1{font-family:var(--serif);font-size:88px;line-height:.96;font-weight:800;letter-spacing:-.02em;max-width:900px;position:relative}
+  .cover h1 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .cover .lede{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--gold-3);max-width:560px;margin-top:24px;line-height:1.4;position:relative}
+  .cover .foot{display:flex;justify-content:space-between;align-items:flex-end;position:relative;gap:40px}
+  .cover .foot .col{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--gold-3);text-transform:uppercase;line-height:1.9}
+  .cover .foot .col b{display:block;color:var(--ivory);font-family:var(--sans);font-weight:500;font-size:14px;letter-spacing:0;text-transform:none;margin-top:4px}
+  .cover .scripture{border-top:1px solid rgba(201,169,97,.4);padding-top:20px;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--gold-3)}
+
+  /* ─── LOGO ─── */
+  .logo-wrap{display:flex;align-items:center;gap:14px}
+  .logo-mark{width:52px;height:52px;flex:none}
+  .logo-word{font-family:var(--serif);font-weight:700;line-height:1;color:var(--navy)}
+  .logo-word .top{display:block;font-size:11px;letter-spacing:.32em;font-family:var(--mono);color:var(--gold-2);text-transform:uppercase;margin-bottom:5px;font-weight:500}
+  .logo-word .main{display:block;font-size:22px;letter-spacing:-.01em}
+  .logo-word .sub{display:block;font-size:9px;letter-spacing:.28em;color:var(--slate);text-transform:uppercase;margin-top:4px;font-family:var(--mono)}
+  /* dark variant */
+  .on-dark .logo-word{color:var(--ivory)}
+  .on-dark .logo-word .top{color:var(--gold-3)}
+  .on-dark .logo-word .sub{color:var(--gold-3);opacity:.7}
+
+  /* ─── LOGO GRID ─── */
+  .logo-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:24px}
+  .logo-tile{background:var(--white);padding:56px;border-radius:2px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;min-height:260px;position:relative}
+  .logo-tile.dark{background:var(--navy)}
+  .logo-tile.ivory{background:var(--ivory)}
+  .logo-tile.gold{background:var(--gold)}
+  .logo-tile .caption{position:absolute;top:16px;left:16px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--slate)}
+  .logo-tile.dark .caption,.logo-tile.gold .caption{color:rgba(247,243,234,.7)}
+  .logo-lg{transform:scale(1.6);transform-origin:center}
+  .mono-mark{width:120px;height:120px}
+
+  /* ─── PALETTE ─── */
+  .swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+  .swatch{border-radius:2px;overflow:hidden;background:var(--white);border:1px solid var(--line)}
+  .swatch .chip{aspect-ratio:1;position:relative}
+  .swatch .chip .role{position:absolute;top:14px;left:14px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+  .swatch.light .chip .role{color:rgba(10,22,40,.65)}
+  .swatch .info{padding:14px 16px}
+  .swatch .name{font-family:var(--serif);font-size:16px;font-weight:600}
+  .swatch .code{font-family:var(--mono);font-size:11px;color:var(--slate);margin-top:4px;letter-spacing:.05em}
+  .swatch .code span{display:block}
+
+  /* ─── TYPE ─── */
+  .type-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+  .type-card{background:var(--white);border:1px solid var(--line);padding:32px;border-radius:2px}
+  .type-label{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-2);margin-bottom:8px}
+  .type-name{font-size:14px;color:var(--slate);margin-bottom:20px;font-family:var(--mono)}
+  .spec-serif{font-family:var(--serif);font-size:64px;line-height:1;font-weight:700;letter-spacing:-.02em}
+  .spec-sans{font-family:var(--sans);font-size:56px;line-height:1;font-weight:700;letter-spacing:-.02em}
+  .spec-mono{font-family:var(--mono);font-size:52px;line-height:1;font-weight:500;letter-spacing:-.02em}
+  .type-weights{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+  .type-weights span{font-size:14px}
+  .w-serif{font-family:var(--serif)} .w-sans{font-family:var(--sans)} .w-mono{font-family:var(--mono)}
+
+  /* ─── SCALE ─── */
+  .scale-list{background:var(--white);border:1px solid var(--line);padding:40px 48px;border-radius:2px}
+  .scale-row{display:flex;align-items:baseline;gap:32px;padding:14px 0;border-bottom:1px dashed var(--line)}
+  .scale-row:last-child{border:0}
+  .scale-row .tag{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;width:120px;flex:none}
+  .scale-row .demo{flex:1;color:var(--navy)}
+  .scale-row .spec{font-family:var(--mono);font-size:11px;color:var(--slate)}
+
+  /* ─── BUSINESS CARDS ─── */
+  .card-row{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+  .bcard{width:100%;aspect-ratio:1.75/1;border-radius:6px;box-shadow:0 20px 60px -30px rgba(10,22,40,.4),0 8px 20px -15px rgba(10,22,40,.2);position:relative;overflow:hidden}
+  .bcard.front{background:var(--navy);color:var(--ivory);padding:32px;display:flex;flex-direction:column;justify-content:space-between}
+  .bcard.front::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 90% 100%, rgba(201,169,97,.22),transparent 45%);
+    pointer-events:none}
+  .bcard.front .top{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
+  .bcard.front .name{font-family:var(--serif);font-weight:700;font-size:26px;letter-spacing:-.01em;line-height:1.05;position:relative}
+  .bcard.front .role{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;margin-top:8px}
+  .bcard.front .bottom{position:relative;display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+  .bcard.front .contact{font-size:11px;line-height:1.7;color:var(--ivory)}
+  .bcard.front .contact b{color:var(--gold-3);font-weight:500;letter-spacing:.05em;display:block;margin-bottom:2px;font-family:var(--mono);font-size:9px;text-transform:uppercase}
+  .bcard.front .seal{width:64px;height:64px;flex:none}
+
+  .bcard.back{background:var(--ivory);color:var(--navy);padding:36px;display:flex;flex-direction:column;justify-content:space-between;position:relative}
+  .bcard.back::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:var(--gold)}
+  .bcard.back .tagline{font-family:var(--serif);font-size:22px;font-weight:700;line-height:1.15;letter-spacing:-.01em;max-width:340px;position:relative}
+  .bcard.back .tagline em{font-style:italic;color:var(--red)}
+  .bcard.back .scripture{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--slate);margin-top:16px;padding-top:12px;border-top:1px solid var(--line);max-width:320px}
+  .bcard.back .row{display:flex;justify-content:space-between;align-items:flex-end}
+  .bcard.back .stats{display:flex;gap:24px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .bcard.back .stats b{display:block;font-family:var(--serif);font-size:22px;color:var(--navy);letter-spacing:-.01em;text-transform:none;font-weight:700}
+  .bcard.back .stats b span{color:var(--gold-2)}
+
+  /* ─── LETTERHEAD ─── */
+  .letter{background:var(--white);width:100%;aspect-ratio:8.5/11;border-radius:2px;box-shadow:0 30px 80px -40px rgba(10,22,40,.4);padding:64px 72px 56px;position:relative;color:var(--navy);font-family:var(--sans);font-size:12px;line-height:1.75;overflow:hidden}
+  .letter::before{content:"";position:absolute;top:0;left:0;right:0;height:8px;background:linear-gradient(90deg,var(--navy) 0%, var(--navy) 62%, var(--gold) 62%, var(--gold) 100%)}
+  .letter .lh-head{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:24px;border-bottom:1px solid var(--line);margin-bottom:32px}
+  .letter .lh-right{text-align:right;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--slate);line-height:1.7}
+  .letter .lh-right b{color:var(--navy);display:block;letter-spacing:.14em;text-transform:uppercase;margin-bottom:2px;font-weight:600}
+  .letter .date{color:var(--slate);margin-bottom:24px;font-family:var(--mono);font-size:11px;letter-spacing:.06em}
+  .letter .addr{margin-bottom:24px}
+  .letter p{margin-bottom:12px}
+  .letter .sign{margin-top:36px;font-family:var(--serif);font-size:24px;font-style:italic;color:var(--navy)}
+  .letter .sign-line{margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate)}
+  .letter .lh-foot{position:absolute;bottom:32px;left:72px;right:72px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase}
+
+  /* ─── EMAIL SIGNATURES ─── */
+  .sig-wrap{background:var(--white);border:1px solid var(--line);padding:32px;border-radius:2px;margin-bottom:16px}
+  .sig-wrap .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;margin-bottom:16px}
+  .sig{font-family:Arial,Helvetica,sans-serif;color:#0A1628;font-size:13px;line-height:1.55}
+  .sig .row{display:flex;gap:20px;align-items:center;padding:8px 0}
+  .sig .divider{width:2px;background:var(--gold);align-self:stretch}
+  .sig .name{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--navy)}
+  .sig .title{font-size:12px;color:var(--slate);letter-spacing:.05em}
+  .sig .contact{font-size:12px;color:var(--slate);margin-top:6px;line-height:1.7}
+  .sig .contact a{color:var(--navy);text-decoration:none;font-weight:500}
+  .sig .contact b{color:var(--gold-2);font-weight:600}
+  .sig .cta{margin-top:8px;display:inline-block;background:var(--navy);color:var(--ivory);padding:6px 14px;border-radius:2px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;text-decoration:none}
+  .sig .quote{margin-top:10px;font-style:italic;font-size:11px;color:var(--slate);border-left:2px solid var(--gold);padding-left:10px}
+
+  /* Signature v2 — compact */
+  .sig2{font-family:Arial,Helvetica,sans-serif;color:#0A1628;font-size:12px;line-height:1.6;border-left:3px solid var(--gold);padding-left:16px}
+  .sig2 .name{font-family:var(--serif);font-size:16px;font-weight:700}
+  .sig2 .title{color:var(--slate);font-size:11px;margin-bottom:6px}
+
+  /* ─── EMAIL TEMPLATE ─── */
+  .email-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+  .email{background:#f2ecdf;padding:32px;border-radius:2px}
+  .email-inner{max-width:560px;margin:0 auto;background:var(--white);border-radius:4px;overflow:hidden;box-shadow:0 20px 40px -30px rgba(10,22,40,.3)}
+  .email-hero{background:var(--navy);color:var(--ivory);padding:36px 40px;position:relative}
+  .email-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%, rgba(201,169,97,.2), transparent 50%);pointer-events:none}
+  .email-hero .brand{position:relative;display:flex;align-items:center;gap:10px}
+  .email-hero .brand-word{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--ivory)}
+  .email-hero .brand-word span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400}
+  .email-hero h2{font-family:var(--serif);font-size:32px;font-weight:700;line-height:1.15;margin-top:24px;position:relative;max-width:400px}
+  .email-hero .sub{font-family:var(--serif);font-style:italic;color:var(--gold-3);font-size:14px;margin-top:8px;position:relative}
+  .email-body{padding:32px 40px 40px;color:var(--navy);font-size:14px;line-height:1.7}
+  .email-body p{margin-bottom:14px}
+  .email-body .btn{display:inline-block;background:var(--red);color:var(--ivory);padding:12px 24px;text-decoration:none;font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;margin-top:8px}
+  .email-body .signoff{font-family:var(--serif);font-style:italic;font-size:16px;margin-top:20px}
+  .email-body ul{padding-left:16px;margin:8px 0 14px}
+  .email-body ul li{margin-bottom:4px}
+  .email-body .stat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0;padding:20px;background:var(--ivory);border-left:3px solid var(--gold)}
+  .email-body .stat-strip .st{text-align:center}
+  .email-body .stat-strip .st b{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--navy);display:block}
+  .email-body .stat-strip .st span{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase}
+  .email-foot{background:#0F1E36;color:var(--gold-3);padding:24px 40px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-align:center;line-height:1.7}
+  .email-foot a{color:var(--gold);text-decoration:none;margin:0 4px}
+  .email-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:12px;text-align:center;font-weight:500}
+
+  /* ─── SOCIAL COVERS ─── */
+  .social-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:10px}
+  .social-cover{width:100%;background:var(--navy);color:var(--ivory);position:relative;overflow:hidden;border-radius:2px;padding:56px 64px;box-shadow:0 20px 50px -30px rgba(10,22,40,.4)}
+  .social-cover.linkedin{aspect-ratio:1584/396;display:flex;align-items:center;justify-content:space-between;padding:32px 72px}
+  .social-cover.linkedin::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 75% 50%,rgba(201,169,97,.2),transparent 50%);pointer-events:none}
+  .social-cover.linkedin .lead{max-width:640px;position:relative}
+  .social-cover.linkedin h2{font-family:var(--serif);font-size:44px;line-height:1.05;font-weight:700;letter-spacing:-.01em}
+  .social-cover.linkedin h2 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .social-cover.linkedin .sub{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;margin-top:12px}
+  .social-cover.linkedin .stats{display:flex;gap:32px;position:relative}
+  .social-cover.linkedin .stats .st{text-align:right}
+  .social-cover.linkedin .stats .st b{font-family:var(--serif);font-size:36px;font-weight:800;color:var(--gold-3);display:block;line-height:1}
+  .social-cover.linkedin .stats .st span{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ivory);text-transform:uppercase;margin-top:6px;display:block;opacity:.8}
+
+  .social-cover.fb{aspect-ratio:820/312;display:flex;align-items:center;justify-content:space-between;padding:32px 56px}
+  .social-cover.fb::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 30%,rgba(201,169,97,.24),transparent 55%)}
+  .social-cover.fb .lead{position:relative;max-width:520px}
+  .social-cover.fb h2{font-family:var(--serif);font-size:38px;line-height:1.05;font-weight:700}
+  .social-cover.fb h2 em{color:var(--gold-3);font-style:italic}
+  .social-cover.fb .cta{position:relative;background:var(--gold);color:var(--navy);padding:14px 24px;font-family:var(--sans);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px;border-radius:2px;text-align:center}
+
+  .social-cover.tw{aspect-ratio:1500/500;display:flex;align-items:center;justify-content:center;text-align:center;padding:56px;flex-direction:column}
+  .social-cover.tw::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 20% 30%, rgba(201,169,97,.15),transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(201,169,97,.12),transparent 40%)}
+  .social-cover.tw h2{font-family:var(--serif);font-size:52px;line-height:1;font-weight:700;position:relative;max-width:900px}
+  .social-cover.tw h2 em{color:var(--gold-3);font-style:italic}
+  .social-cover.tw .sub{font-family:var(--mono);font-size:12px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;margin-top:20px;position:relative}
+  .social-cover .brand-tab{position:absolute;top:20px;left:24px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase}
+  .social-cover .brand-tab svg{width:22px;height:22px}
+
+  /* ─── SOCIAL POST TEMPLATES ─── */
+  .posts{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .post{aspect-ratio:1/1;border-radius:2px;padding:40px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 20px 40px -30px rgba(10,22,40,.4)}
+  .post.stat{background:var(--navy);color:var(--ivory)}
+  .post.stat::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.24),transparent 55%)}
+  .post.stat .num{font-family:var(--serif);font-size:120px;line-height:.95;font-weight:800;color:var(--gold-3);position:relative;letter-spacing:-.03em}
+  .post.stat .num em{font-style:normal;color:var(--gold)}
+  .post.stat .desc{font-family:var(--serif);font-size:22px;line-height:1.15;font-weight:600;max-width:280px;position:relative}
+  .post.stat .foot{position:relative;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase;display:flex;justify-content:space-between}
+
+  .post.quote{background:var(--ivory);color:var(--navy);border:1px solid var(--line)}
+  .post.quote .marks{font-family:var(--serif);font-size:120px;color:var(--gold);line-height:.6;height:40px}
+  .post.quote .txt{font-family:var(--serif);font-size:20px;line-height:1.35;font-weight:600;letter-spacing:-.005em}
+  .post.quote .txt em{font-style:italic;color:var(--red)}
+  .post.quote .who{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);border-top:1px solid var(--line);padding-top:12px}
+  .post.quote .who b{display:block;color:var(--navy);font-family:var(--serif);font-size:13px;letter-spacing:0;text-transform:none;margin-bottom:2px;font-weight:700}
+
+  .post.tip{background:var(--gold);color:var(--navy)}
+  .post.tip .num{font-family:var(--serif);font-size:80px;font-weight:800;line-height:1;color:var(--navy)}
+  .post.tip .num span{font-family:var(--mono);font-size:10px;letter-spacing:.24em;font-weight:500;display:block;margin-bottom:8px;text-transform:uppercase}
+  .post.tip h4{font-family:var(--serif);font-size:26px;line-height:1.1;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+  .post.tip p{font-size:13px;line-height:1.5;color:var(--navy);opacity:.85}
+  .post.tip .foot{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--navy)}
+
+  .post.scripture{background:var(--navy-2);color:var(--ivory);text-align:center;justify-content:center;align-items:center}
+  .post.scripture::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(201,169,97,.18),transparent 60%)}
+  .post.scripture .cross{width:40px;height:40px;color:var(--gold);position:relative}
+  .post.scripture .verse{font-family:var(--serif);font-style:italic;font-size:22px;line-height:1.35;font-weight:400;position:relative;margin-top:24px;max-width:340px}
+  .post.scripture .ref{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;margin-top:20px;position:relative}
+
+  .post.service{background:var(--ivory);color:var(--navy);border-top:6px solid var(--red)}
+  .post.service .badge{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;font-weight:600}
+  .post.service h4{font-family:var(--serif);font-size:32px;line-height:1.05;font-weight:700;letter-spacing:-.01em}
+  .post.service .list{font-size:13px;line-height:1.9;color:var(--slate)}
+  .post.service .list b{color:var(--navy);font-weight:600}
+
+  .post.cta{background:linear-gradient(135deg,var(--red) 0%, #6d1616 100%);color:var(--ivory)}
+  .post.cta .top{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-3)}
+  .post.cta h4{font-family:var(--serif);font-size:38px;line-height:1;font-weight:800;letter-spacing:-.01em}
+  .post.cta h4 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .post.cta .btn{background:var(--gold);color:var(--navy);padding:14px 20px;text-align:center;font-family:var(--sans);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px;border-radius:2px}
+
+  /* ─── PATTERN / BACKGROUND ─── */
+  .bg-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+  .bg-tile{aspect-ratio:1.6/1;border-radius:2px;position:relative;overflow:hidden;box-shadow:0 20px 40px -30px rgba(10,22,40,.4)}
+  .bg-tile .lbl{position:absolute;top:16px;left:16px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75);z-index:2}
+  .bg-tile.light .lbl{color:rgba(10,22,40,.6)}
+  .bg-a{background:
+    radial-gradient(circle at 20% 20%, rgba(201,169,97,.22),transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(201,169,97,.15),transparent 45%),
+    var(--navy)}
+  .bg-b{background:
+    repeating-linear-gradient(45deg, rgba(201,169,97,.12) 0 1px, transparent 1px 14px),
+    var(--navy)}
+  .bg-c{background:var(--ivory);position:relative}
+  .bg-c::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 50% 50%, transparent 30%, var(--ivory-2) 70%),
+    repeating-linear-gradient(0deg, transparent 0 20px, rgba(10,22,40,.05) 20px 21px)}
+  .bg-d{background:
+    linear-gradient(180deg, var(--navy) 0%, var(--navy-3) 100%);position:relative}
+  .bg-d::before{content:"";position:absolute;inset:0;
+    background-image:radial-gradient(circle, rgba(201,169,97,.14) 1px, transparent 1px);
+    background-size:24px 24px}
+  .bg-e{background:var(--gold);position:relative}
+  .bg-e::before{content:"";position:absolute;inset:0;background:
+    repeating-linear-gradient(90deg, rgba(10,22,40,.08) 0 1px, transparent 1px 22px)}
+  .bg-f{background:var(--ivory);position:relative;overflow:hidden}
+  .bg-f svg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:70%;height:70%;opacity:.08}
+
+  /* ─── WEB HEADER / FOOTER ─── */
+  .web-head{background:var(--navy);color:var(--ivory);padding:0;border-radius:2px;overflow:hidden;box-shadow:0 20px 40px -30px rgba(10,22,40,.4)}
+  .web-head .top-bar{background:#050D19;padding:8px 32px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--gold-3);text-transform:uppercase}
+  .web-head .top-bar span{display:flex;gap:20px}
+  .web-head .main-row{padding:22px 32px;display:flex;align-items:center;justify-content:space-between;gap:32px}
+  .web-head nav{display:flex;gap:28px;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ivory)}
+  .web-head nav a{color:var(--ivory);opacity:.9;text-decoration:none}
+  .web-head nav a.active{color:var(--gold-3);opacity:1;border-bottom:2px solid var(--gold);padding-bottom:2px}
+  .web-head .cta{background:var(--red);color:var(--ivory);padding:12px 20px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:2px;text-decoration:none}
+  .web-head.on-dark .logo-word{color:var(--ivory)}
+
+  .web-foot{background:var(--navy);color:var(--ivory);padding:56px 48px 32px;border-radius:2px;overflow:hidden;position:relative;box-shadow:0 20px 40px -30px rgba(10,22,40,.4)}
+  .web-foot::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 90% 20%, rgba(201,169,97,.12),transparent 50%);pointer-events:none}
+  .web-foot .grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;position:relative}
+  .web-foot h5{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;font-weight:600}
+  .web-foot .brand-blurb{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--gold-3);margin-top:14px;line-height:1.5;max-width:280px}
+  .web-foot ul{list-style:none}
+  .web-foot ul li{font-size:13px;line-height:2;color:var(--ivory);opacity:.85}
+  .web-foot .verse{margin-top:32px;padding-top:24px;border-top:1px solid rgba(201,169,97,.25);font-family:var(--serif);font-style:italic;font-size:14px;color:var(--gold-3);text-align:center;position:relative}
+  .web-foot .legal{margin-top:16px;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:rgba(247,243,234,.6);text-transform:uppercase;position:relative}
+
+  /* ─── PITCH COVER ─── */
+  .pitch{background:var(--navy);color:var(--ivory);aspect-ratio:16/9;position:relative;overflow:hidden;border-radius:2px;padding:64px 72px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 30px 60px -40px rgba(10,22,40,.5)}
+  .pitch::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 90% 30%, rgba(201,169,97,.24),transparent 55%),
+    radial-gradient(circle at 10% 90%, rgba(139,31,31,.15),transparent 50%)}
+  .pitch .top{position:relative;display:flex;justify-content:space-between;align-items:flex-start}
+  .pitch h2{font-family:var(--serif);font-size:78px;line-height:.98;font-weight:800;letter-spacing:-.02em;position:relative;max-width:900px}
+  .pitch h2 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .pitch .sub{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--gold-3);margin-top:20px;position:relative}
+  .pitch .foot{position:relative;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gold-3);text-transform:uppercase}
+
+  /* ─── VOICE ─── */
+  .voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .voice-card{background:var(--white);border:1px solid var(--line);padding:32px;border-radius:2px}
+  .voice-card .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;margin-bottom:16px;font-weight:600}
+  .voice-card h4{font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:12px}
+  .voice-list{list-style:none}
+  .voice-list li{padding:10px 0;font-size:14px;color:var(--slate);border-bottom:1px dashed var(--line);display:flex;gap:12px}
+  .voice-list li::before{content:"→";color:var(--gold-2);font-family:var(--mono);font-weight:600;flex:none}
+  .voice-list.dont li::before{content:"×";color:var(--red)}
+  .voice-list li:last-child{border:0}
+  .taglines{background:var(--white);border:1px solid var(--line);padding:32px;border-radius:2px;margin-top:24px}
+  .taglines h4{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin-bottom:20px}
+  .taglines .list{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .taglines .tag{font-family:var(--serif);font-size:22px;font-weight:700;line-height:1.2;padding:16px 20px;border-left:3px solid var(--gold);background:var(--ivory)}
+  .taglines .tag em{color:var(--red);font-style:italic}
+
+  /* ─── SPACING SYSTEM ─── */
+  .space-list{background:var(--white);border:1px solid var(--line);padding:32px;border-radius:2px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .space-cell{display:flex;flex-direction:column;gap:8px}
+  .space-cell .bar{background:var(--navy);height:12px;border-radius:1px}
+  .space-cell .name{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase}
+  .space-cell .val{font-family:var(--serif);font-size:20px;font-weight:700}
+
+  /* ─── FINAL FOOT ─── */
+  .end{border-top:1px solid var(--navy);margin-top:48px;padding-top:32px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase}
+  .end .verse{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--navy);text-transform:none;letter-spacing:0;margin-bottom:12px}
+
+  @media (max-width:900px){
+    .cover h1{font-size:52px}
+    .logo-grid,.type-grid,.card-row,.email-grid,.posts,.bg-grid,.voice-grid{grid-template-columns:1fr}
+    .swatches{grid-template-columns:repeat(2,1fr)}
+    .web-foot .grid{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- REUSABLE LOGO MARK (SVG SYMBOL) -->
+<!-- ═══════════════════════════════════════════════ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Primary Mark: shield + pulpit/cross + document lines -->
+    <symbol id="tcp-mark" viewBox="0 0 100 100">
+      <!-- shield -->
+      <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor" stroke="none"/>
+      <!-- inner ivory shield -->
+      <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="var(--gold, #C9A961)" stroke-width="1.5" opacity=".55"/>
+      <!-- cross beam (subtle) -->
+      <rect x="46" y="26" width="8" height="46" fill="var(--gold, #C9A961)"/>
+      <rect x="32" y="36" width="36" height="6" fill="var(--gold, #C9A961)"/>
+      <!-- document baseline -->
+      <rect x="26" y="76" width="48" height="1.5" fill="var(--gold, #C9A961)"/>
+      <rect x="32" y="80" width="36" height="1" fill="var(--gold, #C9A961)" opacity=".6"/>
+    </symbol>
+
+    <!-- Monogram: TCP interlock -->
+    <symbol id="tcp-mono" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width=".6" opacity=".4"/>
+      <text x="50" y="60" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="34" font-weight="800" fill="currentColor" letter-spacing="-1">TCP</text>
+      <text x="50" y="78" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="6.5" letter-spacing="2.5" fill="currentColor" opacity=".7">EST • FEDERAL</text>
+    </symbol>
+
+    <!-- Cross ornament -->
+    <symbol id="cross-orn" viewBox="0 0 40 40">
+      <rect x="18" y="4" width="4" height="32" fill="currentColor"/>
+      <rect x="8" y="14" width="24" height="4" fill="currentColor"/>
+      <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width=".6" opacity=".5"/>
+    </symbol>
+
+    <!-- Seal ornament -->
+    <symbol id="seal" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1"/>
+      <circle cx="60" cy="60" r="50" fill="none" stroke="currentColor" stroke-width=".5" opacity=".5"/>
+      <path id="curve" d="M 60 60 m -42 0 a 42 42 0 1 1 84 0" fill="none"/>
+      <text font-family="IBM Plex Mono, monospace" font-size="7" fill="currentColor" letter-spacing="2.4">
+        <textPath href="#curve" startOffset="8%">FEDERAL CONTRACTING • FAITH • EXPERTISE •</textPath>
+      </text>
+      <use href="#tcp-mark" x="30" y="30" width="60" height="60"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="page">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- DOC HEADER -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="doc-head">
+  <div>
+    <div class="meta">Brand System · Volume 01</div>
+    <div class="title" style="margin-top:6px">The Contracting Preacher — Brand Kit</div>
+  </div>
+  <div class="kv">
+    <div><b>Client</b>Dr. McKnight</div>
+    <div><b>Domain</b>thecontractingpreacher.com</div>
+    <div><b>Issued</b>Jul 2026</div>
+    <div><b>Version</b>1.0</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- COVER -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+<div class="cover">
+  <div class="corner-l">TCP · Federal Contracting · Faith · Expertise</div>
+  <div class="corner">01 / Cover</div>
+  <div>
+    <div class="logo-wrap on-dark" style="margin-bottom:56px">
+      <svg class="logo-mark" style="color:var(--gold)"><use href="#tcp-mark"/></svg>
+      <div class="logo-word">
+        <span class="top">Dr. McKnight</span>
+        <span class="main" style="font-size:26px">The Contracting Preacher</span>
+        <span class="sub">Federal Contracting Consultant</span>
+      </div>
+    </div>
+    <h1>Win federal <em>contracts</em><br>with faith &amp; expertise.</h1>
+    <div class="lede">A brand system built for the pulpit and the procurement office. Serious enough for SAM.gov. Warm enough to trust with your business.</div>
+  </div>
+  <div class="foot">
+    <div class="col">
+      <b>89%</b>
+      <span>Proposal Win Rate</span>
+    </div>
+    <div class="col">
+      <b>$50M+</b>
+      <span>Contracts Won</span>
+    </div>
+    <div class="col">
+      <b>500+</b>
+      <span>Businesses Served</span>
+    </div>
+    <div class="col scripture" style="max-width:280px;text-align:right">
+      "Commit to the Lord whatever you do, and he will establish your plans."<br>— Proverbs 16:3
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 02. LOGO SYSTEM -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">Logo System</h2>
+    <span class="sec-sub">Primary · Horizontal · Monogram · Mono</span>
+  </div>
+
+  <div class="logo-grid">
+    <!-- Primary lockup -->
+    <div class="logo-tile">
+      <span class="caption">01 · Primary Lockup</span>
+      <div class="logo-wrap logo-lg">
+        <svg class="logo-mark" style="color:var(--navy)"><use href="#tcp-mark"/></svg>
+        <div class="logo-word">
+          <span class="top">Dr. McKnight</span>
+          <span class="main">The Contracting Preacher</span>
+          <span class="sub">Federal Contracting Consultant</span>
+        </div>
+      </div>
+    </div>
+    <!-- Dark variant -->
+    <div class="logo-tile dark on-dark">
+      <span class="caption">02 · Reversed / Dark</span>
+      <div class="logo-wrap logo-lg">
+        <svg class="logo-mark" style="color:var(--gold)"><use href="#tcp-mark"/></svg>
+        <div class="logo-word">
+          <span class="top">Dr. McKnight</span>
+          <span class="main">The Contracting Preacher</span>
+          <span class="sub">Federal Contracting</span>
+        </div>
+      </div>
+    </div>
+    <!-- Monogram -->
+    <div class="logo-tile ivory">
+      <span class="caption">03 · Monogram</span>
+      <svg class="mono-mark" style="color:var(--navy)"><use href="#tcp-mono"/></svg>
+    </div>
+    <!-- Icon only navy -->
+    <div class="logo-tile">
+      <span class="caption">04 · Shield Icon</span>
+      <svg style="width:120px;height:120px;color:var(--navy)"><use href="#tcp-mark"/></svg>
+    </div>
+    <!-- Gold background -->
+    <div class="logo-tile gold on-dark">
+      <span class="caption">05 · Gold Field</span>
+      <svg style="width:110px;height:110px;color:var(--navy)"><use href="#tcp-mark"/></svg>
+    </div>
+    <!-- Seal -->
+    <div class="logo-tile">
+      <span class="caption">06 · Seal Stamp</span>
+      <svg style="width:180px;height:180px;color:var(--navy)"><use href="#seal"/></svg>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;padding:24px 32px;background:var(--white);border:1px solid var(--line);border-radius:2px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--slate);line-height:1.9">
+    <b style="color:var(--navy);letter-spacing:.16em;text-transform:uppercase">Usage Rules</b><br>
+    Minimum clear space = height of the shield mark on every side. Minimum size: 32px digital / 0.5in print for icon; 120px digital / 1.5in for full lockup. Never rotate, restretch, or place over busy imagery without a solid navy or ivory backdrop.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 03. COLOR PALETTE -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title">Color Palette</h2>
+    <span class="sec-sub">Navy · Gold · Ivory · Red · Slate</span>
+  </div>
+
+  <div class="swatches">
+    <div class="swatch">
+      <div class="chip" style="background:var(--navy)"><span class="role">Primary · 01</span></div>
+      <div class="info">
+        <div class="name">Federal Navy</div>
+        <div class="code"><span>#0A1628</span><span>rgb 10 · 22 · 40</span></div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:var(--gold)"><span class="role">Accent · 02</span></div>
+      <div class="info">
+        <div class="name">Pulpit Gold</div>
+        <div class="code"><span>#C9A961</span><span>rgb 201 · 169 · 97</span></div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:var(--red)"><span class="role">CTA · 03</span></div>
+      <div class="info">
+        <div class="name">Signal Red</div>
+        <div class="code"><span>#8B1F1F</span><span>rgb 139 · 31 · 31</span></div>
+      </div>
+    </div>
+    <div class="swatch light">
+      <div class="chip" style="background:var(--ivory);border-bottom:1px solid var(--line)"><span class="role">Neutral · 04</span></div>
+      <div class="info">
+        <div class="name">Warm Ivory</div>
+        <div class="code"><span>#F7F3EA</span><span>rgb 247 · 243 · 234</span></div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:var(--slate)"><span class="role">Text · 05</span></div>
+      <div class="info">
+        <div class="name">Slate Grey</div>
+        <div class="code"><span>#4A5568</span><span>rgb 74 · 85 · 104</span></div>
+      </div>
+    </div>
+    <div class="swatch light">
+      <div class="chip" style="background:var(--white);border-bottom:1px solid var(--line)"><span class="role">Base · 06</span></div>
+      <div class="info">
+        <div class="name">Pure White</div>
+        <div class="code"><span>#FFFFFF</span><span>rgb 255 · 255 · 255</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 04. TYPOGRAPHY -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title">Typography</h2>
+    <span class="sec-sub">Playfair Display · Inter · IBM Plex Mono</span>
+  </div>
+
+  <div class="type-grid">
+    <div class="type-card">
+      <div class="type-label">Display · Serif</div>
+      <div class="type-name">Playfair Display</div>
+      <div class="spec-serif">Aa</div>
+      <div class="type-weights">
+        <span class="w-serif" style="font-weight:400">Regular · Body serif</span>
+        <span class="w-serif" style="font-weight:600">Semibold · Subheads</span>
+        <span class="w-serif" style="font-weight:700">Bold · Headlines</span>
+        <span class="w-serif" style="font-weight:800">Extrabold · Hero</span>
+        <span class="w-serif" style="font-weight:400;font-style:italic">Italic · Scripture</span>
+      </div>
+    </div>
+    <div class="type-card">
+      <div class="type-label">Body · Sans</div>
+      <div class="type-name">Inter</div>
+      <div class="spec-sans">Aa</div>
+      <div class="type-weights">
+        <span class="w-sans" style="font-weight:400">Regular · Body copy</span>
+        <span class="w-sans" style="font-weight:500">Medium · Emphasis</span>
+        <span class="w-sans" style="font-weight:600">Semibold · UI labels</span>
+        <span class="w-sans" style="font-weight:700">Bold · CTAs</span>
+      </div>
+    </div>
+    <div class="type-card">
+      <div class="type-label">Accent · Mono</div>
+      <div class="type-name">IBM Plex Mono</div>
+      <div class="spec-mono">Aa</div>
+      <div class="type-weights">
+        <span class="w-mono" style="font-weight:400">Regular · Metadata</span>
+        <span class="w-mono" style="font-weight:500">Medium · Stats</span>
+        <span class="w-mono" style="font-weight:600">Semibold · Tags</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Type scale -->
+  <div class="scale-list" style="margin-top:24px">
+    <div class="scale-row">
+      <div class="tag">H1 · Display</div>
+      <div class="demo" style="font-family:var(--serif);font-size:64px;font-weight:800;letter-spacing:-.02em;line-height:1">Win the contract.</div>
+      <div class="spec">64/64 · Playfair 800</div>
+    </div>
+    <div class="scale-row">
+      <div class="tag">H2 · Section</div>
+      <div class="demo" style="font-family:var(--serif);font-size:44px;font-weight:700;letter-spacing:-.01em">From SAM to signed.</div>
+      <div class="spec">44/48 · Playfair 700</div>
+    </div>
+    <div class="scale-row">
+      <div class="tag">H3 · Card</div>
+      <div class="demo" style="font-family:var(--serif);font-size:28px;font-weight:600">Faith-Driven Guidance</div>
+      <div class="spec">28/34 · Playfair 600</div>
+    </div>
+    <div class="scale-row">
+      <div class="tag">Lede</div>
+      <div class="demo" style="font-family:var(--serif);font-style:italic;font-size:22px;color:var(--slate)">"Commit to the Lord whatever you do…"</div>
+      <div class="spec">22/32 · Playfair Italic</div>
+    </div>
+    <div class="scale-row">
+      <div class="tag">Body</div>
+      <div class="demo" style="font-family:var(--sans);font-size:16px;color:var(--slate);line-height:1.6;max-width:640px">Dr. McKnight brings integrity, honesty, and faith-based values to every client relationship — from SAM.gov registration to final proposal.</div>
+      <div class="spec">16/26 · Inter 400</div>
+    </div>
+    <div class="scale-row">
+      <div class="tag">Eyebrow</div>
+      <div class="demo" style="font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-2);font-weight:600">Federal Contracting Services</div>
+      <div class="spec">12 · IBM Plex Mono 600</div>
+    </div>
+    <div class="scale-row">
+      <div class="tag">Stat</div>
+      <div class="demo" style="font-family:var(--serif);font-size:56px;font-weight:800;letter-spacing:-.02em">89<span style="color:var(--gold-2)">%</span></div>
+      <div class="spec">56 · Playfair 800</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 05. BUSINESS CARDS -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <h2 class="sec-title">Business Cards</h2>
+    <span class="sec-sub">3.5 × 2 in · Print-ready</span>
+  </div>
+
+  <div class="card-row">
+    <div>
+      <div class="social-lbl">FRONT · Navy + Gold</div>
+      <div class="bcard front on-dark">
+        <div class="top">
+          <div>
+            <div class="name">Dr. McKnight</div>
+            <div class="role">Federal Contracting Consultant</div>
+          </div>
+          <svg style="width:44px;height:44px;color:var(--gold);flex:none"><use href="#tcp-mark"/></svg>
+        </div>
+        <div class="bottom">
+          <div class="contact">
+            <b>Direct</b>
+            (202) 276-2913
+          </div>
+          <div class="contact">
+            <b>Email</b>
+            info@thecontractingpreacher.com
+          </div>
+          <div class="contact">
+            <b>Web</b>
+            thecontractingpreacher.com
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="social-lbl">BACK · Ivory + Tagline</div>
+      <div class="bcard back">
+        <div class="tagline">Win federal contracts <em>with faith &amp; expertise.</em></div>
+        <div class="scripture">"Commit to the Lord whatever you do, and he will establish your plans." — Proverbs 16:3</div>
+        <div class="row">
+          <div class="stats">
+            <div><b>89<span>%</span></b>Win Rate</div>
+            <div><b>$50M<span>+</span></b>Won</div>
+            <div><b>500<span>+</span></b>Served</div>
+          </div>
+          <svg style="width:44px;height:44px;color:var(--navy);flex:none"><use href="#tcp-mono"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 06. LETTERHEAD -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">06</span>
+    <h2 class="sec-title">Letterhead</h2>
+    <span class="sec-sub">US Letter · 8.5 × 11 in</span>
+  </div>
+
+  <div style="max-width:720px;margin:0 auto">
+    <div class="letter">
+      <div class="lh-head">
+        <div class="logo-wrap">
+          <svg class="logo-mark" style="width:56px;height:56px;color:var(--navy)"><use href="#tcp-mark"/></svg>
+          <div class="logo-word">
+            <span class="top">Dr. McKnight</span>
+            <span class="main">The Contracting Preacher</span>
+            <span class="sub">Federal Contracting Consultant</span>
+          </div>
+        </div>
+        <div class="lh-right">
+          <b>Direct</b>
+          (202) 276-2913<br>
+          info@thecontractingpreacher.com<br>
+          thecontractingpreacher.com
+        </div>
+      </div>
+
+      <div class="date">July 23, 2026</div>
+      <div class="addr">
+        <b>Ms. Angela Torres</b><br>
+        President, Torres Logistics Group<br>
+        4020 Palmetto Blvd, Columbia, SC 29204
+      </div>
+
+      <p>Dear Ms. Torres,</p>
+      <p>Thank you for taking the step of exploring federal contracting opportunities for Torres Logistics Group. As we discussed on our consultation, your business is well-positioned to compete for the transportation and warehousing set-asides currently opening across the Southeast region.</p>
+      <p>Enclosed you'll find the roadmap we've prepared: SAM.gov registration timeline, WOSB certification checklist, and a shortlist of eight active solicitations that match your NAICS codes. We recommend beginning with the two 8(a)-eligible opportunities on page three.</p>
+      <p>Every step of this process is walked in partnership with you — and, as our practice has always been, in the trust that good work faithfully done is honored.</p>
+
+      <div class="sign">Dr. McKnight</div>
+      <div class="sign-line">Federal Contracting Consultant · The Contracting Preacher</div>
+
+      <div class="lh-foot">
+        <span>1225 Laurel Street, Ste 415 · Columbia, SC 29201</span>
+        <span>SAM.gov Certified · SBA Approved · Est. Federal</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 07. EMAIL SIGNATURES -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">07</span>
+    <h2 class="sec-title">Email Signatures</h2>
+    <span class="sec-sub">HTML-safe · Outlook/Gmail tested</span>
+  </div>
+
+  <div class="sig-wrap">
+    <div class="lbl">Signature 01 · Full authority</div>
+    <div class="sig">
+      <div class="row">
+        <svg style="width:64px;height:64px;color:var(--navy);flex:none"><use href="#tcp-mark"/></svg>
+        <div class="divider"></div>
+        <div>
+          <div class="name">Dr. McKnight</div>
+          <div class="title">Federal Contracting Consultant · The Contracting Preacher</div>
+          <div class="contact">
+            <b>D</b> (202) 276-2913 &nbsp;·&nbsp; <b>E</b> <a href="#">info@thecontractingpreacher.com</a><br>
+            <b>W</b> <a href="#">thecontractingpreacher.com</a> &nbsp;·&nbsp; Columbia · Charleston · Summerville · Hilton Head
+          </div>
+          <a class="cta" href="#">Book a Free Consultation →</a>
+          <div class="quote">"Commit to the Lord whatever you do, and he will establish your plans." — Proverbs 16:3</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sig-wrap">
+    <div class="lbl">Signature 02 · Compact daily</div>
+    <div class="sig2">
+      <div class="name">Dr. McKnight</div>
+      <div class="title">The Contracting Preacher · Federal Contracting Consultant</div>
+      <div>(202) 276-2913 · info@thecontractingpreacher.com · thecontractingpreacher.com</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 08. EMAIL TEMPLATES -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">08</span>
+    <h2 class="sec-title">Email Templates</h2>
+    <span class="sec-sub">Welcome · Newsletter · Consultation</span>
+  </div>
+
+  <div class="email-grid">
+    <!-- Welcome -->
+    <div>
+      <div class="email-lbl">Template 01 · Welcome / Onboarding</div>
+      <div class="email">
+        <div class="email-inner">
+          <div class="email-hero">
+            <div class="brand">
+              <svg style="width:32px;height:32px;color:var(--gold)"><use href="#tcp-mark"/></svg>
+              <div class="brand-word">The Contracting Preacher<span>Dr. McKnight · Federal</span></div>
+            </div>
+            <h2>Welcome. Let's map your road to a federal contract.</h2>
+            <div class="sub">— Dr. McKnight</div>
+          </div>
+          <div class="email-body">
+            <p>Angela,</p>
+            <p>Grateful you took the first step. Over the next 7 days I'll walk you through everything you need to be SAM.gov-ready and positioned for your first (or next) federal contract.</p>
+            <div class="stat-strip">
+              <div class="st"><b>89%</b><span>Win Rate</span></div>
+              <div class="st"><b>$50M+</b><span>Won</span></div>
+              <div class="st"><b>500+</b><span>Served</span></div>
+            </div>
+            <p><b>Your next step:</b> book your 30-minute strategy call. No pressure — just clarity.</p>
+            <a href="#" class="btn">Book My Strategy Call →</a>
+            <p class="signoff">In service, Dr. McKnight</p>
+          </div>
+          <div class="email-foot">
+            (202) 276-2913 · info@thecontractingpreacher.com<br>
+            <a href="#">Unsubscribe</a> · <a href="#">Preferences</a> · <a href="#">Website</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div>
+      <div class="email-lbl">Template 02 · Weekly Newsletter</div>
+      <div class="email">
+        <div class="email-inner">
+          <div class="email-hero" style="padding:24px 40px">
+            <div class="brand">
+              <svg style="width:28px;height:28px;color:var(--gold)"><use href="#tcp-mark"/></svg>
+              <div class="brand-word" style="font-size:13px">From the Pulpit<span>Issue No. 47 · Federal Contracts Weekly</span></div>
+            </div>
+            <h2 style="font-size:24px;margin-top:16px;max-width:none">Three 8(a) contracts closing this Friday.</h2>
+          </div>
+          <div class="email-body">
+            <p><b style="color:var(--gold-2);font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase">This week</b></p>
+            <ul>
+              <li>USDA — Rural facility maintenance (up to $2.4M)</li>
+              <li>Dept. of Veterans Affairs — IT staffing (up to $890K)</li>
+              <li>GSA — Janitorial Region 4 (up to $1.1M)</li>
+            </ul>
+            <p><b style="color:var(--gold-2);font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase">Verse of the week</b></p>
+            <p style="font-family:var(--serif);font-style:italic;color:var(--slate);border-left:3px solid var(--gold);padding-left:14px">"Whatever you do, work at it with all your heart, as working for the Lord." — Colossians 3:23</p>
+            <a href="#" class="btn">See This Week's Opportunities →</a>
+          </div>
+          <div class="email-foot">
+            2,000+ small business owners · Delivered Fridays<br>
+            <a href="#">Unsubscribe</a> · <a href="#">Website</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 09. SOCIAL COVERS -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">09</span>
+    <h2 class="sec-title">Social Covers</h2>
+    <span class="sec-sub">LinkedIn · Facebook · Twitter/X · YouTube</span>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:32px">
+    <div>
+      <div class="social-lbl">LinkedIn Banner · 1584 × 396</div>
+      <div class="social-cover linkedin on-dark">
+        <div class="lead">
+          <h2>Federal contracts, won <em>with faith.</em></h2>
+          <div class="sub">Dr. McKnight · The Contracting Preacher</div>
+        </div>
+        <div class="stats">
+          <div class="st"><b>89%</b><span>Win Rate</span></div>
+          <div class="st"><b>$50M+</b><span>Contracts Won</span></div>
+          <div class="st"><b>500+</b><span>Businesses</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="social-lbl">Facebook Cover · 820 × 312</div>
+      <div class="social-cover fb on-dark">
+        <div class="lead">
+          <h2>SAM.gov to signed <em>— in weeks, not years.</em></h2>
+        </div>
+        <div class="cta">Free 30-min Consultation</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="social-lbl">Twitter/X Header · 1500 × 500</div>
+      <div class="social-cover tw on-dark">
+        <div class="brand-tab">
+          <svg style="color:var(--gold)"><use href="#tcp-mark"/></svg>
+          The Contracting Preacher
+        </div>
+        <h2>Small business owners <em>win federal contracts</em> here.</h2>
+        <div class="sub">SAM · SBA · 8(a) · WOSB · HUBZone · SDVOSB</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 10. SOCIAL POST TEMPLATES -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">10</span>
+    <h2 class="sec-title">Social Post Templates</h2>
+    <span class="sec-sub">1080 × 1080 · Instagram · LinkedIn · Facebook</span>
+  </div>
+
+  <div class="posts">
+    <div class="post stat">
+      <div class="num">89<em>%</em></div>
+      <div class="desc">Proposal win rate — more than double the industry standard.</div>
+      <div class="foot">
+        <span>The Contracting Preacher</span>
+        <span>#01</span>
+      </div>
+    </div>
+
+    <div class="post quote">
+      <div class="marks">"</div>
+      <div class="txt">Your success is our <em>ministry.</em></div>
+      <div class="who"><b>Dr. McKnight</b>Federal Contracting Consultant</div>
+    </div>
+
+    <div class="post tip">
+      <div>
+        <div class="num"><span>Tip · 03</span>Check<br>your NAICS.</div>
+        <p>Wrong code = wrong contracts. Get certified for what you actually do — not what looks close.</p>
+      </div>
+      <div class="foot">TheContractingPreacher.com</div>
+    </div>
+
+    <div class="post scripture">
+      <svg class="cross"><use href="#cross-orn"/></svg>
+      <div class="verse">"Commit to the Lord whatever you do, and he will establish your plans."</div>
+      <div class="ref">— Proverbs 16:3</div>
+    </div>
+
+    <div class="post service">
+      <div>
+        <div class="badge">Services · 06</div>
+        <h4 style="margin-top:8px">What we handle for you.</h4>
+      </div>
+      <div class="list">
+        <b>01</b> SAM.gov registration<br>
+        <b>02</b> 8(a) &amp; WOSB certification<br>
+        <b>03</b> Bid &amp; proposal writing<br>
+        <b>04</b> Compliance &amp; post-award support
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate)">→ Book a call</div>
+    </div>
+
+    <div class="post cta">
+      <div class="top">Free 30-min consultation</div>
+      <h4>Ready to win <em>your first contract?</em></h4>
+      <div class="btn">Book My Call →</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 11. BACKGROUNDS / PATTERNS -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">11</span>
+    <h2 class="sec-title">Backgrounds &amp; Patterns</h2>
+    <span class="sec-sub">Presentation · Web · Print</span>
+  </div>
+
+  <div class="bg-grid">
+    <div class="bg-tile bg-a"><span class="lbl">01 · Navy Aurora</span></div>
+    <div class="bg-tile bg-b"><span class="lbl">02 · Gold Pinstripe</span></div>
+    <div class="bg-tile bg-c light"><span class="lbl">03 · Ivory Ledger</span></div>
+    <div class="bg-tile bg-d"><span class="lbl">04 · Navy Dot Grid</span></div>
+    <div class="bg-tile bg-e light"><span class="lbl">05 · Gold Column</span></div>
+    <div class="bg-tile bg-f light">
+      <span class="lbl">06 · Ivory Seal</span>
+      <svg style="color:var(--navy)"><use href="#seal"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 12. WEB HEADER / FOOTER -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">12</span>
+    <h2 class="sec-title">Web Header &amp; Footer</h2>
+    <span class="sec-sub">Site chrome · Reusable across pages</span>
+  </div>
+
+  <div class="social-lbl">Website Header</div>
+  <div class="web-head on-dark" style="margin-bottom:32px">
+    <div class="top-bar">
+      <span>
+        <span>📞 (202) 276-2913</span>
+        <span>✉ info@thecontractingpreacher.com</span>
+      </span>
+      <span>Columbia · Charleston · Summerville · Hilton Head</span>
+    </div>
+    <div class="main-row">
+      <div class="logo-wrap">
+        <svg class="logo-mark" style="width:44px;height:44px;color:var(--gold)"><use href="#tcp-mark"/></svg>
+        <div class="logo-word">
+          <span class="top">Dr. McKnight</span>
+          <span class="main" style="font-size:18px">The Contracting Preacher</span>
+        </div>
+      </div>
+      <nav>
+        <a href="#" class="active">Home</a>
+        <a href="#">Services</a>
+        <a href="#">Process</a>
+        <a href="#">About Dr. McKnight</a>
+        <a href="#">Testimonials</a>
+        <a href="#">Contact</a>
+      </nav>
+      <a class="cta" href="#">Free Consultation</a>
+    </div>
+  </div>
+
+  <div class="social-lbl">Website Footer</div>
+  <div class="web-foot on-dark">
+    <div class="grid">
+      <div>
+        <div class="logo-wrap on-dark">
+          <svg class="logo-mark" style="width:44px;height:44px;color:var(--gold)"><use href="#tcp-mark"/></svg>
+          <div class="logo-word">
+            <span class="top">Dr. McKnight</span>
+            <span class="main" style="font-size:18px">The Contracting Preacher</span>
+          </div>
+        </div>
+        <div class="brand-blurb">"Where faith meets federal contracts. Where preparation meets opportunity."</div>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <ul>
+          <li>SAM.gov Registration</li>
+          <li>8(a) Certification</li>
+          <li>WOSB / HUBZone / SDVOSB</li>
+          <li>Bid &amp; Proposal Writing</li>
+          <li>Compliance Support</li>
+        </ul>
+      </div>
+      <div>
+        <h5>Offices</h5>
+        <ul>
+          <li>Columbia, SC (HQ)</li>
+          <li>N. Charleston, SC</li>
+          <li>Summerville, SC</li>
+          <li>Hilton Head, SC</li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <ul>
+          <li>(202) 276-2913</li>
+          <li>info@thecontractingpreacher.com</li>
+          <li>Mon–Fri · 8am–6pm ET</li>
+        </ul>
+      </div>
+    </div>
+    <div class="verse">"Commit to the Lord whatever you do, and he will establish your plans." — Proverbs 16:3</div>
+    <div class="legal">© 2026 The Contracting Preacher · All rights reserved · Privacy · Terms · Accessibility</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 13. PITCH / PROPOSAL COVER -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">13</span>
+    <h2 class="sec-title">Presentation / Proposal Cover</h2>
+    <span class="sec-sub">16 : 9 · Deck opener + client-facing document cover</span>
+  </div>
+
+  <div class="pitch on-dark">
+    <div class="top">
+      <div class="logo-wrap on-dark">
+        <svg class="logo-mark" style="width:52px;height:52px;color:var(--gold)"><use href="#tcp-mark"/></svg>
+        <div class="logo-word">
+          <span class="top">Dr. McKnight</span>
+          <span class="main">The Contracting Preacher</span>
+          <span class="sub">Federal Contracting Consultant</span>
+        </div>
+      </div>
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase;text-align:right">
+        Proposal Cover<br>
+        <span style="color:var(--ivory);opacity:.7">Confidential · 2026</span>
+      </div>
+    </div>
+    <div>
+      <h2>Your roadmap<br>to <em>federal</em> contracts.</h2>
+      <div class="sub">Prepared for Torres Logistics Group · July 2026</div>
+    </div>
+    <div class="foot">
+      <span>thecontractingpreacher.com</span>
+      <span>Columbia · Charleston · Summerville · Hilton Head</span>
+      <span>(202) 276-2913</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 14. VOICE & MESSAGING -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">14</span>
+    <h2 class="sec-title">Voice &amp; Messaging</h2>
+    <span class="sec-sub">Faith · Federal · Faithful</span>
+  </div>
+
+  <div class="voice-grid">
+    <div class="voice-card">
+      <div class="lbl">Do</div>
+      <h4>Sound like this</h4>
+      <ul class="voice-list">
+        <li>Straight-shooting: "We only bid when you can win."</li>
+        <li>Faith-anchored, never preachy: verse below the fold, not the headline.</li>
+        <li>Specific over abstract: "$50M+ won," not "millions won."</li>
+        <li>Warm authority: mentor tone, not sales tone.</li>
+        <li>Federal-fluent: use SAM.gov, 8(a), NAICS, set-aside, RFP correctly.</li>
+      </ul>
+    </div>
+    <div class="voice-card">
+      <div class="lbl">Don't</div>
+      <h4>Never sound like this</h4>
+      <ul class="voice-list dont">
+        <li>Hype-marketing: no "SECRETS THEY DON'T WANT YOU TO KNOW."</li>
+        <li>Prosperity-pitch: faith is stewardship, not a payout.</li>
+        <li>Government jargon dumped without translation.</li>
+        <li>Generic small-business coaching cliché.</li>
+        <li>Emoji-heavy or overly casual — this is a fiduciary voice.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="taglines">
+    <h4>Approved Taglines</h4>
+    <div class="list">
+      <div class="tag">Win federal contracts <em>with faith &amp; expertise.</em></div>
+      <div class="tag">From SAM.gov <em>to signed.</em></div>
+      <div class="tag">Your success is <em>our ministry.</em></div>
+      <div class="tag">We only bid <em>when you can win.</em></div>
+      <div class="tag">Federal contracting, <em>faithfully done.</em></div>
+      <div class="tag">Preparation meets <em>opportunity.</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 15. SPACING & GRID -->
+<!-- ═══════════════════════════════════════════════ -->
+<section>
+  <div class="sec-head">
+    <span class="sec-num">15</span>
+    <h2 class="sec-title">Spacing System</h2>
+    <span class="sec-sub">4pt baseline · Rhythm across all assets</span>
+  </div>
+  <div class="space-list">
+    <div class="space-cell"><div class="bar" style="width:4px"></div><div class="name">xs</div><div class="val">4px</div></div>
+    <div class="space-cell"><div class="bar" style="width:8px"></div><div class="name">sm</div><div class="val">8px</div></div>
+    <div class="space-cell"><div class="bar" style="width:16px"></div><div class="name">md</div><div class="val">16px</div></div>
+    <div class="space-cell"><div class="bar" style="width:24px"></div><div class="name">lg</div><div class="val">24px</div></div>
+    <div class="space-cell"><div class="bar" style="width:32px"></div><div class="name">xl</div><div class="val">32px</div></div>
+    <div class="space-cell"><div class="bar" style="width:48px"></div><div class="name">2xl</div><div class="val">48px</div></div>
+    <div class="space-cell"><div class="bar" style="width:64px"></div><div class="name">3xl</div><div class="val">64px</div></div>
+    <div class="space-cell"><div class="bar" style="width:96px"></div><div class="name">4xl</div><div class="val">96px</div></div>
+  </div>
+</section>
+
+<div class="end">
+  <div class="verse">"Commit to the Lord whatever you do, and he will establish your plans."</div>
+  Brand Kit · Volume 01 · The Contracting Preacher · Dr. McKnight · Issued July 2026
+</div>
+
+</div>
+</body>
+</html>

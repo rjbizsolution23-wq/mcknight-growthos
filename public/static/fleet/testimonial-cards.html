@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Testimonial Cards — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:56px 32px 100px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1300px;margin:0 auto}
+
+  .doc-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--navy);padding-bottom:20px;margin-bottom:36px}
+  .doc-head .title{font-family:var(--serif);font-size:26px;font-weight:700}
+  .doc-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .doc-head .kv{display:flex;gap:28px;font-family:var(--mono);font-size:11px;color:var(--slate)}
+  .doc-head .kv b{color:var(--navy);display:block;letter-spacing:.14em;font-weight:600;text-transform:uppercase}
+
+  .lockdown{background:#FBEEEE;border-left:4px solid var(--red);padding:14px 22px;margin-bottom:36px;border-radius:0 2px 2px 0;font-size:13.5px;color:#5B1414;line-height:1.55}
+  .lockdown b{font-weight:700;font-family:var(--mono);letter-spacing:.05em;font-size:11px;text-transform:uppercase;display:block;margin-bottom:4px}
+
+  section{margin-bottom:56px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:22px;border-bottom:1px solid rgba(10,22,40,.15);padding-bottom:14px}
+  .sec-num{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);font-weight:600}
+  .sec-title{font-family:var(--serif);font-size:28px;font-weight:800;letter-spacing:-.015em}
+  .sec-title em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-sub{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+
+  /* SQUARE POSTS */
+  .row-sq{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .sq{aspect-ratio:1/1;border-radius:2px;padding:40px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 20px 40px -30px rgba(10,22,40,.35)}
+
+  /* Variant A · Big quote on navy */
+  .sq.a{background:var(--navy);color:var(--ivory)}
+  .sq.a::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.24),transparent 55%)}
+  .sq.a .marks{font-family:var(--serif);font-size:120px;color:var(--gold);line-height:.6;height:40px;position:relative}
+  .sq.a .txt{font-family:var(--serif);font-size:26px;line-height:1.2;font-weight:700;position:relative;letter-spacing:-.01em}
+  .sq.a .txt em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .sq.a .who{position:relative;padding-top:14px;border-top:1px solid rgba(201,169,97,.3);font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase}
+  .sq.a .who b{display:block;font-family:var(--serif);font-size:15px;color:var(--ivory);letter-spacing:-.005em;text-transform:none;font-weight:700;margin-bottom:2px}
+
+  /* Variant B · Ivory paper */
+  .sq.b{background:var(--ivory);color:var(--navy);border-top:6px solid var(--gold)}
+  .sq.b .marks{font-family:var(--serif);font-size:120px;color:var(--gold-2);line-height:.6;height:40px}
+  .sq.b .txt{font-family:var(--serif);font-size:24px;line-height:1.25;font-weight:700;letter-spacing:-.005em}
+  .sq.b .txt em{font-style:italic;color:var(--red)}
+  .sq.b .who{padding-top:14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase}
+  .sq.b .who b{display:block;font-family:var(--serif);font-size:15px;color:var(--navy);letter-spacing:-.005em;text-transform:none;font-weight:700;margin-bottom:2px}
+
+  /* Variant C · Portrait split */
+  .sq.c{background:var(--navy);color:var(--ivory);padding:0;display:grid;grid-template-columns:1fr 1.4fr}
+  .sq.c .portrait{background:linear-gradient(135deg,var(--gold),var(--gold-2));display:flex;align-items:center;justify-content:center;position:relative;padding:14px}
+  .sq.c .portrait::after{content:"CLIENT PORTRAIT";position:absolute;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:rgba(10,22,40,.5);text-transform:uppercase;bottom:10px;left:14px;font-weight:600}
+  .sq.c .portrait svg{width:120px;height:120px;opacity:.15;color:var(--navy)}
+  .sq.c .side{padding:32px 30px;display:flex;flex-direction:column;justify-content:space-between}
+  .sq.c .marks{font-family:var(--serif);font-size:80px;color:var(--gold);line-height:.5;height:30px}
+  .sq.c .txt{font-family:var(--serif);font-size:19px;line-height:1.25;font-weight:700;letter-spacing:-.005em}
+  .sq.c .txt em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .sq.c .who{padding-top:12px;border-top:1px solid rgba(201,169,97,.3);font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase}
+  .sq.c .who b{display:block;font-family:var(--serif);font-size:13px;color:var(--ivory);letter-spacing:0;text-transform:none;font-weight:700;margin-bottom:2px}
+
+  /* Variant D · Stat + quote */
+  .sq.d{background:linear-gradient(135deg,var(--navy),var(--navy-2));color:var(--ivory)}
+  .sq.d .stat{font-family:var(--serif);font-size:110px;font-weight:800;color:var(--gold-3);letter-spacing:-.03em;line-height:.9}
+  .sq.d .stat em{font-style:normal;color:var(--gold);font-size:56px}
+  .sq.d .stat-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-top:2px}
+  .sq.d .body{padding-top:12px;border-top:1px solid rgba(201,169,97,.25)}
+  .sq.d .txt{font-family:var(--serif);font-size:17px;line-height:1.35;font-weight:500;font-style:italic;color:var(--gold-3)}
+  .sq.d .who{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--ivory);text-transform:uppercase;margin-top:8px}
+  .sq.d .who b{color:var(--gold-3);font-weight:700}
+
+  /* Variant E · Gold field */
+  .sq.e{background:var(--gold);color:var(--navy)}
+  .sq.e .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--red);text-transform:uppercase;font-weight:700}
+  .sq.e .txt{font-family:var(--serif);font-size:26px;line-height:1.2;font-weight:800;letter-spacing:-.01em;margin-top:12px}
+  .sq.e .txt em{font-style:italic;color:#5B1414;font-weight:600}
+  .sq.e .who{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--navy);text-transform:uppercase;padding-top:14px;border-top:1px solid rgba(10,22,40,.2);font-weight:700}
+  .sq.e .who b{display:block;font-family:var(--serif);font-size:14px;color:var(--navy);letter-spacing:-.005em;text-transform:none;font-weight:800;margin-bottom:2px}
+
+  /* Variant F · Video-thumb style */
+  .sq.f{background:var(--navy-2);color:var(--ivory);padding:0;position:relative;overflow:hidden}
+  .sq.f .frame{position:absolute;inset:20px;border:2px solid var(--gold);border-radius:2px}
+  .sq.f .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--navy);font-size:24px;padding-left:6px}
+  .sq.f .caption{position:absolute;bottom:32px;left:32px;right:32px}
+  .sq.f .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .sq.f h4{font-family:var(--serif);font-size:19px;font-weight:700;line-height:1.15;margin-top:4px;color:var(--ivory);letter-spacing:-.005em}
+  .sq.f .who{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase;margin-top:6px}
+
+  /* HORIZONTAL BAR */
+  .row-h{display:grid;grid-template-columns:1fr;gap:16px}
+  .bar{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);padding:24px 32px;border-radius:0 2px 2px 0;display:grid;grid-template-columns:60px 1fr auto;gap:24px;align-items:center;box-shadow:0 8px 22px -18px rgba(10,22,40,.2)}
+  .bar .avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-2));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;font-weight:800;color:var(--navy);border:2px solid var(--gold-2)}
+  .bar .txt{font-family:var(--serif);font-size:18px;line-height:1.4;color:var(--navy);letter-spacing:-.005em;font-style:italic}
+  .bar .txt b{font-style:normal;font-weight:700;color:var(--navy)}
+  .bar .who{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;font-weight:600;text-align:right;line-height:1.6}
+  .bar .who b{display:block;font-family:var(--serif);font-size:14px;color:var(--navy);letter-spacing:0;text-transform:none;font-weight:700;margin-bottom:2px;font-style:normal}
+
+  /* WEB TESTIMONIAL SECTION */
+  .web-block{background:var(--navy);color:var(--ivory);padding:56px 64px;border-radius:2px;position:relative;overflow:hidden}
+  .web-block::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.22),transparent 50%);pointer-events:none}
+  .web-block .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600;position:relative}
+  .web-block h3{font-family:var(--serif);font-size:44px;font-weight:800;letter-spacing:-.015em;line-height:1;margin:8px 0 32px;position:relative;max-width:820px}
+  .web-block h3 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .web-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative}
+  .wt{background:rgba(247,243,234,.05);border:1px solid rgba(201,169,97,.15);border-radius:2px;padding:24px 26px}
+  .wt .marks{font-family:var(--serif);font-size:64px;color:var(--gold);line-height:.4;height:20px;margin-bottom:14px}
+  .wt .txt{font-family:var(--serif);font-size:16px;line-height:1.5;color:var(--gold-3);font-style:italic;margin-bottom:16px}
+  .wt .who{padding-top:12px;border-top:1px solid rgba(201,169,97,.15);font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .wt .who b{display:block;font-family:var(--serif);font-size:13px;color:var(--ivory);letter-spacing:0;text-transform:none;font-weight:700;margin-bottom:2px;font-style:normal}
+
+  /* EMAIL / SLACK TESTIMONIAL */
+  .msg-frame{background:#fff;border:1px solid #e5e5e5;border-radius:10px;overflow:hidden;box-shadow:0 12px 30px -18px rgba(10,22,40,.2);max-width:560px}
+  .msg-head{padding:14px 18px;background:#f4f4f5;display:flex;gap:10px;align-items:center;border-bottom:1px solid #eee}
+  .msg-head .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--navy-2));display:flex;align-items:center;justify-content:center;color:var(--gold);border:2px solid var(--gold)}
+  .msg-head .avatar svg{width:20px;height:20px}
+  .msg-head .info b{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--navy);display:block;line-height:1.1}
+  .msg-head .info span{font-size:12px;color:#666;line-height:1.6}
+  .msg-body{padding:20px 22px;font-family:var(--sans);font-size:14px;line-height:1.6;color:var(--navy)}
+  .msg-body p{margin-bottom:8px}
+  .msg-body .rating{color:var(--gold-2);font-size:16px;letter-spacing:2px;margin-bottom:10px}
+
+  @media (max-width:900px){ .row-sq,.web-grid{grid-template-columns:1fr} .bar{grid-template-columns:1fr;gap:12px}.web-block{padding:32px 24px} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <rect x="46" y="26" width="8" height="46" fill="currentColor" opacity=".55"/>
+    <rect x="32" y="36" width="36" height="6" fill="currentColor" opacity=".55"/>
+  </symbol>
+</svg>
+
+<div class="page">
+  <div class="doc-head">
+    <div>
+      <div class="meta">Volume 07 · Social Proof</div>
+      <div class="title">Testimonial Cards Pack</div>
+    </div>
+    <div class="kv">
+      <div><b>Formats</b>6 sq · 3 horizontal · web · message</div>
+      <div><b>Version</b>1.0 · Placeholder</div>
+    </div>
+  </div>
+
+  <div class="lockdown">
+    <b>⚠ Do not publish without written permission</b>
+    Every testimonial card below uses placeholder content until (1) client has approved the exact quote wording in writing, (2) client name/company/role permission is on file, and (3) supporting engagement records exist to back the claim. FTC material-connection disclosures apply where relevant.
+  </div>
+
+  <!-- SQUARE POSTS -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">Square Posts <em>· 6 variants</em></h2>
+      <span class="sec-sub">1080×1080 · IG · LinkedIn · FB</span>
+    </div>
+
+    <div class="row-sq">
+      <div class="sq a">
+        <div class="marks">"</div>
+        <div class="txt">Dr. McKnight made the impossible <em>feel simple.</em></div>
+        <div class="who"><b>Angela Torres</b>President · Torres Logistics · SC</div>
+      </div>
+      <div class="sq b">
+        <div class="marks">"</div>
+        <div class="txt">He only bid <em>when we could win.</em> That discipline changed everything.</div>
+        <div class="who"><b>Marcus Reyes</b>CEO · Reyes IT Services</div>
+      </div>
+      <div class="sq c">
+        <div class="portrait"><svg><use href="#mark"/></svg></div>
+        <div class="side">
+          <div><div class="marks">"</div><div class="txt">Zero federal experience to <em>first award</em> in 90 days.</div></div>
+          <div class="who"><b>Sarah Whitfield</b>Founder · WhitCo Consulting</div>
+        </div>
+      </div>
+      <div class="sq d">
+        <div><div class="stat">$2.1<em>M</em></div><div class="stat-lbl">Awarded · 90 days</div></div>
+        <div class="body"><div class="txt">"Best consulting decision our board has ever signed off on."</div><div class="who"><b>Angela Torres</b> · Torres Logistics</div></div>
+      </div>
+      <div class="sq e">
+        <div class="lbl">Client · Story</div>
+        <div class="txt">"He walks with you <em>every step</em> — no handoffs."</div>
+        <div class="who"><b>James Holloway</b>Founder · Holloway Facility Services</div>
+      </div>
+      <div class="sq f">
+        <div class="frame"></div>
+        <div class="play">▶</div>
+        <div class="caption">
+          <div class="lbl">Video · Testimonial</div>
+          <h4>"90 days to our first federal contract."</h4>
+          <div class="who">Angela Torres · Torres Logistics · 1:24</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HORIZONTAL BARS -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">Horizontal <em>Bars</em></h2>
+      <span class="sec-sub">Website · sales page · proposal insert</span>
+    </div>
+
+    <div class="row-h">
+      <div class="bar">
+        <div class="avatar">AT</div>
+        <div class="txt">"Dr. McKnight took us from <b>zero SAM registration</b> to a signed federal contract in ninety days. This is the real work."</div>
+        <div class="who"><b>Angela Torres</b>President · Torres Logistics<br>Columbia, SC</div>
+      </div>
+      <div class="bar">
+        <div class="avatar">MR</div>
+        <div class="txt">"He said <b>'we only bid when you can win'</b> — and every proposal since has been a serious contender. My time isn't wasted anymore."</div>
+        <div class="who"><b>Marcus Reyes</b>CEO · Reyes IT Services<br>Charleston, SC</div>
+      </div>
+      <div class="bar">
+        <div class="avatar">SW</div>
+        <div class="txt">"Straight-shooting. Faith-anchored. <b>Never oversold.</b> I'd hire him again in a heartbeat."</div>
+        <div class="who"><b>Sarah Whitfield</b>Founder · WhitCo Consulting<br>Summerville, SC</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEB TESTIMONIAL BLOCK -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Website <em>Block</em></h2>
+      <span class="sec-sub">3-column testimonial grid on navy — full-bleed section</span>
+    </div>
+
+    <div class="web-block">
+      <div class="lbl">Client Success · Verified</div>
+      <h3>Real people. Real contracts. <em>Real results.</em></h3>
+      <div class="web-grid">
+        <div class="wt">
+          <div class="marks">"</div>
+          <div class="txt">"Dr. McKnight made what felt impossible feel simple. Every step, walked in partnership."</div>
+          <div class="who"><b>Angela Torres</b>Torres Logistics · SC</div>
+        </div>
+        <div class="wt">
+          <div class="marks">"</div>
+          <div class="txt">"Ninety days from first call to signed contract. That's how it should work."</div>
+          <div class="who"><b>Marcus Reyes</b>Reyes IT Services · SC</div>
+        </div>
+        <div class="wt">
+          <div class="marks">"</div>
+          <div class="txt">"He didn't sell us the world. He gave us the process. That's rarer than any promise."</div>
+          <div class="who"><b>Sarah Whitfield</b>WhitCo Consulting · SC</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMAIL / SLACK MESSAGE STYLE -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Direct-Message <em>Style</em></h2>
+      <span class="sec-sub">Unfiltered feel — email/slack testimonial for social carousel or blog</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="msg-frame">
+        <div class="msg-head">
+          <div class="avatar"><svg><use href="#mark"/></svg></div>
+          <div class="info"><b>Angela Torres</b><span>Torres Logistics · Sent Aug 15</span></div>
+        </div>
+        <div class="msg-body">
+          <div class="rating">★ ★ ★ ★ ★</div>
+          <p>Dr. McKnight —</p>
+          <p>Just got the notice. <b>We won it.</b> $2.1M USDA contract, southeast region.</p>
+          <p>Eighteen months ago I didn't even have a SAM registration. Today my team is preparing for onboarding calls with a federal contracting officer.</p>
+          <p>Thank you for walking every step of this with us. You said we could win — and you were right.</p>
+          <p>— Angela</p>
+        </div>
+      </div>
+      <div class="msg-frame">
+        <div class="msg-head">
+          <div class="avatar"><svg><use href="#mark"/></svg></div>
+          <div class="info"><b>Marcus Reyes</b><span>Reyes IT · Sent Jul 03</span></div>
+        </div>
+        <div class="msg-body">
+          <div class="rating">★ ★ ★ ★ ★</div>
+          <p>Following up from our review call —</p>
+          <p>Between the VA award and the two follow-on task orders, we've hit <b>$1.4M booked this year</b>. I don't say this lightly: this consulting relationship is the reason we're at this number.</p>
+          <p>Renewing the retainer. Send the paperwork.</p>
+          <p>— Marcus</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="border-top:1px solid var(--navy);margin-top:40px;padding-top:20px;text-align:center;font-family:var(--serif);font-style:italic;color:var(--slate);font-size:14px">
+    Testimonials · The Contracting Preacher · Placeholder pending client permission
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-2);margin-top:6px;font-style:normal;font-weight:600">"…faithfully done." — Prov 16:3</div>
+  </div>
+</div>
+
+</body>
+</html>

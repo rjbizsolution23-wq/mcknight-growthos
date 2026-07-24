@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Practical Assets — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0; --line-2:#D6CFB8;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:56px 24px 100px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1180px;margin:0 auto}
+
+  .doc-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--navy);padding-bottom:20px;margin-bottom:48px}
+  .doc-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .doc-head .title{font-family:var(--serif);font-size:26px;font-weight:700;margin-top:4px}
+  .doc-head .kv{display:flex;gap:28px;font-family:var(--mono);font-size:11px;color:var(--slate)}
+  .doc-head .kv b{color:var(--navy);display:block;letter-spacing:.14em;font-weight:600;text-transform:uppercase}
+
+  .lockdown{background:#FBEEEE;border-left:4px solid var(--red);padding:14px 22px;margin-bottom:40px;border-radius:0 2px 2px 0;font-size:13.5px;color:#5B1414;line-height:1.55}
+  .lockdown b{font-weight:700;font-family:var(--mono);letter-spacing:.05em;font-size:11px;text-transform:uppercase;display:block;margin-bottom:4px}
+
+  /* SECTION */
+  section{margin-bottom:64px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:28px;border-bottom:1px solid rgba(10,22,40,.15);padding-bottom:14px}
+  .sec-num{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);font-weight:600}
+  .sec-title{font-family:var(--serif);font-size:32px;font-weight:800;letter-spacing:-.015em}
+  .sec-title em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-sub{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+
+  /* DOCUMENT ("paper") */
+  .doc{background:#fff;border-radius:2px;box-shadow:0 20px 50px -30px rgba(10,22,40,.22);padding:0;overflow:hidden;margin-bottom:24px;position:relative}
+  .doc::before{content:"";display:block;height:6px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+  .doc-inner{padding:36px 44px 40px}
+  .doc-head-row{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:20px}
+  .doc-brand{display:flex;align-items:center;gap:12px}
+  .doc-brand svg{width:40px;height:40px;color:var(--navy);flex:none}
+  .doc-brand .txt{font-family:var(--serif);font-weight:700;font-size:14px;line-height:1.05}
+  .doc-brand .txt h1{font-family:var(--serif);font-size:16px;font-weight:800;letter-spacing:-.005em}
+  .doc-brand .txt span{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;font-weight:500;margin-top:2px}
+  .doc-stamp{text-align:right;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;line-height:1.7}
+  .doc-stamp b{color:var(--navy);display:block;font-family:var(--sans);font-size:16px;font-weight:800;letter-spacing:-.005em;text-transform:none;margin-top:2px;font-family:var(--serif)}
+  .doc-stamp .status{display:inline-block;padding:3px 10px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;border-radius:2px;margin-top:6px}
+  .doc-stamp .status.draft{background:#FFF4DD;color:var(--warn)}
+  .doc-stamp .status.due{background:#FBEEEE;color:var(--red)}
+  .doc-stamp .status.paid{background:#E1F0E8;color:var(--ok)}
+
+  /* PARTIES */
+  .parties{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+  .party .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+  .party b{font-family:var(--serif);font-size:16px;font-weight:800;letter-spacing:-.005em;display:block;margin-bottom:2px}
+  .party p{font-size:13px;color:var(--slate);line-height:1.55}
+
+  /* LINE ITEMS */
+  table.items{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px}
+  table.items th{background:var(--navy);color:var(--gold-3);font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:12px;text-align:left;font-weight:700}
+  table.items th.right{text-align:right}
+  table.items td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--navy);line-height:1.55}
+  table.items td.right{text-align:right;font-family:var(--serif);font-weight:700;font-size:15px}
+  table.items td b{color:var(--navy);font-weight:700;font-family:var(--serif);font-size:15px;letter-spacing:-.005em;display:block;margin-bottom:2px}
+  table.items td .desc{font-size:12px;color:var(--slate);line-height:1.5}
+
+  /* TOTALS */
+  .totals{display:grid;grid-template-columns:1fr 340px;gap:24px;margin-top:20px}
+  .totals .notes{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--slate);line-height:1.6}
+  .totals .notes b{font-family:var(--sans);font-style:normal;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-family:var(--mono)}
+  .totals .sum{background:var(--ivory);padding:20px 24px;border-left:4px solid var(--gold)}
+  .totals .sum .row{display:flex;justify-content:space-between;padding:5px 0;font-size:14px;color:var(--slate)}
+  .totals .sum .row b{color:var(--navy);font-family:var(--mono);font-weight:600;letter-spacing:.05em}
+  .totals .sum .total{margin-top:10px;padding-top:12px;border-top:1.5px solid var(--navy);font-family:var(--serif);font-size:28px;font-weight:800;letter-spacing:-.02em;color:var(--navy);display:flex;justify-content:space-between;align-items:baseline}
+  .totals .sum .total .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--gold-2);text-transform:uppercase;font-weight:700}
+
+  /* SIGN */
+  .signrow{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:32px;padding-top:24px;border-top:1px solid var(--line)}
+  .signbox{padding:14px 0;border-bottom:1.5px solid var(--navy)}
+  .signbox label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;font-weight:600;margin-top:6px}
+  .signbox .name{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--navy);padding-top:8px;min-height:32px}
+
+  .doc-foot{background:var(--navy);color:var(--gold-3);padding:14px 44px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;line-height:1.7}
+  .doc-foot .verse{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--gold);text-transform:none;letter-spacing:0}
+
+  /* AGREEMENT BODY */
+  .agreement{font-size:13.5px;line-height:1.7;color:var(--navy)}
+  .agreement h2{font-family:var(--serif);font-size:20px;font-weight:800;letter-spacing:-.005em;margin:20px 0 8px}
+  .agreement h3{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-top:16px;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+  .agreement p{margin-bottom:8px}
+  .agreement p b{color:var(--navy);font-weight:700}
+  .agreement ol{padding-left:22px;margin-bottom:8px}
+  .agreement ol li{margin-bottom:5px}
+
+  /* CASE STUDY */
+  .case-hero{background:var(--navy);color:var(--ivory);padding:32px 44px;position:relative;overflow:hidden}
+  .case-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.2),transparent 50%);pointer-events:none}
+  .case-hero .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;font-weight:600;position:relative}
+  .case-hero h2{font-family:var(--serif);font-size:32px;font-weight:800;letter-spacing:-.015em;line-height:1.05;margin-top:6px;position:relative;max-width:640px}
+  .case-hero h2 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .case-hero .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:24px;padding-top:20px;border-top:1px solid rgba(201,169,97,.3);position:relative}
+  .case-hero .st b{font-family:var(--serif);font-size:32px;font-weight:800;color:var(--gold-3);display:block;line-height:1;letter-spacing:-.01em}
+  .case-hero .st span{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-top:5px;display:block}
+
+  .case-body{padding:32px 44px}
+  .case-block{margin-bottom:18px}
+  .case-block h4{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+  .case-block p{font-size:14px;line-height:1.6;color:var(--navy)}
+  .case-block .quote{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--slate);border-left:3px solid var(--gold);padding-left:16px;margin:12px 0}
+  .case-block .quote b{font-family:var(--mono);font-style:normal;font-weight:700;font-size:11px;letter-spacing:.14em;color:var(--navy);text-transform:uppercase;display:block;margin-top:6px}
+  .case-evidence{background:var(--ivory);padding:14px 20px;border-left:3px solid var(--gold);border-radius:0 2px 2px 0;font-size:12px;color:var(--slate);line-height:1.6;margin-top:16px}
+  .case-evidence b{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--gold-2);text-transform:uppercase;font-weight:700;display:block;margin-bottom:4px}
+
+  /* SELL SHEET */
+  .sell{background:#fff;padding:44px 48px;border-radius:2px;box-shadow:0 20px 50px -30px rgba(10,22,40,.22);position:relative;overflow:hidden}
+  .sell::before{content:"";position:absolute;top:0;left:0;right:0;height:8px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+  .sell .hero-row{display:grid;grid-template-columns:1.4fr 1fr;gap:32px;padding-bottom:24px;border-bottom:1px solid var(--line);margin-bottom:24px}
+  .sell .brand{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+  .sell .brand svg{width:44px;height:44px;color:var(--navy)}
+  .sell .brand .txt{font-family:var(--serif);font-weight:700;font-size:16px;line-height:1.05}
+  .sell .brand .txt h1{font-family:var(--serif);font-size:18px;font-weight:800;letter-spacing:-.005em}
+  .sell .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;font-weight:500;margin-top:2px}
+  .sell h2{font-family:var(--serif);font-size:42px;font-weight:800;letter-spacing:-.02em;line-height:1;margin-bottom:12px}
+  .sell h2 em{font-style:italic;color:var(--red);font-weight:600}
+  .sell .lede{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--slate);line-height:1.5}
+  .sell .stats-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .sell .stats-mini .st{background:var(--ivory);border-left:3px solid var(--gold);padding:12px 14px;border-radius:0 2px 2px 0}
+  .sell .stats-mini .st b{font-family:var(--serif);font-size:26px;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-.01em;display:block}
+  .sell .stats-mini .st span{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-top:5px;display:block}
+
+  .sell .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:8px 0}
+  .sell .col h3{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:1.5px solid var(--navy)}
+  .sell .col ul{list-style:none;font-size:13px;line-height:1.7;color:var(--navy)}
+  .sell .col ul li{padding-left:16px;position:relative;margin-bottom:4px}
+  .sell .col ul li::before{content:"→";position:absolute;left:0;color:var(--gold-2);font-weight:700}
+  .sell .col ul li b{font-weight:700}
+
+  .sell-cta{background:var(--navy);color:var(--ivory);padding:22px 32px;margin-top:28px;border-radius:2px;position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:20px}
+  .sell-cta::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.2),transparent 55%);pointer-events:none}
+  .sell-cta h4{font-family:var(--serif);font-size:24px;font-weight:800;letter-spacing:-.005em;position:relative}
+  .sell-cta h4 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .sell-cta .btn{background:var(--gold);color:var(--navy);padding:14px 24px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;text-decoration:none;border-radius:2px;position:relative;white-space:nowrap}
+
+  /* PRICING GRID */
+  .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+  .tier{background:#fff;border:1px solid var(--line);border-radius:2px;padding:28px 24px;position:relative;overflow:hidden}
+  .tier.featured{background:var(--navy);color:var(--ivory);border-color:var(--navy)}
+  .tier.featured::before{content:"MOST POPULAR";position:absolute;top:0;right:0;background:var(--gold);color:var(--navy);padding:5px 12px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;font-weight:700}
+  .tier .name{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold-2);text-transform:uppercase;font-weight:700}
+  .tier.featured .name{color:var(--gold-3)}
+  .tier h3{font-family:var(--serif);font-size:24px;font-weight:800;letter-spacing:-.005em;margin:6px 0 12px}
+  .tier .price{font-family:var(--serif);font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1}
+  .tier.featured .price{color:var(--gold-3)}
+  .tier .price small{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--slate);font-weight:500;margin-left:6px;text-transform:uppercase}
+  .tier.featured .price small{color:var(--gold)}
+  .tier p{font-size:12px;color:var(--slate);margin:8px 0 14px;line-height:1.55}
+  .tier.featured p{color:var(--gold-3);opacity:.9}
+  .tier ul{list-style:none;font-size:13px;line-height:1.65;padding-top:14px;border-top:1px dashed var(--line)}
+  .tier.featured ul{border-top-color:rgba(201,169,97,.3)}
+  .tier ul li{padding-left:18px;position:relative;margin-bottom:5px}
+  .tier ul li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:700}
+
+  /* NAV */
+  nav.local{position:sticky;top:0;background:rgba(235,228,210,.95);backdrop-filter:blur(6px);padding:14px 0;margin:-56px -24px 32px;padding-left:24px;padding-right:24px;z-index:20;border-bottom:1px solid var(--line)}
+  nav.local .inner{max-width:1180px;margin:0 auto;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+  nav.local a{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;text-decoration:none;padding:6px 12px;border:1px solid transparent;border-radius:2px;font-weight:600;transition:all .12s}
+  nav.local a:hover{border-color:var(--gold-2);color:var(--gold-2)}
+
+  @media print{ body{background:#fff;padding:0} nav.local{display:none} .doc,.sell{box-shadow:none;page-break-inside:avoid} }
+  @media (max-width:900px){ .parties,.totals,.signrow,.sell .hero-row,.sell .three-col,.sell-cta,.pricing{grid-template-columns:1fr} .case-hero .stats{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="page">
+
+  <nav class="local">
+    <div class="inner">
+      <a href="#invoice">Invoice</a>
+      <a href="#estimate">Estimate</a>
+      <a href="#engagement">Engagement Agreement</a>
+      <a href="#nda">NDA</a>
+      <a href="#teaming">Teaming Agreement</a>
+      <a href="#casestudy">Case Study</a>
+      <a href="#sellsheet">Sell Sheet</a>
+      <a href="#pricing">Pricing Sheet</a>
+    </div>
+  </nav>
+
+  <div class="doc-head">
+    <div>
+      <div class="meta">Volume 06 · Practical Assets</div>
+      <div class="title">Business-Operations Template Pack</div>
+    </div>
+    <div class="kv">
+      <div><b>Contains</b>8 templates</div>
+      <div><b>Format</b>Print-ready HTML</div>
+      <div><b>Version</b>1.0 · Draft</div>
+    </div>
+  </div>
+
+  <div class="lockdown">
+    <b>⚠ P0 Reminder</b>
+    All contract templates below are drafting starters, not legal advice. Every agreement must be reviewed by qualified counsel before use. Client names, dollar figures, and identifiers shown are illustrative — swap real values only when the Fleet Verification Packet closes.
+  </div>
+
+  <!-- ═══════ 1. INVOICE ═══════ -->
+  <section id="invoice">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">Invoice <em>Template</em></h2>
+      <span class="sec-sub">US Letter · print-ready</span>
+    </div>
+
+    <div class="doc">
+      <div class="doc-inner">
+        <div class="doc-head-row">
+          <div class="doc-brand">
+            <svg><use href="#mark"/></svg>
+            <div class="txt"><h1>The Contracting Preacher</h1><span>Federal Contracting Consultant</span></div>
+          </div>
+          <div class="doc-stamp">
+            Invoice<b>#TCP-2026-0142</b>
+            <div>Issued · July 23, 2026</div>
+            <div>Due · August 22, 2026</div>
+            <span class="status draft">Draft</span>
+          </div>
+        </div>
+
+        <div class="parties">
+          <div class="party"><div class="lbl">Bill To</div><b>[ Client Legal Business Name ]</b><p>Attn: [Signer]<br>[Street Address]<br>[City, ST ZIP]<br>[Email]</p></div>
+          <div class="party" style="text-align:right"><div class="lbl">From</div><b>The Contracting Preacher</b><p>1225 Laurel Street, Ste 415<br>Columbia, SC 29201<br>(202) 276-2913<br>info@thecontractingpreacher.com</p></div>
+        </div>
+
+        <table class="items">
+          <thead><tr><th>Description</th><th class="right">Qty</th><th class="right">Rate</th><th class="right">Amount</th></tr></thead>
+          <tbody>
+            <tr><td><b>SAM.gov Registration &amp; UEI Setup</b><div class="desc">Complete registration · entity validation · CAGE code assignment · POC configuration</div></td><td class="right">1</td><td class="right">$1,500.00</td><td class="right">$1,500.00</td></tr>
+            <tr><td><b>Federal Capability Statement</b><div class="desc">1-page federal document · NAICS optimization · design + copy · print-ready</div></td><td class="right">1</td><td class="right">$850.00</td><td class="right">$850.00</td></tr>
+            <tr><td><b>8(a) Certification Support</b><div class="desc">Application preparation · document assembly · SBA correspondence · follow-up</div></td><td class="right">1</td><td class="right">$3,200.00</td><td class="right">$3,200.00</td></tr>
+            <tr><td><b>Monthly Opportunity Service — July</b><div class="desc">Daily SAM.gov + Grants.gov scans · scored shortlist · bid/no-bid consult</div></td><td class="right">1</td><td class="right">$750.00</td><td class="right">$750.00</td></tr>
+          </tbody>
+        </table>
+
+        <div class="totals">
+          <div class="notes">
+            <b>Payment Terms</b>
+            Net 30 · Pay by ACH, check, or client portal. Late balances subject to 1.5% monthly service charge after 30 days past due. Please reference invoice # on all payments.
+          </div>
+          <div class="sum">
+            <div class="row"><span>Subtotal</span><b>$6,300.00</b></div>
+            <div class="row"><span>Tax (SC · 6.0%)</span><b>$0.00</b></div>
+            <div class="row"><span>Retainer applied</span><b>$1,000.00</b></div>
+            <div class="total"><span class="lbl">Total Due</span><span>$5,300.00</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-foot">
+        <span>Questions · <b style="color:var(--gold-3)">info@thecontractingpreacher.com</b></span>
+        <span class="verse">"…faithfully done." — Prov 16:3</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ 2. ESTIMATE ═══════ -->
+  <section id="estimate">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">Estimate <em>Template</em></h2>
+      <span class="sec-sub">Client scoping · valid 30 days</span>
+    </div>
+
+    <div class="doc">
+      <div class="doc-inner">
+        <div class="doc-head-row">
+          <div class="doc-brand">
+            <svg><use href="#mark"/></svg>
+            <div class="txt"><h1>The Contracting Preacher</h1><span>Estimate · Federal Contracting</span></div>
+          </div>
+          <div class="doc-stamp">
+            Estimate<b>#EST-2026-058</b>
+            <div>Issued · July 23, 2026</div>
+            <div>Valid · Through Aug 22, 2026</div>
+          </div>
+        </div>
+
+        <div class="parties">
+          <div class="party"><div class="lbl">Prepared For</div><b>[ Prospective Client ]</b><p>Attn: [Signer]<br>[Street Address]<br>[City, ST ZIP]</p></div>
+          <div class="party" style="text-align:right"><div class="lbl">Prepared By</div><b>Dr. McKnight</b><p>The Contracting Preacher<br>(202) 276-2913</p></div>
+        </div>
+
+        <table class="items">
+          <thead><tr><th>Recommended Scope</th><th class="right">Timeline</th><th class="right">Investment</th></tr></thead>
+          <tbody>
+            <tr><td><b>Federal Foundation Package</b><div class="desc">SAM registration · UEI · CAGE · capability statement · NAICS strategy</div></td><td class="right">3-4 wks</td><td class="right">$2,850</td></tr>
+            <tr><td><b>Certification Track — 8(a) primary</b><div class="desc">Full application preparation, submission, and SBA follow-through</div></td><td class="right">6-8 wks</td><td class="right">$3,200</td></tr>
+            <tr><td><b>Pursuit Package — First Bid</b><div class="desc">Opportunity ID + bid/no-bid scoring + full proposal package on ONE selected opportunity</div></td><td class="right">4-6 wks after target ID</td><td class="right">$4,500</td></tr>
+            <tr><td><b>Monthly Retainer — Ongoing</b><div class="desc">Continuous opportunity pipeline · unlimited bid/no-bid scoring · proposal support · pipeline tracking</div></td><td class="right">Monthly</td><td class="right">$1,850/mo</td></tr>
+          </tbody>
+        </table>
+
+        <div class="totals">
+          <div class="notes">
+            <b>Notes on this Estimate</b>
+            All figures are inclusive of Dr. McKnight's personal time. Third-party costs (bonding, licensing fees, express-mail SBA submissions) are pass-through and invoiced at cost with documentation. Estimate is valid for 30 days; scope may adjust based on intake findings.
+          </div>
+          <div class="sum">
+            <div class="row"><span>Foundation + Cert Track</span><b>$6,050</b></div>
+            <div class="row"><span>Optional — Pursuit Add-on</span><b>$4,500</b></div>
+            <div class="row"><span>Optional — Retainer (monthly)</span><b>$1,850</b></div>
+            <div class="total"><span class="lbl">Starter Bundle</span><span>$6,050</span></div>
+          </div>
+        </div>
+
+        <div class="signrow">
+          <div><div class="signbox"><div class="name">&nbsp;</div><label>Client · Authorized Signature</label></div><div class="signbox" style="margin-top:14px"><div class="name">&nbsp;</div><label>Date</label></div></div>
+          <div><div class="signbox"><div class="name">Dr. McKnight</div><label>The Contracting Preacher · Preparer</label></div><div class="signbox" style="margin-top:14px"><div class="name">July 23, 2026</div><label>Date</label></div></div>
+        </div>
+      </div>
+
+      <div class="doc-foot">
+        <span>Client acceptance triggers Engagement Agreement</span>
+        <span class="verse">"…establish your plans." — Prov 16:3</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ 3. ENGAGEMENT AGREEMENT ═══════ -->
+  <section id="engagement">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Engagement <em>Agreement</em></h2>
+      <span class="sec-sub">Master consulting agreement · draft</span>
+    </div>
+
+    <div class="doc">
+      <div class="doc-inner">
+        <div class="doc-head-row">
+          <div class="doc-brand">
+            <svg><use href="#mark"/></svg>
+            <div class="txt"><h1>The Contracting Preacher</h1><span>Consulting Engagement Agreement</span></div>
+          </div>
+          <div class="doc-stamp">Agreement<b>Version 1.0</b><span class="status draft">Draft · Counsel Review Required</span></div>
+        </div>
+
+        <div class="agreement">
+          <p>This Consulting Engagement Agreement ("<b>Agreement</b>") is entered into as of <b>[Effective Date]</b> between <b>[The Contracting Preacher, LLC — legal entity TBD]</b> ("<b>Consultant</b>") and <b>[Client Legal Name]</b> ("<b>Client</b>").</p>
+
+          <h3>1 · Services</h3>
+          <p>Consultant will provide the federal contracting consulting services described in the attached Statement of Work ("<b>SOW</b>"), which may include SAM.gov registration, capability statement preparation, SBA certification support, opportunity identification, bid/no-bid scoring, proposal writing, and post-award compliance guidance.</p>
+
+          <h3>2 · Fees &amp; Payment</h3>
+          <p>Client agrees to pay Consultant the fees set forth in the attached SOW. Invoices are due <b>Net 30</b> from issue date. Balances unpaid after 30 days accrue a 1.5% monthly service charge. Third-party costs are pass-through and require documentation.</p>
+
+          <h3>3 · Client Responsibilities</h3>
+          <ol>
+            <li>Provide accurate business, ownership, and financial information.</li>
+            <li>Designate an Authorized Signer / AOR for all binding certifications.</li>
+            <li>Respond to Consultant requests within reasonable time.</li>
+            <li>Sign all legally binding federal certifications personally — Consultant does not sign on Client's behalf.</li>
+          </ol>
+
+          <h3>4 · Confidentiality</h3>
+          <p>Each party shall protect the other's non-public information as it protects its own, using at least reasonable care. Neither party is required to hold as confidential information that (a) becomes public through no fault of the receiving party, (b) is already known, or (c) is independently developed.</p>
+
+          <h3>5 · No Guarantee</h3>
+          <p><b>Consultant does not guarantee any contract award, certification approval, or specific outcome.</b> Federal contracting is a competitive process governed by regulations outside Consultant's control. Consultant's obligations are limited to good-faith, best-effort performance of the services described.</p>
+
+          <h3>6 · Independent Contractor</h3>
+          <p>Consultant is engaged as an independent contractor, not an employee, agent, partner, or joint venturer of Client. Nothing in this Agreement grants Consultant authority to bind Client except as specifically authorized in writing.</p>
+
+          <h3>7 · Term &amp; Termination</h3>
+          <p>This Agreement begins on the Effective Date and continues until services described in the SOW are complete or until terminated. Either party may terminate for cause on 15 days' written notice; either may terminate for convenience on 30 days' written notice. Fees earned through termination remain payable.</p>
+
+          <h3>8 · Limitation of Liability</h3>
+          <p>Except for breach of confidentiality or gross negligence, either party's aggregate liability shall not exceed the total fees paid by Client to Consultant in the 12 months preceding the claim. Neither party is liable for indirect, incidental, or consequential damages.</p>
+
+          <h3>9 · Governing Law</h3>
+          <p>This Agreement is governed by the laws of the State of South Carolina, without regard to conflict-of-laws principles. Any dispute shall be resolved in the state or federal courts located in Richland County, South Carolina.</p>
+
+          <h3>10 · Entire Agreement</h3>
+          <p>This Agreement, together with any attached SOW, constitutes the entire understanding between the parties and supersedes all prior discussions. Amendments must be in writing and signed by both parties.</p>
+        </div>
+
+        <div class="signrow">
+          <div><div class="signbox"><div class="name">&nbsp;</div><label>Client · Authorized Signer</label></div><div class="signbox" style="margin-top:14px"><div class="name">&nbsp;</div><label>Printed Name · Title · Date</label></div></div>
+          <div><div class="signbox"><div class="name">&nbsp;</div><label>Consultant · Dr. McKnight</label></div><div class="signbox" style="margin-top:14px"><div class="name">The Contracting Preacher</div><label>Printed Name · Title · Date</label></div></div>
+        </div>
+      </div>
+
+      <div class="doc-foot">
+        <span>Not legal advice — counsel review required</span>
+        <span class="verse">"…faithfully done." — Prov 16:3</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ 4. NDA ═══════ -->
+  <section id="nda">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Mutual <em>NDA</em></h2>
+      <span class="sec-sub">Discovery calls · teaming discussions</span>
+    </div>
+
+    <div class="doc">
+      <div class="doc-inner">
+        <div class="doc-head-row">
+          <div class="doc-brand">
+            <svg><use href="#mark"/></svg>
+            <div class="txt"><h1>The Contracting Preacher</h1><span>Mutual Non-Disclosure Agreement</span></div>
+          </div>
+          <div class="doc-stamp">NDA<b>Mutual · Bilateral</b><span class="status draft">Draft</span></div>
+        </div>
+
+        <div class="agreement">
+          <p>This Mutual Non-Disclosure Agreement ("<b>Agreement</b>") is entered into as of <b>[Date]</b> by and between <b>[Party A]</b> and <b>[Party B]</b> (each a "<b>Party</b>," collectively the "<b>Parties</b>").</p>
+
+          <h3>1 · Purpose</h3>
+          <p>The Parties wish to explore a potential business relationship involving federal contracting opportunities, teaming, joint proposals, or other engagements (the "<b>Purpose</b>") and may share confidential business, technical, and strategic information.</p>
+
+          <h3>2 · Confidential Information</h3>
+          <p>"<b>Confidential Information</b>" means any non-public information disclosed by one Party ("<b>Discloser</b>") to the other ("<b>Recipient</b>") in connection with the Purpose, whether oral, written, or visual, marked as confidential or reasonably understood to be confidential given the context.</p>
+
+          <h3>3 · Obligations</h3>
+          <ol>
+            <li>Recipient shall protect Confidential Information with at least the same care it uses for its own similar information (never less than reasonable care).</li>
+            <li>Recipient shall use Confidential Information solely for the Purpose.</li>
+            <li>Recipient shall limit access to employees, contractors, and advisors who need to know and who are bound by confidentiality obligations at least as protective as those herein.</li>
+            <li>Recipient shall not reverse-engineer, copy, or reproduce Confidential Information beyond what the Purpose requires.</li>
+          </ol>
+
+          <h3>4 · Exclusions</h3>
+          <p>Confidential Information does not include information that: (a) is or becomes public through no fault of Recipient; (b) was known to Recipient before disclosure; (c) is independently developed by Recipient without use of Confidential Information; or (d) is rightfully received from a third party without confidentiality obligation.</p>
+
+          <h3>5 · Term</h3>
+          <p>This Agreement remains in effect for <b>two (2) years</b> from the Effective Date. Confidentiality obligations survive termination for an additional <b>three (3) years</b>. Trade secrets remain protected as long as they qualify as such under applicable law.</p>
+
+          <h3>6 · Return &amp; Destruction</h3>
+          <p>On written request or termination, Recipient shall return or destroy all Confidential Information in its possession, retaining no copies except as required by law or reasonable archival policies applied consistently.</p>
+
+          <h3>7 · No License</h3>
+          <p>Nothing in this Agreement grants any license or other right to any intellectual property. All Confidential Information remains the property of the disclosing Party.</p>
+
+          <h3>8 · Remedies</h3>
+          <p>The Parties agree that money damages may be inadequate for breach of this Agreement, and the injured Party is entitled to seek injunctive relief in addition to any other available remedies.</p>
+
+          <h3>9 · Governing Law</h3>
+          <p>This Agreement is governed by the laws of the State of South Carolina without regard to conflict-of-laws principles.</p>
+        </div>
+
+        <div class="signrow">
+          <div><div class="signbox"><div class="name">&nbsp;</div><label>Party A · Signature</label></div><div class="signbox" style="margin-top:14px"><div class="name">&nbsp;</div><label>Printed Name · Title · Date</label></div></div>
+          <div><div class="signbox"><div class="name">&nbsp;</div><label>Party B · Signature</label></div><div class="signbox" style="margin-top:14px"><div class="name">&nbsp;</div><label>Printed Name · Title · Date</label></div></div>
+        </div>
+      </div>
+
+      <div class="doc-foot"><span>Not legal advice — counsel review recommended</span><span class="verse">"…faithfully done."</span></div>
+    </div>
+  </section>
+
+  <!-- ═══════ 5. TEAMING AGREEMENT ═══════ -->
+  <section id="teaming">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">Teaming <em>Agreement</em></h2>
+      <span class="sec-sub">Prime + subcontractor · federal pursuit</span>
+    </div>
+
+    <div class="doc">
+      <div class="doc-inner">
+        <div class="doc-head-row">
+          <div class="doc-brand">
+            <svg><use href="#mark"/></svg>
+            <div class="txt"><h1>The Contracting Preacher</h1><span>Contractor Teaming Agreement</span></div>
+          </div>
+          <div class="doc-stamp">CTA<b>Federal · Pursuit</b><span class="status draft">Draft</span></div>
+        </div>
+
+        <div class="agreement">
+          <p>This Contractor Teaming Agreement ("<b>CTA</b>") is entered as of <b>[Date]</b> between <b>[Prime Contractor Legal Name]</b> ("<b>Prime</b>") and <b>[Subcontractor Legal Name]</b> ("<b>Sub</b>") for the pursuit of the federal opportunity described below.</p>
+
+          <h3>1 · Target Opportunity</h3>
+          <p><b>Agency:</b> [Agency] · <b>Solicitation #:</b> [Solicitation] · <b>Set-Aside:</b> [Set-Aside] · <b>Est. Value:</b> [Value] · <b>Proposal Due:</b> [Date]</p>
+
+          <h3>2 · Roles &amp; Work Allocation</h3>
+          <p>If awarded, the Parties intend Prime to hold prime contract responsibility and Sub to perform the work identified in <b>Exhibit A — Statement of Work Allocation</b>. Prime's estimated share: <b>[__%]</b>. Sub's estimated share: <b>[__%]</b>. Final allocation subject to negotiation of a definitive subcontract post-award.</p>
+
+          <h3>3 · Proposal Effort</h3>
+          <ol>
+            <li>Prime will lead proposal preparation, submission, and communication with the Contracting Officer.</li>
+            <li>Sub will provide technical input, past-performance narratives, key-personnel resumes, and pricing inputs for its scope.</li>
+            <li>Each Party bears its own proposal costs unless separately agreed.</li>
+          </ol>
+
+          <h3>4 · Exclusivity</h3>
+          <p>For this specific opportunity, Sub agrees not to team with any other prime contractor pursuing the same solicitation. Sub retains all rights to pursue other federal opportunities independently or with other primes.</p>
+
+          <h3>5 · Confidentiality</h3>
+          <p>Each Party's proprietary information disclosed in support of the pursuit is confidential and subject to the Mutual NDA between the Parties (attached or incorporated by reference).</p>
+
+          <h3>6 · Small-Business &amp; Set-Aside Compliance</h3>
+          <p>Each Party represents that it meets all size, socioeconomic, and eligibility standards it claims for purposes of this opportunity. Any change in status shall be disclosed promptly.</p>
+
+          <h3>7 · Post-Award Subcontract</h3>
+          <p>If Prime is awarded, the Parties will negotiate in good faith a definitive subcontract consistent with this CTA within <b>thirty (30) days</b> of award notification. If good-faith negotiation fails, either Party may withdraw without penalty.</p>
+
+          <h3>8 · Term &amp; Termination</h3>
+          <p>This CTA terminates on the earlier of: (a) execution of a post-award subcontract, (b) award of the opportunity to a competing team, (c) withdrawal of the solicitation, or (d) 90 days after proposal submission with no award decision.</p>
+
+          <h3>9 · No Partnership; No Joint Venture</h3>
+          <p>Nothing herein creates a partnership, joint venture, agency, or employment relationship. Each Party remains independent and separately responsible for its own conduct.</p>
+
+          <h3>10 · Governing Law</h3>
+          <p>Governed by the laws of the State of South Carolina and applicable federal law.</p>
+        </div>
+
+        <div class="signrow">
+          <div><div class="signbox"><div class="name">&nbsp;</div><label>Prime · Authorized Signature</label></div><div class="signbox" style="margin-top:14px"><div class="name">&nbsp;</div><label>Printed Name · Title · Date</label></div></div>
+          <div><div class="signbox"><div class="name">&nbsp;</div><label>Sub · Authorized Signature</label></div><div class="signbox" style="margin-top:14px"><div class="name">&nbsp;</div><label>Printed Name · Title · Date</label></div></div>
+        </div>
+      </div>
+
+      <div class="doc-foot"><span>FAR 9.601 &amp; counsel review required</span><span class="verse">"…faithfully done."</span></div>
+    </div>
+  </section>
+
+  <!-- ═══════ 6. CASE STUDY ═══════ -->
+  <section id="casestudy">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <h2 class="sec-title">Case Study <em>Template</em></h2>
+      <span class="sec-sub">1-page · placeholder · fill after client permission</span>
+    </div>
+
+    <div class="doc">
+      <div class="case-hero">
+        <div class="kicker">Case Study · [Client Sector]</div>
+        <h2>How <em>[Client Name]</em> went from<br>[Starting Point] to [Outcome].</h2>
+        <div class="stats">
+          <div class="st"><b>[$Value]</b><span>Contract Awarded</span></div>
+          <div class="st"><b>[Months]</b><span>Foundation to Award</span></div>
+          <div class="st"><b>[N]</b><span>Jobs Created</span></div>
+          <div class="st"><b>[Rating]</b><span>CPARS / Outcome</span></div>
+        </div>
+      </div>
+
+      <div class="case-body">
+        <div class="case-block"><h4>Client Situation</h4><p>[2-3 sentences on client background, size, market, and pre-engagement position. Anonymize if permission not granted.]</p></div>
+        <div class="case-block"><h4>The Problem</h4><p>[What was blocking the client from federal contracting? Concrete detail — no jargon.]</p></div>
+        <div class="case-block"><h4>Services Delivered</h4><p>[Numbered list of exactly what TCP did — SAM registration, cert application, proposal package, etc. — with dates.]</p></div>
+        <div class="case-block"><h4>Outcome — Documented</h4><p>[Quantified results. Contract number, award date, dollar value, jobs created, follow-on contracts.]</p>
+          <div class="quote">"[Direct client quote — exact wording as approved in writing.]"<b>— [Client Name] · [Title]</b></div>
+        </div>
+
+        <div class="case-evidence"><b>Evidence on file</b>Signed permission-to-publish letter · Contract number and award notification · Client-approved quote wording · Photos/screenshots (if applicable) · Reference contact (available on request)</div>
+      </div>
+
+      <div class="doc-foot"><span>Do not publish without written client permission</span><span class="verse">"…faithfully done."</span></div>
+    </div>
+  </section>
+
+  <!-- ═══════ 7. SELL SHEET ═══════ -->
+  <section id="sellsheet">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
+      <h2 class="sec-title">One-Page <em>Sell Sheet</em></h2>
+      <span class="sec-sub">Hand-out · trade shows · cold intros</span>
+    </div>
+
+    <div class="sell">
+      <div class="hero-row">
+        <div>
+          <div class="brand">
+            <svg><use href="#mark"/></svg>
+            <div class="txt"><h1>The Contracting Preacher</h1><span>Dr. McKnight · Federal Contracting</span></div>
+          </div>
+          <h2>Win federal contracts <em>with faith &amp; expertise.</em></h2>
+          <div class="lede">End-to-end federal contracting support — SAM.gov registration, SBA certifications, proposal preparation, and post-award compliance for small businesses ready to break in or scale up.</div>
+        </div>
+        <div>
+          <div class="stats-mini">
+            <div class="st"><b>[X]%</b><span>Verified Win Rate</span></div>
+            <div class="st"><b>$[Y]+</b><span>Awarded for Clients</span></div>
+            <div class="st"><b>[N]+</b><span>Small Businesses Served</span></div>
+          </div>
+          <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;color:var(--slate);text-transform:uppercase;font-weight:600;margin-top:8px;padding:6px 10px;background:var(--ivory);border-left:2px solid var(--red);border-radius:0 2px 2px 0;line-height:1.5">Stats above are placeholders — populate only from documented calculation + evidence file.</div>
+        </div>
+      </div>
+
+      <div class="three-col">
+        <div class="col">
+          <h3>What we handle</h3>
+          <ul>
+            <li><b>SAM.gov registration</b> — UEI + CAGE</li>
+            <li><b>8(a) / HUBZone / WOSB / SDVOSB</b></li>
+            <li><b>Capability statements</b></li>
+            <li><b>Bid &amp; proposal writing</b></li>
+            <li><b>Compliance matrices</b></li>
+            <li><b>Teaming introductions</b></li>
+            <li><b>Post-award compliance</b></li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Who we help</h3>
+          <ul>
+            <li>Solo founders entering federal</li>
+            <li>Established small businesses scaling</li>
+            <li>Veteran-owned + women-owned firms</li>
+            <li>SC + Southeast regional operators</li>
+            <li>Firms pursuing 8(a) certification</li>
+            <li>Teaming partners seeking primes</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Why us</h3>
+          <ul>
+            <li><b>Dr. McKnight personally</b> — no juniors</li>
+            <li>Bid only when you can <b>actually win</b></li>
+            <li>Faith-anchored, straight-shooting</li>
+            <li>Federal-fluent — not generic coaching</li>
+            <li>Documented outcomes, not hype</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sell-cta">
+        <div>
+          <h4>Book a free 30-minute <em>strategy call.</em></h4>
+          <div style="font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-top:6px;font-weight:600">(202) 276-2913 · info@thecontractingpreacher.com · thecontractingpreacher.com</div>
+        </div>
+        <a class="btn" href="#">Schedule →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ 8. PRICING SHEET ═══════ -->
+  <section id="pricing">
+    <div class="sec-head">
+      <span class="sec-num">08</span>
+      <h2 class="sec-title">Pricing <em>Sheet</em></h2>
+      <span class="sec-sub">3-tier · draft pricing · confirm w/ Verification Packet</span>
+    </div>
+
+    <div class="pricing">
+      <div class="tier">
+        <div class="name">Starter · 01</div>
+        <h3>Foundation</h3>
+        <div class="price">$2,850<small>one-time</small></div>
+        <p>Get federal-ready. SAM registered, capability statement in hand, first certification queued.</p>
+        <ul>
+          <li>SAM.gov registration + UEI</li>
+          <li>CAGE code setup</li>
+          <li>Capability statement (1-page)</li>
+          <li>NAICS optimization</li>
+          <li>One certification application (8(a) or WOSB)</li>
+          <li>30-day onboarding roadmap</li>
+        </ul>
+      </div>
+
+      <div class="tier featured">
+        <div class="name">Pursuit · 02</div>
+        <h3>Full Bid Package</h3>
+        <div class="price">$4,500<small>per opportunity</small></div>
+        <p>Everything in Foundation, plus a proposal engineered to win on one target opportunity.</p>
+        <ul>
+          <li>Everything in Foundation</li>
+          <li>Opportunity identification + scoring</li>
+          <li>Bid/no-bid analysis</li>
+          <li>Full compliance matrix</li>
+          <li>Complete proposal package</li>
+          <li>Compliance + submission support</li>
+        </ul>
+      </div>
+
+      <div class="tier">
+        <div class="name">Retainer · 03</div>
+        <h3>Ongoing Growth</h3>
+        <div class="price">$1,850<small>/ month</small></div>
+        <p>Continuous federal pipeline. Structured for firms actively pursuing multiple bids per quarter.</p>
+        <ul>
+          <li>Daily opportunity pipeline (SAM + Grants.gov)</li>
+          <li>Unlimited bid/no-bid scoring</li>
+          <li>2 full proposals per month</li>
+          <li>Teaming introductions</li>
+          <li>Compliance monitoring</li>
+          <li>Monthly strategy call</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lockdown" style="margin-top:24px">
+      <b>Draft pricing only.</b> Final pricing confirmed in Section 5 of the Fleet Verification Packet. All service scopes require documented Statement of Work before contract execution. Third-party pass-through costs (bonding, licensing, express mail) invoiced separately at cost.
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

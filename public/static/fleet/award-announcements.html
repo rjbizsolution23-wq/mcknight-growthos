@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Award Announcements — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --ok:#2F6B4A;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:56px 32px 100px}
+  .page{max-width:1300px;margin:0 auto}
+
+  /* DOC HEAD */
+  .doc-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--navy);padding-bottom:20px;margin-bottom:48px}
+  .doc-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .doc-head .title{font-family:var(--serif);font-size:26px;font-weight:700;margin-top:4px}
+  .doc-head .kv{display:flex;gap:28px;font-family:var(--mono);font-size:11px;color:var(--slate)}
+  .doc-head .kv b{color:var(--navy);display:block;letter-spacing:.14em;font-weight:600;text-transform:uppercase}
+
+  /* SECTION */
+  section{margin-bottom:64px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:24px;border-bottom:1px solid rgba(10,22,40,.15);padding-bottom:14px}
+  .sec-num{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);font-weight:600}
+  .sec-title{font-family:var(--serif);font-size:28px;font-weight:700;letter-spacing:-.01em}
+  .sec-title em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-sub{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+
+  .lbl-small{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;margin-bottom:8px;font-weight:500}
+
+  /* SQUARE POSTS */
+  .posts{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .post{aspect-ratio:1/1;border-radius:2px;padding:42px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 20px 40px -30px rgba(10,22,40,.35)}
+
+  /* Variant 1 — Big Value */
+  .p-value{background:var(--navy);color:var(--ivory)}
+  .p-value::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.24),transparent 55%)}
+  .p-value .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600;position:relative}
+  .p-value .amount{font-family:var(--serif);font-size:130px;line-height:.9;font-weight:800;color:var(--gold-3);position:relative;letter-spacing:-.03em;margin:12px 0}
+  .p-value .amount em{font-style:normal;color:var(--gold);font-size:80px}
+  .p-value .subject{font-family:var(--serif);font-size:26px;line-height:1.15;font-weight:700;position:relative;max-width:340px;letter-spacing:-.005em}
+  .p-value .foot{position:relative;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase;display:flex;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(201,169,97,.3)}
+
+  /* Variant 2 — Client Spotlight */
+  .p-client{background:var(--ivory);color:var(--navy);border-top:6px solid var(--gold)}
+  .p-client .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+  .p-client .quote{font-family:var(--serif);font-size:32px;line-height:1.15;font-weight:700;letter-spacing:-.01em}
+  .p-client .quote em{font-style:italic;color:var(--red)}
+  .p-client .attrib{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);padding-top:14px;border-top:1px solid var(--line)}
+  .p-client .attrib b{display:block;color:var(--navy);font-family:var(--serif);font-size:15px;letter-spacing:-.005em;text-transform:none;font-weight:700;margin-bottom:2px}
+
+  /* Variant 3 — Announcement */
+  .p-award{background:var(--gold);color:var(--navy)}
+  .p-award .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--red);text-transform:uppercase;font-weight:700}
+  .p-award h3{font-family:var(--serif);font-size:52px;line-height:1;font-weight:800;letter-spacing:-.015em;margin-top:12px}
+  .p-award h3 em{font-style:italic;color:#8B1F1F;font-weight:600}
+  .p-award .body{font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.4;color:var(--navy);opacity:.85;max-width:320px;margin-top:14px}
+  .p-award .foot{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);font-weight:600;padding-top:14px;border-top:1px solid rgba(10,22,40,.2)}
+
+  /* Variant 4 — Impact / Jobs */
+  .p-impact{background:var(--navy-2);color:var(--ivory)}
+  .p-impact::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(201,169,97,.14) 1px,transparent 1px);background-size:22px 22px}
+  .p-impact .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600;position:relative}
+  .p-impact .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;position:relative}
+  .p-impact .st{padding:12px 0}
+  .p-impact .st b{font-family:var(--serif);font-size:56px;font-weight:800;color:var(--gold-3);line-height:.9;letter-spacing:-.02em;display:block}
+  .p-impact .st span{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-top:6px;display:block}
+  .p-impact .headline{font-family:var(--serif);font-size:22px;line-height:1.15;font-weight:700;position:relative;max-width:330px;margin-top:auto}
+  .p-impact .headline em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .p-impact .foot{position:relative;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase}
+
+  /* Variant 5 — Scripture Award */
+  .p-scripture{background:linear-gradient(135deg,var(--red) 0%,#6d1616 100%);color:var(--ivory);text-align:center;justify-content:center;align-items:center}
+  .p-scripture .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--gold-3);text-transform:uppercase;font-weight:600}
+  .p-scripture .verse{font-family:var(--serif);font-style:italic;font-size:26px;line-height:1.3;font-weight:400;margin-top:24px;max-width:320px}
+  .p-scripture .verse b{font-style:normal;font-weight:700}
+  .p-scripture .ref{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;margin-top:24px;font-weight:600}
+  .p-scripture .foot{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--gold-3);text-transform:uppercase;margin-top:24px;padding-top:14px;border-top:1px solid rgba(201,169,97,.3);width:80%}
+
+  /* Variant 6 — Milestone tally */
+  .p-tally{background:#fff;color:var(--navy);border-left:6px solid var(--red)}
+  .p-tally .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--red);text-transform:uppercase;font-weight:700}
+  .p-tally .number{font-family:var(--serif);font-size:150px;line-height:.85;font-weight:800;color:var(--navy);letter-spacing:-.03em;margin:14px 0 8px}
+  .p-tally .number em{font-style:italic;color:var(--gold);font-size:70px}
+  .p-tally .desc{font-family:var(--serif);font-size:22px;line-height:1.2;font-weight:700;letter-spacing:-.005em;max-width:340px}
+  .p-tally .desc em{font-style:italic;color:var(--red)}
+  .p-tally .foot{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase;padding-top:14px;border-top:1px solid var(--line);font-weight:600}
+
+  /* LINKEDIN POST */
+  .li-frame{max-width:560px;margin:0 auto;background:#fff;border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;box-shadow:0 8px 24px -12px rgba(0,0,0,.15);font-family:'Inter',system-ui,sans-serif;color:#1d1d1d}
+  .li-head{padding:14px 16px;display:flex;gap:10px;align-items:flex-start}
+  .li-head .avatar{width:48px;height:48px;background:var(--navy);border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:var(--gold);border:2px solid var(--gold)}
+  .li-head .avatar svg{width:24px;height:24px}
+  .li-head .who b{font-size:14px;font-weight:700;display:block}
+  .li-head .who .role{font-size:12px;color:#666}
+  .li-head .who .time{font-size:12px;color:#888;margin-top:2px}
+  .li-body{padding:4px 16px 12px;font-size:14px;line-height:1.55;color:#1d1d1d}
+  .li-body p{margin-bottom:8px}
+  .li-body .emphasis{font-weight:600}
+  .li-media{background:var(--navy);color:var(--ivory);padding:36px 32px;text-align:center;position:relative;overflow:hidden}
+  .li-media::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.2),transparent 55%);pointer-events:none}
+  .li-media .lbl-m{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600;position:relative}
+  .li-media .amt{font-family:var(--serif);font-size:82px;font-weight:800;color:var(--gold-3);line-height:.9;margin:12px 0;position:relative;letter-spacing:-.02em}
+  .li-media .subj{font-family:var(--serif);font-size:20px;font-weight:700;line-height:1.2;position:relative;max-width:400px;margin:0 auto}
+  .li-actions{padding:8px 16px;border-top:1px solid #f0f0f0;display:flex;justify-content:space-between;font-size:12px;color:#666}
+  .li-actions .act{padding:8px 12px;border-radius:4px;cursor:default}
+  .li-tags{padding:0 16px 12px;font-size:13px;color:#0a66c2}
+  .li-tags a{color:#0a66c2;text-decoration:none;font-weight:500}
+
+  /* PRESS RELEASE */
+  .press{background:#fff;padding:48px 56px;border-radius:2px;box-shadow:0 20px 50px -30px rgba(10,22,40,.2);position:relative;overflow:hidden}
+  .press::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+  .press-head{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:24px}
+  .press-head .brand{display:flex;align-items:center;gap:12px}
+  .press-head .brand svg{width:40px;height:40px;color:var(--navy)}
+  .press-head .brand .txt{font-family:var(--serif);font-weight:700;font-size:14px;line-height:1.05}
+  .press-head .brand .txt h1{font-family:var(--serif);font-size:18px;font-weight:800;letter-spacing:-.01em;line-height:1}
+  .press-head .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;font-weight:500;margin-top:2px}
+  .press-head .stamp{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--red);text-transform:uppercase;font-weight:700;text-align:right;line-height:1.6}
+  .press-head .stamp b{color:var(--navy);display:block;font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;margin-top:2px}
+
+  .press-title{font-family:var(--serif);font-size:38px;font-weight:800;letter-spacing:-.02em;line-height:1;margin-bottom:8px}
+  .press-title em{font-style:italic;color:var(--red);font-weight:600}
+  .press-sub{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--slate);margin-bottom:24px;line-height:1.5}
+
+  .press-body{font-size:14.5px;line-height:1.7;color:var(--navy)}
+  .press-body p{margin-bottom:12px}
+  .press-body p:first-of-type::first-letter{font-family:var(--serif);font-size:52px;font-weight:800;float:left;line-height:.85;padding:4px 8px 0 0;color:var(--navy)}
+  .press-body p b{color:var(--navy);font-weight:700}
+  .press-body .quote{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--slate);border-left:3px solid var(--gold);padding-left:16px;margin:14px 0}
+  .press-body .quote b{color:var(--navy);font-style:normal;font-weight:600;display:block;margin-top:4px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+  .press-boilerplate{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--slate);line-height:1.6}
+  .press-boilerplate b{color:var(--navy);font-weight:700}
+  .press-contact{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;line-height:1.7}
+  .press-contact b{color:var(--navy);font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:0;text-transform:none;display:block;margin-bottom:2px}
+
+  @media (max-width:900px){
+    .posts{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#0A1628" stroke-width="1.5" opacity=".45"/>
+    <rect x="46" y="26" width="8" height="46" fill="#0A1628"/>
+    <rect x="32" y="36" width="36" height="6" fill="#0A1628"/>
+  </symbol>
+</svg>
+
+<div class="page">
+
+  <div class="doc-head">
+    <div>
+      <div class="meta">Volume 05 · Marketing Assets</div>
+      <div class="title">Contract Award Announcement Pack</div>
+    </div>
+    <div class="kv">
+      <div><b>Purpose</b>Announce client wins</div>
+      <div><b>Formats</b>6 sq · 1 LinkedIn · 1 press</div>
+      <div><b>Version</b>1.0</div>
+    </div>
+  </div>
+
+  <!-- SECTION 01 — SQUARE POSTS -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">Square Posts <em>· 6 variants</em></h2>
+      <span class="sec-sub">1080 × 1080 · IG · LinkedIn · FB</span>
+    </div>
+
+    <div class="posts">
+
+      <!-- Variant 1 - Big Value -->
+      <div class="post p-value">
+        <div class="lbl">Contract · Awarded</div>
+        <div class="amount">$2.1<em>M</em></div>
+        <div class="subject">USDA facility maintenance across the SE region.</div>
+        <div class="foot"><span>The Contracting Preacher</span><span>#Federal</span></div>
+      </div>
+
+      <!-- Variant 2 - Client Spotlight -->
+      <div class="post p-client">
+        <div class="lbl">Client · Spotlight</div>
+        <div class="quote">"Dr. McKnight made the impossible <em>feel simple.</em>"</div>
+        <div class="attrib"><b>Angela Torres</b>Torres Logistics · SC 8(a) Prime</div>
+      </div>
+
+      <!-- Variant 3 - Announcement -->
+      <div class="post p-award">
+        <div>
+          <div class="lbl">Award · Announcement</div>
+          <h3>Contract <em>won.</em></h3>
+          <div class="body">USDA transportation set-aside · $2.1M · Prime · On-time · On-budget.</div>
+        </div>
+        <div class="foot">TheContractingPreacher.com</div>
+      </div>
+
+      <!-- Variant 4 - Impact -->
+      <div class="post p-impact">
+        <div class="lbl">Impact · Reported</div>
+        <div class="grid">
+          <div class="st"><b>18</b><span>Jobs Created</span></div>
+          <div class="st"><b>$4.6M</b><span>Multi-Yr Value</span></div>
+          <div class="st"><b>3</b><span>Certifications</span></div>
+          <div class="st"><b>12</b><span>SE States</span></div>
+        </div>
+        <div class="headline">A single contract <em>· real community impact.</em></div>
+        <div class="foot">USDA · Southeast Region · 2026</div>
+      </div>
+
+      <!-- Variant 5 - Scripture / Award -->
+      <div class="post p-scripture">
+        <div class="lbl">Faith · Anchored</div>
+        <div class="verse">"<b>Whatever you do,</b> work at it with all your heart, as working for the Lord…"</div>
+        <div class="ref">— Colossians 3 : 23</div>
+        <div class="foot">Client Win · TCP</div>
+      </div>
+
+      <!-- Variant 6 - Tally -->
+      <div class="post p-tally">
+        <div class="lbl">Milestone · YTD</div>
+        <div class="number">$50<em>M+</em></div>
+        <div class="desc">In federal contracts won <em>for our clients.</em></div>
+        <div class="foot">The Contracting Preacher · YTD 2026</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 02 — LINKEDIN POST -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">LinkedIn Post <em>· long-form</em></h2>
+      <span class="sec-sub">1200 × 630 media + caption</span>
+    </div>
+
+    <div class="li-frame">
+      <div class="li-head">
+        <div class="avatar"><svg><use href="#mark"/></svg></div>
+        <div class="who">
+          <b>Dr. McKnight</b>
+          <div class="role">Federal Contracting Consultant · The Contracting Preacher</div>
+          <div class="time">2h · 🌎</div>
+        </div>
+      </div>
+
+      <div class="li-body">
+        <p class="emphasis">Another one for the books.</p>
+        <p>Torres Logistics — a South Carolina 8(a) small business — was just awarded a <b>$2.1M USDA transportation contract</b> for facility support across the Southeast region.</p>
+        <p>18 months ago, they had:<br>→ No SAM registration<br>→ No 8(a) certification<br>→ Zero federal past performance</p>
+        <p>Today, they have all three — and a signed contract that will create 18 jobs in Columbia, Charleston, and Aiken.</p>
+        <p>The lesson isn't ours. It's theirs. They showed up prepared. They walked the process. They didn't quit when the paperwork got dense.</p>
+        <p class="emphasis">Congratulations, Angela. Well done.</p>
+        <p>"Commit to the Lord whatever you do, and he will establish your plans." — Proverbs 16:3</p>
+      </div>
+
+      <div class="li-media">
+        <div class="lbl-m">Contract · Awarded</div>
+        <div class="amt">$2.1M</div>
+        <div class="subj">USDA Facility Maintenance · Southeast Region</div>
+      </div>
+
+      <div class="li-tags">
+        <a>#FederalContracts</a> <a>#8aContracting</a> <a>#SmallBusiness</a> <a>#SouthCarolina</a> <a>#TheContractingPreacher</a>
+      </div>
+
+      <div class="li-actions">
+        <span class="act">👍 Like</span>
+        <span class="act">💬 Comment</span>
+        <span class="act">🔁 Repost</span>
+        <span class="act">✉ Send</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 03 — PRESS RELEASE -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Press Release <em>· one-page</em></h2>
+      <span class="sec-sub">For local + trade media</span>
+    </div>
+
+    <div class="press">
+      <div class="press-head">
+        <div class="brand">
+          <svg><use href="#mark"/></svg>
+          <div class="txt"><h1>The Contracting Preacher</h1><span>For Immediate Release · Columbia, SC</span></div>
+        </div>
+        <div class="stamp">Press Release<b>July 23, 2026</b></div>
+      </div>
+
+      <div class="press-title">South Carolina Small Business Wins <em>$2.1M</em> USDA Federal Contract</div>
+      <div class="press-sub">Torres Logistics Group joins the 500+ businesses coached to federal contract awards by Dr. McKnight — The Contracting Preacher.</div>
+
+      <div class="press-body">
+        <p><b>Columbia, SC — July 23, 2026 —</b> Torres Logistics Group, a Columbia-based 8(a)-certified small business, has been awarded a $2.1 million federal contract by the U.S. Department of Agriculture (USDA) to provide facility maintenance services across the Southeast region. The multi-year contract is expected to create 18 new jobs across Columbia, Charleston, and Aiken.</p>
+
+        <p>The contract is the culmination of an 18-month federal readiness engagement led by <b>Dr. McKnight — The Contracting Preacher</b>, a Columbia-based federal contracting consultancy that has helped over 500 small businesses nationwide navigate SAM.gov registration, SBA certification, and proposal preparation to win federal contracts.</p>
+
+        <div class="quote">
+          "Torres Logistics is exactly what the federal marketplace was designed for — a well-run, values-driven small business that just needed a clear path in. Angela showed up prepared. She followed the process. This contract is the fruit of that discipline."
+          <b>— Dr. McKnight, Federal Contracting Consultant</b>
+        </div>
+
+        <p>Dr. McKnight's practice, which maintains an <b>89% proposal win rate</b> — more than double the industry standard — has helped clients win a collective <b>$50M+ in federal contracts</b>. The practice specializes in end-to-end federal contracting support, including SAM.gov registration, 8(a) / HUBZone / WOSB / SDVOSB certification, bid and proposal writing, and post-award compliance.</p>
+
+        <div class="quote">
+          "Dr. McKnight made what felt like an impossible process feel simple. He walked with us the entire way — from SAM registration to signed contract. Our team is now positioned for federal growth we never thought possible."
+          <b>— Angela Torres, President, Torres Logistics Group</b>
+        </div>
+
+        <p>Torres Logistics begins performance under the contract on August 1, 2026.</p>
+
+        <div class="press-boilerplate">
+          <b>About The Contracting Preacher —</b> Founded by Dr. McKnight, The Contracting Preacher is a federal contracting consulting practice headquartered in Columbia, South Carolina, with regional offices in Charleston, Summerville, and Hilton Head. The practice has served over 500 small businesses nationwide, helping clients win more than $50 million in federal contracts. Learn more at <b>thecontractingpreacher.com</b>.
+        </div>
+
+        <div class="press-contact">
+          <b>Media Contact</b>
+          Dr. McKnight · The Contracting Preacher<br>
+          (202) 276-2913 · info@thecontractingpreacher.com<br>
+          1225 Laurel Street, Ste 415 · Columbia, SC 29201
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

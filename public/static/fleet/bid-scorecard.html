@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bid Scorecard — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0; --line-2:#D6CFB8;
+    --ok:#2F6B4A; --warn:#B87A1F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);-webkit-font-smoothing:antialiased}
+  body{padding:40px 20px 120px}
+  .wrap{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 340px;gap:24px}
+
+  /* HEADER */
+  header{grid-column:1/-1;background:var(--navy);color:var(--ivory);padding:36px 44px;border-radius:2px;position:relative;overflow:hidden;margin-bottom:8px}
+  header::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 90% 20%,rgba(201,169,97,.2),transparent 45%);pointer-events:none}
+  .brand{display:flex;align-items:center;gap:14px;position:relative;margin-bottom:20px}
+  .brand svg{width:44px;height:44px;color:var(--gold);flex:none}
+  .brand .txt{font-family:var(--serif);font-weight:700;font-size:18px;line-height:1.05}
+  .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400;margin-top:3px}
+  header h1{font-family:var(--serif);font-size:44px;font-weight:800;letter-spacing:-.01em;line-height:1;position:relative}
+  header h1 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  header .lede{font-family:var(--serif);font-style:italic;color:var(--gold-3);font-size:16px;margin-top:8px;position:relative;max-width:640px}
+
+  header .oppty{margin-top:24px;padding-top:20px;border-top:1px solid rgba(201,169,97,.3);display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;position:relative}
+  .oppty .fld label{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:4px}
+  .oppty .fld input{background:rgba(255,255,255,.06);border:0;border-bottom:1px solid rgba(201,169,97,.3);color:var(--ivory);padding:8px 10px;font-family:var(--serif);font-size:15px;width:100%;outline:none}
+  .oppty .fld input:focus{border-bottom-color:var(--gold)}
+  .oppty .fld input::placeholder{color:rgba(228,203,146,.5)}
+
+  /* MAIN */
+  main{background:#fff;border:1px solid var(--line);border-radius:2px;padding:0;box-shadow:0 20px 50px -30px rgba(10,22,40,.2)}
+  main::before{content:"";display:block;height:6px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+
+  /* GATE SECTION */
+  .gate-sec{padding:32px 40px;border-bottom:1px solid var(--line)}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .sec-head h2{font-family:var(--serif);font-size:22px;font-weight:700}
+  .sec-head h2 em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-head .tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+
+  .gates{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .gate{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line-2);border-radius:2px;cursor:pointer;transition:all .12s;background:#fff}
+  .gate:hover{background:var(--ivory)}
+  .gate input{width:16px;height:16px;flex:none;margin-top:2px;accent-color:var(--red);cursor:pointer}
+  .gate span{font-size:13px;color:var(--navy);line-height:1.4}
+  .gate:has(input:checked){background:#FBEEEE;border-color:var(--red)}
+  .gate:has(input:checked) span{color:#5B1414;font-weight:600}
+
+  /* WEIGHTED SECTION */
+  .score-sec{padding:32px 40px;border-bottom:1px solid var(--line)}
+  .factor{display:grid;grid-template-columns:1fr 320px 80px;gap:20px;align-items:center;padding:16px 0;border-bottom:1px dashed var(--line)}
+  .factor:last-child{border:0}
+  .factor .info h4{font-family:var(--serif);font-size:17px;font-weight:700;letter-spacing:-.005em}
+  .factor .info p{font-size:12px;color:var(--slate);margin-top:2px}
+  .factor .weight-tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin-top:2px;display:inline-block}
+  .factor .slider-wrap{display:flex;align-items:center;gap:12px}
+  .factor input[type="range"]{flex:1;-webkit-appearance:none;height:6px;background:var(--ivory-2);border-radius:3px;outline:none;cursor:pointer}
+  .factor input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;background:var(--navy);border:2px solid var(--gold);border-radius:50%;cursor:pointer;transition:transform .1s}
+  .factor input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+  .factor input[type="range"]::-moz-range-thumb{width:20px;height:20px;background:var(--navy);border:2px solid var(--gold);border-radius:50%;cursor:pointer}
+  .factor .pct{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--slate);text-transform:uppercase;width:50px;text-align:right;font-weight:600}
+  .factor .earned{font-family:var(--serif);font-size:26px;font-weight:800;color:var(--navy);text-align:right;letter-spacing:-.01em}
+  .factor .earned span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--slate);text-transform:uppercase;display:block;font-weight:600;margin-top:-4px}
+
+  /* NOTES */
+  .notes-sec{padding:32px 40px}
+  .notes-sec textarea{width:100%;min-height:100px;padding:14px 16px;border:1px solid var(--line-2);border-radius:2px;font-family:var(--sans);font-size:14px;color:var(--navy);resize:vertical;outline:none;line-height:1.5}
+  .notes-sec textarea:focus{border-color:var(--gold-2)}
+
+  /* SIDEBAR — RESULT PANEL */
+  aside{position:sticky;top:24px;align-self:start}
+  .result{background:var(--navy);color:var(--ivory);border-radius:2px;padding:32px 28px;overflow:hidden;position:relative}
+  .result::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.18),transparent 55%);pointer-events:none}
+  .result .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600;position:relative}
+  .result .score-big{font-family:var(--serif);font-size:96px;font-weight:800;line-height:.95;letter-spacing:-.03em;color:var(--gold-3);margin:12px 0 4px;position:relative}
+  .result .score-big span{font-size:36px;color:var(--gold);opacity:.7;font-weight:400}
+  .result .band{display:inline-block;padding:6px 14px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;border-radius:2px;margin-bottom:20px;position:relative}
+  .result .band.b-priority{background:var(--gold);color:var(--navy)}
+  .result .band.b-strong{background:var(--gold-3);color:var(--navy)}
+  .result .band.b-gap{background:var(--ivory);color:var(--navy);border:1px solid var(--gold)}
+  .result .band.b-monitor{background:transparent;color:var(--gold-3);border:1px solid var(--gold-3)}
+  .result .band.b-nobid{background:#5B1414;color:#F5D5D5;border:1px solid var(--red)}
+  .result .band.b-reject{background:var(--red);color:#fff}
+
+  .result .verdict{font-family:var(--serif);font-size:22px;font-weight:700;line-height:1.2;margin-bottom:16px;position:relative}
+  .result .verdict em{font-style:italic;color:var(--gold-3);font-weight:400}
+
+  .result .breakdown{border-top:1px solid rgba(201,169,97,.3);padding-top:16px;position:relative}
+  .result .breakdown h5{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:10px}
+  .result .breakdown .row{display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--ivory);opacity:.9}
+  .result .breakdown .row b{font-family:var(--mono);color:var(--gold-3);font-weight:600}
+
+  .result .disqual{margin-top:16px;padding-top:14px;border-top:1px solid rgba(201,169,97,.3);position:relative}
+  .result .disqual.active{background:#5B1414;margin:16px -28px -32px;padding:20px 28px}
+  .result .disqual h5{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--red);text-transform:uppercase;font-weight:700;margin-bottom:8px}
+  .result .disqual.active h5{color:#F5D5D5}
+  .result .disqual p{font-size:12px;color:var(--ivory);opacity:.75;line-height:1.5}
+  .result .disqual.active p{color:#F5D5D5;opacity:1;font-weight:500}
+
+  .actions{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+  .actions button{background:transparent;border:1px solid var(--navy);color:var(--navy);padding:12px 16px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;cursor:pointer;border-radius:2px;transition:all .15s}
+  .actions button:hover{background:var(--navy);color:var(--gold-3)}
+  .actions button.primary{background:var(--navy);color:var(--gold-3);border-color:var(--navy)}
+  .actions button.primary:hover{background:var(--gold);color:var(--navy)}
+  .actions button.reset{border-color:var(--red);color:var(--red)}
+  .actions button.reset:hover{background:var(--red);color:#fff}
+
+  @media print{
+    body{background:#fff;padding:0}
+    .wrap{grid-template-columns:1fr;max-width:none}
+    aside{position:static}
+    .actions{display:none}
+  }
+  @media (max-width:900px){
+    .wrap{grid-template-columns:1fr}
+    aside{position:static}
+    .gates{grid-template-columns:1fr}
+    .factor{grid-template-columns:1fr;gap:8px}
+    .factor .earned{text-align:left}
+    header .oppty{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#0A1628" stroke-width="1.5" opacity=".45"/>
+    <rect x="46" y="26" width="8" height="46" fill="#0A1628"/>
+    <rect x="32" y="36" width="36" height="6" fill="#0A1628"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#0A1628"/>
+  </symbol>
+</svg>
+
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <svg><use href="#mark"/></svg>
+      <div class="txt">The Contracting Preacher<span>Bid Scorecard · v1.0</span></div>
+    </div>
+    <h1>Bid or <em>no-bid?</em></h1>
+    <div class="lede">Score every opportunity before you write a single word. 10 hard gates. 9 weighted factors. One clear verdict.</div>
+
+    <div class="oppty">
+      <div class="fld"><label>Opportunity Name / #</label><input id="opp_name" placeholder="e.g. RFP W912GB-26-R-0042"></div>
+      <div class="fld"><label>Agency / Buyer</label><input id="opp_agency" placeholder="e.g. USDA · GSA · VA"></div>
+      <div class="fld"><label>Deadline · Est. Value</label><input id="opp_meta" placeholder="e.g. Aug 15 · $2.4M"></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HARD GATES -->
+    <div class="gate-sec">
+      <div class="sec-head">
+        <h2>Step 1 · Hard Disqualifiers <em>— check any that TRUE</em></h2>
+        <span class="tag">Any check = auto-reject</span>
+      </div>
+      <div class="gates">
+        <label class="gate"><input type="checkbox" class="dq" data-dq="Eligibility"><span><b>Ineligibility</b> — applicant type doesn't qualify</span></label>
+        <label class="gate"><input type="checkbox" class="dq" data-dq="Geography"><span><b>Geography</b> — business location is ineligible</span></label>
+        <label class="gate"><input type="checkbox" class="dq" data-dq="Certification"><span><b>Certification</b> — required certification is absent</span></label>
+        <label class="gate"><input type="checkbox" class="dq" data-dq="SAM"><span><b>SAM registration</b> — won't be active at award</span></label>
+        <label class="gate"><input type="checkbox" class="dq" data-dq="Timeline"><span><b>Timeline</b> — deadline is impossible</span></label>
+        <label class="gate"><input type="checkbox" class="dq" data-dq="Match"><span><b>Match funding</b> — required match unavailable</span></label>
+        <label class="gate"><input type="checkbox" class="dq" data-dq="License"><span><b>License</b> — required license is absent</span></label>
+        <label class="gate"><input type="checkbox" class="dq" data-dq="Conflict"><span><b>Conflict of interest</b> — cannot be satisfied</span></label>
+        <label class="gate"><input type="checkbox" class="dq" data-dq="Experience"><span><b>Experience</b> — required experience unprovable</span></label>
+        <label class="gate"><input type="checkbox" class="dq" data-dq="Integrity"><span><b>Integrity</b> — would require a false certification</span></label>
+      </div>
+    </div>
+
+    <!-- WEIGHTED SCORING -->
+    <div class="score-sec">
+      <div class="sec-head">
+        <h2>Step 2 · Weighted Fit Score <em>— slide to your honest read</em></h2>
+        <span class="tag">Total 100 pts</span>
+      </div>
+
+      <div class="factor">
+        <div class="info"><h4>Eligibility</h4><p>Applicant type, size standard, geography, cert match</p><span class="weight-tag">20 pts max</span></div>
+        <div class="slider-wrap"><input type="range" min="0" max="100" value="50" class="slider" data-weight="20"><span class="pct">50%</span></div>
+        <div class="earned"><span data-max>of 20</span><span data-val>10</span></div>
+      </div>
+
+      <div class="factor">
+        <div class="info"><h4>Capability Alignment</h4><p>What buyer needs vs. what you actually do</p><span class="weight-tag">15 pts max</span></div>
+        <div class="slider-wrap"><input type="range" min="0" max="100" value="50" class="slider" data-weight="15"><span class="pct">50%</span></div>
+        <div class="earned"><span data-max>of 15</span><span data-val>7.5</span></div>
+      </div>
+
+      <div class="factor">
+        <div class="info"><h4>Past Performance</h4><p>Documented similar wins (federal preferred)</p><span class="weight-tag">15 pts max</span></div>
+        <div class="slider-wrap"><input type="range" min="0" max="100" value="50" class="slider" data-weight="15"><span class="pct">50%</span></div>
+        <div class="earned"><span data-max>of 15</span><span data-val>7.5</span></div>
+      </div>
+
+      <div class="factor">
+        <div class="info"><h4>Customer / Agency Alignment</h4><p>Prior relationship, agency familiarity</p><span class="weight-tag">10 pts max</span></div>
+        <div class="slider-wrap"><input type="range" min="0" max="100" value="50" class="slider" data-weight="10"><span class="pct">50%</span></div>
+        <div class="earned"><span data-max>of 10</span><span data-val>5</span></div>
+      </div>
+
+      <div class="factor">
+        <div class="info"><h4>Geographic Alignment</h4><p>Distance, local presence, HUBZone/rural bonus</p><span class="weight-tag">10 pts max</span></div>
+        <div class="slider-wrap"><input type="range" min="0" max="100" value="50" class="slider" data-weight="10"><span class="pct">50%</span></div>
+        <div class="earned"><span data-max>of 10</span><span data-val>5</span></div>
+      </div>
+
+      <div class="factor">
+        <div class="info"><h4>Financial Capacity</h4><p>Can finance performance, bonding, cash flow</p><span class="weight-tag">10 pts max</span></div>
+        <div class="slider-wrap"><input type="range" min="0" max="100" value="50" class="slider" data-weight="10"><span class="pct">50%</span></div>
+        <div class="earned"><span data-max>of 10</span><span data-val>5</span></div>
+      </div>
+
+      <div class="factor">
+        <div class="info"><h4>Competitive Positioning</h4><p>Incumbent vulnerability, price competitiveness</p><span class="weight-tag">10 pts max</span></div>
+        <div class="slider-wrap"><input type="range" min="0" max="100" value="50" class="slider" data-weight="10"><span class="pct">50%</span></div>
+        <div class="earned"><span data-max>of 10</span><span data-val>5</span></div>
+      </div>
+
+      <div class="factor">
+        <div class="info"><h4>Deadline Readiness</h4><p>Time available vs. proposal complexity</p><span class="weight-tag">5 pts max</span></div>
+        <div class="slider-wrap"><input type="range" min="0" max="100" value="50" class="slider" data-weight="5"><span class="pct">50%</span></div>
+        <div class="earned"><span data-max>of 5</span><span data-val>2.5</span></div>
+      </div>
+
+      <div class="factor">
+        <div class="info"><h4>Strategic Value</h4><p>Door-opener, agency relationship, follow-on potential</p><span class="weight-tag">5 pts max</span></div>
+        <div class="slider-wrap"><input type="range" min="0" max="100" value="50" class="slider" data-weight="5"><span class="pct">50%</span></div>
+        <div class="earned"><span data-max>of 5</span><span data-val>2.5</span></div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="notes-sec">
+      <div class="sec-head"><h2>Step 3 · Notes <em>— context for the record</em></h2><span class="tag">Optional</span></div>
+      <textarea id="notes" placeholder="Teaming partners considered · gap-plan needed · incumbent notes · pricing intel · anything the memory of this decision should carry forward…"></textarea>
+    </div>
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="result" id="result">
+      <div class="lbl">Final Verdict</div>
+      <div class="score-big"><span id="score">50</span><span>/100</span></div>
+      <div class="band b-monitor" id="band">Monitor</div>
+      <div class="verdict" id="verdict">Set the sliders <em>to your honest read.</em></div>
+
+      <div class="breakdown">
+        <h5>Score Breakdown</h5>
+        <div class="row"><span>Eligibility</span><b id="b0">10.0</b></div>
+        <div class="row"><span>Capability</span><b id="b1">7.5</b></div>
+        <div class="row"><span>Past Performance</span><b id="b2">7.5</b></div>
+        <div class="row"><span>Customer Align</span><b id="b3">5.0</b></div>
+        <div class="row"><span>Geographic</span><b id="b4">5.0</b></div>
+        <div class="row"><span>Financial</span><b id="b5">5.0</b></div>
+        <div class="row"><span>Competitive</span><b id="b6">5.0</b></div>
+        <div class="row"><span>Deadline</span><b id="b7">2.5</b></div>
+        <div class="row"><span>Strategic</span><b id="b8">2.5</b></div>
+      </div>
+
+      <div class="disqual" id="disqual">
+        <h5>Hard Disqualifiers</h5>
+        <p id="dqmsg">None triggered. Score stands.</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="exportJSON()">↓ Export Decision</button>
+      <button onclick="window.print()">⎙ Print / PDF</button>
+      <button class="reset" onclick="resetAll()">✕ Reset</button>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+const sliders = document.querySelectorAll('.slider');
+const dqBoxes = document.querySelectorAll('.dq');
+const scoreEl = document.getElementById('score');
+const bandEl = document.getElementById('band');
+const verdictEl = document.getElementById('verdict');
+const disqualEl = document.getElementById('disqual');
+const dqmsgEl = document.getElementById('dqmsg');
+
+function update(){
+  let total = 0;
+  const breakdown = [];
+  sliders.forEach((s, i) => {
+    const w = +s.dataset.weight;
+    const pct = +s.value;
+    const earned = (pct / 100) * w;
+    total += earned;
+    breakdown.push(earned);
+    const factor = s.closest('.factor');
+    factor.querySelector('.pct').textContent = pct + '%';
+    factor.querySelector('[data-val]').textContent = earned.toFixed(1);
+    document.getElementById('b' + i).textContent = earned.toFixed(1);
+  });
+
+  const rounded = Math.round(total);
+
+  /* Disqualifier check */
+  const triggered = [...dqBoxes].filter(cb => cb.checked).map(cb => cb.dataset.dq);
+  const isDQ = triggered.length > 0;
+
+  if(isDQ){
+    scoreEl.textContent = '—';
+    bandEl.className = 'band b-reject';
+    bandEl.textContent = 'Reject';
+    verdictEl.innerHTML = 'Automatic <em>no-bid.</em> Hard disqualifier cannot be overridden.';
+    disqualEl.classList.add('active');
+    dqmsgEl.innerHTML = '<b>' + triggered.length + ' triggered:</b> ' + triggered.join(' · ');
+  } else {
+    scoreEl.textContent = rounded;
+    disqualEl.classList.remove('active');
+    dqmsgEl.textContent = 'None triggered. Score stands.';
+    if(rounded >= 90){
+      bandEl.className = 'band b-priority'; bandEl.textContent = 'Priority Pursuit';
+      verdictEl.innerHTML = 'Full package. All hands. <em>Executive review.</em>';
+    } else if(rounded >= 80){
+      bandEl.className = 'band b-strong'; bandEl.textContent = 'Strong Pursuit';
+      verdictEl.innerHTML = 'Standard bid team. <em>On schedule.</em>';
+    } else if(rounded >= 70){
+      bandEl.className = 'band b-gap'; bandEl.textContent = 'Pursue with Partner';
+      verdictEl.innerHTML = 'Teaming or gap-plan needed <em>first.</em>';
+    } else if(rounded >= 60){
+      bandEl.className = 'band b-monitor'; bandEl.textContent = 'Monitor';
+      verdictEl.innerHTML = 'Watch list. <em>Re-score at next amendment.</em>';
+    } else {
+      bandEl.className = 'band b-nobid'; bandEl.textContent = 'No-Bid';
+      verdictEl.innerHTML = 'Decline. Log lessons. <em>Protect the calendar.</em>';
+    }
+  }
+}
+
+sliders.forEach(s => s.addEventListener('input', update));
+dqBoxes.forEach(b => b.addEventListener('change', update));
+
+function resetAll(){
+  if(!confirm('Reset every field?')) return;
+  sliders.forEach(s => s.value = 50);
+  dqBoxes.forEach(b => b.checked = false);
+  document.getElementById('opp_name').value = '';
+  document.getElementById('opp_agency').value = '';
+  document.getElementById('opp_meta').value = '';
+  document.getElementById('notes').value = '';
+  update();
+}
+
+function exportJSON(){
+  const data = {
+    opportunity: document.getElementById('opp_name').value,
+    agency: document.getElementById('opp_agency').value,
+    meta: document.getElementById('opp_meta').value,
+    score: scoreEl.textContent,
+    verdict: bandEl.textContent,
+    disqualifiers: [...dqBoxes].filter(cb => cb.checked).map(cb => cb.dataset.dq),
+    factors: [...sliders].map((s, i) => ({
+      factor: s.closest('.factor').querySelector('h4').textContent,
+      weight: +s.dataset.weight,
+      confidence_pct: +s.value,
+      earned: ((+s.value / 100) * +s.dataset.weight).toFixed(1)
+    })),
+    notes: document.getElementById('notes').value,
+    generated: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const name = (data.opportunity || 'scorecard').replace(/[^a-z0-9]+/gi,'-').toLowerCase();
+  a.href = url; a.download = `bidscore-${name}.json`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+update();
+</script>
+
+</body>
+</html>

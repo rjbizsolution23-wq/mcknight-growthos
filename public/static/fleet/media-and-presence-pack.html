@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Media & Presence Pack — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:56px 32px 100px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1360px;margin:0 auto}
+
+  .doc-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--navy);padding-bottom:20px;margin-bottom:36px}
+  .doc-head .title{font-family:var(--serif);font-size:26px;font-weight:700;margin-top:4px}
+  .doc-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .doc-head .kv{display:flex;gap:28px;font-family:var(--mono);font-size:11px;color:var(--slate)}
+  .doc-head .kv b{color:var(--navy);display:block;letter-spacing:.14em;font-weight:600;text-transform:uppercase}
+
+  section{margin-bottom:56px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:20px;border-bottom:1px solid rgba(10,22,40,.15);padding-bottom:14px}
+  .sec-num{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);font-weight:600}
+  .sec-title{font-family:var(--serif);font-size:28px;font-weight:800;letter-spacing:-.015em}
+  .sec-title em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-sub{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+
+  .lbl-tag{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase;font-weight:600;margin-bottom:8px}
+
+  /* PODCAST cover 3000×3000 (shown scaled) */
+  .row-pod{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .pod{aspect-ratio:1/1;border-radius:2px;position:relative;overflow:hidden;box-shadow:0 20px 40px -30px rgba(10,22,40,.35)}
+  .pod .brand{position:absolute;top:32px;left:32px;display:flex;align-items:center;gap:10px}
+  .pod .brand svg{width:36px;height:36px}
+  .pod .brand .txt{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
+
+  .pod.a{background:var(--navy);color:var(--ivory);padding:36px}
+  .pod.a::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.24),transparent 55%)}
+  .pod.a .brand{color:var(--gold);position:relative}
+  .pod.a .brand svg{color:var(--gold)}
+  .pod.a .brand .txt{color:var(--gold)}
+  .pod.a .body{position:absolute;bottom:36px;left:36px;right:36px}
+  .pod.a h3{font-family:var(--serif);font-size:52px;font-weight:800;letter-spacing:-.02em;line-height:.98}
+  .pod.a h3 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .pod.a .foot{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-top:14px;padding-top:14px;border-top:1px solid rgba(201,169,97,.35)}
+
+  .pod.b{background:var(--gold);color:var(--navy);padding:36px}
+  .pod.b .brand svg{color:var(--navy)}
+  .pod.b .brand .txt{color:var(--navy)}
+  .pod.b .body{position:absolute;bottom:36px;left:36px;right:36px}
+  .pod.b h3{font-family:var(--serif);font-size:64px;font-weight:800;letter-spacing:-.03em;line-height:.9;color:var(--navy)}
+  .pod.b h3 em{font-style:italic;color:#5B1414;font-weight:600}
+  .pod.b .foot{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--navy);text-transform:uppercase;font-weight:600;margin-top:14px;padding-top:14px;border-top:1px solid rgba(10,22,40,.2)}
+
+  .pod.c{background:var(--ivory);color:var(--navy);padding:0;overflow:hidden;display:grid;grid-template-rows:1fr auto}
+  .pod.c .top{position:relative;padding:36px 32px;display:flex;flex-direction:column;justify-content:space-between}
+  .pod.c .brand{position:static;color:var(--gold-2)}
+  .pod.c .brand svg{color:var(--navy)}
+  .pod.c .brand .txt{color:var(--gold-2)}
+  .pod.c h3{font-family:var(--serif);font-size:48px;font-weight:800;letter-spacing:-.02em;line-height:.95;color:var(--navy);margin-top:auto}
+  .pod.c h3 em{font-style:italic;color:var(--red)}
+  .pod.c .strip{background:var(--navy);color:var(--gold-3);padding:14px 32px;font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;text-align:center;font-weight:600}
+
+  /* YOUTUBE 2560×1440 (16:9 scaled) */
+  .yt{aspect-ratio:16/9;background:var(--navy);color:var(--ivory);position:relative;overflow:hidden;border-radius:2px;box-shadow:0 20px 40px -30px rgba(10,22,40,.35)}
+  .yt::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.22),transparent 50%);pointer-events:none}
+  .yt .lyt{position:relative;height:100%;padding:56px 72px;display:flex;flex-direction:column;justify-content:space-between}
+  .yt .brand{display:flex;align-items:center;gap:14px}
+  .yt .brand svg{width:44px;height:44px;color:var(--gold)}
+  .yt .brand .txt{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .yt .brand .txt span{display:block;font-family:var(--serif);font-size:16px;color:var(--ivory);letter-spacing:-.005em;text-transform:none;font-weight:700;margin-top:3px}
+  .yt h2{font-family:var(--serif);font-size:82px;font-weight:800;letter-spacing:-.025em;line-height:.98;max-width:900px}
+  .yt h2 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .yt .foot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:14px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:600;padding-top:24px;border-top:1px solid rgba(201,169,97,.3)}
+
+  /* YOUTUBE THUMBNAIL 1280×720 */
+  .row-thumb{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .thumb{aspect-ratio:16/9;background:var(--navy);color:var(--ivory);position:relative;overflow:hidden;border-radius:2px;box-shadow:0 16px 36px -22px rgba(10,22,40,.4);padding:32px 40px;display:flex;flex-direction:column;justify-content:space-between}
+  .thumb::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.2),transparent 55%);pointer-events:none}
+  .thumb.b{background:linear-gradient(135deg,var(--red),#6d1616)}
+  .thumb .top{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
+  .thumb .kicker{background:var(--gold);color:var(--navy);padding:6px 12px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;border-radius:2px}
+  .thumb.b .kicker{background:var(--gold-3);color:var(--navy)}
+  .thumb h3{font-family:var(--serif);font-size:60px;font-weight:800;letter-spacing:-.025em;line-height:.95;position:relative;max-width:80%}
+  .thumb h3 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .thumb .foot{position:relative;font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase;font-weight:600;padding-top:14px;border-top:1px solid rgba(201,169,97,.3)}
+
+  /* ZOOM BACKGROUNDS 1920×1080 */
+  .row-zoom{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .zoom{aspect-ratio:16/9;background:var(--navy);color:var(--ivory);position:relative;overflow:hidden;border-radius:2px;box-shadow:0 16px 36px -22px rgba(10,22,40,.4)}
+  .zoom::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 30%,rgba(201,169,97,.22),transparent 55%),radial-gradient(circle at 15% 90%,rgba(201,169,97,.08),transparent 45%);pointer-events:none}
+  /* Camera-avoid zone: middle 50% is where speaker sits — brand only on sides */
+  .zoom .zone{position:absolute;inset:0;padding:56px 72px;display:flex;justify-content:space-between;align-items:center}
+  .zoom .side-l{position:relative;z-index:2;max-width:34%}
+  .zoom .side-r{position:relative;z-index:2;max-width:24%;text-align:right}
+  .zoom .brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .zoom .brand svg{width:40px;height:40px;color:var(--gold);flex:none}
+  .zoom .brand .txt{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600;line-height:1.3}
+  .zoom .brand .txt span{display:block;font-family:var(--serif);font-size:15px;color:var(--ivory);letter-spacing:-.005em;text-transform:none;font-weight:700;margin-top:3px}
+  .zoom .name{font-family:var(--serif);font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.05;color:var(--ivory)}
+  .zoom .role{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold-3);text-transform:uppercase;margin-top:4px;font-weight:600}
+  .zoom .verse{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--gold-3);line-height:1.5;margin-bottom:8px}
+  .zoom .contact{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;font-weight:600;line-height:1.7}
+  .zoom.ivory{background:var(--ivory)}
+  .zoom.ivory::before{background:radial-gradient(circle at 85% 30%,rgba(10,22,40,.06),transparent 55%)}
+  .zoom.ivory .brand svg{color:var(--gold-2)}
+  .zoom.ivory .brand .txt{color:var(--gold-2)}
+  .zoom.ivory .brand .txt span{color:var(--navy)}
+  .zoom.ivory .name{color:var(--navy)}
+  .zoom.ivory .role{color:var(--slate)}
+  .zoom.ivory .verse{color:var(--slate)}
+  .zoom.ivory .contact{color:var(--gold-2)}
+
+  /* EVENT BANNER (retractable, 33"×80" ≈ 1:2.4 vertical shown as 5:12) */
+  .row-banner{display:grid;grid-template-columns:1fr 2fr;gap:24px}
+  .banner{aspect-ratio:5/12;background:var(--navy);color:var(--ivory);position:relative;overflow:hidden;border-radius:2px;box-shadow:0 30px 60px -30px rgba(10,22,40,.5);padding:40px 32px 60px;display:flex;flex-direction:column;justify-content:space-between}
+  .banner::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.22),transparent 50%),radial-gradient(circle at 15% 90%,rgba(201,169,97,.1),transparent 55%);pointer-events:none}
+  .banner .top{position:relative;text-align:center;padding-top:12px}
+  .banner .top svg{width:64px;height:64px;color:var(--gold);margin-bottom:18px}
+  .banner .top .up{font-family:var(--mono);font-size:12px;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .banner .top h2{font-family:var(--serif);font-size:44px;font-weight:800;letter-spacing:-.015em;line-height:1;margin-top:8px;color:var(--ivory)}
+  .banner .middle{position:relative;text-align:center}
+  .banner .middle h1{font-family:var(--serif);font-size:88px;font-weight:800;line-height:.95;letter-spacing:-.03em;color:var(--gold-3)}
+  .banner .middle h1 em{font-style:italic;color:var(--ivory);font-weight:400;display:block}
+  .banner .middle .stats{margin-top:36px;padding-top:24px;border-top:1px solid rgba(201,169,97,.3)}
+  .banner .middle .row{display:flex;justify-content:space-between;padding:10px 0;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;font-weight:600;border-bottom:1px dashed rgba(201,169,97,.2)}
+  .banner .middle .row b{font-family:var(--serif);font-size:22px;color:var(--gold-3);letter-spacing:-.01em;text-transform:none;font-weight:800}
+  .banner .bottom{position:relative;text-align:center}
+  .banner .bottom .cta{background:var(--gold);color:var(--navy);padding:14px 24px;font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;border-radius:2px;display:inline-block}
+  .banner .bottom .qr{width:80px;height:80px;background:#fff;margin:14px auto 8px;position:relative;padding:6px;border-radius:2px}
+  .banner .bottom .qr::before{content:"";position:absolute;inset:6px;background:
+    linear-gradient(90deg,var(--navy) 0 20%,transparent 20% 30%,var(--navy) 30% 50%,transparent 50% 65%,var(--navy) 65% 80%,transparent 80% 100%),
+    linear-gradient(0deg,var(--navy) 0 20%,transparent 20% 35%,var(--navy) 35% 55%,transparent 55% 75%,var(--navy) 75% 100%);
+    background-blend-mode:multiply}
+  .banner .bottom .contact{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--gold-3);text-transform:uppercase;line-height:1.7;margin-top:8px;font-weight:600}
+
+  /* YARD SIGN 24×18 landscape */
+  .yard{aspect-ratio:4/3;background:var(--navy);color:var(--ivory);position:relative;overflow:hidden;border-radius:2px;box-shadow:0 16px 36px -22px rgba(10,22,40,.4);padding:36px 40px;display:flex;flex-direction:column;justify-content:space-between}
+  .yard::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.22),transparent 55%);pointer-events:none}
+  .yard .brand{display:flex;align-items:center;gap:14px;position:relative}
+  .yard .brand svg{width:44px;height:44px;color:var(--gold)}
+  .yard .brand .txt{font-family:var(--serif);font-weight:700;font-size:15px;line-height:1.05}
+  .yard .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;margin-top:3px;font-weight:500}
+  .yard h3{font-family:var(--serif);font-size:48px;font-weight:800;letter-spacing:-.02em;line-height:.98;position:relative}
+  .yard h3 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .yard .foot{position:relative;display:flex;justify-content:space-between;align-items:flex-end;padding-top:14px;border-top:1px solid rgba(201,169,97,.3);font-family:var(--mono);font-size:13px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;font-weight:700}
+  .yard .foot .cta{background:var(--gold);color:var(--navy);padding:10px 16px;border-radius:2px;font-size:12px}
+
+  @media (max-width:900px){ .row-pod,.row-thumb,.row-zoom,.row-banner{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="page">
+  <div class="doc-head">
+    <div>
+      <div class="meta">Volume 10 · Media Presence</div>
+      <div class="title">Podcast · YouTube · Zoom · Banners</div>
+    </div>
+    <div class="kv">
+      <div><b>Formats</b>Audio · Video · Live · Event · Signage</div>
+      <div><b>Version</b>1.0</div>
+    </div>
+  </div>
+
+  <!-- PODCAST -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">Podcast <em>Covers</em></h2><span class="sec-sub">3000×3000 · Spotify · Apple · YouTube Music</span></div>
+    <div class="lbl-tag">Draft — Show title placeholder until show launch confirmed</div>
+    <div class="row-pod">
+      <div class="pod a">
+        <div class="brand"><svg><use href="#mark"/></svg><div class="txt">The Contracting Preacher</div></div>
+        <div class="body">
+          <h3>Federal.<br>Faithful.<br><em>Winning.</em></h3>
+          <div class="foot">A podcast with Dr. McKnight</div>
+        </div>
+      </div>
+      <div class="pod b">
+        <div class="brand"><svg><use href="#mark"/></svg><div class="txt">The Contracting Preacher</div></div>
+        <div class="body">
+          <h3>From the <em>Pulpit.</em></h3>
+          <div class="foot">Federal contracts, weekly</div>
+        </div>
+      </div>
+      <div class="pod c">
+        <div class="top">
+          <div class="brand"><svg><use href="#mark"/></svg><div class="txt">Ep. 001</div></div>
+          <h3>Faith &amp;<br><em>Federal.</em></h3>
+        </div>
+        <div class="strip">Dr. McKnight · New Episodes · Fridays</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- YOUTUBE CHANNEL BANNER -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">YouTube <em>Channel Banner</em></h2><span class="sec-sub">2560×1440 · TV-safe zone respected</span></div>
+    <div class="yt">
+      <div class="lyt">
+        <div class="brand"><svg><use href="#mark"/></svg><div class="txt">Dr. McKnight<span>The Contracting Preacher</span></div></div>
+        <h2>Federal contracts,<br>won <em>with faith.</em></h2>
+        <div class="foot"><span>New videos · Fridays</span><span>thecontractingpreacher.com</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- YOUTUBE THUMBNAILS -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">YouTube <em>Thumbnails</em></h2><span class="sec-sub">1280×720 · high-contrast · mobile-legible</span></div>
+    <div class="row-thumb">
+      <div class="thumb">
+        <div class="top"><span class="kicker">Ep. 001</span><span style="font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gold-3);text-transform:uppercase;font-weight:600">14:22</span></div>
+        <h3>SAM.gov <em>in 90 minutes.</em></h3>
+        <div class="foot">Dr. McKnight · Federal Contracting</div>
+      </div>
+      <div class="thumb b">
+        <div class="top"><span class="kicker">Ep. 002</span><span style="font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gold-3);text-transform:uppercase;font-weight:600">18:04</span></div>
+        <h3>Bid or <em>no-bid?</em></h3>
+        <div class="foot">100-Point Scoring Explained</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ZOOM BACKGROUNDS -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2 class="sec-title">Zoom / Meet <em>Virtual Backgrounds</em></h2><span class="sec-sub">1920×1080 · Speaker-safe middle zone</span></div>
+    <div class="row-zoom">
+      <div class="zoom">
+        <div class="zone">
+          <div class="side-l">
+            <div class="brand"><svg><use href="#mark"/></svg><div class="txt">Dr. McKnight<span>The Contracting Preacher</span></div></div>
+            <div class="name">Federal Contracting</div>
+            <div class="role">Consultant · Columbia, SC</div>
+          </div>
+          <div class="side-r">
+            <div class="verse">"…faithfully done."<br>— Prov 16:3</div>
+            <div class="contact">(202) 276-2913<br>thecontractingpreacher.com</div>
+          </div>
+        </div>
+      </div>
+      <div class="zoom ivory">
+        <div class="zone">
+          <div class="side-l">
+            <div class="brand"><svg><use href="#mark"/></svg><div class="txt">Dr. McKnight<span>The Contracting Preacher</span></div></div>
+            <div class="name">Federal Contracting</div>
+            <div class="role">Consultant · Columbia, SC</div>
+          </div>
+          <div class="side-r">
+            <div class="verse">"…faithfully done."<br>— Prov 16:3</div>
+            <div class="contact">(202) 276-2913<br>thecontractingpreacher.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--slate);text-transform:uppercase;font-weight:600;background:var(--ivory);padding:10px 16px;border-left:3px solid var(--gold);border-radius:0 2px 2px 0">Rule · Camera is centered → keep the middle 40% of the frame clean. Brand info sits in the outer thirds.</div>
+  </section>
+
+  <!-- EVENT BANNER + YARD SIGN -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2 class="sec-title">Event <em>Signage</em></h2><span class="sec-sub">Retractable banner · Yard sign · Trade show pop-up</span></div>
+    <div class="row-banner">
+      <div>
+        <div class="lbl-tag">Retractable Banner · 33"×80"</div>
+        <div class="banner">
+          <div class="top">
+            <svg><use href="#mark"/></svg>
+            <div class="up">Dr. McKnight</div>
+            <h2>The Contracting Preacher</h2>
+          </div>
+          <div class="middle">
+            <h1>Federal<br>contracts,<br><em>won with faith.</em></h1>
+            <div class="stats">
+              <div class="row"><span>Win Rate</span><b>[X]%</b></div>
+              <div class="row"><span>Awarded</span><b>$[Y]+</b></div>
+              <div class="row"><span>Businesses</span><b>[N]+</b></div>
+            </div>
+          </div>
+          <div class="bottom">
+            <div class="cta">Book · 15-min · Free</div>
+            <div class="qr"></div>
+            <div class="contact">(202) 276-2913<br>thecontractingpreacher.com</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="lbl-tag">Yard Sign / Trade-show Placard · 24"×18"</div>
+        <div class="yard">
+          <div class="brand">
+            <svg><use href="#mark"/></svg>
+            <div class="txt">Dr. McKnight — The Contracting Preacher<span>Federal Contracting Consultant · Columbia, SC</span></div>
+          </div>
+          <h3>Small businesses<br>win federal <em>contracts</em> here.</h3>
+          <div class="foot">
+            <div>(202) 276-2913<br>thecontractingpreacher.com</div>
+            <div class="cta">Free Consultation →</div>
+          </div>
+        </div>
+        <div class="lbl-tag" style="margin-top:16px">Print rules · Full-bleed 0.125" · Corner-safe 0.5" from edges · Solid-color background</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

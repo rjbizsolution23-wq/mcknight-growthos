@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fleet Dashboard — McKnight Opportunity Group</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0; --line-2:#D6CFB8;
+    --ok:#2F6B4A; --warn:#B87A1F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);-webkit-font-smoothing:antialiased}
+  body{padding:40px 24px 100px}
+  .page{max-width:1400px;margin:0 auto}
+
+  /* HERO */
+  .hero{background:var(--navy);color:var(--ivory);padding:44px 52px 40px;border-radius:2px;position:relative;overflow:hidden;margin-bottom:32px}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 90% 20%,rgba(201,169,97,.2),transparent 45%);pointer-events:none}
+  .hero .top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;margin-bottom:32px;gap:24px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand svg{width:48px;height:48px;color:var(--gold);flex:none}
+  .brand .txt{font-family:var(--serif);font-weight:700;font-size:16px;line-height:1.05}
+  .brand .txt h1{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.01em}
+  .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400;margin-top:3px}
+  .hero .meta{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;text-align:right;line-height:1.7}
+  .hero .meta b{color:var(--ivory);display:block;font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;margin-top:2px}
+
+  .hero .headline{position:relative;font-family:var(--serif);font-size:52px;font-weight:800;letter-spacing:-.02em;line-height:1;max-width:900px}
+  .hero .headline em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .hero .lede{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--gold-3);max-width:640px;margin-top:14px;position:relative;line-height:1.5}
+
+  .stats{margin-top:36px;padding-top:24px;border-top:1px solid rgba(201,169,97,.3);display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative}
+  .stat b{font-family:var(--serif);font-size:44px;font-weight:800;color:var(--gold-3);display:block;line-height:1;letter-spacing:-.02em}
+  .stat span{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:500;margin-top:8px;display:block}
+  .stat .bar{margin-top:8px;height:5px;background:rgba(201,169,97,.15);border-radius:1px;overflow:hidden}
+  .stat .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold-2),var(--gold-3));transition:width .3s}
+
+  /* WARNING BAR */
+  .lockdown{background:#FBEEEE;border-left:4px solid var(--red);padding:16px 24px;border-radius:0 2px 2px 0;font-size:14px;color:#5B1414;margin-bottom:32px;line-height:1.55}
+  .lockdown b{font-weight:700;font-family:var(--mono);letter-spacing:.05em;font-size:11px;text-transform:uppercase;color:#5B1414;display:block;margin-bottom:4px}
+
+  /* SECTION */
+  section{margin-bottom:40px}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;border-bottom:1px solid var(--navy);padding-bottom:14px}
+  .sec-head h2{font-family:var(--serif);font-size:28px;font-weight:800;letter-spacing:-.015em}
+  .sec-head h2 em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-head .sub{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+
+  /* BRAND GRID */
+  .brand-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .b-card{background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden;transition:all .15s}
+  .b-card:hover{border-color:var(--gold-2);box-shadow:0 12px 30px -18px rgba(10,22,40,.2)}
+  .b-head{background:var(--navy);color:var(--ivory);padding:16px 22px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden}
+  .b-head::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.14),transparent 55%)}
+  .b-head .id{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600;position:relative}
+  .b-head .name{font-family:var(--serif);font-size:20px;font-weight:800;letter-spacing:-.005em;line-height:1.1;margin-top:3px;position:relative}
+  .b-head .role{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--gold-3);text-transform:uppercase;position:relative;margin-top:4px;opacity:.85}
+  .b-head .status{position:relative;text-align:right}
+  .b-head .status .pill{display:inline-block;padding:4px 12px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;border-radius:2px}
+  .b-head .status .pill.locked{background:#5B1414;color:#F5D5D5;border:1px solid var(--red)}
+  .b-head .status .pill.staging{background:var(--warn);color:var(--navy)}
+  .b-head .status .pill.launched{background:var(--ok);color:#fff}
+  .b-head .status .pill.blocked{background:var(--gold);color:var(--navy)}
+  .b-head .status .pct{font-family:var(--serif);font-size:26px;font-weight:800;color:var(--gold-3);line-height:1;margin-top:6px;letter-spacing:-.01em}
+
+  .b-body{padding:16px 22px}
+  .b-body .prog-set{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+  .prog{background:var(--ivory);border-left:3px solid var(--gold);padding:8px 10px;border-radius:0 2px 2px 0}
+  .prog .lbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;font-weight:700;display:flex;justify-content:space-between}
+  .prog .lbl b{color:var(--navy);font-family:var(--sans);font-size:11px;letter-spacing:0;text-transform:none;font-weight:700}
+  .prog .bar{margin-top:5px;height:4px;background:rgba(10,22,40,.08);border-radius:1px;overflow:hidden}
+  .prog .bar span{display:block;height:100%;background:var(--gold);transition:width .3s}
+  .prog.p0 .bar span{background:var(--red)}
+  .prog.p1 .bar span{background:var(--warn)}
+  .prog.p2 .bar span{background:var(--ok)}
+
+  .b-body .checklist{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .check{display:flex;gap:8px;align-items:flex-start;padding:6px 8px;border:1px solid var(--line);border-radius:2px;cursor:pointer;font-size:11.5px;color:var(--slate);line-height:1.35;font-family:var(--sans);transition:all .12s}
+  .check:hover{background:var(--ivory)}
+  .check input{width:12px;height:12px;flex:none;margin-top:2px;accent-color:var(--navy);cursor:pointer}
+  .check:has(input:checked){background:#F1F7F3;border-color:var(--ok);color:var(--navy);font-weight:600}
+  .check:has(input:checked) span{text-decoration:line-through;text-decoration-color:var(--ok);text-decoration-thickness:1.5px}
+
+  .b-foot{background:var(--ivory);padding:12px 22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--slate);text-transform:uppercase}
+  .b-foot .domain{font-family:var(--serif);font-size:12px;letter-spacing:0;text-transform:none;color:var(--navy);font-weight:600}
+  .b-foot .blocker{color:var(--red);font-weight:600}
+
+  /* LAUNCH ORDER */
+  .launch{background:var(--navy);color:var(--ivory);border-radius:2px;padding:32px 40px;position:relative;overflow:hidden}
+  .launch::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.18),transparent 55%);pointer-events:none}
+  .launch h3{font-family:var(--serif);font-size:24px;font-weight:800;letter-spacing:-.005em;position:relative;margin-bottom:20px}
+  .launch h3 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .launch .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;position:relative}
+  .lstep{background:rgba(201,169,97,.06);border-left:3px solid var(--gold);padding:12px 16px;border-radius:0 2px 2px 0}
+  .lstep .n{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:700}
+  .lstep h4{font-family:var(--serif);font-size:15px;font-weight:700;margin-top:2px;letter-spacing:-.005em}
+  .lstep p{font-size:11.5px;color:var(--gold-3);line-height:1.4;margin-top:4px;opacity:.85}
+
+  /* ACTIONS */
+  .actions{display:flex;gap:10px;margin-top:24px;justify-content:flex-end;flex-wrap:wrap}
+  .actions button, .actions a{background:transparent;border:1px solid var(--navy);color:var(--navy);padding:10px 18px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;cursor:pointer;border-radius:2px;transition:all .15s;text-decoration:none}
+  .actions button:hover, .actions a:hover{background:var(--navy);color:var(--gold-3)}
+  .actions .primary{background:var(--navy);color:var(--gold-3)}
+  .actions .primary:hover{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+  .actions .red{border-color:var(--red);color:var(--red)}
+  .actions .red:hover{background:var(--red);color:#fff}
+
+  @media print{ body{background:#fff;padding:0} .actions{display:none} }
+  @media (max-width:900px){ .brand-grid{grid-template-columns:1fr} .launch .steps{grid-template-columns:1fr} .stats{grid-template-columns:1fr 1fr} .b-body .checklist{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="top">
+      <div class="brand">
+        <svg><use href="#mark"/></svg>
+        <div class="txt">
+          <h1>Fleet Dashboard</h1>
+          <span>McKnight Opportunity Group · Verification Gate</span>
+        </div>
+      </div>
+      <div class="meta">Status Board · v1.0<b>Updated July 23, 2026</b></div>
+    </div>
+
+    <div class="headline">Architecture complete.<br><em>Verification pending.</em></div>
+    <div class="lede">10 brands · 3 priority tiers · 1 rule: no launch until the P0 gate closes on documented entities, credentials, and evidence.</div>
+
+    <div class="stats">
+      <div class="stat"><b id="s-total">10</b><span>Brands</span><div class="bar"><span style="width:100%"></span></div></div>
+      <div class="stat"><b id="s-p0">0/10</b><span>P0 Gate Closed</span><div class="bar"><span id="s-p0-bar" style="width:0%"></span></div></div>
+      <div class="stat"><b id="s-staging">1</b><span>In Staging</span><div class="bar"><span style="width:10%"></span></div></div>
+      <div class="stat"><b id="s-launched">0</b><span>Publicly Launched</span><div class="bar"><span style="width:0%"></span></div></div>
+    </div>
+  </div>
+
+  <div class="lockdown">
+    <b>⚠ Publication Lockdown</b>
+    No brand publishes public claims about win rates, dollar volumes, 501(c)(3) status, active housing programs, government contracting experience, or credentials until <b>the P0 gate closes with documented evidence</b> in the Fleet Verification Packet. The one live-domain exception (Contracting Preacher staging) uses illustrative examples clearly labeled as such.
+  </div>
+
+  <!-- BRAND STATUS GRID -->
+  <section>
+    <div class="sec-head">
+      <h2>Brand <em>Status</em></h2>
+      <span class="sub">10 brands · Check items as you verify · State persists locally</span>
+    </div>
+
+    <div class="brand-grid" id="grid">
+      <!-- Injected by JS -->
+    </div>
+  </section>
+
+  <!-- LAUNCH ORDER -->
+  <section>
+    <div class="sec-head">
+      <h2>Recommended <em>Launch Order</em></h2>
+      <span class="sub">Fleet Verification → Entities → Names → Brand → Rebuilds</span>
+    </div>
+
+    <div class="launch">
+      <h3>The path from <em>architecture</em> to <em>launched.</em></h3>
+      <div class="steps">
+        <div class="lstep"><span class="n">Step · 01</span><h4>Fleet Verification Packet</h4><p>Complete the intake. Every field. Every credential. Every entity.</p></div>
+        <div class="lstep"><span class="n">Step · 02</span><h4>Legal-Entity Map</h4><p>Confirm the operating entity behind every brand + intercompany agreements.</p></div>
+        <div class="lstep"><span class="n">Step · 03</span><h4>Name &amp; Domain Clearance</h4><p>SC SoS · USPTO · state TM · common-law · handles · counsel review.</p></div>
+        <div class="lstep"><span class="n">Step · 04</span><h4>Master McKnight Brand Kit</h4><p>One identity system → 10 connected sub-brands.</p></div>
+        <div class="lstep"><span class="n">Step · 05</span><h4>Repository &amp; Infra Audit</h4><p>Inventory existing platforms, code, data, and access.</p></div>
+        <div class="lstep"><span class="n">Step · 06</span><h4>Contracting Preacher Rebuild</h4><p>Move from Cloudflare staging → primary domain w/ verified claims.</p></div>
+        <div class="lstep"><span class="n">Step · 07</span><h4>Contracting Preacher OS</h4><p>Client Command Center — the practice's operating layer.</p></div>
+        <div class="lstep"><span class="n">Step · 08</span><h4>MortgageOS + GrowthOS Rebrand</h4><p>Under McKnight family — pending mortgage counsel review.</p></div>
+        <div class="lstep"><span class="n">Step · 09</span><h4>Regulated Platforms</h4><p>Housing · Capital Ready · Freight · FleetWorks · Early Learning — only after credential verification.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="actions">
+    <a href="fleet-verification-packet.html">↗ Open Verification Packet</a>
+    <button onclick="resetAll()">↺ Reset Checks</button>
+    <button onclick="window.print()">⎙ Print / PDF</button>
+    <button class="primary" onclick="exportStatus()">↓ Export Status Report</button>
+  </div>
+
+</div>
+
+<script>
+const STORAGE_KEY = 'mog_fleet_dashboard_v1';
+
+const BRANDS = [
+  {
+    id: 'mog', name: 'McKnight Opportunity Group', role: 'Parent · Management',
+    domain: 'McKnightOpportunityGroup.com', status: 'locked',
+    checks: {
+      p0: ['Legal entity confirmed','EIN on file','Bank & insurance set','Authorized signer','Intercompany agreements drafted','Master brand kit approved'],
+      p1: ['Ownership map','Board / advisors','Staff roster','Data-access matrix'],
+      p2: ['Site staging','Privacy policy','Support system','Uptime monitoring']
+    }
+  },
+  {
+    id: 'tcp', name: 'The Contracting Preacher', role: 'Consulting Operator',
+    domain: 'thecontractingpreacher.com', status: 'staging',
+    checks: {
+      p0: ['LLC / entity formed','EIN','SAM.gov active','UEI + CAGE code','Insurance (E&O)','Bank account','Verified stats source'],
+      p1: ['3 verified case studies','Testimonials + permission','SOPs written','Client agreement finalized'],
+      p2: ['Site launched (staging)','Privacy + terms','Analytics','Uptime monitoring']
+    }
+  },
+  {
+    id: 'mhi', name: 'McKnight Housing Initiative', role: 'Nonprofit · Housing',
+    domain: 'McKnightHousing.org', status: 'blocked',
+    checks: {
+      p0: ['501(c)(3) IRS letter','Articles + bylaws','Independent board (min 3)','Conflict-of-interest policy','Financial controls','Fair housing procedures'],
+      p1: ['Properties owned/controlled','Development partners','Grant accountant','Grant calendar'],
+      p2: ['Donation processing','Site + applicant intake','Impact reporting','Board portal']
+    }
+  },
+  {
+    id: 'mcr', name: 'McKnight Capital Ready', role: 'Credit / Funding Operator',
+    domain: 'McKnightCapitalReady.com', status: 'locked',
+    checks: {
+      p0: ['Legal entity','EIN','State bonds / registrations','Attorney of record','Client agreement (compliant)','Credit disclosures reviewed'],
+      p1: ['Referral partner agreements','Refund policy','Complaint policy','Data-sharing consent'],
+      p2: ['Payment processing','Secure document vault','E-signature integration','Site + funnel']
+    }
+  },
+  {
+    id: 'mmos', name: 'McKnight MortgageOS', role: 'Software / IP',
+    domain: 'McKnightMortgageOS.com', status: 'locked',
+    checks: {
+      p0: ['Software entity','IP assignment on file','Mortgage counsel review','Guideline-source documented','Human-review process','Disclaimers approved'],
+      p1: ['DPA + AUP','SLA','Incident response plan','Vendor list'],
+      p2: ['Sandbox live','Pricing tiers set','API terms','Monitoring stack']
+    }
+  },
+  {
+    id: 'mgos', name: 'McKnight GrowthOS', role: 'Software / IP',
+    domain: 'McKnightGrowthOS.com', status: 'locked',
+    checks: {
+      p0: ['Software entity','IP assignment','Pricing tiers approved','Terms of service','Data-processing agreement','Acceptable-use policy'],
+      p1: ['Integrations mapped','Roadmap published','Support tier defined','SLA'],
+      p2: ['Sandbox environment','Billing integrated','Launch page','Onboarding flow']
+    }
+  },
+  {
+    id: 'mfs', name: 'McKnight Freight Systems', role: 'Transportation Operator',
+    domain: 'McKnightFreightSystems.com', status: 'blocked',
+    checks: {
+      p0: ['USDOT active','MC authority','BOC-3','UCR current','Insurance (BI/PD + Cargo)','Drug & alcohol program','Clearinghouse process'],
+      p1: ['ELD provider','Driver files','Safety policies','Factoring relationship'],
+      p2: ['Load-board access','Fuel-card provider','GPS tracking','Site + DriverHub']
+    }
+  },
+  {
+    id: 'mfw', name: 'McKnight FleetWorks', role: 'Repair Operator',
+    domain: 'McKnightFleetWorks.com', status: 'blocked',
+    checks: {
+      p0: ['Legal operator','Garage liability insurance','Workers comp','Technician qualifications','Env procedures','Customer auth form'],
+      p1: ['Warranty policy','Parts + tire suppliers','Estimate policy','Fleet credit terms'],
+      p2: ['ServiceHub sandbox','Payment integration','Site + booking flow','Dispatch board']
+    }
+  },
+  {
+    id: 'mela', name: 'McKnight Early Learning Academy', role: 'Licensed Childcare',
+    domain: 'McKnightEarlyLearning.com', status: 'blocked',
+    checks: {
+      p0: ['Childcare license','Provider number','Facility licensed','Background checks complete','CPR / first-aid current','Parent handbook approved'],
+      p1: ['Emergency plan','Medication policy','Incident policy','ABC Quality documented'],
+      p2: ['Enrollment flow','Payments + subsidy','Attendance system','Parent messaging']
+    }
+  },
+  {
+    id: 'mlos', name: 'McKnight LearningOS', role: 'Software / IP',
+    domain: 'McKnightLearningOS.com', status: 'locked',
+    checks: {
+      p0: ['Software entity','IP assignment','Pricing tiers','Data-processing agreement','Privacy for minors (COPPA review)','State reporting mapping'],
+      p1: ['Background-check workflow','Subsidy processing','Accounting integration','Attendance API'],
+      p2: ['Sandbox','Multi-location support','Site + pricing page','Onboarding']
+    }
+  },
+];
+
+let state = {};
+
+function load(){
+  try {
+    state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  } catch(e){ state = {}; }
+  render();
+}
+function save(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  render();
+}
+
+function pctFor(brandId, tier){
+  const items = BRANDS.find(b => b.id === brandId).checks[tier];
+  const s = state[brandId] || {};
+  const done = items.filter((_, i) => s[`${tier}_${i}`]).length;
+  return { done, total: items.length, pct: Math.round(done / items.length * 100) };
+}
+
+function render(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = BRANDS.map(brand => {
+    const p0 = pctFor(brand.id, 'p0');
+    const p1 = pctFor(brand.id, 'p1');
+    const p2 = pctFor(brand.id, 'p2');
+    const overall = Math.round((p0.pct + p1.pct + p2.pct) / 3);
+    const statusPill = brand.status === 'launched' ? 'launched' : (p0.pct === 100 ? 'staging' : brand.status);
+    const statusLabel = statusPill === 'locked' ? 'Locked' : statusPill === 'blocked' ? 'Blocked · P0' : statusPill === 'staging' ? 'Staging OK' : 'Launched';
+    const blocker = p0.pct < 100 ? `P0 gate · ${p0.total - p0.done} items remaining` : (p1.pct < 100 ? `P1 · ${p1.total - p1.done} content items` : `Ready for launch`);
+
+    const checksHtml = (tier, items) => items.map((item, i) => {
+      const checked = state[brand.id]?.[`${tier}_${i}`] ? 'checked' : '';
+      return `<label class="check"><input type="checkbox" ${checked} onchange="toggle('${brand.id}','${tier}',${i},this.checked)"><span>${item}</span></label>`;
+    }).join('');
+
+    return `
+      <div class="b-card">
+        <div class="b-head">
+          <div>
+            <div class="id">Brand · ${brand.id.toUpperCase()}</div>
+            <div class="name">${brand.name}</div>
+            <div class="role">${brand.role}</div>
+          </div>
+          <div class="status">
+            <div class="pill ${statusPill}">${statusLabel}</div>
+            <div class="pct">${overall}%</div>
+          </div>
+        </div>
+        <div class="b-body">
+          <div class="prog-set">
+            <div class="prog p0"><div class="lbl">P0<b>${p0.done}/${p0.total}</b></div><div class="bar"><span style="width:${p0.pct}%"></span></div></div>
+            <div class="prog p1"><div class="lbl">P1<b>${p1.done}/${p1.total}</b></div><div class="bar"><span style="width:${p1.pct}%"></span></div></div>
+            <div class="prog p2"><div class="lbl">P2<b>${p2.done}/${p2.total}</b></div><div class="bar"><span style="width:${p2.pct}%"></span></div></div>
+          </div>
+
+          <details ${brand.id === 'tcp' ? 'open' : ''}>
+            <summary style="cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--gold-2);text-transform:uppercase;font-weight:700;padding:8px 0;border-bottom:1px dashed var(--line);margin-bottom:10px">▸ P0 Checklist (must all close)</summary>
+            <div class="checklist">${checksHtml('p0', brand.checks.p0)}</div>
+          </details>
+          <details style="margin-top:8px">
+            <summary style="cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--warn);text-transform:uppercase;font-weight:700;padding:8px 0;border-bottom:1px dashed var(--line);margin-bottom:10px">▸ P1 Content &amp; Ops</summary>
+            <div class="checklist">${checksHtml('p1', brand.checks.p1)}</div>
+          </details>
+          <details style="margin-top:8px">
+            <summary style="cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ok);text-transform:uppercase;font-weight:700;padding:8px 0;border-bottom:1px dashed var(--line);margin-bottom:10px">▸ P2 Platform &amp; Launch</summary>
+            <div class="checklist">${checksHtml('p2', brand.checks.p2)}</div>
+          </details>
+        </div>
+        <div class="b-foot">
+          <span class="domain">${brand.domain}</span>
+          <span class="${p0.pct < 100 ? 'blocker' : ''}">${blocker}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  updateStats();
+}
+
+function toggle(brandId, tier, i, checked){
+  if(!state[brandId]) state[brandId] = {};
+  state[brandId][`${tier}_${i}`] = checked;
+  save();
+}
+
+function updateStats(){
+  let p0Closed = 0, staging = 0, launched = 0;
+  BRANDS.forEach(b => {
+    const p0 = pctFor(b.id, 'p0');
+    if(p0.pct === 100) p0Closed++;
+    if(b.status === 'staging' || p0.pct === 100) staging++;
+    if(b.status === 'launched') launched++;
+  });
+  document.getElementById('s-p0').textContent = `${p0Closed}/${BRANDS.length}`;
+  document.getElementById('s-p0-bar').style.width = (p0Closed / BRANDS.length * 100) + '%';
+  document.getElementById('s-staging').textContent = staging;
+  document.getElementById('s-launched').textContent = launched;
+}
+
+function resetAll(){
+  if(!confirm('Reset all checkbox state? This clears local progress.')) return;
+  state = {};
+  localStorage.removeItem(STORAGE_KEY);
+  render();
+}
+
+function exportStatus(){
+  const report = BRANDS.map(b => ({
+    id: b.id,
+    name: b.name,
+    role: b.role,
+    domain: b.domain,
+    status: b.status,
+    p0: { ...pctFor(b.id, 'p0'), items: b.checks.p0.map((it, i) => ({ item: it, done: !!state[b.id]?.[`p0_${i}`] })) },
+    p1: { ...pctFor(b.id, 'p1'), items: b.checks.p1.map((it, i) => ({ item: it, done: !!state[b.id]?.[`p1_${i}`] })) },
+    p2: { ...pctFor(b.id, 'p2'), items: b.checks.p2.map((it, i) => ({ item: it, done: !!state[b.id]?.[`p2_${i}`] })) },
+  }));
+  const blob = new Blob([JSON.stringify({generated: new Date().toISOString(), fleet: report}, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `mog-fleet-status-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+load();
+</script>
+
+</body>
+</html>

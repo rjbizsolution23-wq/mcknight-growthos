@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Capability Statement — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);padding:40px 20px;color:var(--navy);-webkit-font-smoothing:antialiased}
+  .page{max-width:850px;margin:0 auto;background:#fff;box-shadow:0 30px 80px -40px rgba(10,22,40,.4);border-radius:2px;position:relative;overflow:hidden;padding:0;aspect-ratio:8.5/11}
+  .page::before{content:"";position:absolute;top:0;left:0;right:0;height:8px;background:linear-gradient(90deg,var(--navy) 0%, var(--navy) 62%, var(--gold) 62%, var(--gold) 100%)}
+
+  /* HEADER */
+  .head{background:var(--navy);color:var(--ivory);padding:28px 40px 24px;position:relative;overflow:hidden}
+  .head::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%, rgba(201,169,97,.2),transparent 45%)}
+  .head-row{display:flex;justify-content:space-between;align-items:center;gap:24px;position:relative}
+  .brand{display:flex;align-items:center;gap:14px}
+  .shield{width:60px;height:60px;flex:none}
+  .brand-txt .top{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;font-weight:500}
+  .brand-txt .main{font-family:var(--serif);font-size:24px;font-weight:700;line-height:1.05;margin-top:2px}
+  .brand-txt .sub{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;margin-top:4px;opacity:.85}
+  .stamp{text-align:right;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase;line-height:1.7}
+  .stamp b{color:var(--ivory);display:block;font-family:var(--sans);font-weight:600;font-size:11px;letter-spacing:0;text-transform:none;margin-top:2px}
+
+  /* TAGLINE STRIP */
+  .tagline{background:var(--gold);color:var(--navy);padding:12px 40px;font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:-.005em;display:flex;justify-content:space-between;align-items:center}
+  .tagline em{font-style:italic;color:var(--navy);opacity:.75;font-weight:600}
+  .tagline .verse{font-family:var(--serif);font-style:italic;font-weight:400;font-size:11px;opacity:.75}
+
+  /* BODY */
+  .body{padding:22px 40px 20px;display:grid;grid-template-columns:1.35fr 1fr;gap:22px}
+
+  .col h3{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin-bottom:8px;padding-bottom:5px;border-bottom:1.5px solid var(--navy)}
+  .col p{font-size:11.5px;line-height:1.55;color:var(--slate);margin-bottom:10px}
+  .col p b{color:var(--navy);font-weight:600}
+
+  /* DIFFERENTIATORS list */
+  .diff{list-style:none;font-size:11.5px;line-height:1.5}
+  .diff li{padding:5px 0 5px 18px;color:var(--navy);border-bottom:1px dashed var(--line);position:relative}
+  .diff li:last-child{border:0}
+  .diff li::before{content:"▶";position:absolute;left:0;top:5px;font-size:8px;color:var(--gold-2)}
+  .diff li b{font-weight:600}
+
+  /* CORE COMPETENCIES */
+  .comp{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px;color:var(--navy);line-height:1.35;margin-top:4px}
+  .comp span{padding:4px 0 4px 12px;position:relative}
+  .comp span::before{content:"";width:5px;height:5px;background:var(--gold);position:absolute;left:0;top:9px}
+
+  /* NAICS TABLE */
+  .naics{width:100%;border-collapse:collapse;margin-top:4px;font-size:10.5px}
+  .naics th{background:var(--navy);color:var(--gold-3);font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;text-align:left;font-weight:600}
+  .naics td{padding:6px 10px;border-bottom:1px solid var(--line);color:var(--navy)}
+  .naics td.code{font-family:var(--mono);color:var(--gold-2);font-weight:600;width:70px}
+
+  /* CERTS strip */
+  .certs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .cert{padding:4px 10px;background:var(--ivory);border:1px solid var(--gold-2);color:var(--navy);font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;border-radius:1px}
+  .cert.primary{background:var(--navy);color:var(--gold-3);border-color:var(--navy)}
+
+  /* PAST PERFORMANCE */
+  .pp{background:var(--ivory);border-left:3px solid var(--gold);padding:10px 14px;margin-bottom:6px;font-size:10.5px;line-height:1.5}
+  .pp .client{font-family:var(--serif);font-weight:700;font-size:12.5px;color:var(--navy);display:flex;justify-content:space-between}
+  .pp .client .val{font-family:var(--mono);color:var(--gold-2);font-size:10px;letter-spacing:.06em}
+  .pp .scope{color:var(--slate);margin-top:2px}
+
+  /* STATS BAND */
+  .stats{background:var(--navy);color:var(--ivory);display:grid;grid-template-columns:repeat(4,1fr);padding:14px 40px;position:relative;overflow:hidden}
+  .stats::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 50%,rgba(201,169,97,.16),transparent 55%)}
+  .stat{text-align:center;position:relative;border-right:1px solid rgba(201,169,97,.25)}
+  .stat:last-child{border:0}
+  .stat b{font-family:var(--serif);font-size:26px;font-weight:800;color:var(--gold-3);letter-spacing:-.02em;display:block;line-height:1}
+  .stat span{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--ivory);text-transform:uppercase;margin-top:4px;display:block;opacity:.85}
+
+  /* FOOTER */
+  .foot{padding:16px 40px 24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;border-top:1px solid var(--line);font-size:10.5px;line-height:1.55}
+  .foot .blk b{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin-bottom:3px}
+  .foot .blk{color:var(--navy)}
+  .foot-strip{background:var(--navy);color:var(--gold-3);padding:8px 40px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-align:center;text-transform:uppercase;display:flex;justify-content:space-between}
+  .foot-strip b{color:var(--ivory);font-weight:600}
+
+  @media print {
+    body{background:#fff;padding:0}
+    .page{box-shadow:none;aspect-ratio:auto;height:11in;width:8.5in}
+  }
+  @media (max-width:700px){
+    .body{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
+    .foot{grid-template-columns:1fr}
+    .page{aspect-ratio:auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- HEADER -->
+  <div class="head">
+    <div class="head-row">
+      <div class="brand">
+        <svg class="shield" viewBox="0 0 100 100">
+          <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="#C9A961"/>
+          <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#0A1628" stroke-width="1.5" opacity=".45"/>
+          <rect x="46" y="26" width="8" height="46" fill="#0A1628"/>
+          <rect x="32" y="36" width="36" height="6" fill="#0A1628"/>
+          <rect x="26" y="76" width="48" height="1.5" fill="#0A1628"/>
+        </svg>
+        <div class="brand-txt">
+          <div class="top">Dr. McKnight</div>
+          <div class="main">The Contracting Preacher</div>
+          <div class="sub">Federal Contracting Consultant</div>
+        </div>
+      </div>
+      <div class="stamp">
+        Capability Statement<b>Rev. 07 / 2026</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="tagline">
+    <span>Federal contracting, <em>faithfully done.</em></span>
+    <span class="verse">"…he will establish your plans." — Prov 16:3</span>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+    <!-- LEFT -->
+    <div class="col">
+      <h3>Company Overview</h3>
+      <p><b>The Contracting Preacher</b> is a federal contracting consulting practice founded by Dr. McKnight, helping small businesses nationwide win federal government contracts through SAM.gov registration, SBA certifications, bid writing, and proposal preparation — anchored in integrity, precision, and faith-based partnership.</p>
+      <p>With <b>500+ businesses served</b> and <b>$50M+ in awarded contracts</b>, we deliver end-to-end federal contracting support to solo entrepreneurs and established companies across every industry.</p>
+
+      <h3 style="margin-top:14px">Differentiators</h3>
+      <ul class="diff">
+        <li><b>89% Proposal Win Rate</b> — more than 2× the industry average; we only bid when the client can win.</li>
+        <li><b>Faith-Driven Delivery</b> — integrity and honesty as operating standards, not marketing lines.</li>
+        <li><b>Hands-On Guidance</b> — Dr. McKnight personally leads each engagement; you're never routed to junior staff.</li>
+        <li><b>End-to-End Coverage</b> — registration → certification → opportunity ID → proposal → post-award compliance.</li>
+        <li><b>SAM.gov Certified · SBA Approved</b> — recognized expertise in the systems that matter.</li>
+      </ul>
+
+      <h3 style="margin-top:14px">Core Competencies</h3>
+      <div class="comp">
+        <span>SAM.gov Registration</span>
+        <span>UEI &amp; CAGE Setup</span>
+        <span>8(a) Certification</span>
+        <span>HUBZone Certification</span>
+        <span>WOSB / EDWOSB</span>
+        <span>SDVOSB / VOSB</span>
+        <span>Sources-Sought Response</span>
+        <span>Bid &amp; Proposal Writing</span>
+        <span>Compliance Matrices</span>
+        <span>Teaming &amp; JV Agreements</span>
+        <span>Post-Award Compliance</span>
+        <span>CPARS Support</span>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col">
+      <h3>NAICS Codes</h3>
+      <table class="naics">
+        <thead><tr><th>Code</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="code">541611</td><td>Admin &amp; General Mgmt Consulting</td></tr>
+          <tr><td class="code">541612</td><td>Human Resources Consulting</td></tr>
+          <tr><td class="code">541614</td><td>Process &amp; Logistics Consulting</td></tr>
+          <tr><td class="code">541618</td><td>Other Management Consulting</td></tr>
+          <tr><td class="code">541690</td><td>Other Scientific &amp; Technical Consulting</td></tr>
+          <tr><td class="code">611430</td><td>Professional &amp; Mgmt Development Training</td></tr>
+          <tr><td class="code">561499</td><td>All Other Business Support Services</td></tr>
+          <tr><td class="code">541990</td><td>All Other Professional Services</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:14px">Certifications &amp; Registrations</h3>
+      <div class="certs">
+        <span class="cert primary">SAM.gov Registered</span>
+        <span class="cert primary">SBA Approved</span>
+        <span class="cert">Small Business</span>
+        <span class="cert">SC MBE Eligible</span>
+        <span class="cert">DUNS/UEI Active</span>
+        <span class="cert">CAGE Active</span>
+      </div>
+
+      <h3 style="margin-top:14px">Past Performance</h3>
+      <div class="pp">
+        <div class="client">Federal Prime — Logistics<span class="val">$2.1M · On-time</span></div>
+        <div class="scope">SAM registration → 8(a) award → post-award compliance for a transportation SB in SC.</div>
+      </div>
+      <div class="pp">
+        <div class="client">Federal Prime — IT Staffing<span class="val">$890K · Award</span></div>
+        <div class="scope">Full proposal preparation for VA IT staff-aug set-aside; client had zero prior federal experience.</div>
+      </div>
+      <div class="pp">
+        <div class="client">Federal Sub — Facility Maint.<span class="val">$4.6M · Multi-yr</span></div>
+        <div class="scope">Teaming agreement + technical volume for USDA facility maintenance across Southeast region.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat"><b>89%</b><span>Proposal Win Rate</span></div>
+    <div class="stat"><b>$50M+</b><span>Contracts Won</span></div>
+    <div class="stat"><b>500+</b><span>Businesses Served</span></div>
+    <div class="stat"><b>15+</b><span>Years Experience</span></div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="foot">
+    <div class="blk"><b>Point of Contact</b>Dr. McKnight<br>Federal Contracting Consultant<br>info@thecontractingpreacher.com</div>
+    <div class="blk"><b>Direct</b>(202) 276-2913<br>thecontractingpreacher.com<br>Mon–Fri · 8am–6pm ET</div>
+    <div class="blk"><b>Headquarters</b>1225 Laurel Street, Ste 415<br>Columbia, SC 29201<br>Offices: Charleston · Summerville · Hilton Head</div>
+  </div>
+
+  <div class="foot-strip">
+    <span>UEI: <b>—</b></span>
+    <span>CAGE: <b>—</b></span>
+    <span>DUNS: <b>—</b></span>
+    <span>© 2026 The Contracting Preacher</span>
+  </div>
+</div>
+
+</body>
+</html>

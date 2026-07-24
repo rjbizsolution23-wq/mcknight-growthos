@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fleet Command Center — McKnight Opportunity Group</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="assets/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --ok:#2F6B4A; --warn:#B87A1F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);-webkit-font-smoothing:antialiased}
+  body{padding:48px 24px 100px}
+  .page{max-width:1280px;margin:0 auto}
+
+  /* HERO */
+  .hero{background:var(--navy);color:var(--ivory);padding:52px 60px 56px;border-radius:2px;position:relative;overflow:hidden;margin-bottom:32px}
+  .hero::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 85% 20%, rgba(201,169,97,.22),transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(139,31,31,.06),transparent 50%);
+    pointer-events:none}
+  .hero .top{position:relative;display:flex;justify-content:space-between;align-items:center;margin-bottom:44px;gap:24px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand svg{width:52px;height:52px;flex:none;color:var(--gold)}
+  .brand .txt .up{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;font-weight:500}
+  .brand .txt .main{font-family:var(--serif);font-size:22px;font-weight:800;line-height:1.05;margin-top:2px;letter-spacing:-.005em}
+  .brand .txt .sub{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;margin-top:3px;opacity:.85}
+  .hero .meta{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase;text-align:right;line-height:1.7}
+  .hero .meta b{color:var(--ivory);display:block;font-family:var(--sans);font-weight:600;font-size:13px;letter-spacing:0;text-transform:none;margin-top:2px}
+
+  .hero h1{font-family:var(--serif);font-size:68px;line-height:.98;font-weight:800;letter-spacing:-.025em;position:relative;max-width:920px}
+  .hero h1 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .hero .lede{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--gold-3);max-width:720px;margin-top:16px;line-height:1.5;position:relative}
+
+  .stats{margin-top:44px;padding-top:28px;border-top:1px solid rgba(201,169,97,.3);display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative}
+  .stat b{font-family:var(--serif);font-size:40px;font-weight:800;color:var(--gold-3);display:block;line-height:1;letter-spacing:-.02em}
+  .stat span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-top:8px;display:block}
+
+  /* LOCKDOWN BANNER */
+  .lockdown{background:#FBEEEE;border-left:4px solid var(--red);padding:18px 24px;border-radius:0 2px 2px 0;font-size:14px;color:#5B1414;margin-bottom:36px;line-height:1.6}
+  .lockdown b{font-weight:700;font-family:var(--mono);letter-spacing:.06em;font-size:12px;text-transform:uppercase;color:#3D0F0F;display:block;margin-bottom:6px}
+  .lockdown a{color:#5B1414;text-decoration:underline;font-weight:600}
+
+  /* SECTION */
+  section{margin-bottom:56px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:24px;border-bottom:1px solid var(--navy);padding-bottom:14px}
+  .sec-num{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-2);font-weight:600}
+  .sec-title{font-family:var(--serif);font-size:32px;font-weight:800;letter-spacing:-.015em}
+  .sec-title em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-sub{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+
+  /* PRIORITY GATE CARDS (P0 tools) */
+  .gate-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .gate{background:var(--navy);color:var(--ivory);padding:28px 32px;border-radius:2px;text-decoration:none;position:relative;overflow:hidden;transition:all .18s;display:block;border-left:5px solid var(--red)}
+  .gate::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.18),transparent 55%);pointer-events:none}
+  .gate:hover{transform:translateY(-2px);box-shadow:0 20px 40px -20px rgba(10,22,40,.5)}
+  .gate .badge{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--red);text-transform:uppercase;font-weight:700;background:rgba(139,31,31,.15);padding:4px 10px;display:inline-block;border-radius:2px;position:relative}
+  .gate h4{font-family:var(--serif);font-size:28px;font-weight:800;letter-spacing:-.005em;line-height:1.05;margin:10px 0 6px;color:var(--ivory);position:relative}
+  .gate h4 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .gate p{font-size:14px;color:var(--gold-3);line-height:1.55;position:relative;margin-bottom:14px}
+  .gate .arrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;font-weight:700;position:relative;display:inline-flex;align-items:center;gap:8px}
+
+  /* CARDS */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .cards.two{grid-template-columns:1fr 1fr}
+  .card{background:#fff;border:1px solid var(--line);padding:0;border-radius:2px;overflow:hidden;text-decoration:none;color:var(--navy);display:flex;flex-direction:column;transition:all .15s;box-shadow:0 8px 20px -16px rgba(10,22,40,.15)}
+  .card:hover{transform:translateY(-2px);box-shadow:0 16px 34px -18px rgba(10,22,40,.3);border-color:var(--gold-2)}
+  .card .thumb{aspect-ratio:16/10;background:var(--navy);position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .card .thumb::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.24),transparent 50%);z-index:1}
+  .card .thumb .badge{position:absolute;top:12px;left:12px;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:600;z-index:2;background:rgba(10,22,40,.4);padding:3px 9px;border-radius:1px}
+  .card .thumb .glyph{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;font-family:var(--serif);color:var(--gold-3);font-size:28px;font-weight:800;letter-spacing:-.02em;text-align:center;line-height:.95;max-width:80%}
+  .card .thumb .glyph em{font-style:italic;color:var(--gold);font-weight:400}
+  .card .thumb.ivory{background:var(--ivory);border-bottom:1px solid var(--line)}
+  .card .thumb.ivory::before{background:radial-gradient(circle at 50% 50%,transparent 30%,var(--ivory-2) 70%),repeating-linear-gradient(0deg,transparent 0 20px,rgba(10,22,40,.05) 20px 21px)}
+  .card .thumb.ivory .glyph{color:var(--navy)}
+  .card .thumb.ivory .glyph em{color:var(--red)}
+  .card .thumb.ivory .badge{color:var(--navy);background:rgba(10,22,40,.15)}
+  .card .thumb.gold{background:linear-gradient(135deg,var(--gold),var(--gold-2))}
+  .card .thumb.gold::before{background:radial-gradient(circle at 50% 50%,rgba(10,22,40,.15),transparent 60%)}
+  .card .thumb.gold .glyph{color:var(--navy)}
+  .card .thumb.gold .glyph em{color:#F7F3EA}
+  .card .thumb.gold .badge{color:var(--navy);background:rgba(10,22,40,.2)}
+
+  .card .body{padding:16px 18px;flex:1;display:flex;flex-direction:column}
+  .card .body h4{font-family:var(--serif);font-size:17px;font-weight:800;letter-spacing:-.005em;margin-bottom:5px;line-height:1.15}
+  .card .body p{font-size:12.5px;color:var(--slate);line-height:1.5;flex:1}
+  .card .body .foot{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+  .card .body .foot .arrow{color:var(--red);font-size:13px}
+
+  /* FLEET STATUS SUMMARY */
+  .fleet-strip{background:#fff;border:1px solid var(--line);border-radius:2px;padding:24px 28px;display:grid;grid-template-columns:1fr 260px;gap:24px;align-items:center}
+  .fleet-strip .info h3{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.005em}
+  .fleet-strip .info h3 em{font-style:italic;color:var(--red);font-weight:600}
+  .fleet-strip .info p{font-family:var(--serif);font-style:italic;color:var(--slate);font-size:14px;margin-top:4px;line-height:1.55;max-width:640px}
+  .fleet-strip .cta{background:var(--navy);color:var(--gold-3);padding:14px 20px;border-radius:2px;text-decoration:none;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;text-align:center;transition:all .15s}
+  .fleet-strip .cta:hover{background:var(--gold);color:var(--navy)}
+  .fleet-strip .cta small{display:block;font-size:9px;color:var(--gold);letter-spacing:.14em;margin-top:4px;font-weight:500}
+
+  /* BRAND PILLS */
+  .brand-pills{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
+  .bpill{background:var(--ivory);border:1px solid var(--line);padding:10px 12px;border-radius:2px;text-align:center}
+  .bpill .n{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;font-weight:600}
+  .bpill .name{font-family:var(--serif);font-size:11px;font-weight:700;color:var(--navy);letter-spacing:-.005em;line-height:1.1;margin-top:2px}
+  .bpill.locked{border-color:var(--red);background:#FBEEEE}
+  .bpill.locked .n{color:var(--red)}
+  .bpill.staging{border-color:var(--warn);background:#FFF6E1}
+  .bpill.staging .n{color:var(--warn)}
+
+  /* FOOT */
+  .end{border-top:1px solid var(--navy);margin-top:48px;padding-top:24px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase}
+  .end .verse{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--navy);text-transform:none;letter-spacing:0;margin-bottom:8px}
+
+  @media (max-width:900px){
+    .cards{grid-template-columns:1fr}
+    .cards.two,.gate-grid{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
+    .hero h1{font-size:42px}
+    .fleet-strip{grid-template-columns:1fr}
+    .brand-pills{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".45"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="top">
+      <div class="brand">
+        <svg><use href="#mark"/></svg>
+        <div class="txt">
+          <div class="up">McKnight Opportunity Group</div>
+          <div class="main">Fleet Command Center</div>
+          <div class="sub">Every asset · Every gate · One view</div>
+        </div>
+      </div>
+      <div class="meta">Fleet Console · v2.0<b>Updated July 23, 2026</b></div>
+    </div>
+    <h1>Architecture complete.<br><em>Verification pending.</em></h1>
+    <div class="lede">10 brands. 3 priority tiers. 22 deliverables. One rule: no launch until the P0 gate closes on documented entities, credentials, and evidence.</div>
+
+    <div class="stats">
+      <div class="stat"><b>10</b><span>Brands in Fleet</span></div>
+      <div class="stat"><b>30</b><span>Deliverables Shipped</span></div>
+      <div class="stat"><b>0/10</b><span>P0 Gates Closed</span></div>
+      <div class="stat"><b>1</b><span>Live Staging</span></div>
+    </div>
+  </div>
+
+  <div class="lockdown">
+    <b>⚠ Publication Lockdown</b>
+    No brand publishes public claims about win rates, dollar volumes, 501(c)(3) status, active housing programs, government contracting experience, or credentials until <b>the P0 gate closes with documented evidence</b> in the <a href="fleet-verification-packet.html">Fleet Verification Packet</a>. Complete the packet → run <a href="fleet-dashboard.html">Fleet Dashboard</a> → gate turns green → launch.
+  </div>
+
+  <!-- ═══════ 01 · P0 COMMAND TOOLS ═══════ -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">P0 Command <em>Tools</em></h2>
+      <span class="sec-sub">The gate before any launch</span>
+    </div>
+
+    <div class="gate-grid">
+      <a class="gate" href="fleet-verification-packet.html">
+        <div class="badge">Blocker · Start Here</div>
+        <h4>Fleet Verification <em>Packet</em></h4>
+        <p>Live intake tool. 14 sections. Every entity, credential, and compliance packet across 10 brands. Autosaves locally. Export JSON. Send to Dr. McKnight.</p>
+        <span class="arrow">Open →</span>
+      </a>
+      <a class="gate" href="fleet-dashboard.html" style="border-left-color:var(--gold)">
+        <div class="badge" style="color:var(--gold);background:rgba(201,169,97,.15)">Status Board</div>
+        <h4>Fleet <em>Dashboard</em></h4>
+        <p>Visual P0/P1/P2 tracker across all 10 brands. Check items as you verify. Progress bars auto-update. Export status report as JSON.</p>
+        <span class="arrow">Open →</span>
+      </a>
+      <a class="gate" href="fleet-brand-system.html" style="border-left-color:var(--gold-3)">
+        <div class="badge" style="color:var(--gold-3);background:rgba(228,203,146,.15)">Draft · Pre-clearance</div>
+        <h4>Fleet Brand <em>System</em></h4>
+        <p>Master McKnight identity + 10 connected sub-brand marks + accent color system + fleet-wide rules. Draft only — pending name clearance.</p>
+        <span class="arrow">Open →</span>
+      </a>
+      <a class="gate" href="legal-entity-map.html" style="border-left-color:var(--slate)">
+        <div class="badge" style="color:var(--slate);background:rgba(74,85,104,.15)">Counsel Required</div>
+        <h4>Legal Entity <em>Map</em></h4>
+        <p>Ownership tree, authority matrix, and 6 required intercompany agreements. Template only — counsel review mandatory before adoption.</p>
+        <span class="arrow">Open →</span>
+      </a>
+      <a class="gate" href="clearance-tracker.html" style="border-left-color:var(--warn)">
+        <div class="badge" style="color:var(--warn);background:rgba(184,122,31,.15)">Section 3 · Interactive</div>
+        <h4>Clearance <em>Tracker</em></h4>
+        <p>13 names × 8 clearance checks (SC SoS, USPTO, state TM, common-law, domain, socials, similar-risk, counsel). Click cells to cycle status. Notes per brand. Autosave + JSON export.</p>
+        <span class="arrow">Open →</span>
+      </a>
+      <a class="gate" href="compliance-packets.html" style="border-left-color:var(--ok)">
+        <div class="badge" style="color:var(--ok);background:rgba(47,107,74,.15)">Regulated · 6 Sheets</div>
+        <h4>Compliance <em>Packets</em></h4>
+        <p>Six one-page compliance sheets — Housing · Capital Ready · MortgageOS · Freight · FleetWorks · Early Learning. Sub-brand color-coded. Print all six as PDFs.</p>
+        <span class="arrow">Open →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════ 02 · FLEET STATUS ═══════ -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">Fleet <em>at a Glance</em></h2>
+      <span class="sec-sub">10 brands · current status</span>
+    </div>
+
+    <div class="fleet-strip">
+      <div class="info">
+        <h3>Every brand is <em>architecturally ready.</em></h3>
+        <p>Only The Contracting Preacher currently has a live staging site (with illustrative examples clearly labeled). All others require entity + name + credential verification before public marks, taglines, or launch.</p>
+        <div class="brand-pills">
+          <div class="bpill"><div class="n">00 · MOG</div><div class="name">Opportunity Group</div></div>
+          <div class="bpill staging"><div class="n">01 · TCP</div><div class="name">Contracting Preacher</div></div>
+          <div class="bpill locked"><div class="n">02 · MHI</div><div class="name">Housing Initiative</div></div>
+          <div class="bpill"><div class="n">03 · MCR</div><div class="name">Capital Ready</div></div>
+          <div class="bpill"><div class="n">04 · MMOS</div><div class="name">MortgageOS</div></div>
+          <div class="bpill"><div class="n">05 · MGOS</div><div class="name">GrowthOS</div></div>
+          <div class="bpill locked"><div class="n">06 · MFS</div><div class="name">Freight Systems</div></div>
+          <div class="bpill locked"><div class="n">07 · MFW</div><div class="name">FleetWorks</div></div>
+          <div class="bpill locked"><div class="n">08 · MELA</div><div class="name">Early Learning</div></div>
+          <div class="bpill"><div class="n">09 · MLOS</div><div class="name">LearningOS</div></div>
+        </div>
+      </div>
+      <a class="cta" href="fleet-dashboard.html">Open Dashboard →<small>Live status board</small></a>
+    </div>
+  </section>
+
+  <!-- ═══════ 03 · BRAND KIT & IDENTITY ═══════ -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Brand Kit &amp; <em>Identity</em></h2>
+      <span class="sec-sub">Interactive portal · assets · downloads</span>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="brand-portal.html">
+        <div class="thumb"><span class="badge">01 · Interactive</span><div class="glyph">Brand<br><em>Portal.</em></div></div>
+        <div class="body">
+          <h4>Brand Portal</h4>
+          <p>Live download portal — logos in SVG/PNG/JPG any size, colors as HEX/RGB/HSL, palette exports (CSS/Tailwind/SCSS/JSON), templates hub. Everything in one page.</p>
+          <div class="foot"><span>Interactive</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="brand-kit.html">
+        <div class="thumb"><span class="badge">02 · Reference</span><div class="glyph">Brand<br><em>Kit.</em></div></div>
+        <div class="body">
+          <h4>Brand Kit — Reference Document</h4>
+          <p>15-section print-ready brand book. Logos, palette, type, business cards, letterhead, email templates, social covers, backgrounds, header/footer, voice.</p>
+          <div class="foot"><span>15 Sections</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="fleet-brand-system.html">
+        <div class="thumb gold"><span class="badge">03 · Fleet</span><div class="glyph">Fleet Brand<br><em>System.</em></div></div>
+        <div class="body">
+          <h4>Master McKnight System</h4>
+          <p>Connected identity for all 10 brands. Master shield + sub-brand silhouettes + accent color system + fleet-wide typography &amp; usage rules.</p>
+          <div class="foot"><span>10 Marks</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════ 04 · CLIENT-FACING OPERATING TOOLS ═══════ -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Client-Facing <em>Tools</em></h2>
+      <span class="sec-sub">The Contracting Preacher · practice operations</span>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="client-intake-form.html">
+        <div class="thumb ivory"><span class="badge">01 · Live Form</span><div class="glyph">Client<br><em>Intake.</em></div></div>
+        <div class="body">
+          <h4>Client Intake Form</h4>
+          <p>Interactive 9-section onboarding form. Autosave, progress tracking, JSON export, mailto submission. Ship-ready to embed on the website.</p>
+          <div class="foot"><span>Interactive</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="bid-scorecard.html">
+        <div class="thumb"><span class="badge">02 · Scoring</span><div class="glyph">Bid /<br><em>No-Bid.</em></div></div>
+        <div class="body">
+          <h4>Bid / No-Bid Scorecard</h4>
+          <p>100-point scoring engine — 10 hard disqualifiers + 9 weighted factors. Live sliders, decision bands, JSON export.</p>
+          <div class="foot"><span>Interactive</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="opportunity-tracker.html">
+        <div class="thumb"><span class="badge">03 · Kanban</span><div class="glyph">Opportunity<br><em>Pipeline.</em></div></div>
+        <div class="body">
+          <h4>Opportunity Tracker (Kanban)</h4>
+          <p>Drag-and-drop pipeline — Lead → Qualify → Bidding → Submitted → Won. Auto-calc value, win rate, days-until-due. localStorage persist.</p>
+          <div class="foot"><span>Interactive</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="compliance-matrix.html">
+        <div class="thumb ivory"><span class="badge">04 · RTM</span><div class="glyph">Compliance<br><em>Matrix.</em></div></div>
+        <div class="body">
+          <h4>Compliance Matrix (RTM)</h4>
+          <p>Federal proposal requirement traceability — every RFP line mapped, owned, status-tracked, editable rows, JSON export.</p>
+          <div class="foot"><span>Federal Proposal Tool</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="onboarding-checklist.html">
+        <div class="thumb"><span class="badge">05 · Checklist</span><div class="glyph">90-Day<br><em>Onboarding.</em></div></div>
+        <div class="body">
+          <h4>Client Onboarding</h4>
+          <p>90-day roadmap. 24 checkpoints across 3 phases. Sign-off blocks for client + preacher. Progress bars per phase.</p>
+          <div class="foot"><span>3 Phases · Sign-Off</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="intake-workbook.html">
+        <div class="thumb"><span class="badge">06 · Manual</span><div class="glyph">Intake<br><em>Workbook.</em></div></div>
+        <div class="body">
+          <h4>Intake Workbook &amp; AI Engine</h4>
+          <p>20-section operating manual — AI rules, ownership, past performance, grants, contracts, VC, sponsors, loans, scoring engine.</p>
+          <div class="foot"><span>20 Sections</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════ 05 · BUSINESS OPERATIONS ═══════ -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">Business <em>Operations</em></h2>
+      <span class="sec-sub">Contracts · billing · sales · legal (draft — counsel review required)</span>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="Practical Assets.html#invoice">
+        <div class="thumb ivory"><span class="badge">01 · Billing</span><div class="glyph">Invoice /<br><em>Estimate.</em></div></div>
+        <div class="body">
+          <h4>Invoice + Estimate</h4>
+          <p>Print-ready billing templates. Line items, tax handling, retainer credits, payment terms, signature blocks for estimate acceptance.</p>
+          <div class="foot"><span>2 Templates</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="Practical Assets.html#engagement">
+        <div class="thumb"><span class="badge">02 · Legal Draft</span><div class="glyph">Engagement<br><em>Agreement.</em></div></div>
+        <div class="body">
+          <h4>Master Consulting Agreement</h4>
+          <p>10-section engagement agreement covering services, fees, confidentiality, no-guarantee, term, liability, and SC governing law. Counsel review required.</p>
+          <div class="foot"><span>Counsel Review Req'd</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="Practical Assets.html#nda">
+        <div class="thumb ivory"><span class="badge">03 · Legal Draft</span><div class="glyph">Mutual<br><em>NDA.</em></div></div>
+        <div class="body">
+          <h4>Mutual NDA</h4>
+          <p>Bilateral non-disclosure agreement — 2-year term, 3-year survival. Standard exclusions, no-license clause, injunctive-relief remedy.</p>
+          <div class="foot"><span>Counsel Review Req'd</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="Practical Assets.html#teaming">
+        <div class="thumb"><span class="badge">04 · Federal</span><div class="glyph">Teaming<br><em>Agreement.</em></div></div>
+        <div class="body">
+          <h4>Contractor Teaming Agreement</h4>
+          <p>Prime + Sub CTA for federal opportunity pursuit. Roles, exclusivity, small-business compliance, 30-day post-award subcontract framework.</p>
+          <div class="foot"><span>FAR 9.601 · Counsel</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="Practical Assets.html#casestudy">
+        <div class="thumb"><span class="badge">05 · Marketing</span><div class="glyph">Case<br><em>Study.</em></div></div>
+        <div class="body">
+          <h4>Case Study Template</h4>
+          <p>1-page client-win template. Situation, problem, delivery, outcome, quote, evidence. Do not publish without written client permission.</p>
+          <div class="foot"><span>Permission Required</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="Practical Assets.html#sellsheet">
+        <div class="thumb gold"><span class="badge">06 · Marketing</span><div class="glyph">Sell<br><em>Sheet.</em></div></div>
+        <div class="body">
+          <h4>One-Page Sell Sheet</h4>
+          <p>Hand-out format for trade shows, cold intros, and referrals. What we handle · who we help · why us · CTA. Stats are placeholders.</p>
+          <div class="foot"><span>Trade Show Ready</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="Practical Assets.html#pricing">
+        <div class="thumb ivory"><span class="badge">07 · Pricing</span><div class="glyph">Pricing<br><em>Sheet.</em></div></div>
+        <div class="body">
+          <h4>Pricing Sheet · 3 Tiers</h4>
+          <p>Foundation ($2,850) · Pursuit ($4,500/opportunity) · Retainer ($1,850/mo). Draft only — confirm final numbers in Verification Packet §5.</p>
+          <div class="foot"><span>Draft Pricing</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="capability-statement.html">
+        <div class="thumb gold"><span class="badge">08 · Federal</span><div class="glyph">Capability<br><em>Statement.</em></div></div>
+        <div class="body">
+          <h4>Federal Capability Statement</h4>
+          <p>SAM/GSA-ready 1-page federal document. Company overview, differentiators, NAICS codes, certifications, past performance.</p>
+          <div class="foot"><span>1 Page · US Letter</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="sam-registration-checklist.html">
+        <div class="thumb ivory"><span class="badge">09 · Client Handout</span><div class="glyph">SAM.gov<br><em>Checklist.</em></div></div>
+        <div class="body">
+          <h4>SAM Registration Checklist</h4>
+          <p>1-page client handout. Every field needed before registration + 5-step process with timelines. Print, hand out, save the back-and-forth.</p>
+          <div class="foot"><span>1 Page</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════ 06 · MARKETING & CONTENT ═══════ -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">07</span>
+      <h2 class="sec-title">Deck · <em>Newsletter · Announcements</em></h2>
+      <span class="sec-sub">Presentation · email · press pack</span>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="proposal-deck.html">
+        <div class="thumb"><span class="badge">01 · Deck</span><div class="glyph">Proposal<br><em>Deck.</em></div></div>
+        <div class="body">
+          <h4>Proposal / Capability Deck</h4>
+          <p>12-slide 1920×1080 pitch deck. Cover · Who We Are · Problem · Solution · Process · Past Performance · Roadmap · Investment · CTA.</p>
+          <div class="foot"><span>12 Slides · 16:9</span><span class="arrow">Present →</span></div>
+        </div>
+      </a>
+      <a class="card" href="newsletter-template.html">
+        <div class="thumb"><span class="badge">02 · Email</span><div class="glyph">From the<br><em>Pulpit.</em></div></div>
+        <div class="body">
+          <h4>Weekly Newsletter</h4>
+          <p>Email-safe HTML template. Weekly opportunity list, tip of the week, verse of the week, CTA. Realistic sample content — swap and send.</p>
+          <div class="foot"><span>HTML Email</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+      <a class="card" href="award-announcements.html">
+        <div class="thumb gold"><span class="badge">03 · Social + PR</span><div class="glyph">Award<br><em>Pack.</em></div></div>
+        <div class="body">
+          <h4>Award Announcements</h4>
+          <p>Full social pack — 6 square posts + LinkedIn long-form + press release for celebrating client wins. Publish only when documented.</p>
+          <div class="foot"><span>8 Assets</span><span class="arrow">Open →</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <div class="end">
+    <div class="verse">"Commit to the Lord whatever you do, and he will establish your plans."</div>
+    Fleet Command Center · McKnight Opportunity Group · Dr. McKnight · Issued July 2026 · v2.0
+  </div>
+
+</div>
+
+</body>
+</html>

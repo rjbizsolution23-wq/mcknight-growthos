@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Grant Tracker — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0; --line-2:#D6CFB8;
+    --ok:#2F6B4A; --warn:#B87A1F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:32px 24px 100px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1280px;margin:0 auto}
+
+  header{background:var(--navy);color:var(--ivory);padding:32px 44px;border-radius:2px;position:relative;overflow:hidden;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;gap:24px}
+  header::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.2),transparent 55%);pointer-events:none}
+  .brand{display:flex;align-items:center;gap:12px;position:relative}
+  .brand svg{width:40px;height:40px;color:var(--gold);flex:none}
+  .brand .txt{font-family:var(--serif);font-weight:700;font-size:15px;line-height:1.05}
+  .brand .txt h1{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1}
+  .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400;margin-top:3px}
+  header .stats{display:flex;gap:22px;position:relative}
+  header .stats .st{text-align:right;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;font-weight:600;line-height:1.6}
+  header .stats .st b{display:block;font-family:var(--serif);font-size:28px;color:var(--gold-3);font-weight:800;letter-spacing:-.01em}
+
+  .actions{display:flex;gap:8px;position:relative}
+  .actions button{background:var(--gold);color:var(--navy);padding:10px 16px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border:0;border-radius:2px;cursor:pointer;transition:all .15s}
+  .actions button:hover{background:var(--gold-3)}
+  .actions button.ghost{background:transparent;color:var(--gold-3);border:1px solid var(--gold-3)}
+  .actions button.ghost:hover{background:var(--gold-3);color:var(--navy)}
+
+  section{margin-bottom:40px}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--navy)}
+  .sec-head h2{font-family:var(--serif);font-size:26px;font-weight:800;letter-spacing:-.015em}
+  .sec-head h2 em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-head .sub{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+
+  /* TABLE */
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+  th{background:var(--navy);color:var(--gold-3);font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:12px 14px;text-align:left;font-weight:700;position:sticky;top:0;z-index:1}
+  td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--navy);line-height:1.5}
+  td b{color:var(--navy);font-weight:700;font-family:var(--serif);font-size:14px;letter-spacing:-.005em;display:block;margin-bottom:2px}
+  td.mono{font-family:var(--mono);font-size:11px;color:var(--slate);letter-spacing:.03em}
+  tr:nth-child(even) td{background:#FBF9F3}
+  td input,td select{width:100%;background:transparent;border:0;border-bottom:1px dashed var(--line-2);padding:2px 4px;font-family:var(--sans);font-size:12px;color:var(--navy);outline:none}
+  td input:focus,td select:focus{border-bottom-color:var(--gold-2)}
+  td select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold-2) 50%),linear-gradient(135deg,var(--gold-2) 50%,transparent 50%);background-position:right 4px center;background-size:4px 4px;background-repeat:no-repeat;padding-right:16px}
+  .pill{display:inline-block;padding:2px 8px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border-radius:2px}
+  .pill.researching{background:var(--ivory-2);color:var(--slate)}
+  .pill.drafting{background:#FFF6E1;color:var(--warn)}
+  .pill.submitted{background:#E0EAFF;color:#3A55B0}
+  .pill.awarded{background:#E1F0E8;color:var(--ok)}
+  .pill.denied{background:#FBEEEE;color:var(--red)}
+  td.delete button{background:transparent;border:0;color:var(--slate);cursor:pointer;font-size:14px;opacity:.5}
+  td.delete button:hover{color:var(--red);opacity:1}
+
+  .add-row{padding:14px;background:var(--ivory);border-top:1px dashed var(--line);text-align:center}
+  .add-row button{background:var(--navy);color:var(--gold-3);border:0;padding:8px 16px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border-radius:2px;cursor:pointer}
+  .add-row button:hover{background:var(--gold);color:var(--navy)}
+
+  /* CHEAT SHEET */
+  .cheat{background:#fff;border:1px solid var(--line);border-radius:2px;padding:32px 40px;position:relative;overflow:hidden}
+  .cheat::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+  .cheat h3{font-family:var(--serif);font-size:24px;font-weight:800;letter-spacing:-.005em;margin-bottom:6px}
+  .cheat h3 em{font-style:italic;color:var(--red);font-weight:600}
+  .cheat .intro{font-family:var(--serif);font-style:italic;color:var(--slate);font-size:14px;margin-bottom:20px;line-height:1.55}
+  .cheat-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .cheat-box{background:var(--ivory);border-left:3px solid var(--gold);padding:16px 20px;border-radius:0 2px 2px 0}
+  .cheat-box h4{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-bottom:10px}
+  .cheat-box ol{padding-left:18px;font-size:13px;line-height:1.7;color:var(--navy)}
+  .cheat-box ol li{margin-bottom:6px}
+  .cheat-box ol li b{font-weight:700}
+  .cheat-box ul{list-style:none;font-size:13px;line-height:1.7;color:var(--navy)}
+  .cheat-box ul li{padding-left:18px;position:relative;margin-bottom:5px}
+  .cheat-box ul li::before{content:"→";position:absolute;left:0;color:var(--gold-2);font-weight:700}
+
+  /* CALENDAR */
+  .cal{background:#fff;border:1px solid var(--line);border-radius:2px;padding:20px 24px}
+  .cal h3{font-family:var(--serif);font-size:20px;font-weight:800;letter-spacing:-.005em;margin-bottom:10px}
+  .cal-months{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+  .month{padding:10px 12px;background:var(--ivory);border-left:3px solid var(--gold);border-radius:0 2px 2px 0;font-size:12px}
+  .month .m{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--gold-2);text-transform:uppercase;font-weight:700}
+  .month .items{margin-top:4px;color:var(--navy);line-height:1.5}
+  .month .items span{display:block;padding:2px 0;border-bottom:1px dashed rgba(0,0,0,.06)}
+  .month .items span:last-child{border:0}
+
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--gold-3);padding:12px 20px;border-radius:2px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;opacity:0;transform:translateY(20px);transition:all .25s;z-index:100;border-left:3px solid var(--gold)}
+  .toast.show{opacity:1;transform:translateY(0)}
+
+  @media (max-width:900px){ header{flex-direction:column;align-items:flex-start} .cheat-grid{grid-template-columns:1fr} .cal-months{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="page">
+
+  <header>
+    <div class="brand">
+      <svg><use href="#mark"/></svg>
+      <div class="txt"><h1>Grant Tracker</h1><span>Grants.gov · Foundation · State · Local</span></div>
+    </div>
+    <div class="stats">
+      <div class="st"><b id="s-total">0</b>Active</div>
+      <div class="st"><b id="s-pipeline">$0</b>Pipeline</div>
+      <div class="st"><b id="s-awarded">$0</b>Awarded YTD</div>
+      <div class="st"><b id="s-winrate">—</b>Win Rate</div>
+    </div>
+    <div class="actions">
+      <button onclick="addRow()">+ Add Grant</button>
+      <button class="ghost" onclick="exportJSON()">↓ Export</button>
+    </div>
+  </header>
+
+  <!-- PIPELINE TABLE -->
+  <section>
+    <div class="sec-head">
+      <h2>Grant <em>Pipeline</em></h2>
+      <span class="sub">Editable · autosave · localStorage</span>
+    </div>
+    <table id="grid">
+      <thead>
+        <tr>
+          <th style="width:22%">Opportunity</th>
+          <th style="width:14%">Agency / Funder</th>
+          <th style="width:9%">Category</th>
+          <th style="width:9%">Amount</th>
+          <th style="width:9%">Match Req'd</th>
+          <th style="width:9%">Due Date</th>
+          <th style="width:11%">Status</th>
+          <th style="width:13%">Owner / Notes</th>
+          <th style="width:4%"></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="add-row"><button onclick="addRow()">+ Add Grant Opportunity</button></div>
+  </section>
+
+  <!-- GRANTS.GOV CHEAT SHEET -->
+  <section>
+    <div class="sec-head">
+      <h2>Grants.gov <em>Cheat Sheet</em></h2>
+      <span class="sub">Registration · workflow · minimum requirements</span>
+    </div>
+
+    <div class="cheat">
+      <h3>Everything you need — <em>faithfully done.</em></h3>
+      <p class="intro">Federal grants live on Grants.gov. Every submission must trace back to a valid SAM.gov registration, an AOR (Authorized Organizational Representative), and a completed applicant profile. Miss a step, miss the deadline.</p>
+
+      <div class="cheat-grid">
+        <div class="cheat-box">
+          <h4>Registration Workflow</h4>
+          <ol>
+            <li><b>SAM.gov Active</b> — entity registration current, UEI + CAGE issued</li>
+            <li><b>Grants.gov Applicant Profile</b> — matches SAM data</li>
+            <li><b>Designate EBiz POC</b> — official grants electronic-business contact</li>
+            <li><b>AOR Registered</b> — Authorized Organizational Rep can sign submissions</li>
+            <li><b>Login.gov Set Up</b> — MFA required for AOR access</li>
+            <li><b>Workspace Created</b> — practice submission before real deadline</li>
+          </ol>
+        </div>
+
+        <div class="cheat-box">
+          <h4>Every Application Needs</h4>
+          <ul>
+            <li>SF-424 (application for federal assistance)</li>
+            <li>SF-424A / B (budget + assurances)</li>
+            <li>Project narrative (page-limited by opportunity)</li>
+            <li>Statement of need + logic model</li>
+            <li>Budget narrative + justification</li>
+            <li>Applicant capability statement</li>
+            <li>Certifications (debarment · lobbying · drug-free)</li>
+            <li>SF-LLL (lobbying disclosure) if applicable</li>
+            <li>Letters of support / MOUs</li>
+            <li>IRS determination letter (if nonprofit)</li>
+          </ul>
+        </div>
+
+        <div class="cheat-box">
+          <h4>Common Pitfalls</h4>
+          <ul>
+            <li>SAM registration expires mid-application (72-hour lag to reactivate)</li>
+            <li>AOR credentials lost — no one can submit</li>
+            <li>Budget doesn't tie to narrative</li>
+            <li>Match funds unverified / uncommitted</li>
+            <li>Page-limit violations disqualify entire application</li>
+            <li>File-format wrong (only PDF for most attachments)</li>
+            <li>Submitting less than 24 hrs before close (system queue can fail)</li>
+            <li>Missing SF-LLL when lobbying activity exists</li>
+          </ul>
+        </div>
+
+        <div class="cheat-box">
+          <h4>Post-Submission Sequence</h4>
+          <ol>
+            <li><b>Submission Confirmation</b> — receipt email within minutes</li>
+            <li><b>Validation Confirmation</b> — 24-48 hrs (may reject → resubmit)</li>
+            <li><b>Agency Tracking Number</b> — 5-7 days</li>
+            <li><b>Review Period</b> — 60-180 days depending on program</li>
+            <li><b>Award or Denial Notice</b> — via email + Grants.gov workspace</li>
+            <li><b>Reporting Cadence Established</b> — quarterly / annual per NOFO</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORTING CALENDAR -->
+  <section>
+    <div class="sec-head">
+      <h2>Reporting <em>Calendar</em></h2>
+      <span class="sub">Post-award compliance · federal + state cadence</span>
+    </div>
+
+    <div class="cal">
+      <h3>Never miss a reporting deadline.</h3>
+      <p style="font-family:var(--serif);font-style:italic;color:var(--slate);font-size:13.5px;line-height:1.5">Federal grants tie continued funding to on-time reporting. Set these on the calendar the day the award notice comes in — never after.</p>
+      <div class="cal-months">
+        <div class="month"><div class="m">Q1 · Jan-Mar</div><div class="items"><span>SF-425 (Fed Financial) — 30d after Dec 31</span><span>SF-PPR (Performance) — as scheduled</span></div></div>
+        <div class="month"><div class="m">Q2 · Apr-Jun</div><div class="items"><span>SF-425 — 30d after Mar 31</span><span>Interim narrative — as required</span></div></div>
+        <div class="month"><div class="m">Q3 · Jul-Sep</div><div class="items"><span>SF-425 — 30d after Jun 30</span><span>Site visits scheduled — check NOFO</span></div></div>
+        <div class="month"><div class="m">Q4 · Oct-Dec</div><div class="items"><span>SF-425 — 30d after Sep 30</span><span>SAM.gov renewal (annual) — 30d before expiry</span></div></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+const STORAGE_KEY = 'tcp_grant_tracker_v1';
+let rows = [];
+
+const seed = [
+  { name: 'USDA Rural Business Development Grant', agency: 'USDA · Rural Dev', category: 'Federal', amount: '$250,000', match: '20%', due: '2026-09-30', status: 'drafting', owner: 'Dr. McKnight' },
+  { name: 'SBA Community Navigator', agency: 'SBA', category: 'Federal', amount: '$500,000', match: '0%', due: '2026-08-15', status: 'submitted', owner: 'AOR filed' },
+  { name: 'SC Community Impact Grant', agency: 'SC Dept. of Commerce', category: 'State', amount: '$75,000', match: '10%', due: '2026-10-15', status: 'researching', owner: 'Fit check' },
+  { name: 'HUD Community Development Block', agency: 'HUD', category: 'Federal', amount: '$1,200,000', match: '25%', due: '2026-11-30', status: 'researching', owner: 'MHI eligibility' },
+];
+
+function load(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){ try { rows = JSON.parse(raw); } catch(e){ rows = [...seed]; } }
+  else rows = [...seed];
+  render();
+}
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(rows)); update(); }
+function parseAmount(s){ const n = parseFloat((s || '').replace(/[$,]/g,'')); return isNaN(n) ? 0 : n; }
+function fmt(n){ return n >= 1e6 ? '$'+(n/1e6).toFixed(1)+'M' : n >= 1e3 ? '$'+(n/1e3).toFixed(0)+'K' : '$'+n; }
+
+function render(){
+  const tbody = document.getElementById('rows');
+  tbody.innerHTML = rows.map((r, i) => `
+    <tr>
+      <td><input value="${escapeHtml(r.name || '')}" onchange="edit(${i},'name',this.value)"></td>
+      <td><input value="${escapeHtml(r.agency || '')}" onchange="edit(${i},'agency',this.value)"></td>
+      <td>
+        <select onchange="edit(${i},'category',this.value)">
+          <option ${r.category==='Federal'?'selected':''}>Federal</option>
+          <option ${r.category==='State'?'selected':''}>State</option>
+          <option ${r.category==='Local'?'selected':''}>Local</option>
+          <option ${r.category==='Foundation'?'selected':''}>Foundation</option>
+          <option ${r.category==='Corporate'?'selected':''}>Corporate</option>
+        </select>
+      </td>
+      <td><input value="${escapeHtml(r.amount || '')}" onchange="edit(${i},'amount',this.value)"></td>
+      <td><input value="${escapeHtml(r.match || '')}" onchange="edit(${i},'match',this.value)"></td>
+      <td><input type="date" value="${r.due || ''}" onchange="edit(${i},'due',this.value)"></td>
+      <td>
+        <select onchange="edit(${i},'status',this.value); render()">
+          <option value="researching" ${r.status==='researching'?'selected':''}>Researching</option>
+          <option value="drafting" ${r.status==='drafting'?'selected':''}>Drafting</option>
+          <option value="submitted" ${r.status==='submitted'?'selected':''}>Submitted</option>
+          <option value="awarded" ${r.status==='awarded'?'selected':''}>Awarded</option>
+          <option value="denied" ${r.status==='denied'?'selected':''}>Denied</option>
+        </select>
+        <span class="pill ${r.status}" style="margin-top:3px;display:inline-block">${r.status || 'researching'}</span>
+      </td>
+      <td><input value="${escapeHtml(r.owner || '')}" onchange="edit(${i},'owner',this.value)"></td>
+      <td class="delete"><button onclick="del(${i})" title="Delete">×</button></td>
+    </tr>
+  `).join('');
+  update();
+}
+
+function edit(i, key, val){ rows[i][key] = val; save(); }
+function del(i){ if(!confirm('Delete this row?')) return; rows.splice(i,1); save(); render(); }
+function addRow(){
+  rows.push({ name:'New opportunity', agency:'', category:'Federal', amount:'', match:'', due:'', status:'researching', owner:'' });
+  save(); render();
+}
+function escapeHtml(s){ return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function update(){
+  const active = rows.filter(r => r.status !== 'awarded' && r.status !== 'denied').length;
+  const pipeline = rows.filter(r => r.status !== 'awarded' && r.status !== 'denied').reduce((s,r) => s + parseAmount(r.amount), 0);
+  const awarded = rows.filter(r => r.status === 'awarded').reduce((s,r) => s + parseAmount(r.amount), 0);
+  const decided = rows.filter(r => r.status === 'awarded' || r.status === 'denied').length;
+  const won = rows.filter(r => r.status === 'awarded').length;
+  document.getElementById('s-total').textContent = active;
+  document.getElementById('s-pipeline').textContent = fmt(pipeline);
+  document.getElementById('s-awarded').textContent = fmt(awarded);
+  document.getElementById('s-winrate').textContent = decided ? Math.round(won/decided*100)+'%' : '—';
+}
+
+function exportJSON(){
+  const blob = new Blob([JSON.stringify({generated: new Date().toISOString(), grants: rows}, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `grant-tracker-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  URL.revokeObjectURL(url);
+  const t = document.getElementById('toast'); t.textContent = 'Exported'; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+load();
+</script>
+
+</body>
+</html>

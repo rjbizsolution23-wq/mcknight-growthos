@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FAQ · Knowledge Base — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:48px 24px 100px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:220px 1fr;gap:32px}
+
+  aside{position:sticky;top:24px;align-self:start}
+  aside .brand{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:16px}
+  aside .brand svg{width:36px;height:36px;color:var(--navy);flex:none}
+  aside .brand .txt{font-family:var(--serif);font-weight:700;font-size:14px;line-height:1.1}
+  aside .brand .txt span{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;font-weight:500;margin-top:2px}
+  aside h3{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin:16px 0 8px}
+  aside nav{display:flex;flex-direction:column;gap:1px}
+  aside nav a{padding:7px 10px;color:var(--slate);text-decoration:none;font-size:12.5px;border-radius:2px;transition:all .12s;font-family:var(--sans);border-left:2px solid transparent;display:flex;justify-content:space-between;align-items:center}
+  aside nav a:hover{background:#fff;color:var(--navy)}
+  aside nav a.active{background:var(--navy);color:var(--gold-3);border-left-color:var(--gold)}
+  aside nav a .ct{font-family:var(--mono);font-size:9px;color:var(--gold-2);letter-spacing:.05em;font-weight:600}
+  aside nav a.active .ct{color:var(--gold-3)}
+
+  main .hero{background:var(--navy);color:var(--ivory);padding:32px 40px 28px;border-radius:2px;position:relative;overflow:hidden;margin-bottom:24px}
+  main .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.22),transparent 50%);pointer-events:none}
+  .hero .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600;position:relative}
+  .hero h1{font-family:var(--serif);font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1;margin-top:6px;position:relative}
+  .hero h1 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .hero p{font-family:var(--serif);font-style:italic;color:var(--gold-3);font-size:15px;margin-top:8px;position:relative;line-height:1.5;max-width:640px}
+
+  .search{background:#fff;border:1px solid var(--line);border-radius:2px;padding:14px 20px;display:flex;align-items:center;gap:12px;margin-bottom:24px;box-shadow:0 8px 20px -16px rgba(10,22,40,.15)}
+  .search::before{content:"⌕";color:var(--gold-2);font-size:22px}
+  .search input{border:0;flex:1;font-family:var(--sans);font-size:15px;color:var(--navy);outline:none;background:transparent}
+  .search input::placeholder{color:var(--slate);opacity:.6}
+  .search .clr{background:transparent;border:0;color:var(--slate);cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;opacity:0;transition:opacity .12s}
+  .search .clr.show{opacity:1}
+
+  section{margin-bottom:36px;scroll-margin-top:24px}
+  .sec-head{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--navy)}
+  .sec-head h2{font-family:var(--serif);font-size:24px;font-weight:800;letter-spacing:-.01em}
+  .sec-head h2 em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-head .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+
+  details.faq{background:#fff;border:1px solid var(--line);border-radius:2px;margin-bottom:8px;overflow:hidden;transition:all .15s}
+  details.faq[open]{border-color:var(--gold-2);box-shadow:0 8px 20px -14px rgba(10,22,40,.2)}
+  details.faq summary{padding:14px 20px;cursor:pointer;font-family:var(--serif);font-size:16px;font-weight:700;letter-spacing:-.005em;color:var(--navy);list-style:none;display:flex;justify-content:space-between;align-items:center;line-height:1.35}
+  details.faq summary::-webkit-details-marker{display:none}
+  details.faq summary::after{content:"+";color:var(--gold-2);font-family:var(--mono);font-size:20px;font-weight:400;transition:transform .15s}
+  details.faq[open] summary::after{transform:rotate(45deg)}
+  details.faq .answer{padding:0 20px 18px;font-size:14px;line-height:1.65;color:var(--slate);border-top:1px dashed var(--line);padding-top:14px;margin-top:4px}
+  details.faq .answer p{margin-bottom:8px}
+  details.faq .answer b{color:var(--navy);font-weight:700}
+  details.faq .answer ul{padding-left:20px;margin:6px 0 8px}
+  details.faq .answer ul li{margin-bottom:3px}
+  details.faq.hidden{display:none}
+
+  .no-results{background:#fff;border:1px dashed var(--gold-2);padding:32px;text-align:center;color:var(--slate);border-radius:2px;font-family:var(--serif);font-style:italic;font-size:16px;display:none}
+  .no-results.show{display:block}
+  .no-results b{color:var(--navy);font-style:normal;font-weight:700}
+
+  .footer{background:var(--navy);color:var(--gold-3);padding:22px 32px;border-radius:2px;text-align:center;font-family:var(--serif);font-style:italic;font-size:15px;margin-top:32px}
+  .footer b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:8px;font-style:normal}
+
+  @media (max-width:900px){ .page{grid-template-columns:1fr} aside{position:static} aside nav{flex-direction:row;flex-wrap:wrap} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="page">
+
+  <aside>
+    <div class="brand">
+      <svg><use href="#mark"/></svg>
+      <div class="txt">FAQ · Help Center<span>The Contracting Preacher</span></div>
+    </div>
+    <h3>Categories</h3>
+    <nav id="nav">
+      <a href="#getting-started" class="active"><span>Getting Started</span><span class="ct">6</span></a>
+      <a href="#sam"><span>SAM.gov</span><span class="ct">6</span></a>
+      <a href="#certifications"><span>Certifications</span><span class="ct">6</span></a>
+      <a href="#pursuit"><span>Bid Pursuit</span><span class="ct">6</span></a>
+      <a href="#billing"><span>Billing &amp; Working w/ Us</span><span class="ct">6</span></a>
+    </nav>
+    <h3 style="margin-top:24px">Still Stuck?</h3>
+    <div style="background:#fff;border:1px solid var(--line);padding:14px 16px;border-radius:2px;font-size:12px;color:var(--slate);line-height:1.55">
+      <b style="color:var(--navy);display:block;font-family:var(--serif);font-size:14px;margin-bottom:4px">Book a 15-min call.</b>
+      No pitch. Just answers.
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin-top:10px">(202) 276-2913</div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <div class="lbl">Help Center · 30 Answers</div>
+      <h1>Federal contracting, <em>demystified.</em></h1>
+      <p>The most common questions we hear from small businesses exploring federal contracts. Search or browse.</p>
+    </div>
+
+    <div class="search">
+      <input type="text" id="q" placeholder="Ask anything about federal contracts, SAM.gov, certifications…" oninput="filter()">
+      <button class="clr" id="clr" onclick="clearSearch()">Clear</button>
+    </div>
+
+    <div class="no-results" id="none"><b>No matches.</b> Try different words — or book a call, we'll answer it live.</div>
+
+    <!-- GETTING STARTED -->
+    <section id="getting-started">
+      <div class="sec-head">
+        <div class="lbl">01 · Getting Started</div>
+        <h2>The <em>basics.</em></h2>
+      </div>
+      <details class="faq" data-search="what is federal contracting government contracts basics"><summary>What is federal contracting?</summary><div class="answer"><p>Federal contracting is when the U.S. government pays a private business to provide goods or services — everything from IT staffing to facility maintenance to consulting. The federal government spends over $600 billion a year on contracts, with a meaningful share reserved for small businesses.</p><p>The federal marketplace has its own rules, forms, portals, and language. Once you know the system, it becomes a real, repeatable revenue channel.</p></div></details>
+      <details class="faq" data-search="who qualifies small business eligibility"><summary>Does my business qualify?</summary><div class="answer"><p>Almost every small business that legally operates in the U.S. can pursue federal contracts. Eligibility varies by <b>size standard</b> (based on employees or revenue for your NAICS code), <b>ownership status</b> (small, minority-owned, veteran-owned, women-owned, etc.), and <b>capability</b>.</p><p>Set-aside contracts (8(a), WOSB, HUBZone, SDVOSB) further restrict competition to certified businesses — which is often <b>less competitive</b> than open-market bidding.</p></div></details>
+      <details class="faq" data-search="how long timeline federal contract first"><summary>How long until I could win my first contract?</summary><div class="answer"><p>Realistic timelines:</p><ul><li><b>Registration only:</b> 3-4 weeks (SAM active, UEI + CAGE issued)</li><li><b>First set-aside cert:</b> 8-16 weeks depending on certification</li><li><b>First bid opportunity:</b> 60-90 days after foundation is set</li><li><b>First award:</b> 3-12 months from foundation, depending on competition and timing</li></ul><p>Anyone promising "federal contracts in 30 days" is selling hype — walk away.</p></div></details>
+      <details class="faq" data-search="cost federal consultant pricing investment"><summary>What does it cost to work with a consultant?</summary><div class="answer"><p>Our practice ranges from ~$2,850 for a Foundation package (SAM + first cert + capability statement) to $4,500 per pursued opportunity (full proposal package) to $1,850/month for an ongoing retainer.</p><p>Third-party costs (bonding, licensing fees, express-mail submissions) are pass-through at cost with documentation.</p></div></details>
+      <details class="faq" data-search="difference grant contract funding types"><summary>What's the difference between a grant and a contract?</summary><div class="answer"><p><b>Grant:</b> Government funds you to accomplish a public purpose. Typically no direct exchange — you deliver on the program, submit reports, and the money doesn't have to be paid back. Common for nonprofits.</p><p><b>Contract:</b> Government buys a good or service from you at a specified price. Direct exchange, defined deliverables, invoices, and payment terms. Common for for-profit businesses.</p><p>Different portals (Grants.gov vs. SAM.gov + agency portals), different rules, different timelines.</p></div></details>
+      <details class="faq" data-search="why me small business no experience"><summary>Can I compete if I have no federal experience?</summary><div class="answer"><p>Yes — but you need to translate your commercial experience honestly. Federal buyers care about <b>relevant past performance</b>: similar scope, similar dollar size, similar complexity. It doesn't need to be a federal contract; a comparable commercial project can qualify.</p><p>Set-asides (like 8(a)) specifically exist to give small businesses without federal history a path in. That's the whole point.</p></div></details>
+    </section>
+
+    <!-- SAM.GOV -->
+    <section id="sam">
+      <div class="sec-head">
+        <div class="lbl">02 · SAM.gov</div>
+        <h2>The <em>front door.</em></h2>
+      </div>
+      <details class="faq" data-search="what sam registration entity"><summary>What is SAM.gov?</summary><div class="answer"><p>SAM.gov is the System for Award Management — the single federal registration portal where every entity doing business with the U.S. government must register. It's the front door. No SAM registration, no federal contracts.</p></div></details>
+      <details class="faq" data-search="uei unique entity id duns"><summary>What is a UEI?</summary><div class="answer"><p>The Unique Entity ID (UEI) replaced DUNS numbers as the federal government's official business identifier in 2022. Every SAM.gov registration gets one automatically after entity validation.</p><p>UEIs are free. If anyone charges for one, they're charging for a service around it — not the UEI itself.</p></div></details>
+      <details class="faq" data-search="cage code assigned defense logistics"><summary>What's a CAGE code?</summary><div class="answer"><p>Commercial And Government Entity code — a 5-character identifier issued by the Defense Logistics Agency to every entity registered in SAM. Once your SAM registration is validated, CAGE assignment is automatic (5-10 business days).</p></div></details>
+      <details class="faq" data-search="sam expiration renewal annual"><summary>How often do I renew SAM registration?</summary><div class="answer"><p>Every 365 days. Set a calendar reminder <b>30 days before expiration</b> — a lapsed SAM registration disqualifies you mid-bid, and reactivating can take 72+ hours.</p></div></details>
+      <details class="faq" data-search="sam cost free scam"><summary>Should I pay someone to register me?</summary><div class="answer"><p>SAM registration is <b>free</b>. Paying a consultant to guide you through it (like our Foundation package) is a service fee — you're paying for time, accuracy, and avoiding rework, not for the registration itself. Anyone claiming the registration itself costs money is running a scam.</p></div></details>
+      <details class="faq" data-search="what info needed sam registration"><summary>What info do I need before starting?</summary><div class="answer"><p>See our downloadable SAM Registration Checklist. Highlights: legal business name + address, EIN, bank routing/account (for EFT), NAICS codes, business type indicators, and named Points of Contact (Entity Admin, EBiz POC, Government POC, Past-Performance POC).</p><p>Never share your SAM login credentials or MFA codes with anyone — not even a consultant.</p></div></details>
+    </section>
+
+    <!-- CERTIFICATIONS -->
+    <section id="certifications">
+      <div class="sec-head">
+        <div class="lbl">03 · Certifications</div>
+        <h2>The <em>set-aside</em> door.</h2>
+      </div>
+      <details class="faq" data-search="8a certification business development program"><summary>What is 8(a)?</summary><div class="answer"><p>The 8(a) Business Development Program is a 9-year SBA program for small businesses at least 51% owned by socially and economically disadvantaged individuals. Benefits: access to sole-source contracts up to $4.5M ($7M for manufacturing), mentor-protégé relationships, and direct set-aside competition.</p></div></details>
+      <details class="faq" data-search="wosb women owned small business"><summary>What is WOSB / EDWOSB?</summary><div class="answer"><p><b>WOSB:</b> Women-Owned Small Business — at least 51% owned/controlled by one or more women who are U.S. citizens. <b>EDWOSB:</b> Economically Disadvantaged WOSB adds income and net-worth caps. Both open set-aside contracts in industries where women-owned businesses are underrepresented.</p></div></details>
+      <details class="faq" data-search="hubzone historically underutilized"><summary>What's HUBZone?</summary><div class="answer"><p>Historically Underutilized Business Zone — set-aside program for businesses located in specific economically distressed areas, with at least 35% of employees living in HUBZones. Location matters. Check the HUBZone map before assuming you qualify.</p></div></details>
+      <details class="faq" data-search="sdvosb service disabled veteran"><summary>What's SDVOSB / VOSB?</summary><div class="answer"><p><b>VOSB:</b> Veteran-Owned Small Business. <b>SDVOSB:</b> Service-Disabled Veteran-Owned. SDVOSB unlocks powerful set-asides across every federal agency, especially VA and DoD. Certification is now handled through the SBA (unified in 2023).</p></div></details>
+      <details class="faq" data-search="how many certifications multiple stack"><summary>Can I hold multiple certifications?</summary><div class="answer"><p>Yes — and you should where eligible. A veteran-owned, service-disabled, HUBZone-located, 8(a)-certified small business qualifies for the maximum set-aside surface area. Each certification also opens agency-specific goals and dollar targets.</p></div></details>
+      <details class="faq" data-search="how long certification apply timeline"><summary>How long does certification take?</summary><div class="answer"><p>Rough averages (subject to change):</p><ul><li><b>Self-certification (WOSB/VOSB):</b> Days once documents are ready</li><li><b>8(a) application:</b> 60-120 days SBA review</li><li><b>HUBZone:</b> 90-120 days</li><li><b>EDWOSB / SDVOSB (SBA-certified):</b> 60-90 days</li></ul></div></details>
+    </section>
+
+    <!-- PURSUIT -->
+    <section id="pursuit">
+      <div class="sec-head">
+        <div class="lbl">04 · Bid Pursuit</div>
+        <h2>Winning <em>contracts.</em></h2>
+      </div>
+      <details class="faq" data-search="bid no bid decision when compete"><summary>How do I decide whether to bid?</summary><div class="answer"><p>Our practice uses a 100-point bid/no-bid scorecard: 10 hard disqualifiers + 9 weighted factors (eligibility, capability alignment, past performance, agency relationship, geographic fit, financial capacity, competitive position, deadline readiness, strategic value). Below 60 = no-bid. Above 80 = strong pursuit. Above 90 = priority.</p><p>The discipline of <b>knowing when NOT to bid</b> is what protects your calendar and your margin.</p></div></details>
+      <details class="faq" data-search="proposal writing volumes technical"><summary>What goes in a federal proposal?</summary><div class="answer"><p>Most federal RFPs require multiple "volumes": Technical, Management, Past Performance, and Price. Each volume has page limits, format rules, and evaluation criteria explicitly stated in Sections L (Instructions) and M (Evaluation) of the solicitation.</p><p>A compliance matrix maps every requirement to the volume/section where you answered it — miss a requirement, get disqualified.</p></div></details>
+      <details class="faq" data-search="teaming partnership prime subcontract"><summary>Should I team with a prime?</summary><div class="answer"><p>Teaming (as a subcontractor to a larger prime) is often the fastest way to gain federal past performance. You do the work, get paid, and can cite the engagement on future proposals. Just make sure the teaming agreement (CTA) is signed, work allocation is clear, and the eventual subcontract terms match your expectations.</p></div></details>
+      <details class="faq" data-search="past performance references cpars"><summary>What if I have no past performance?</summary><div class="answer"><p>Translate honestly. Cite similar commercial work with clear equivalents: comparable scope, size, complexity, or customer type. Never relabel commercial work as federal work — that gets you disqualified.</p><p>Alternative paths: subcontracting to build federal history, mentor-protégé arrangements, or bidding on smaller opportunities to build a record.</p></div></details>
+      <details class="faq" data-search="pricing strategy federal proposals win"><summary>How do I price a federal proposal?</summary><div class="answer"><p>Two questions matter: (1) can you profitably deliver at this price? (2) will the price be evaluated as <b>realistic and reasonable</b> per Section M? Lowballing gets you disqualified as unrealistic. Overpricing loses to competitors.</p><p>Build up from cost + reasonable margin, then sanity-check against historical awards on USAspending.gov.</p></div></details>
+      <details class="faq" data-search="cpars rating past performance"><summary>What's CPARS?</summary><div class="answer"><p>Contractor Performance Assessment Reporting System — the federal database of past-performance evaluations. Every contract over $150K gets a CPARS report. Good CPARS ratings are your most valuable asset for future bids; bad ones follow you for years.</p></div></details>
+    </section>
+
+    <!-- WORKING TOGETHER -->
+    <section id="billing">
+      <div class="sec-head">
+        <div class="lbl">05 · Working With Us</div>
+        <h2>Practicalities.</h2>
+      </div>
+      <details class="faq" data-search="how consultation call book schedule"><summary>How do I book a consultation?</summary><div class="answer"><p>Call (202) 276-2913 or email info@thecontractingpreacher.com. First 15-minute consultation is free, no obligation, no pressure. If we're not a fit, we'll say so and point you to a better resource.</p></div></details>
+      <details class="faq" data-search="engagement contract terms cancellation"><summary>What are the engagement terms?</summary><div class="answer"><p>Standard engagement includes a signed Master Consulting Agreement, a project-specific Statement of Work, and Net-30 invoicing. Either party may terminate for cause on 15 days' written notice or for convenience on 30 days. Fees earned through termination remain payable.</p></div></details>
+      <details class="faq" data-search="payment methods invoice net 30"><summary>How do you invoice?</summary><div class="answer"><p>Net-30 from invoice date. Accepted: ACH, check, or client portal. Late balances accrue a 1.5% monthly service charge after 30 days past due. Retainer clients billed monthly in advance.</p></div></details>
+      <details class="faq" data-search="refund guarantee money back"><summary>Do you offer refunds or guarantees?</summary><div class="answer"><p>We do not guarantee any specific contract award — federal procurement is a competitive process outside anyone's control. We do guarantee: honest bid/no-bid discipline, documented process, and full disclosure of what worked and what didn't. Anyone promising a specific award should be avoided.</p><p>If our work misses a documented commitment on our end, we make it right — either refund of the unearned fee or additional work at no charge.</p></div></details>
+      <details class="faq" data-search="confidentiality data security nda"><summary>How is my information protected?</summary><div class="answer"><p>Every engagement includes a mutual NDA. Sensitive fields (EIN, banking, SSN, MFA codes) are stored in an encrypted vault with owner-approval access only — never in email, chat, or unsecured shared folders. Backups, retention, and destruction policies are documented.</p></div></details>
+      <details class="faq" data-search="do i sign or you sign proposals"><summary>Do you sign proposals for me?</summary><div class="answer"><p>Never. Federal certifications and proposal submissions require an <b>Authorized Signer (AOR)</b> — that's you or your designated officer. We prepare, review, and QC the package, but you personally certify and submit. It's a legal line we don't cross.</p></div></details>
+    </section>
+
+    <div class="footer">
+      <b>"…faithfully done." — Prov 16:3</b>
+      Not finding what you need? Call (202) 276-2913 or email info@thecontractingpreacher.com — real answers, no phone-tree.
+    </div>
+  </main>
+</div>
+
+<script>
+const sections = ['getting-started','sam','certifications','pursuit','billing'];
+
+function filter(){
+  const q = document.getElementById('q').value.toLowerCase().trim();
+  document.getElementById('clr').classList.toggle('show', q.length > 0);
+  const all = document.querySelectorAll('details.faq');
+  let matches = 0;
+  all.forEach(d => {
+    const text = (d.dataset.search + ' ' + d.textContent).toLowerCase();
+    const hit = !q || text.includes(q);
+    d.classList.toggle('hidden', !hit);
+    if(hit) matches++;
+    if(q && hit) d.open = true; else if(!q) d.open = false;
+  });
+  document.getElementById('none').classList.toggle('show', matches === 0 && q.length > 0);
+  /* hide empty sections */
+  sections.forEach(id => {
+    const sec = document.getElementById(id);
+    const visible = sec.querySelectorAll('details.faq:not(.hidden)').length;
+    sec.style.display = visible === 0 && q.length > 0 ? 'none' : '';
+  });
+}
+function clearSearch(){
+  document.getElementById('q').value = '';
+  filter();
+}
+
+/* nav active state */
+const nav = document.querySelectorAll('#nav a');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY + 100;
+  let cur = 'getting-started';
+  sections.forEach(s => {
+    const el = document.getElementById(s);
+    if(el && el.offsetTop <= y) cur = s;
+  });
+  nav.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+}, {passive: true});
+</script>
+
+</body>
+</html>

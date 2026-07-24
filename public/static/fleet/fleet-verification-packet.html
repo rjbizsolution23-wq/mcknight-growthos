@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fleet Verification Packet — McKnight Opportunity Group</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --slate-2:#718096;
+    --line:#E5DFD0; --line-2:#D6CFB8;
+    --ok:#2F6B4A; --warn:#B87A1F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);-webkit-font-smoothing:antialiased}
+  body{padding:40px 20px 120px}
+  .wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:260px 1fr;gap:28px}
+
+  aside{position:sticky;top:24px;align-self:start;background:var(--navy);color:var(--ivory);padding:28px 24px;border-radius:2px;overflow:hidden;max-height:calc(100vh - 48px);overflow-y:auto}
+  aside::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.15),transparent 55%);pointer-events:none}
+  aside .brand{display:flex;align-items:center;gap:12px;position:relative;padding-bottom:20px;border-bottom:1px solid rgba(201,169,97,.25);margin-bottom:20px}
+  aside .brand svg{width:36px;height:36px;flex:none;color:var(--gold)}
+  aside .brand .txt{font-family:var(--serif);font-weight:700;font-size:15px;line-height:1.05}
+  aside .brand .txt span{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400;margin-top:3px}
+  aside h3{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:10px;position:relative;margin-top:16px}
+  aside h3:first-of-type{margin-top:0}
+  aside nav{display:flex;flex-direction:column;gap:2px;position:relative}
+  aside nav a{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;color:var(--ivory);text-decoration:none;font-size:12.5px;border-radius:2px;font-family:var(--sans);opacity:.75;cursor:pointer;border-left:2px solid transparent;transition:all .12s}
+  aside nav a:hover{opacity:1;background:rgba(201,169,97,.08)}
+  aside nav a.done{opacity:1;color:var(--gold-3)}
+  aside nav a.done::after{content:"✓";color:var(--gold);font-weight:700;font-family:var(--mono)}
+  aside .progress{position:relative;padding-top:16px;border-top:1px solid rgba(201,169,97,.25);margin-top:16px}
+  aside .progress .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;font-weight:600;display:flex;justify-content:space-between}
+  aside .progress .bar{height:6px;background:rgba(201,169,97,.15);border-radius:1px;overflow:hidden}
+  aside .progress .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold-2),var(--gold-3));transition:width .3s}
+  aside .actions{margin-top:16px;display:flex;flex-direction:column;gap:6px;position:relative}
+  aside .actions button{background:transparent;border:1px solid var(--gold);color:var(--gold-3);padding:8px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;cursor:pointer;border-radius:2px;text-align:left;transition:all .15s}
+  aside .actions button:hover{background:var(--gold);color:var(--navy)}
+  aside .actions button.primary{background:var(--gold);color:var(--navy)}
+  aside .actions button.primary:hover{background:var(--gold-3)}
+
+  main{background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden;box-shadow:0 20px 50px -30px rgba(10,22,40,.2)}
+  main::before{content:"";display:block;height:6px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+
+  header{padding:36px 40px 24px;border-bottom:1px solid var(--line);position:relative}
+  header .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+  header h1{font-family:var(--serif);font-size:38px;font-weight:800;letter-spacing:-.015em;line-height:1.02;margin-top:6px}
+  header h1 em{font-style:italic;color:var(--red);font-weight:600}
+  header p{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--slate);margin-top:8px;max-width:820px;line-height:1.5}
+
+  .warn{background:#FBEEEE;border-left:4px solid var(--red);padding:16px 22px;margin:24px 40px;border-radius:0 2px 2px 0;font-size:13.5px;color:#5B1414;line-height:1.55}
+  .warn b{font-weight:700}
+  .warn strong{font-weight:700;color:#3D0F0F}
+
+  section{padding:32px 40px;border-bottom:1px solid var(--line);scroll-margin-top:16px}
+  section:last-of-type{border:0}
+  section .sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  section .sec-head h2{font-family:var(--serif);font-size:24px;font-weight:800;letter-spacing:-.01em}
+  section .sec-head h2 em{font-style:italic;color:var(--red);font-weight:600}
+  section .sec-head .tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+  section .sec-head .tag.p0{color:var(--red)}
+  section .sec-head .tag.p1{color:var(--warn)}
+  section .sec-head .tag.p2{color:var(--slate)}
+  section .lede{font-family:var(--serif);font-style:italic;color:var(--slate);font-size:14px;margin-bottom:20px;max-width:760px;line-height:1.5}
+
+  /* ENTITY ACCORDIONS */
+  .entity{border:1px solid var(--line-2);border-radius:2px;margin-bottom:10px;overflow:hidden;background:#fff}
+  .entity summary{padding:14px 18px;background:var(--ivory);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:var(--serif);font-size:16px;font-weight:700;letter-spacing:-.005em;list-style:none}
+  .entity summary::-webkit-details-marker{display:none}
+  .entity summary::before{content:"▸";color:var(--gold-2);margin-right:10px;transition:transform .15s;display:inline-block}
+  .entity[open] summary::before{transform:rotate(90deg)}
+  .entity summary .role{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600}
+  .entity summary .role.filled{color:var(--ok)}
+  .entity .body{padding:18px 24px;background:#fff}
+
+  /* FIELDS */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+  .grid.three{grid-template-columns:1fr 1fr 1fr}
+  .grid.one{grid-template-columns:1fr}
+  .fld{display:flex;flex-direction:column;gap:4px}
+  .fld label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600;display:flex;justify-content:space-between}
+  .fld label .req{color:var(--red)}
+  .fld label .hint{color:var(--slate);opacity:.7;font-size:8.5px;text-transform:none;letter-spacing:0;font-style:italic}
+  .fld input,.fld textarea,.fld select{
+    font-family:var(--serif);font-size:14px;color:var(--navy);padding:8px 10px;
+    background:transparent;border:0;border-bottom:1.5px solid var(--line-2);outline:none;
+    transition:border-color .15s;width:100%;
+  }
+  .fld textarea{font-family:var(--sans);font-size:13px;border:1px solid var(--line-2);border-radius:2px;min-height:56px;padding:8px 10px;resize:vertical}
+  .fld select{font-family:var(--sans);font-size:13px;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold-2) 50%),linear-gradient(135deg,var(--gold-2) 50%,transparent 50%);background-position:right 10px center;background-size:5px 5px;background-repeat:no-repeat;padding-right:28px}
+  .fld input:focus,.fld textarea:focus,.fld select:focus{border-color:var(--gold-2)}
+
+  .checkgroup{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:4px}
+  .checkgroup label{display:flex;gap:8px;align-items:center;padding:7px 10px;border:1px solid var(--line-2);border-radius:2px;font-size:12px;cursor:pointer;font-family:var(--sans);color:var(--navy)}
+  .checkgroup label:hover{background:var(--ivory)}
+  .checkgroup input[type="checkbox"]{width:13px;height:13px;accent-color:var(--navy);cursor:pointer;flex:none}
+  .checkgroup label:has(input:checked){background:var(--navy);color:var(--ivory);border-color:var(--navy)}
+
+  .subgroup{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+  .subgroup h5{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-bottom:10px}
+
+  .footer-bar{padding:22px 40px;background:var(--navy);color:var(--ivory);display:flex;justify-content:space-between;align-items:center;gap:20px;position:relative;overflow:hidden}
+  .footer-bar::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 50%,rgba(201,169,97,.18),transparent 55%);pointer-events:none}
+  .footer-bar .verse{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--gold-3);position:relative;max-width:340px;line-height:1.5}
+  .footer-bar .buttons{display:flex;gap:8px;position:relative}
+  .footer-bar button{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:11px 20px;border:0;border-radius:2px;cursor:pointer;transition:all .15s}
+  .footer-bar .btn-primary{background:var(--gold);color:var(--navy)}
+  .footer-bar .btn-primary:hover{background:var(--gold-3)}
+  .footer-bar .btn-ghost{background:transparent;color:var(--gold-3);border:1px solid var(--gold-3)}
+  .footer-bar .btn-ghost:hover{background:var(--gold-3);color:var(--navy)}
+
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--gold-3);padding:14px 22px;border-radius:2px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;box-shadow:0 20px 40px -20px rgba(10,22,40,.5);border-left:3px solid var(--gold);opacity:0;transform:translateY(20px);transition:all .25s;z-index:100}
+  .toast.show{opacity:1;transform:translateY(0)}
+  .toast b{color:var(--ivory);font-weight:600}
+
+  @media print{
+    body{background:#fff;padding:0}
+    .wrap{grid-template-columns:1fr;max-width:none;gap:0}
+    aside,.footer-bar .buttons{display:none}
+    main{border:0;box-shadow:none}
+    .entity{page-break-inside:avoid}
+    details:not([open])>summary+*{display:block !important}
+    details:not([open])>summary::before{transform:rotate(90deg) !important}
+  }
+  @media (max-width:900px){
+    .wrap{grid-template-columns:1fr}
+    aside{position:static;max-height:none}
+    .grid,.grid.three{grid-template-columns:1fr}
+    .checkgroup{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="wrap">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="brand">
+      <svg><use href="#mark"/></svg>
+      <div class="txt">Fleet Verification<span>McKnight Opportunity Group</span></div>
+    </div>
+
+    <h3>Sections · P0</h3>
+    <nav id="nav">
+      <a href="#s-founder">1 · Founder</a>
+      <a href="#s-entities">2 · Legal Entities</a>
+      <a href="#s-names">3 · Names &amp; Domains</a>
+      <a href="#s-brand">4 · Brand Assets</a>
+      <a href="#s-services">5 · Services &amp; Pricing</a>
+    </nav>
+
+    <h3>Compliance · P0</h3>
+    <nav>
+      <a href="#s-housing">6 · Housing</a>
+      <a href="#s-capital">7 · Capital Ready</a>
+      <a href="#s-mortgage">8 · MortgageOS</a>
+      <a href="#s-freight">9 · Freight</a>
+      <a href="#s-fleetworks">10 · FleetWorks</a>
+      <a href="#s-earlylearning">11 · Early Learning</a>
+    </nav>
+
+    <h3>Content &amp; Ops · P1</h3>
+    <nav>
+      <a href="#s-content">12 · Content &amp; Proof</a>
+      <a href="#s-tech">13 · Tech Access</a>
+      <a href="#s-data">14 · Data Migration</a>
+    </nav>
+
+    <div class="progress">
+      <div class="lbl"><span>Progress</span><span id="pct">0%</span></div>
+      <div class="bar"><span id="progbar" style="width:0%"></span></div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="saveNow()">💾 Save Draft</button>
+      <button onclick="exportJSON()">↓ Export JSON</button>
+      <button onclick="window.print()">⎙ Print / PDF</button>
+      <button onclick="clearAll()" style="color:#F5A5A5;border-color:#F5A5A5">✕ Clear</button>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <div class="lbl">P0 · Verification Packet · v1.0</div>
+      <h1>Everything <em>before</em> launch.</h1>
+      <p>The complete verification packet for the McKnight Opportunity Group fleet. Fill what you have. Flag what you don't. Nothing publishes until the P0 sections are green.</p>
+    </header>
+
+    <div class="warn">
+      <b>⚠ Absolute rule.</b> No public claim about 501(c)(3) status, property ownership, active housing assistance, win rates, client counts, dollar volumes, government contracting experience, or credentials publishes until <strong>documented evidence exists in this packet</strong>. Unverified stats stay in draft.
+    </div>
+
+    <form id="packet" autocomplete="off">
+
+    <!-- ═════════ 1. FOUNDER ═════════ -->
+    <section id="s-founder">
+      <div class="sec-head"><h2>1 · Dr. McKnight — <em>Verified Profile</em></h2><span class="tag p0">P0 · Required</span></div>
+      <p class="lede">Every public credential needs evidence. If you can't hand a reporter proof, it doesn't publish.</p>
+
+      <div class="grid">
+        <div class="fld"><label>Full Legal Name <span class="req">*</span></label><input name="f_legal_name" required></div>
+        <div class="fld"><label>Preferred Public Name</label><input name="f_public_name" placeholder="e.g. Dr. McKnight"></div>
+        <div class="fld"><label>Approved Title(s)</label><input name="f_title" placeholder="Federal Contracting Consultant · Founder"></div>
+        <div class="fld"><label>Primary Contact Email</label><input type="email" name="f_email"></div>
+        <div class="fld"><label>Primary Phone</label><input type="tel" name="f_phone"></div>
+        <div class="fld"><label>Home / Business State</label><input name="f_state" placeholder="South Carolina"></div>
+      </div>
+
+      <div class="subgroup">
+        <h5>Biography</h5>
+        <div class="grid one">
+          <div class="fld"><label>Approved Public Biography (150-300 words)</label><textarea name="f_bio" rows="5"></textarea></div>
+          <div class="fld"><label>Short Bio (elevator, 1-2 sentences)</label><textarea name="f_bio_short" rows="2"></textarea></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <h5>Credentials — attach evidence file names as you list each</h5>
+        <div class="grid one">
+          <div class="fld"><label>Education &amp; Degrees</label><textarea name="f_edu" placeholder="Institution · Degree · Year · Evidence file"></textarea></div>
+          <div class="fld"><label>Licenses (professional / state / federal)</label><textarea name="f_licenses" placeholder="License · Issuing body · Number · Expiration · Evidence"></textarea></div>
+          <div class="fld"><label>Certifications</label><textarea name="f_certs" placeholder="Cert · Issuer · Number · Date · Evidence"></textarea></div>
+          <div class="fld"><label>Federal / Gov Contracting Experience</label><textarea name="f_gov_exp" placeholder="Contract # · Agency · Value · Role · Dates · Evidence"></textarea></div>
+          <div class="fld"><label>Transportation Experience</label><textarea name="f_transp_exp"></textarea></div>
+          <div class="fld"><label>Housing Experience</label><textarea name="f_housing_exp"></textarea></div>
+          <div class="fld"><label>Childcare Experience</label><textarea name="f_child_exp"></textarea></div>
+          <div class="fld"><label>Awards &amp; Recognition</label><textarea name="f_awards"></textarea></div>
+          <div class="fld"><label>Public Speaking &amp; Media Appearances</label><textarea name="f_media"></textarea></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <h5>Visual Assets</h5>
+        <div class="grid">
+          <div class="fld"><label>Headshot filename / link</label><input name="f_headshot"></div>
+          <div class="fld"><label>Business Photos filename / link</label><input name="f_photos"></div>
+          <div class="fld"><label>Signature Image (if authorized)</label><input name="f_signature"></div>
+          <div class="fld"><label>Social Accounts (LinkedIn, X, YouTube, etc)</label><input name="f_social"></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <h5>Permissions</h5>
+        <div class="checkgroup">
+          <label><input type="checkbox" name="f_perm_edu">Publish education</label>
+          <label><input type="checkbox" name="f_perm_licenses">Publish licenses</label>
+          <label><input type="checkbox" name="f_perm_certs">Publish certifications</label>
+          <label><input type="checkbox" name="f_perm_gov">Publish gov experience</label>
+          <label><input type="checkbox" name="f_perm_headshot">Publish headshot</label>
+          <label><input type="checkbox" name="f_perm_signature">Publish signature</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════ 2. LEGAL ENTITIES ═════════ -->
+    <section id="s-entities">
+      <div class="sec-head"><h2>2 · Legal Entities — <em>10 brands</em></h2><span class="tag p0">P0 · Required</span></div>
+      <p class="lede">Every brand needs a confirmed operating entity. Same-owned entities can share; independent brands cannot.</p>
+
+      <!-- Entity accordion — repeated 10× -->
+      <details class="entity" open>
+        <summary>McKnight Opportunity Group <span class="role">Parent · Management</span></summary>
+        <div class="body">
+          <div class="grid">
+            <div class="fld"><label>Exact Legal Name</label><input name="e_mog_legal"></div>
+            <div class="fld"><label>DBA (if any)</label><input name="e_mog_dba"></div>
+            <div class="fld"><label>Entity Type</label><select name="e_mog_type"><option value="">—</option><option>LLC</option><option>S-Corp</option><option>C-Corp</option><option>Partnership</option><option>Sole Prop</option><option>Nonprofit</option><option>Holding Co</option></select></div>
+            <div class="fld"><label>Formation State</label><input name="e_mog_state"></div>
+            <div class="fld"><label>Formation Date</label><input type="date" name="e_mog_date"></div>
+            <div class="fld"><label>EIN</label><input name="e_mog_ein" placeholder="XX-XXXXXXX (stored encrypted)"></div>
+            <div class="fld"><label>Business Address</label><input name="e_mog_addr"></div>
+            <div class="fld"><label>Authorized Signer</label><input name="e_mog_signer"></div>
+            <div class="fld"><label>Ownership % Breakdown</label><input name="e_mog_owners" placeholder="e.g. McKnight 100% or list all"></div>
+            <div class="fld"><label>Bank Account Owner</label><input name="e_mog_bank"></div>
+            <div class="fld"><label>Insurance (GL / Umbrella / etc)</label><input name="e_mog_ins"></div>
+            <div class="fld"><label>Tax Status</label><input name="e_mog_tax"></div>
+          </div>
+          <div class="subgroup">
+            <h5>Role in Fleet</h5>
+            <div class="grid">
+              <div class="fld"><label>Owns Software?</label><input name="e_mog_ip"></div>
+              <div class="fld"><label>Employs Staff?</label><input name="e_mog_staff"></div>
+              <div class="fld"><label>Signs Client Contracts?</label><input name="e_mog_clients"></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="entity">
+        <summary>The Contracting Preacher <span class="role">Consulting Operator</span></summary>
+        <div class="body">
+          <div class="grid">
+            <div class="fld"><label>Exact Legal Name</label><input name="e_tcp_legal"></div>
+            <div class="fld"><label>DBA</label><input name="e_tcp_dba"></div>
+            <div class="fld"><label>Entity Type</label><select name="e_tcp_type"><option value="">—</option><option>LLC</option><option>S-Corp</option><option>C-Corp</option><option>Sole Prop</option></select></div>
+            <div class="fld"><label>Formation State</label><input name="e_tcp_state"></div>
+            <div class="fld"><label>EIN</label><input name="e_tcp_ein"></div>
+            <div class="fld"><label>Authorized Signer</label><input name="e_tcp_signer"></div>
+            <div class="fld"><label>Business Address</label><input name="e_tcp_addr"></div>
+            <div class="fld"><label>SAM.gov UEI</label><input name="e_tcp_uei"></div>
+            <div class="fld"><label>CAGE Code</label><input name="e_tcp_cage"></div>
+            <div class="fld"><label>SAM.gov Expiration</label><input type="date" name="e_tcp_sam_exp"></div>
+            <div class="fld"><label>SC Vendor #</label><input name="e_tcp_scv"></div>
+            <div class="fld"><label>E&amp;O + Prof Liability</label><input name="e_tcp_ins"></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="entity">
+        <summary>McKnight Housing Initiative <span class="role">Nonprofit · Housing</span></summary>
+        <div class="body">
+          <div class="grid">
+            <div class="fld"><label>Exact Legal Name</label><input name="e_mhi_legal"></div>
+            <div class="fld"><label>Entity Type</label><select name="e_mhi_type"><option value="">—</option><option>501(c)(3) — pending</option><option>501(c)(3) — approved</option><option>Nonprofit Corp (state only)</option><option>Fiscally Sponsored</option><option>Not yet formed</option></select></div>
+            <div class="fld"><label>IRS Determination Letter Date</label><input type="date" name="e_mhi_irs_date"></div>
+            <div class="fld"><label>EIN</label><input name="e_mhi_ein"></div>
+            <div class="fld"><label>Formation State</label><input name="e_mhi_state"></div>
+            <div class="fld"><label>Board Members</label><input name="e_mhi_board" placeholder="Count / names"></div>
+            <div class="fld"><label>Board Independence Verified?</label><select name="e_mhi_board_indep"><option value="">—</option><option>Yes — documented</option><option>Partial</option><option>No</option><option>N/A</option></select></div>
+            <div class="fld"><label>CHDO Designation Status</label><select name="e_mhi_chdo"><option value="">—</option><option>Not applicable</option><option>Not yet</option><option>In progress</option><option>Certified</option></select></div>
+          </div>
+          <div class="warn" style="margin:16px 0 0;padding:12px 16px">Do NOT publicly claim 501(c)(3), CHDO, or "active housing programs" until IRS letter + board records are attached.</div>
+        </div>
+      </details>
+
+      <details class="entity">
+        <summary>McKnight Capital Ready <span class="role">Credit / Funding Operator</span></summary>
+        <div class="body">
+          <div class="grid">
+            <div class="fld"><label>Legal Name</label><input name="e_mcr_legal"></div>
+            <div class="fld"><label>Entity Type</label><select name="e_mcr_type"><option value="">—</option><option>LLC</option><option>S-Corp</option><option>C-Corp</option></select></div>
+            <div class="fld"><label>EIN</label><input name="e_mcr_ein"></div>
+            <div class="fld"><label>States Served</label><input name="e_mcr_states"></div>
+            <div class="fld"><label>State Bonds / Registrations</label><input name="e_mcr_bonds"></div>
+            <div class="fld"><label>Attorney of Record</label><input name="e_mcr_attorney"></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="entity">
+        <summary>McKnight MortgageOS <span class="role">Software / IP Owner</span></summary>
+        <div class="body">
+          <div class="grid">
+            <div class="fld"><label>Legal Name</label><input name="e_mmos_legal"></div>
+            <div class="fld"><label>Entity Type</label><select name="e_mmos_type"><option value="">—</option><option>LLC</option><option>C-Corp (DE)</option><option>Wholly owned by MOG</option></select></div>
+            <div class="fld"><label>EIN</label><input name="e_mmos_ein"></div>
+            <div class="fld"><label>IP Assignment on file?</label><select name="e_mmos_ip"><option value="">—</option><option>Yes</option><option>Partial</option><option>No</option></select></div>
+            <div class="fld"><label>States Intended</label><input name="e_mmos_states"></div>
+            <div class="fld"><label>Mortgage Counsel Reviewed?</label><select name="e_mmos_counsel"><option value="">—</option><option>Yes</option><option>Scheduled</option><option>No</option></select></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="entity">
+        <summary>McKnight GrowthOS <span class="role">Software / IP Owner</span></summary>
+        <div class="body">
+          <div class="grid">
+            <div class="fld"><label>Legal Name</label><input name="e_mgos_legal"></div>
+            <div class="fld"><label>Entity Type</label><input name="e_mgos_type"></div>
+            <div class="fld"><label>EIN</label><input name="e_mgos_ein"></div>
+            <div class="fld"><label>IP Assignment on file?</label><select name="e_mgos_ip"><option value="">—</option><option>Yes</option><option>Partial</option><option>No</option></select></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="entity">
+        <summary>McKnight Freight Systems <span class="role">Transportation Operator</span></summary>
+        <div class="body">
+          <div class="grid">
+            <div class="fld"><label>Legal Name</label><input name="e_mfs_legal"></div>
+            <div class="fld"><label>USDOT #</label><input name="e_mfs_dot"></div>
+            <div class="fld"><label>MC Authority</label><input name="e_mfs_mc"></div>
+            <div class="fld"><label>Operating Status</label><select name="e_mfs_status"><option value="">—</option><option>Active</option><option>Pending</option><option>Not filed</option></select></div>
+            <div class="fld"><label>BOC-3 filed?</label><select name="e_mfs_boc"><option value="">—</option><option>Yes</option><option>No</option></select></div>
+            <div class="fld"><label>UCR Current?</label><select name="e_mfs_ucr"><option value="">—</option><option>Yes</option><option>Expired</option><option>Never</option></select></div>
+            <div class="fld"><label>Insurance (BI/PD / Cargo)</label><input name="e_mfs_ins"></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="entity">
+        <summary>McKnight FleetWorks <span class="role">Repair Operator</span></summary>
+        <div class="body">
+          <div class="grid">
+            <div class="fld"><label>Legal Name</label><input name="e_mfw_legal"></div>
+            <div class="fld"><label>Physical / Mobile / Both</label><select name="e_mfw_ops"><option value="">—</option><option>Physical shop</option><option>Mobile only</option><option>Both</option></select></div>
+            <div class="fld"><label>Service Area</label><input name="e_mfw_area"></div>
+            <div class="fld"><label>Garage Liability Insurance</label><input name="e_mfw_ins"></div>
+            <div class="fld"><label>Workers' Comp</label><input name="e_mfw_wc"></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="entity">
+        <summary>McKnight Early Learning Academy <span class="role">Licensed Childcare Operator</span></summary>
+        <div class="body">
+          <div class="grid">
+            <div class="fld"><label>Legal Provider Name</label><input name="e_mela_legal"></div>
+            <div class="fld"><label>Childcare License #</label><input name="e_mela_license"></div>
+            <div class="fld"><label>Facility Address</label><input name="e_mela_addr"></div>
+            <div class="fld"><label>Licensed Capacity</label><input type="number" name="e_mela_cap"></div>
+            <div class="fld"><label>ABC Quality Level</label><input name="e_mela_abc"></div>
+            <div class="fld"><label>Provider #</label><input name="e_mela_provider"></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="entity">
+        <summary>McKnight LearningOS <span class="role">Software / IP Owner</span></summary>
+        <div class="body">
+          <div class="grid">
+            <div class="fld"><label>Legal Name</label><input name="e_mlos_legal"></div>
+            <div class="fld"><label>Entity Type</label><input name="e_mlos_type"></div>
+            <div class="fld"><label>EIN</label><input name="e_mlos_ein"></div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ═════════ 3. NAMES & DOMAINS ═════════ -->
+    <section id="s-names">
+      <div class="sec-head"><h2>3 · Names &amp; <em>Domains</em></h2><span class="tag p0">P0 · Required</span></div>
+      <p class="lede">Every proposed name must survive SC SoS search, USPTO trademark search, domain availability, social handle availability, and attorney clearance where risk exists.</p>
+
+      <div class="subgroup">
+        <h5>Registrar &amp; DNS Master Setup</h5>
+        <div class="grid">
+          <div class="fld"><label>Registrar Account Owner</label><input name="d_registrar_owner"></div>
+          <div class="fld"><label>Registrar (Namecheap · Cloudflare · GoDaddy)</label><input name="d_registrar"></div>
+          <div class="fld"><label>Renewal Responsibility</label><input name="d_renewal_owner"></div>
+          <div class="fld"><label>DNS Provider</label><input name="d_dns"></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <h5>Universal Email Addresses (across fleet)</h5>
+        <div class="grid three">
+          <div class="fld"><label>Primary Email Domain</label><input name="d_email_domain"></div>
+          <div class="fld"><label>Support Address</label><input name="d_support"></div>
+          <div class="fld"><label>Sales Address</label><input name="d_sales"></div>
+          <div class="fld"><label>Legal-Notice Address</label><input name="d_legal"></div>
+          <div class="fld"><label>Privacy Address</label><input name="d_privacy"></div>
+          <div class="fld"><label>Billing Address</label><input name="d_billing"></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <h5>Per-Brand Clearance Status</h5>
+        <p style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--slate);margin-bottom:10px">SC-SoS · USPTO · State TM · Common-Law · Domain · Handle · Similar-Risk · Attorney Cleared</p>
+        <div class="grid">
+          <div class="fld"><label>McKnight Opportunity Group — Status</label><input name="d_mog_status" placeholder="e.g. Domain reserved · TM pending"></div>
+          <div class="fld"><label>The Contracting Preacher — Status</label><input name="d_tcp_status" placeholder="Domain live"></div>
+          <div class="fld"><label>McKnight Housing Initiative</label><input name="d_mhi_status"></div>
+          <div class="fld"><label>McKnight Capital Ready / CapitalReady OS</label><input name="d_mcr_status"></div>
+          <div class="fld"><label>McKnight MortgageOS</label><input name="d_mmos_status"></div>
+          <div class="fld"><label>McKnight GrowthOS</label><input name="d_mgos_status"></div>
+          <div class="fld"><label>McKnight Freight Systems / DriverHub</label><input name="d_mfs_status"></div>
+          <div class="fld"><label>McKnight FleetWorks / ServiceHub</label><input name="d_mfw_status"></div>
+          <div class="fld"><label>McKnight Early Learning Academy</label><input name="d_mela_status"></div>
+          <div class="fld"><label>McKnight LearningOS</label><input name="d_mlos_status"></div>
+          <div class="fld"><label>Contracting Preacher OS</label><input name="d_tcpos_status"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════ 4. BRAND ASSETS ═════════ -->
+    <section id="s-brand">
+      <div class="sec-head"><h2>4 · Brand <em>Assets</em></h2><span class="tag p0">P0 · Required</span></div>
+      <p class="lede">One master McKnight identity → connected logo family. Each brand needs the same asset set.</p>
+
+      <div class="subgroup">
+        <h5>Master McKnight System</h5>
+        <div class="grid">
+          <div class="fld"><label>Master Wordmark (link/filename)</label><input name="b_master_word"></div>
+          <div class="fld"><label>Master Icon</label><input name="b_master_icon"></div>
+          <div class="fld"><label>Master Color System Doc</label><input name="b_master_colors"></div>
+          <div class="fld"><label>Master Type Doc</label><input name="b_master_type"></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <h5>Per-Brand Deliverable Checklist</h5>
+        <p style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);margin-bottom:8px">Each brand needs: Primary · Horizontal · Square · Dark · Light · SVG · PNG · Favicon · Social Avatar · OG · Email Header · Deck Cover · Letterhead · Approved Photo Set · Icon Style · Signature (if authorized)</p>
+        <div class="checkgroup">
+          <label><input type="checkbox" name="b_c_mog">MOG complete</label>
+          <label><input type="checkbox" name="b_c_tcp">TCP complete</label>
+          <label><input type="checkbox" name="b_c_mhi">MHI complete</label>
+          <label><input type="checkbox" name="b_c_mcr">Capital Ready</label>
+          <label><input type="checkbox" name="b_c_mmos">MortgageOS</label>
+          <label><input type="checkbox" name="b_c_mgos">GrowthOS</label>
+          <label><input type="checkbox" name="b_c_mfs">Freight Systems</label>
+          <label><input type="checkbox" name="b_c_mfw">FleetWorks</label>
+          <label><input type="checkbox" name="b_c_mela">Early Learning</label>
+          <label><input type="checkbox" name="b_c_mlos">LearningOS</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════ 5. SERVICES & PRICING ═════════ -->
+    <section id="s-services">
+      <div class="sec-head"><h2>5 · Services &amp; <em>Pricing</em></h2><span class="tag p0">P0 · Required</span></div>
+      <p class="lede">Each service: name · description · deliverables · price · timeline · terms · eligibility · assigned staff. Without this, no funnel converts cleanly.</p>
+
+      <div class="subgroup">
+        <h5>The Contracting Preacher</h5>
+        <div class="grid">
+          <div class="fld"><label>Consultation Price</label><input name="p_tcp_consult"></div>
+          <div class="fld"><label>SAM Assistance</label><input name="p_tcp_sam"></div>
+          <div class="fld"><label>Capability Statement</label><input name="p_tcp_capstmt"></div>
+          <div class="fld"><label>Certification Support</label><input name="p_tcp_cert"></div>
+          <div class="fld"><label>Proposal Development</label><input name="p_tcp_proposal"></div>
+          <div class="fld"><label>Monthly Opportunity Service</label><input name="p_tcp_monthly"></div>
+          <div class="fld"><label>Contracting Preacher OS pricing</label><input name="p_tcpos"></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <h5>Capital Ready</h5>
+        <div class="grid">
+          <div class="fld"><label>Credit-Education Package</label><input name="p_cr_credit"></div>
+          <div class="fld"><label>Business-Readiness Audit</label><input name="p_cr_audit"></div>
+          <div class="fld"><label>Funding-Readiness Package</label><input name="p_cr_funding"></div>
+          <div class="fld"><label>Subscription</label><input name="p_cr_sub"></div>
+          <div class="fld"><label>Attorney-Referral Structure</label><input name="p_cr_atty"></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <h5>MortgageOS · GrowthOS · LearningOS</h5>
+        <div class="grid three">
+          <div class="fld"><label>MortgageOS · Starter</label><input name="p_mmos_start"></div>
+          <div class="fld"><label>MortgageOS · Pro</label><input name="p_mmos_pro"></div>
+          <div class="fld"><label>MortgageOS · Enterprise</label><input name="p_mmos_ent"></div>
+          <div class="fld"><label>GrowthOS · Launch</label><input name="p_mgos_launch"></div>
+          <div class="fld"><label>GrowthOS · Growth</label><input name="p_mgos_growth"></div>
+          <div class="fld"><label>GrowthOS · Scale</label><input name="p_mgos_scale"></div>
+          <div class="fld"><label>LearningOS · Per Location</label><input name="p_mlos_perloc"></div>
+          <div class="fld"><label>LearningOS · Setup + Training</label><input name="p_mlos_setup"></div>
+        </div>
+      </div>
+
+      <div class="subgroup">
+        <h5>Freight · FleetWorks · Early Learning</h5>
+        <div class="grid three">
+          <div class="fld"><label>Freight · Standard rates</label><input name="p_mfs_rate"></div>
+          <div class="fld"><label>Freight · Owner-op structure</label><input name="p_mfs_owner"></div>
+          <div class="fld"><label>FleetWorks · Shop labor</label><input name="p_mfw_labor"></div>
+          <div class="fld"><label>FleetWorks · Mobile call fee</label><input name="p_mfw_mobile"></div>
+          <div class="fld"><label>Early Learning · Tuition</label><input name="p_mela_tuit"></div>
+          <div class="fld"><label>Early Learning · Registration fee</label><input name="p_mela_reg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════ 6. HOUSING COMPLIANCE ═════════ -->
+    <section id="s-housing">
+      <div class="sec-head"><h2>6 · Housing <em>Compliance Packet</em></h2><span class="tag p0">P0 · Regulated</span></div>
+      <div class="warn" style="margin:0 0 16px">No public claim of 501(c)(3), CHDO, property ownership, or active housing assistance until <b>every item below</b> is verified.</div>
+      <div class="grid">
+        <div class="fld"><label>Nonprofit Legal Name</label><input name="h_legal"></div>
+        <div class="fld"><label>IRS Determination Letter Filename</label><input name="h_irs"></div>
+        <div class="fld"><label>Articles of Incorporation Filename</label><input name="h_articles"></div>
+        <div class="fld"><label>Bylaws Filename</label><input name="h_bylaws"></div>
+        <div class="fld"><label>Board Roster Filename</label><input name="h_board"></div>
+        <div class="fld"><label>Conflict-of-Interest Policy</label><input name="h_coi"></div>
+        <div class="fld"><label>Financial Controls Doc</label><input name="h_fincon"></div>
+        <div class="fld"><label>Current Programs</label><input name="h_programs"></div>
+        <div class="fld"><label>Service Territory</label><input name="h_territory"></div>
+        <div class="fld"><label>Properties Owned / Controlled</label><input name="h_props"></div>
+        <div class="fld"><label>Existing Grants</label><input name="h_grants"></div>
+        <div class="fld"><label>Development Partners</label><input name="h_dev"></div>
+        <div class="fld"><label>Property Managers</label><input name="h_pm"></div>
+        <div class="fld"><label>Housing Counsel</label><input name="h_counsel"></div>
+        <div class="fld"><label>Grant Accountant</label><input name="h_acct"></div>
+        <div class="fld"><label>Fair Housing Procedures Doc</label><input name="h_fh"></div>
+        <div class="fld"><label>Applicant Appeal Process</label><input name="h_appeal"></div>
+      </div>
+    </section>
+
+    <!-- ═════════ 7. CAPITAL READY COMPLIANCE ═════════ -->
+    <section id="s-capital">
+      <div class="sec-head"><h2>7 · Capital Ready <em>Compliance</em></h2><span class="tag p0">P0 · Regulated</span></div>
+      <div class="grid">
+        <div class="fld"><label>Existing Client Agreement</label><input name="c_agmt"></div>
+        <div class="fld"><label>Credit Disclosures</label><input name="c_disc"></div>
+        <div class="fld"><label>Cancellation Notice</label><input name="c_cancel"></div>
+        <div class="fld"><label>Billing Workflow</label><input name="c_bill"></div>
+        <div class="fld"><label>Consumer Authorization</label><input name="c_auth"></div>
+        <div class="fld"><label>Dispute Workflow</label><input name="c_dispute"></div>
+        <div class="fld"><label>Complaint Policy</label><input name="c_complaint"></div>
+        <div class="fld"><label>Refund Policy</label><input name="c_refund"></div>
+        <div class="fld"><label>Attorney Relationship</label><input name="c_atty"></div>
+        <div class="fld"><label>Referral Agreement</label><input name="c_ref"></div>
+        <div class="fld"><label>Data-Sharing Authorization</label><input name="c_data"></div>
+        <div class="fld"><label>Advertising Claims Approved by Counsel</label><input name="c_ads"></div>
+        <div class="fld"><label>Existing Software</label><input name="c_sw"></div>
+        <div class="fld"><label>States Served</label><input name="c_states"></div>
+        <div class="fld"><label>Bond / Registration by State</label><input name="c_bonds"></div>
+        <div class="fld"><label>Funding-Provider Relationships</label><input name="c_funding"></div>
+      </div>
+    </section>
+
+    <!-- ═════════ 8. MORTGAGEOS COMPLIANCE ═════════ -->
+    <section id="s-mortgage">
+      <div class="sec-head"><h2>8 · MortgageOS <em>Compliance</em></h2><span class="tag p0">P0 · Regulated</span></div>
+      <div class="warn" style="margin:0 0 16px">Every loan limit and program rule must be verified against official source before production display.</div>
+      <div class="grid">
+        <div class="fld"><label>Software Legal Entity</label><input name="mo_entity"></div>
+        <div class="fld"><label>Intended Customers</label><input name="mo_cust"></div>
+        <div class="fld"><label>States Served</label><input name="mo_states"></div>
+        <div class="fld"><label>Mortgage Counsel Review Date</label><input type="date" name="mo_counsel_date"></div>
+        <div class="fld"><label>Final Disclaimers</label><input name="mo_disc"></div>
+        <div class="fld"><label>Data-Retention Policy</label><input name="mo_retention"></div>
+        <div class="fld"><label>Information-Security Program</label><input name="mo_infosec"></div>
+        <div class="fld"><label>Vendor List</label><input name="mo_vendors"></div>
+        <div class="fld"><label>API Terms</label><input name="mo_api"></div>
+        <div class="fld"><label>Acceptable-Use Policy</label><input name="mo_aup"></div>
+        <div class="fld"><label>SLA</label><input name="mo_sla"></div>
+        <div class="fld"><label>Incident-Response Plan</label><input name="mo_ir"></div>
+        <div class="fld"><label>DPA (Data Processing Agreement)</label><input name="mo_dpa"></div>
+        <div class="fld"><label>Test-Data Policy</label><input name="mo_test"></div>
+        <div class="fld"><label>Official Guideline Sources</label><input name="mo_sources"></div>
+        <div class="fld"><label>Guideline-Update Process</label><input name="mo_update"></div>
+        <div class="fld"><label>Human-Review Process</label><input name="mo_review"></div>
+        <div class="fld"><label>Insurance Coverage</label><input name="mo_ins"></div>
+      </div>
+    </section>
+
+    <!-- ═════════ 9. FREIGHT COMPLIANCE ═════════ -->
+    <section id="s-freight">
+      <div class="sec-head"><h2>9 · Freight <em>Compliance</em></h2><span class="tag p0">P0 · Regulated</span></div>
+      <div class="grid">
+        <div class="fld"><label>USDOT #</label><input name="fr_dot"></div>
+        <div class="fld"><label>MC Authority</label><input name="fr_mc"></div>
+        <div class="fld"><label>Operating Status</label><input name="fr_status"></div>
+        <div class="fld"><label>BOC-3</label><input name="fr_boc"></div>
+        <div class="fld"><label>UCR Current</label><input name="fr_ucr"></div>
+        <div class="fld"><label>Insurance (BI/PD, Cargo)</label><input name="fr_ins"></div>
+        <div class="fld"><label>Equipment List</label><input name="fr_equip"></div>
+        <div class="fld"><label>Drivers &amp; Qualification Files</label><input name="fr_drivers"></div>
+        <div class="fld"><label>Drug &amp; Alcohol Program</label><input name="fr_da"></div>
+        <div class="fld"><label>Clearinghouse Status</label><input name="fr_clear"></div>
+        <div class="fld"><label>HOS Provider</label><input name="fr_hos"></div>
+        <div class="fld"><label>ELD Provider</label><input name="fr_eld"></div>
+        <div class="fld"><label>Maintenance Program</label><input name="fr_maint"></div>
+        <div class="fld"><label>Accident Register</label><input name="fr_accidents"></div>
+        <div class="fld"><label>Safety Policies</label><input name="fr_safety"></div>
+        <div class="fld"><label>Lease / Owner-Op Agreement</label><input name="fr_lease"></div>
+        <div class="fld"><label>Settlement Statement Template</label><input name="fr_settle"></div>
+        <div class="fld"><label>Service Lanes</label><input name="fr_lanes"></div>
+        <div class="fld"><label>Commodities</label><input name="fr_commods"></div>
+        <div class="fld"><label>Factoring Relationship</label><input name="fr_factor"></div>
+        <div class="fld"><label>Broker/Carrier Agreements</label><input name="fr_bca"></div>
+      </div>
+    </section>
+
+    <!-- ═════════ 10. FLEETWORKS COMPLIANCE ═════════ -->
+    <section id="s-fleetworks">
+      <div class="sec-head"><h2>10 · FleetWorks <em>Compliance</em></h2><span class="tag p0">P0 · Regulated</span></div>
+      <div class="grid">
+        <div class="fld"><label>Legal Operator</label><input name="fw_op"></div>
+        <div class="fld"><label>Physical / Mobile Status</label><input name="fw_ops"></div>
+        <div class="fld"><label>Service Area</label><input name="fw_area"></div>
+        <div class="fld"><label>Garage Liability Insurance</label><input name="fw_gl"></div>
+        <div class="fld"><label>Workers' Compensation</label><input name="fw_wc"></div>
+        <div class="fld"><label>Technician Qualifications</label><input name="fw_tech"></div>
+        <div class="fld"><label>Inspection Authority</label><input name="fw_insp"></div>
+        <div class="fld"><label>Tool &amp; Equipment List</label><input name="fw_tools"></div>
+        <div class="fld"><label>Environmental Procedures</label><input name="fw_env"></div>
+        <div class="fld"><label>Waste-Oil Handling</label><input name="fw_oil"></div>
+        <div class="fld"><label>Tire Disposal</label><input name="fw_tire"></div>
+        <div class="fld"><label>Parts Suppliers</label><input name="fw_parts"></div>
+        <div class="fld"><label>Warranty Policy</label><input name="fw_warr"></div>
+        <div class="fld"><label>Customer Auth Form</label><input name="fw_auth"></div>
+        <div class="fld"><label>Estimate / Change-Order Policy</label><input name="fw_est"></div>
+        <div class="fld"><label>Fleet Credit Terms</label><input name="fw_credit"></div>
+      </div>
+    </section>
+
+    <!-- ═════════ 11. EARLY LEARNING COMPLIANCE ═════════ -->
+    <section id="s-earlylearning">
+      <div class="sec-head"><h2>11 · Early Learning <em>Compliance</em></h2><span class="tag p0">P0 · Regulated</span></div>
+      <div class="grid">
+        <div class="fld"><label>Legal Provider Name</label><input name="el_provider"></div>
+        <div class="fld"><label>Childcare License #</label><input name="el_license"></div>
+        <div class="fld"><label>Provider Number</label><input name="el_pnum"></div>
+        <div class="fld"><label>Facility Address</label><input name="el_addr"></div>
+        <div class="fld"><label>Licensed Capacity</label><input type="number" name="el_cap"></div>
+        <div class="fld"><label>Age Groups</label><input name="el_ages"></div>
+        <div class="fld"><label>Operating Hours</label><input name="el_hours"></div>
+        <div class="fld"><label>ABC Quality Status</label><input name="el_abc"></div>
+        <div class="fld"><label>Inspection History</label><input name="el_insp"></div>
+        <div class="fld"><label>Staff Roster</label><input name="el_staff"></div>
+        <div class="fld"><label>Staff Qualifications</label><input name="el_qual"></div>
+        <div class="fld"><label>Background Checks Complete?</label><select name="el_bg"><option value="">—</option><option>All</option><option>Partial</option><option>None</option></select></div>
+        <div class="fld"><label>CPR / First-Aid Current?</label><select name="el_cpr"><option value="">—</option><option>All</option><option>Partial</option><option>None</option></select></div>
+        <div class="fld"><label>Curriculum</label><input name="el_curr"></div>
+        <div class="fld"><label>Tuition Rates</label><input name="el_tuition"></div>
+        <div class="fld"><label>Subsidy / Voucher Status</label><input name="el_subsidy"></div>
+        <div class="fld"><label>Parent Handbook</label><input name="el_handbook"></div>
+        <div class="fld"><label>Emergency Plan</label><input name="el_emerg"></div>
+        <div class="fld"><label>Medication Policy</label><input name="el_med"></div>
+        <div class="fld"><label>Authorized-Pickup Policy</label><input name="el_pickup"></div>
+        <div class="fld"><label>Incident Policy</label><input name="el_incident"></div>
+        <div class="fld"><label>Photo/Video Consent Form</label><input name="el_photo"></div>
+        <div class="fld"><label>Privacy Practices</label><input name="el_privacy"></div>
+      </div>
+    </section>
+
+    <!-- ═════════ 12. CONTENT & PROOF ═════════ -->
+    <section id="s-content">
+      <div class="sec-head"><h2>12 · Content &amp; <em>Proof</em></h2><span class="tag p1">P1 · Required for launch</span></div>
+      <p class="lede">Every operating business needs ≥3 verified case studies before it can quote stats or claim outcomes.</p>
+      <div class="grid one">
+        <div class="fld"><label>Verified Case Studies (list by business)</label><textarea name="ct_cases" rows="4" placeholder="TCP: 3 · Capital Ready: 0 · Freight: 1…"></textarea></div>
+        <div class="fld"><label>Testimonials on File (name · company · quote · permission)</label><textarea name="ct_test" rows="4"></textarea></div>
+        <div class="fld"><label>Portfolio Evidence (contracts · POs · awards · screenshots)</label><textarea name="ct_port" rows="4"></textarea></div>
+        <div class="fld"><label>Stats Documented (calc + evidence for every "X%", "$Y+", "N+")</label><textarea name="ct_stats" rows="3" placeholder="'89% win rate' — evidence: [file]"></textarea></div>
+      </div>
+    </section>
+
+    <!-- ═════════ 13. TECH ACCESS ═════════ -->
+    <section id="s-tech">
+      <div class="sec-head"><h2>13 · Technology <em>Access</em></h2><span class="tag p1">P1 · Deploy blocker</span></div>
+      <p class="lede">To build and deploy the fleet, delegated access is required. Secrets never in chat or GitHub.</p>
+      <div class="grid">
+        <div class="fld"><label>GitHub Org Name</label><input name="t_gh"></div>
+        <div class="fld"><label>Existing Repos (list)</label><input name="t_repos"></div>
+        <div class="fld"><label>Cloudflare Account</label><input name="t_cf"></div>
+        <div class="fld"><label>Cloudflare Zone Ownership</label><input name="t_cfzones"></div>
+        <div class="fld"><label>Domain Registrar Account</label><input name="t_reg"></div>
+        <div class="fld"><label>Email Provider Account</label><input name="t_email"></div>
+        <div class="fld"><label>Supabase Account (if any)</label><input name="t_sup"></div>
+        <div class="fld"><label>Stripe Test-Mode Access</label><input name="t_stripe"></div>
+        <div class="fld"><label>Sentry Account</label><input name="t_sentry"></div>
+        <div class="fld"><label>Analytics Account</label><input name="t_analytics"></div>
+        <div class="fld"><label>SMS Provider</label><input name="t_sms"></div>
+        <div class="fld"><label>Calendar Provider</label><input name="t_cal"></div>
+        <div class="fld"><label>File-Storage Provider</label><input name="t_files"></div>
+        <div class="fld"><label>Existing Source Code Location</label><input name="t_src"></div>
+      </div>
+    </section>
+
+    <!-- ═════════ 14. DATA MIGRATION ═════════ -->
+    <section id="s-data">
+      <div class="sec-head"><h2>14 · Data <em>Migration</em></h2><span class="tag p1">P1 · Consent required</span></div>
+      <div class="warn" style="margin:0 0 16px">Do NOT import old marketing contacts without documented communication consent + suppression-list history.</div>
+      <div class="grid one">
+        <div class="fld"><label>Existing Client Data Sources (per source: owner · format · records · sensitive fields · consent status)</label><textarea name="dt_sources" rows="6"></textarea></div>
+        <div class="fld"><label>Migration Priority Order</label><textarea name="dt_priority" rows="3"></textarea></div>
+      </div>
+    </section>
+
+    </form>
+
+    <div class="footer-bar">
+      <div class="verse">"Commit to the Lord whatever you do, and he will establish your plans." — Prov 16:3</div>
+      <div class="buttons">
+        <button class="btn-ghost" onclick="saveNow()">Save Draft</button>
+        <button class="btn-ghost" onclick="exportJSON()">Export JSON</button>
+        <button class="btn-primary" onclick="submitPacket()">Send to Dr. McKnight →</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+const STORAGE_KEY = 'mog_fleet_packet_v1';
+const form = document.getElementById('packet');
+
+function loadState(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    for(const [k,v] of Object.entries(data)){
+      const el = form.elements.namedItem(k);
+      if(!el) continue;
+      if(el.type === 'checkbox') el.checked = !!v;
+      else el.value = v;
+    }
+  } catch(e){ console.warn(e); }
+  update();
+}
+function saveState(){
+  const data = {};
+  for(const el of form.elements){
+    if(!el.name) continue;
+    data[el.name] = el.type === 'checkbox' ? el.checked : el.value;
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  update();
+}
+function update(){
+  const all = [...form.elements].filter(el => el.name && el.type !== 'submit');
+  const filled = all.filter(el => el.type === 'checkbox' ? el.checked : (el.value && el.value.trim() !== '')).length;
+  const pct = Math.round((filled / all.length) * 100);
+  document.getElementById('pct').textContent = pct + '%';
+  document.getElementById('progbar').style.width = pct + '%';
+
+  /* mark entity headers filled */
+  document.querySelectorAll('.entity').forEach(det => {
+    const inputs = det.querySelectorAll('input, select, textarea');
+    const filledN = [...inputs].filter(el => el.value && el.value.trim() !== '').length;
+    const role = det.querySelector('.role');
+    if(role && filledN >= Math.max(2, Math.floor(inputs.length * 0.4))) role.classList.add('filled');
+    else if(role) role.classList.remove('filled');
+  });
+}
+function saveNow(){ saveState(); toast('Draft saved locally'); }
+function exportJSON(){
+  saveState();
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'mog-fleet-verification-packet.json'; a.click();
+  URL.revokeObjectURL(url);
+  toast('JSON exported');
+}
+function clearAll(){
+  if(!confirm('Clear entire packet? Cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  form.reset(); update(); toast('Cleared');
+}
+function submitPacket(){
+  saveState();
+  const legal = form.elements['f_legal_name']?.value || 'Dr. McKnight';
+  const subj = encodeURIComponent(`Fleet Verification Packet — ${legal}`);
+  const body = encodeURIComponent(`Fleet verification packet attached (export JSON separately).\n\nLegal name: ${legal}\nContact: ${form.elements['f_phone']?.value || '—'}\n\n— Attach the exported JSON to this email.`);
+  exportJSON();
+  setTimeout(() => { window.location.href = `mailto:info@thecontractingpreacher.com?subject=${subj}&body=${body}`; toast('Attach the JSON to your email'); }, 300);
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.innerHTML = `<b>✓</b> ${msg}`;
+  t.classList.add('show');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.remove('show'), 2400);
+}
+form.addEventListener('input', saveState);
+form.addEventListener('change', saveState);
+loadState();
+</script>
+
+</body>
+</html>

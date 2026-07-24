@@ -21,6 +21,7 @@ import { webinarsPage } from './pages/webinars'
 import { clientsPage } from './pages/clients'
 import { verifyPage } from './pages/verify'
 import { trafficPage } from './pages/traffic'
+import { fleetPage } from './pages/fleet'
 import { FUNNEL_SLUGS } from './funnels'
 import { TEMPLATES } from './templateRegistry'
 import { getCopyOverrides, trackView, maybeRefreshFunnel } from './agents'
@@ -57,6 +58,7 @@ app.get('/webinars', (c) => html(webinarsPage()))
 app.get('/clients', (c) => html(clientsPage()))
 app.get('/verify', (c) => html(verifyPage()))
 app.get('/traffic', (c) => html(trafficPage()))
+app.get('/fleet', (c) => html(fleetPage()))
 
 // ── API layer: Stripe checkout + lead capture + SEO pack ─────
 app.route('/api', api)
@@ -103,7 +105,7 @@ app.get('/f/:code', async (c) => {
 app.get('/health', (c) => c.json({ status: 'ok', app: 'mcknight-growthos', version: '6.5.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
-const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations', '/ecosystem', '/passport', '/agents', '/mailer', '/analytics', '/deploy', '/webinars', '/clients', '/verify', '/traffic', ...ECOSYSTEM_BRANDS.map((b) => `/ecosystem/${b.slug}`)]
+const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations', '/ecosystem', '/passport', '/agents', '/mailer', '/analytics', '/deploy', '/webinars', '/clients', '/verify', '/traffic', '/fleet', ...ECOSYSTEM_BRANDS.map((b) => `/ecosystem/${b.slug}`)]
 const FUNNELS = [...FUNNEL_SLUGS]
 
 app.get('/sitemap.xml', (c) => {

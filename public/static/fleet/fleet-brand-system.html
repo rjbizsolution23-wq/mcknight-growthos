@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fleet Brand System — McKnight Opportunity Group</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:56px 32px 100px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1360px;margin:0 auto}
+
+  .doc-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--navy);padding-bottom:20px;margin-bottom:48px}
+  .doc-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .doc-head .title{font-family:var(--serif);font-size:26px;font-weight:700;margin-top:4px}
+  .doc-head .kv{display:flex;gap:28px;font-family:var(--mono);font-size:11px;color:var(--slate)}
+  .doc-head .kv b{color:var(--navy);display:block;letter-spacing:.14em;font-weight:600;text-transform:uppercase}
+
+  /* HERO */
+  .hero{background:var(--navy);color:var(--ivory);padding:64px 72px;border-radius:2px;position:relative;overflow:hidden;margin-bottom:48px}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.22),transparent 45%),radial-gradient(circle at 15% 90%,rgba(201,169,97,.1),transparent 50%);pointer-events:none}
+  .hero .brand{display:flex;align-items:center;gap:16px;margin-bottom:40px;position:relative}
+  .hero .brand svg{width:64px;height:64px;color:var(--gold);flex:none}
+  .hero .brand .txt{font-family:var(--serif);font-weight:700;line-height:1.05}
+  .hero .brand .txt .up{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;font-weight:500}
+  .hero .brand .txt .name{font-size:28px;font-weight:800;letter-spacing:-.01em;margin-top:2px}
+  .hero h1{font-family:var(--serif);font-size:80px;line-height:.98;font-weight:800;letter-spacing:-.02em;position:relative;max-width:1000px}
+  .hero h1 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .hero .lede{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--gold-3);max-width:640px;margin-top:20px;line-height:1.5;position:relative}
+
+  /* SECTION */
+  section{margin-bottom:64px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:24px;border-bottom:1px solid rgba(10,22,40,.15);padding-bottom:14px}
+  .sec-num{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-2);font-weight:600}
+  .sec-title{font-family:var(--serif);font-size:32px;font-weight:800;letter-spacing:-.015em}
+  .sec-title em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-sub{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .lede{font-family:var(--serif);font-style:italic;color:var(--slate);font-size:16px;margin-bottom:20px;max-width:840px;line-height:1.5}
+
+  /* SYSTEM DIAGRAM */
+  .system{background:var(--navy);color:var(--ivory);padding:56px 40px;border-radius:2px;position:relative;overflow:hidden}
+  .system::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(201,169,97,.12),transparent 55%);pointer-events:none}
+  .system .center{text-align:center;position:relative;padding-bottom:32px;border-bottom:1px dashed rgba(201,169,97,.25);margin-bottom:32px}
+  .system .center svg{width:120px;height:120px;color:var(--gold);margin-bottom:16px}
+  .system .center h3{font-family:var(--serif);font-size:36px;font-weight:800;letter-spacing:-.01em}
+  .system .center h3 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .system .center p{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;margin-top:8px;font-weight:600}
+  .system .children{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;position:relative}
+  .system .child{text-align:center;padding:16px 8px}
+  .system .child .icon{width:56px;height:56px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center}
+  .system .child .icon svg{width:100%;height:100%}
+  .system .child .name{font-family:var(--serif);font-weight:700;font-size:14px;line-height:1.15;letter-spacing:-.005em;color:var(--ivory);margin-bottom:4px}
+  .system .child .role{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;opacity:.85;font-weight:600}
+
+  /* BRAND CARDS */
+  .brand-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .brand-card{background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+  .bc-head{display:flex;justify-content:space-between;align-items:center;padding:22px 26px;background:var(--ivory);border-bottom:1px solid var(--line);gap:16px}
+  .bc-head .id{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;font-weight:700}
+  .bc-head h4{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.005em;margin-top:2px}
+  .bc-head .role{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;margin-top:2px}
+  .bc-head .accent{width:56px;height:56px;flex:none}
+  .bc-body{padding:24px 26px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+  /* Lockup preview */
+  .lockup{display:flex;align-items:center;gap:14px;padding:20px 22px;background:var(--navy);color:var(--ivory);border-radius:2px;position:relative;overflow:hidden}
+  .lockup::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 50%,rgba(201,169,97,.15),transparent 50%)}
+  .lockup .iconwrap{position:relative;flex:none}
+  .lockup .iconwrap svg{width:44px;height:44px}
+  .lockup .word{position:relative;font-family:var(--serif);font-weight:700;line-height:1.05}
+  .lockup .word .up{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:500;margin-bottom:2px}
+  .lockup .word .name{display:block;font-size:16px;font-weight:800;letter-spacing:-.005em;color:var(--ivory)}
+  .lockup .word .sub{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:var(--gold-3);text-transform:uppercase;margin-top:3px;opacity:.8}
+
+  .lockup.light{background:var(--ivory);color:var(--navy)}
+  .lockup.light::before{background:none}
+  .lockup.light .word .up{color:var(--gold-2)}
+  .lockup.light .word .name{color:var(--navy)}
+  .lockup.light .word .sub{color:var(--slate)}
+
+  .bc-body .prev-lbl{grid-column:1/-1;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-bottom:-8px}
+
+  /* USAGE STRIP */
+  .bc-usage{padding:14px 26px;background:#fff;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--slate);text-transform:uppercase}
+  .bc-usage .primary-color{display:flex;align-items:center;gap:6px}
+  .bc-usage .primary-color .chip{width:14px;height:14px;border-radius:2px;border:1px solid rgba(0,0,0,.1)}
+
+  /* SUBBRAND COLOR TAGS */
+  .accent-mog{color:#C9A961}
+  .accent-tcp{color:#C9A961}
+  .accent-mhi{color:#2F6B4A}   /* Housing — quiet green */
+  .accent-mcr{color:#9B7A2B}   /* Capital Ready — deeper gold */
+  .accent-mmos{color:#4A5FA5}  /* MortgageOS — steady blue */
+  .accent-mgos{color:#8B1F1F}  /* GrowthOS — red */
+  .accent-mfs{color:#B8823A}   /* Freight — burnt gold */
+  .accent-mfw{color:#5C6B7C}   /* FleetWorks — steel */
+  .accent-mela{color:#B37A8C}  /* Early Learning — muted rose */
+  .accent-mlos{color:#4A6B7C}  /* LearningOS — teal-navy */
+
+  /* PALETTE ROW */
+  .palette-row{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;margin-top:12px}
+  .palette-row .swatch{aspect-ratio:1/1;border-radius:2px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:8px}
+  .palette-row .swatch .lbl{font-family:var(--mono);font-size:8px;letter-spacing:.1em;font-weight:600;text-transform:uppercase}
+
+  /* RULES */
+  .rules{background:#fff;border:1px solid var(--line);border-radius:2px;padding:28px 32px}
+  .rules h3{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.005em;margin-bottom:16px}
+  .rules-list{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+  .rule{padding:14px 16px;border-left:3px solid var(--gold);background:var(--ivory);border-radius:0 2px 2px 0}
+  .rule.warn{border-left-color:var(--red);background:#FBEEEE}
+  .rule .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-bottom:4px}
+  .rule.warn .lbl{color:var(--red)}
+  .rule p{font-size:13px;line-height:1.5;color:var(--navy)}
+
+  @media (max-width:900px){ .brand-grid{grid-template-columns:1fr} .system .children{grid-template-columns:1fr 1fr} .palette-row{grid-template-columns:repeat(5,1fr)} .rules-list{grid-template-columns:1fr} .hero h1{font-size:44px} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- Master shield (parent) -->
+  <symbol id="mark-shield" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".35"/>
+    <rect x="46" y="26" width="8" height="46" fill="currentColor" opacity=".9"/>
+    <rect x="32" y="36" width="36" height="6" fill="currentColor" opacity=".9"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="currentColor" opacity=".7"/>
+  </symbol>
+
+  <!-- MOG · Parent · circle with initials -->
+  <symbol id="mark-mog" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2.5"/>
+    <circle cx="50" cy="50" r="38" fill="currentColor" opacity=".08"/>
+    <text x="50" y="58" text-anchor="middle" font-family="Playfair Display, serif" font-size="28" font-weight="800" fill="currentColor" letter-spacing="-1">MOG</text>
+    <text x="50" y="77" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="6" letter-spacing="2.4" fill="currentColor" opacity=".7">OPPORTUNITY</text>
+  </symbol>
+
+  <!-- TCP · Contracting Preacher — Shield with cross/pulpit (existing mark) -->
+  <symbol id="mark-tcp" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+  </symbol>
+
+  <!-- MHI · Housing — House inside shield -->
+  <symbol id="mark-mhi" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M30 52 L50 34 L70 52 L70 74 L58 74 L58 60 L42 60 L42 74 L30 74 Z" fill="#F7F3EA"/>
+    <rect x="46" y="42" width="8" height="10" fill="currentColor"/>
+    <path d="M28 54 L50 32 L72 54" fill="none" stroke="#F7F3EA" stroke-width="2.2" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- MCR · Capital Ready — Ascending steps -->
+  <symbol id="mark-mcr" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <rect x="22" y="66" width="14" height="14" fill="#F7F3EA"/>
+    <rect x="40" y="52" width="14" height="28" fill="#F7F3EA"/>
+    <rect x="58" y="38" width="14" height="42" fill="#F7F3EA"/>
+    <path d="M22 32 L34 24 L46 30 L58 22 L74 28" fill="none" stroke="#F7F3EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="74" cy="28" r="3" fill="#F7F3EA"/>
+  </symbol>
+
+  <!-- MMOS · MortgageOS — House + circuit -->
+  <symbol id="mark-mmos" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M32 60 L50 42 L68 60 L68 78 L32 78 Z" fill="#F7F3EA"/>
+    <rect x="46" y="60" width="8" height="18" fill="currentColor"/>
+    <circle cx="42" cy="30" r="2.5" fill="#F7F3EA"/>
+    <circle cx="58" cy="30" r="2.5" fill="#F7F3EA"/>
+    <circle cx="50" cy="22" r="2.5" fill="#F7F3EA"/>
+    <path d="M42 30 L50 22 L58 30 M42 30 L58 30" stroke="#F7F3EA" stroke-width="1" fill="none"/>
+  </symbol>
+
+  <!-- MGOS · GrowthOS — Upward arrow / rocket -->
+  <symbol id="mark-mgos" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 24 L64 44 L58 44 L58 68 L42 68 L42 44 L36 44 Z" fill="#F7F3EA"/>
+    <rect x="42" y="70" width="16" height="4" fill="#F7F3EA" opacity=".5"/>
+    <path d="M28 78 Q32 74 36 78 M40 82 Q46 76 52 82 M56 78 Q60 74 64 78 M68 82 Q72 78 76 82" stroke="#F7F3EA" stroke-width="1.5" fill="none" opacity=".5"/>
+  </symbol>
+
+  <!-- MFS · Freight — Truck/road profile -->
+  <symbol id="mark-mfs" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <rect x="20" y="42" width="42" height="24" fill="#F7F3EA"/>
+    <path d="M62 46 L74 46 L80 56 L80 66 L62 66 Z" fill="#F7F3EA"/>
+    <circle cx="32" cy="72" r="6" fill="currentColor" stroke="#F7F3EA" stroke-width="2"/>
+    <circle cx="68" cy="72" r="6" fill="currentColor" stroke="#F7F3EA" stroke-width="2"/>
+    <rect x="26" y="48" width="6" height="6" fill="currentColor"/>
+    <rect x="36" y="48" width="6" height="6" fill="currentColor"/>
+  </symbol>
+
+  <!-- MFW · FleetWorks — Wrench crossed -->
+  <symbol id="mark-mfw" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <g transform="translate(50 50) rotate(-45)">
+      <rect x="-3" y="-24" width="6" height="34" fill="#F7F3EA"/>
+      <path d="M-8 -30 L-8 -22 L-4 -18 L-4 -24 L4 -24 L4 -18 L8 -22 L8 -30 Z" fill="#F7F3EA"/>
+    </g>
+    <g transform="translate(50 50) rotate(45)">
+      <rect x="-3" y="-24" width="6" height="34" fill="#F7F3EA" opacity=".85"/>
+      <path d="M-8 -30 L-8 -22 L-4 -18 L-4 -24 L4 -24 L4 -18 L8 -22 L8 -30 Z" fill="#F7F3EA" opacity=".85"/>
+    </g>
+  </symbol>
+
+  <!-- MELA · Early Learning — Open book + sprout -->
+  <symbol id="mark-mela" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M20 52 L50 60 L80 52 L80 74 L50 78 L20 74 Z" fill="#F7F3EA"/>
+    <path d="M50 60 L50 78" stroke="currentColor" stroke-width="1.5"/>
+    <path d="M50 44 Q46 34 40 30 Q42 40 50 44 Z" fill="#F7F3EA"/>
+    <path d="M50 44 Q54 34 60 30 Q58 40 50 44 Z" fill="#F7F3EA"/>
+    <rect x="48" y="42" width="4" height="12" fill="#F7F3EA"/>
+  </symbol>
+
+  <!-- MLOS · LearningOS — Nested chevrons (grow) -->
+  <symbol id="mark-mlos" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M30 58 L50 42 L70 58" stroke="#F7F3EA" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M30 46 L50 30 L70 46" stroke="#F7F3EA" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
+    <path d="M30 70 L50 54 L70 70" stroke="#F7F3EA" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>
+  </symbol>
+</svg>
+
+<div class="page">
+
+  <div class="doc-head">
+    <div>
+      <div class="meta">Fleet Volume · v1.0</div>
+      <div class="title">Master McKnight Brand System</div>
+    </div>
+    <div class="kv">
+      <div><b>Fleet</b>10 brands · 1 identity</div>
+      <div><b>Status</b>Draft · pre-clearance</div>
+      <div><b>Issued</b>Jul 2026</div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="brand">
+      <svg><use href="#mark-mog"/></svg>
+      <div class="txt">
+        <div class="up">Fleet · Master Identity</div>
+        <div class="name">McKnight Opportunity Group</div>
+      </div>
+    </div>
+    <h1>One family.<br><em>Ten brands.</em></h1>
+    <div class="lede">A unified visual DNA — shared shield geometry, disciplined type system, distinct sub-brand accent colors — so every McKnight product feels connected without collapsing into sameness.</div>
+  </div>
+
+  <!-- SYSTEM DIAGRAM -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">The <em>System</em></h2>
+      <span class="sec-sub">1 parent · 9 children · connected DNA</span>
+    </div>
+    <p class="lede">Every sub-brand inherits the shield geometry, Playfair Display headline, IBM Plex Mono metadata, and warm-ivory paper. Each carries a distinct silhouette + accent color so the sector reads instantly.</p>
+
+    <div class="system">
+      <div class="center">
+        <svg style="color:var(--gold)"><use href="#mark-mog"/></svg>
+        <h3>McKnight <em>Opportunity Group</em></h3>
+        <p>Parent · Management · Master Identity</p>
+      </div>
+      <div class="children">
+        <div class="child"><div class="icon accent-tcp"><svg><use href="#mark-tcp"/></svg></div><div class="name">The Contracting Preacher</div><div class="role">Federal Consulting</div></div>
+        <div class="child"><div class="icon accent-mhi"><svg><use href="#mark-mhi"/></svg></div><div class="name">McKnight Housing Initiative</div><div class="role">Nonprofit · Housing</div></div>
+        <div class="child"><div class="icon accent-mcr"><svg><use href="#mark-mcr"/></svg></div><div class="name">McKnight Capital Ready</div><div class="role">Credit · Funding</div></div>
+        <div class="child"><div class="icon accent-mmos"><svg><use href="#mark-mmos"/></svg></div><div class="name">MortgageOS</div><div class="role">Software</div></div>
+        <div class="child"><div class="icon accent-mgos"><svg><use href="#mark-mgos"/></svg></div><div class="name">GrowthOS</div><div class="role">Software</div></div>
+        <div class="child"><div class="icon accent-mfs"><svg><use href="#mark-mfs"/></svg></div><div class="name">Freight Systems</div><div class="role">Transportation</div></div>
+        <div class="child"><div class="icon accent-mfw"><svg><use href="#mark-mfw"/></svg></div><div class="name">FleetWorks</div><div class="role">Repair</div></div>
+        <div class="child"><div class="icon accent-mela"><svg><use href="#mark-mela"/></svg></div><div class="name">Early Learning Academy</div><div class="role">Childcare</div></div>
+        <div class="child"><div class="icon accent-mlos"><svg><use href="#mark-mlos"/></svg></div><div class="name">LearningOS</div><div class="role">Software</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRAND CARDS -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">Sub-brand <em>Lockups</em></h2>
+      <span class="sec-sub">Draft marks · pending name clearance</span>
+    </div>
+    <p class="lede">Draft-only silhouettes. Every lockup below is pending Section 3 (name + trademark clearance) before it can be produced as final production art. All shields use the same corner geometry so they read as siblings, not strangers.</p>
+
+    <div class="brand-grid">
+
+      <!-- TCP -->
+      <div class="brand-card">
+        <div class="bc-head">
+          <div>
+            <div class="id">01 · TCP</div>
+            <h4>The Contracting Preacher</h4>
+            <div class="role">Federal Contracting Consultant</div>
+          </div>
+          <div class="accent accent-tcp"><svg style="width:100%;height:100%"><use href="#mark-tcp"/></svg></div>
+        </div>
+        <div class="bc-body">
+          <div class="prev-lbl">Lockup · dark + light</div>
+          <div class="lockup">
+            <div class="iconwrap accent-tcp"><svg><use href="#mark-tcp"/></svg></div>
+            <div class="word"><span class="up">Dr. McKnight</span><span class="name">The Contracting Preacher</span><span class="sub">Federal Contracting</span></div>
+          </div>
+          <div class="lockup light">
+            <div class="iconwrap" style="color:var(--navy)"><svg><use href="#mark-tcp"/></svg></div>
+            <div class="word"><span class="up">Dr. McKnight</span><span class="name">The Contracting Preacher</span><span class="sub">Federal Contracting</span></div>
+          </div>
+        </div>
+        <div class="bc-usage"><span>Domain</span><span class="primary-color"><span class="chip" style="background:#C9A961"></span> #C9A961 · Pulpit Gold</span></div>
+      </div>
+
+      <!-- MHI -->
+      <div class="brand-card">
+        <div class="bc-head">
+          <div>
+            <div class="id">02 · MHI</div>
+            <h4>McKnight Housing Initiative</h4>
+            <div class="role">Nonprofit · Housing</div>
+          </div>
+          <div class="accent accent-mhi"><svg style="width:100%;height:100%"><use href="#mark-mhi"/></svg></div>
+        </div>
+        <div class="bc-body">
+          <div class="prev-lbl">Lockup · dark + light</div>
+          <div class="lockup">
+            <div class="iconwrap accent-mhi"><svg><use href="#mark-mhi"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">Housing Initiative</span><span class="sub">Nonprofit</span></div>
+          </div>
+          <div class="lockup light">
+            <div class="iconwrap" style="color:#2F6B4A"><svg><use href="#mark-mhi"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">Housing Initiative</span><span class="sub">Nonprofit</span></div>
+          </div>
+        </div>
+        <div class="bc-usage"><span>Nonprofit — .org</span><span class="primary-color"><span class="chip" style="background:#2F6B4A"></span> #2F6B4A · Quiet Green</span></div>
+      </div>
+
+      <!-- MCR -->
+      <div class="brand-card">
+        <div class="bc-head">
+          <div>
+            <div class="id">03 · MCR</div>
+            <h4>McKnight Capital Ready</h4>
+            <div class="role">Credit · Funding · Compliance</div>
+          </div>
+          <div class="accent accent-mcr"><svg style="width:100%;height:100%"><use href="#mark-mcr"/></svg></div>
+        </div>
+        <div class="bc-body">
+          <div class="prev-lbl">Lockup · dark + light</div>
+          <div class="lockup">
+            <div class="iconwrap accent-mcr"><svg><use href="#mark-mcr"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">Capital Ready</span><span class="sub">Credit · Funding</span></div>
+          </div>
+          <div class="lockup light">
+            <div class="iconwrap" style="color:#9B7A2B"><svg><use href="#mark-mcr"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">Capital Ready</span><span class="sub">Credit · Funding</span></div>
+          </div>
+        </div>
+        <div class="bc-usage"><span>Regulated · counsel review needed</span><span class="primary-color"><span class="chip" style="background:#9B7A2B"></span> #9B7A2B · Deep Gold</span></div>
+      </div>
+
+      <!-- MMOS -->
+      <div class="brand-card">
+        <div class="bc-head">
+          <div>
+            <div class="id">04 · MMOS</div>
+            <h4>McKnight MortgageOS</h4>
+            <div class="role">Software · Mortgage</div>
+          </div>
+          <div class="accent accent-mmos"><svg style="width:100%;height:100%"><use href="#mark-mmos"/></svg></div>
+        </div>
+        <div class="bc-body">
+          <div class="prev-lbl">Lockup · dark + light</div>
+          <div class="lockup">
+            <div class="iconwrap accent-mmos"><svg><use href="#mark-mmos"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">MortgageOS</span><span class="sub">Software</span></div>
+          </div>
+          <div class="lockup light">
+            <div class="iconwrap" style="color:#4A5FA5"><svg><use href="#mark-mmos"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">MortgageOS</span><span class="sub">Software</span></div>
+          </div>
+        </div>
+        <div class="bc-usage"><span>Mortgage counsel required</span><span class="primary-color"><span class="chip" style="background:#4A5FA5"></span> #4A5FA5 · Steady Blue</span></div>
+      </div>
+
+      <!-- MGOS -->
+      <div class="brand-card">
+        <div class="bc-head">
+          <div>
+            <div class="id">05 · MGOS</div>
+            <h4>McKnight GrowthOS</h4>
+            <div class="role">Software · Growth</div>
+          </div>
+          <div class="accent accent-mgos"><svg style="width:100%;height:100%"><use href="#mark-mgos"/></svg></div>
+        </div>
+        <div class="bc-body">
+          <div class="prev-lbl">Lockup · dark + light</div>
+          <div class="lockup">
+            <div class="iconwrap accent-mgos"><svg><use href="#mark-mgos"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">GrowthOS</span><span class="sub">Software</span></div>
+          </div>
+          <div class="lockup light">
+            <div class="iconwrap" style="color:#8B1F1F"><svg><use href="#mark-mgos"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">GrowthOS</span><span class="sub">Software</span></div>
+          </div>
+        </div>
+        <div class="bc-usage"><span>Multi-tenant SaaS</span><span class="primary-color"><span class="chip" style="background:#8B1F1F"></span> #8B1F1F · Signal Red</span></div>
+      </div>
+
+      <!-- MFS -->
+      <div class="brand-card">
+        <div class="bc-head">
+          <div>
+            <div class="id">06 · MFS</div>
+            <h4>McKnight Freight Systems</h4>
+            <div class="role">Transportation</div>
+          </div>
+          <div class="accent accent-mfs"><svg style="width:100%;height:100%"><use href="#mark-mfs"/></svg></div>
+        </div>
+        <div class="bc-body">
+          <div class="prev-lbl">Lockup · dark + light</div>
+          <div class="lockup">
+            <div class="iconwrap accent-mfs"><svg><use href="#mark-mfs"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">Freight Systems</span><span class="sub">Transportation</span></div>
+          </div>
+          <div class="lockup light">
+            <div class="iconwrap" style="color:#B8823A"><svg><use href="#mark-mfs"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">Freight Systems</span><span class="sub">Transportation</span></div>
+          </div>
+        </div>
+        <div class="bc-usage"><span>USDOT/MC required</span><span class="primary-color"><span class="chip" style="background:#B8823A"></span> #B8823A · Burnt Gold</span></div>
+      </div>
+
+      <!-- MFW -->
+      <div class="brand-card">
+        <div class="bc-head">
+          <div>
+            <div class="id">07 · MFW</div>
+            <h4>McKnight FleetWorks</h4>
+            <div class="role">Repair · Maintenance</div>
+          </div>
+          <div class="accent accent-mfw"><svg style="width:100%;height:100%"><use href="#mark-mfw"/></svg></div>
+        </div>
+        <div class="bc-body">
+          <div class="prev-lbl">Lockup · dark + light</div>
+          <div class="lockup">
+            <div class="iconwrap accent-mfw"><svg><use href="#mark-mfw"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">FleetWorks</span><span class="sub">Repair</span></div>
+          </div>
+          <div class="lockup light">
+            <div class="iconwrap" style="color:#5C6B7C"><svg><use href="#mark-mfw"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">FleetWorks</span><span class="sub">Repair</span></div>
+          </div>
+        </div>
+        <div class="bc-usage"><span>Garage liability required</span><span class="primary-color"><span class="chip" style="background:#5C6B7C"></span> #5C6B7C · Steel Grey</span></div>
+      </div>
+
+      <!-- MELA -->
+      <div class="brand-card">
+        <div class="bc-head">
+          <div>
+            <div class="id">08 · MELA</div>
+            <h4>Early Learning Academy</h4>
+            <div class="role">Licensed Childcare</div>
+          </div>
+          <div class="accent accent-mela"><svg style="width:100%;height:100%"><use href="#mark-mela"/></svg></div>
+        </div>
+        <div class="bc-body">
+          <div class="prev-lbl">Lockup · dark + light</div>
+          <div class="lockup">
+            <div class="iconwrap accent-mela"><svg><use href="#mark-mela"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">Early Learning Academy</span><span class="sub">Childcare</span></div>
+          </div>
+          <div class="lockup light">
+            <div class="iconwrap" style="color:#B37A8C"><svg><use href="#mark-mela"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">Early Learning Academy</span><span class="sub">Childcare</span></div>
+          </div>
+        </div>
+        <div class="bc-usage"><span>Childcare license required</span><span class="primary-color"><span class="chip" style="background:#B37A8C"></span> #B37A8C · Muted Rose</span></div>
+      </div>
+
+      <!-- MLOS -->
+      <div class="brand-card">
+        <div class="bc-head">
+          <div>
+            <div class="id">09 · MLOS</div>
+            <h4>McKnight LearningOS</h4>
+            <div class="role">Software · Childcare</div>
+          </div>
+          <div class="accent accent-mlos"><svg style="width:100%;height:100%"><use href="#mark-mlos"/></svg></div>
+        </div>
+        <div class="bc-body">
+          <div class="prev-lbl">Lockup · dark + light</div>
+          <div class="lockup">
+            <div class="iconwrap accent-mlos"><svg><use href="#mark-mlos"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">LearningOS</span><span class="sub">Software</span></div>
+          </div>
+          <div class="lockup light">
+            <div class="iconwrap" style="color:#4A6B7C"><svg><use href="#mark-mlos"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">LearningOS</span><span class="sub">Software</span></div>
+          </div>
+        </div>
+        <div class="bc-usage"><span>COPPA review required</span><span class="primary-color"><span class="chip" style="background:#4A6B7C"></span> #4A6B7C · Teal Navy</span></div>
+      </div>
+
+      <!-- MOG -->
+      <div class="brand-card">
+        <div class="bc-head">
+          <div>
+            <div class="id">00 · MOG</div>
+            <h4>McKnight Opportunity Group</h4>
+            <div class="role">Parent · Master</div>
+          </div>
+          <div class="accent accent-mog"><svg style="width:100%;height:100%"><use href="#mark-mog"/></svg></div>
+        </div>
+        <div class="bc-body">
+          <div class="prev-lbl">Lockup · dark + light</div>
+          <div class="lockup">
+            <div class="iconwrap accent-mog"><svg><use href="#mark-mog"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">Opportunity Group</span><span class="sub">Parent</span></div>
+          </div>
+          <div class="lockup light">
+            <div class="iconwrap" style="color:var(--gold-2)"><svg><use href="#mark-mog"/></svg></div>
+            <div class="word"><span class="up">McKnight</span><span class="name">Opportunity Group</span><span class="sub">Parent</span></div>
+          </div>
+        </div>
+        <div class="bc-usage"><span>Master identity</span><span class="primary-color"><span class="chip" style="background:#C9A961"></span> #C9A961 · Pulpit Gold</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ACCENT COLOR SYSTEM -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Sub-brand <em>Accent Colors</em></h2>
+      <span class="sec-sub">Shared shell · distinct sectors</span>
+    </div>
+    <p class="lede">Navy + ivory + Playfair remain constant across every brand. Each sub-brand gets one accent color that signals its sector at a glance.</p>
+
+    <div class="palette-row">
+      <div class="swatch" style="background:#C9A961"><span class="lbl" style="color:#0A1628">TCP · MOG</span></div>
+      <div class="swatch" style="background:#2F6B4A"><span class="lbl" style="color:#F7F3EA">MHI</span></div>
+      <div class="swatch" style="background:#9B7A2B"><span class="lbl" style="color:#F7F3EA">MCR</span></div>
+      <div class="swatch" style="background:#4A5FA5"><span class="lbl" style="color:#F7F3EA">MMOS</span></div>
+      <div class="swatch" style="background:#8B1F1F"><span class="lbl" style="color:#F7F3EA">MGOS</span></div>
+      <div class="swatch" style="background:#B8823A"><span class="lbl" style="color:#F7F3EA">MFS</span></div>
+      <div class="swatch" style="background:#5C6B7C"><span class="lbl" style="color:#F7F3EA">MFW</span></div>
+      <div class="swatch" style="background:#B37A8C"><span class="lbl" style="color:#F7F3EA">MELA</span></div>
+      <div class="swatch" style="background:#4A6B7C"><span class="lbl" style="color:#F7F3EA">MLOS</span></div>
+      <div class="swatch" style="background:#0A1628"><span class="lbl" style="color:#E4CB92">NAVY · BASE</span></div>
+    </div>
+  </section>
+
+  <!-- RULES -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Fleet <em>Rules</em></h2>
+      <span class="sec-sub">Non-negotiable across all brands</span>
+    </div>
+
+    <div class="rules">
+      <h3>The rules that make the family look like a family.</h3>
+      <div class="rules-list">
+        <div class="rule warn"><div class="lbl">Warning</div><p>No sub-brand mark is production-final until name + trademark clearance closes (Section 3 of the Verification Packet). These are draft silhouettes.</p></div>
+        <div class="rule warn"><div class="lbl">Warning</div><p>Regulated brands (MHI, MCR, MMOS, MFS, MFW, MELA) require compliance-packet closure before any public mark, tagline, or claim appears anywhere — including social handles.</p></div>
+        <div class="rule"><div class="lbl">Shape</div><p>Every mark lives inside the master shield silhouette. No square, circle, or wordmark-only exceptions without approval.</p></div>
+        <div class="rule"><div class="lbl">Type</div><p>Playfair Display · headlines. Inter · body. IBM Plex Mono · metadata &amp; tags. Zero exceptions across all 10 brands.</p></div>
+        <div class="rule"><div class="lbl">Neutrals</div><p>Navy #0A1628 for authority, Ivory #F7F3EA for paper. Every brand uses these — the accent color is the only variable.</p></div>
+        <div class="rule"><div class="lbl">Accent Use</div><p>Accent color = fill of the mark, headline emphasis (italic `em`), and CTA background. Never for body copy.</p></div>
+        <div class="rule"><div class="lbl">Voice</div><p>All brands ship in the same voice family: straight-shooting, specific, values-anchored — with sector-appropriate vocabulary.</p></div>
+        <div class="rule"><div class="lbl">Naming</div><p>Sub-brand always reads "McKnight [Brand]" in the wordmark — never "[Brand] by McKnight." Parent first. Exception: The Contracting Preacher (Dr. McKnight override).</p></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

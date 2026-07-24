@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Outreach Kit — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --ok:#2F6B4A;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:48px 24px 100px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1180px;margin:0 auto}
+
+  .doc-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--navy);padding-bottom:20px;margin-bottom:36px}
+  .doc-head .title{font-family:var(--serif);font-size:26px;font-weight:700;margin-top:4px}
+  .doc-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .doc-head .kv{display:flex;gap:28px;font-family:var(--mono);font-size:11px;color:var(--slate)}
+  .doc-head .kv b{color:var(--navy);display:block;letter-spacing:.14em;font-weight:600;text-transform:uppercase}
+
+  /* HERO */
+  .hero{background:var(--navy);color:var(--ivory);padding:48px 56px 44px;border-radius:2px;position:relative;overflow:hidden;margin-bottom:32px}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.2),transparent 45%);pointer-events:none}
+  .hero .brand{display:flex;align-items:center;gap:12px;margin-bottom:24px;position:relative}
+  .hero .brand svg{width:40px;height:40px;color:var(--gold);flex:none}
+  .hero .brand .txt{font-family:var(--serif);font-weight:700;font-size:14px;line-height:1.05}
+  .hero .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400;margin-top:3px}
+  .hero h1{font-family:var(--serif);font-size:56px;font-weight:800;letter-spacing:-.02em;line-height:1;position:relative;max-width:820px}
+  .hero h1 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .hero .lede{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--gold-3);max-width:640px;margin-top:14px;line-height:1.5;position:relative}
+
+  /* STICKY NAV */
+  nav.local{position:sticky;top:0;background:rgba(235,228,210,.95);backdrop-filter:blur(6px);padding:12px 0;margin:-48px -24px 32px;padding-left:24px;padding-right:24px;z-index:20;border-bottom:1px solid var(--line)}
+  nav.local .inner{max-width:1180px;margin:0 auto;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  nav.local a{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;text-decoration:none;padding:6px 12px;border:1px solid transparent;border-radius:2px;font-weight:600;transition:all .12s}
+  nav.local a:hover{border-color:var(--gold-2);color:var(--gold-2)}
+
+  /* SECTION */
+  section{margin-bottom:56px;scroll-margin-top:60px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:22px;border-bottom:1px solid rgba(10,22,40,.15);padding-bottom:14px}
+  .sec-num{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);font-weight:600}
+  .sec-title{font-family:var(--serif);font-size:30px;font-weight:800;letter-spacing:-.015em}
+  .sec-title em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-sub{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+
+  /* CARD (script) */
+  .script{background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-bottom:16px;box-shadow:0 8px 20px -16px rgba(10,22,40,.2)}
+  .script-head{display:flex;justify-content:space-between;align-items:center;padding:16px 26px;background:var(--ivory);border-bottom:1px solid var(--line)}
+  .script-head .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:700}
+  .script-head h3{font-family:var(--serif);font-size:20px;font-weight:800;letter-spacing:-.005em;margin-top:2px}
+  .script-head .meta{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600;text-align:right;line-height:1.6}
+  .script-head .meta b{display:block;color:var(--navy);font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;margin-top:2px}
+  .script-head .copy-btn{background:var(--navy);color:var(--gold-3);border:0;padding:7px 14px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border-radius:2px;cursor:pointer;transition:all .15s;margin-left:12px}
+  .script-head .copy-btn:hover{background:var(--gold);color:var(--navy)}
+  .script-head .copy-btn.copied{background:var(--ok);color:#fff}
+
+  .script-body{padding:22px 30px;background:#fff}
+  .script-body .subject{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600;margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+  .script-body .subject b{color:var(--navy);font-family:var(--serif);font-size:16px;font-weight:700;letter-spacing:-.005em;text-transform:none;display:block;margin-top:3px}
+  .script-body .content{font-family:var(--serif);font-size:15px;line-height:1.7;color:var(--navy);white-space:pre-wrap}
+  .script-body .content.mono{font-family:var(--sans);font-size:14px;line-height:1.65}
+  .script-body .content b{font-weight:700}
+  .script-body .content em{font-style:italic;color:var(--slate)}
+  .script-body .stage{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--gold-2);text-transform:uppercase;font-weight:700;background:var(--ivory);padding:4px 10px;border-radius:2px;display:inline-block;margin-bottom:8px}
+  .script-body .beat{background:var(--ivory);border-left:3px solid var(--gold);padding:12px 16px;margin:10px 0;border-radius:0 2px 2px 0;font-family:var(--sans);font-size:13.5px;line-height:1.55;color:var(--slate)}
+  .script-body .beat b{color:var(--navy);font-family:var(--serif);font-size:15px;font-weight:700;display:block;margin-bottom:4px;letter-spacing:-.005em}
+
+  .script-foot{padding:12px 30px;background:#fafafa;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--slate);text-transform:uppercase;display:flex;justify-content:space-between}
+  .script-foot .stat{color:var(--gold-2);font-weight:700}
+
+  /* SEQUENCE FLOW */
+  .flow-box{background:var(--navy);color:var(--ivory);padding:28px 36px;border-radius:2px;position:relative;overflow:hidden;margin-bottom:20px}
+  .flow-box::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.16),transparent 55%);pointer-events:none}
+  .flow-box h3{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.005em;position:relative;margin-bottom:6px}
+  .flow-box h3 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .flow-box p{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--gold-3);position:relative;margin-bottom:20px;opacity:.9}
+  .flow-steps{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;position:relative}
+  .flow-step{background:rgba(201,169,97,.08);border-left:3px solid var(--gold);padding:12px 14px;border-radius:0 2px 2px 0;position:relative}
+  .flow-step .n{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;font-weight:700}
+  .flow-step h5{font-family:var(--serif);font-size:14px;font-weight:700;margin-top:2px;letter-spacing:-.005em;color:var(--ivory)}
+  .flow-step p{font-family:var(--mono);font-style:normal;font-size:9.5px;letter-spacing:.06em;color:var(--gold-3);margin-top:4px;margin-bottom:0;opacity:.85}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--gold-3);padding:14px 22px;border-radius:2px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;box-shadow:0 20px 40px -20px rgba(10,22,40,.5);border-left:3px solid var(--gold);opacity:0;transform:translateY(20px);transition:all .25s;z-index:200}
+  .toast.show{opacity:1;transform:translateY(0)}
+
+  @media (max-width:900px){ .flow-steps{grid-template-columns:1fr 1fr} .script-head{flex-wrap:wrap;gap:10px} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="page">
+
+  <nav class="local">
+    <div class="inner">
+      <a href="#sequence">Email Sequence</a>
+      <a href="#linkedin">LinkedIn DMs</a>
+      <a href="#phone">Phone Scripts</a>
+      <a href="#voicemail">Voicemails</a>
+      <a href="#followup">Follow-Ups</a>
+      <a href="#objections">Objection Handling</a>
+    </div>
+  </nav>
+
+  <div class="doc-head">
+    <div>
+      <div class="meta">Volume 08 · Sales &amp; Outreach</div>
+      <div class="title">Outreach Kit</div>
+    </div>
+    <div class="kv">
+      <div><b>Contains</b>18 scripts</div>
+      <div><b>Version</b>1.0</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="brand">
+      <svg><use href="#mark"/></svg>
+      <div class="txt">The Contracting Preacher<span>Outreach Playbook</span></div>
+    </div>
+    <h1>Copy. Paste. <em>Send.</em></h1>
+    <div class="lede">Cold-email sequences, LinkedIn DMs, phone scripts, voicemails, and follow-ups — all in the practice voice. Straight-shooting. Never pushy. Never fake.</div>
+  </div>
+
+  <!-- ═══════ SEQUENCE FLOW ═══════ -->
+  <div class="flow-box">
+    <h3>The <em>7-touch sequence.</em></h3>
+    <p>Over 21 days. Never more than one message a day. If they say no clearly, they exit.</p>
+    <div class="flow-steps">
+      <div class="flow-step"><div class="n">Day 0</div><h5>Cold Email #1</h5><p>Hook + one-question ask</p></div>
+      <div class="flow-step"><div class="n">Day 3</div><h5>LinkedIn DM</h5><p>Personal · reference email</p></div>
+      <div class="flow-step"><div class="n">Day 7</div><h5>Call #1</h5><p>Voicemail if no answer</p></div>
+      <div class="flow-step"><div class="n">Day 10</div><h5>Cold Email #2</h5><p>Case study + soft ask</p></div>
+      <div class="flow-step"><div class="n">Day 14</div><h5>Call #2</h5><p>Different time · voicemail</p></div>
+      <div class="flow-step"><div class="n">Day 21</div><h5>Break-up Email</h5><p>Close the loop respectfully</p></div>
+    </div>
+  </div>
+
+  <!-- ═══════ EMAIL SEQUENCE ═══════ -->
+  <section id="sequence">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">Email <em>Sequence</em></h2>
+      <span class="sec-sub">3 touches across 21 days</span>
+    </div>
+
+    <div class="script">
+      <div class="script-head">
+        <div>
+          <div class="lbl">Email · Touch 01 · Day 0</div>
+          <h3>The Hook</h3>
+        </div>
+        <div class="meta">Send · Tue-Thu 9am ET<b>Cold opener</b></div>
+        <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      </div>
+      <div class="script-body">
+        <div class="subject">Subject line<b>Question about [Company]'s federal pipeline</b></div>
+        <div class="content">Hi [First Name],
+
+Quick question — is [Company] pursuing federal contracts this year, or is that still on the "someday" list?
+
+Reason I'm asking: I help small businesses in [State/Industry] go from zero-SAM-registration to signed federal contracts. My clients hit an 89% proposal win rate. Placeholder stat pending verification — the reason it's that high is discipline: we only bid when the client can actually win.
+
+If federal is on your radar, worth a 15-minute call to see if there's a fit? I don't do generic advice — I look at your specific situation and tell you straight up whether it's worth pursuing.
+
+If not, no worries at all. Reply "not now" and I'll close the loop.
+
+Dr. McKnight
+The Contracting Preacher
+(202) 276-2913</div>
+      </div>
+      <div class="script-foot"><span>Length: ~110 words · Personal · Zero jargon</span><span class="stat">Open rate benchmark: 42%+</span></div>
+    </div>
+
+    <div class="script">
+      <div class="script-head">
+        <div>
+          <div class="lbl">Email · Touch 02 · Day 10</div>
+          <h3>Proof + Soft Ask</h3>
+        </div>
+        <div class="meta">Send · Same time as Touch 01<b>Nurture</b></div>
+        <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      </div>
+      <div class="script-body">
+        <div class="subject">Subject line<b>Following up — quick case worth reading</b></div>
+        <div class="content">[First Name] —
+
+Circling back on my note from last week. In case federal's on your mind, here's a quick example of what's possible:
+
+Torres Logistics in Columbia had no SAM registration, no 8(a) certification, zero federal past performance. Eighteen months later they won a $2.1M USDA facility maintenance contract and are staffing up 18 jobs.
+
+Placeholder — replace with verified case study once client permission is on file.
+
+The path wasn't magic. It was preparation. Every step documented. Every decision walked through together.
+
+Would that path fit [Company]? 15-min call, no obligation:
+→ [Calendar link]
+
+If federal's not for you right now, just say the word and I'll stop reaching out.
+
+Dr. McKnight
+The Contracting Preacher</div>
+      </div>
+      <div class="script-foot"><span>Include ONE case study only · Never more</span><span class="stat">Reply rate benchmark: 8-12%</span></div>
+    </div>
+
+    <div class="script">
+      <div class="script-head">
+        <div>
+          <div class="lbl">Email · Touch 03 · Day 21</div>
+          <h3>The Break-Up</h3>
+        </div>
+        <div class="meta">Send · Fri late morning<b>Close the loop</b></div>
+        <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      </div>
+      <div class="script-body">
+        <div class="subject">Subject line<b>Closing the loop — should I stop reaching out?</b></div>
+        <div class="content">[First Name],
+
+Third and final note — I've reached out a couple of times about federal contracting for [Company]. If it's not the right fit or the timing's off, I completely understand.
+
+Would you rather:
+  (a) Stay on my radar — I'll check back in six months
+  (b) Move on — I won't reach out again
+
+Reply with (a) or (b). Either is a real answer, and I appreciate the two seconds it takes.
+
+Grateful either way,
+
+Dr. McKnight
+The Contracting Preacher
+(202) 276-2913</div>
+      </div>
+      <div class="script-foot"><span>Break-up notes convert 12-18% of dead leads</span><span class="stat">Highest reply rate in sequence</span></div>
+    </div>
+  </section>
+
+  <!-- ═══════ LINKEDIN DMs ═══════ -->
+  <section id="linkedin">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">LinkedIn <em>DMs</em></h2>
+      <span class="sec-sub">Connection + first-message pair</span>
+    </div>
+
+    <div class="script">
+      <div class="script-head">
+        <div>
+          <div class="lbl">LinkedIn · Connection Note</div>
+          <h3>Connection Request</h3>
+        </div>
+        <div class="meta">300 chars max<b>Warm intro</b></div>
+        <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      </div>
+      <div class="script-body">
+        <div class="content mono">Hi [First Name] — noticed [Company] is in [Industry] in [State]. I work with small businesses navigating federal contracts and figured a connection made sense. No pitch, just building a Southeast network. — Dr. McKnight, The Contracting Preacher</div>
+      </div>
+      <div class="script-foot"><span>~280 chars · Reference something specific</span><span class="stat">Acceptance: 65%+</span></div>
+    </div>
+
+    <div class="script">
+      <div class="script-head">
+        <div>
+          <div class="lbl">LinkedIn · First DM after connection</div>
+          <h3>The After-Connect</h3>
+        </div>
+        <div class="meta">Send · 2-4 days later<b>Never same-day</b></div>
+        <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      </div>
+      <div class="script-body">
+        <div class="content mono">Thanks for connecting, [First Name].
+
+Real quick — is [Company] doing anything with federal contracts, or is it something you've thought about but haven't cracked yet?
+
+Reason I'm asking: I help small businesses go from zero to signed federal work. Not selling anything today. Just curious if it's on your radar.
+
+If it is, happy to trade notes. If not, no worries.
+
+— Dr. McKnight</div>
+      </div>
+      <div class="script-foot"><span>Never lead with "let me tell you about..."</span><span class="stat">Reply rate: 25-35%</span></div>
+    </div>
+  </section>
+
+  <!-- ═══════ PHONE SCRIPTS ═══════ -->
+  <section id="phone">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Phone <em>Scripts</em></h2>
+      <span class="sec-sub">Cold call · qualifying call · booking call</span>
+    </div>
+
+    <div class="script">
+      <div class="script-head">
+        <div>
+          <div class="lbl">Phone · Cold Call</div>
+          <h3>The Cold Open</h3>
+        </div>
+        <div class="meta">30-60 seconds max<b>Direct dial</b></div>
+        <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      </div>
+      <div class="script-body">
+        <div class="stage">First words</div>
+        <div class="content mono">"Hi [First Name], this is Dr. McKnight with The Contracting Preacher. Did I catch you at a bad time?"
+
+<em>[Pause. Let them answer.]</em>
+
+If they say <b>"yes, bad time"</b> → "Understood. When's a better window — later today or is tomorrow morning cleaner?"
+
+If they say <b>"what's this about?"</b> → "Fair question. Straight up: I help small businesses in [State] win federal contracts. Saw [Company] and wanted to ask if that's something you're pursuing right now — or if it's on the list but hasn't been figured out yet."
+
+<em>[Pause again. Their answer decides the next 60 seconds.]</em></div>
+
+        <div class="beat"><b>Golden rule</b>Never talk more than 30 seconds without asking a question. If they're doing 70% of the talking, you're winning.</div>
+        <div class="beat"><b>If they engage</b>Book a 15-minute call this week. Don't pitch on the cold call. Book the fit call and hang up.</div>
+        <div class="beat"><b>If they decline politely</b>"Totally fair. Can I send you one email with a case study, then leave you alone unless you reach out?" — 80% say yes.</div>
+      </div>
+      <div class="script-foot"><span>Best window: Tue-Thu 10-11am, 3-4pm local</span><span class="stat">Connect rate: 8-14%</span></div>
+    </div>
+  </section>
+
+  <!-- ═══════ VOICEMAILS ═══════ -->
+  <section id="voicemail">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Voicemail <em>Scripts</em></h2>
+      <span class="sec-sub">First VM · second VM · final VM</span>
+    </div>
+
+    <div class="script">
+      <div class="script-head">
+        <div>
+          <div class="lbl">Voicemail · Touch 01</div>
+          <h3>First VM</h3>
+        </div>
+        <div class="meta">18-22 seconds<b>Short + specific</b></div>
+        <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      </div>
+      <div class="script-body">
+        <div class="content mono">"Hi [First Name], Dr. McKnight from The Contracting Preacher. I work with small businesses in [State] on federal contracting.
+
+Reason for the call: I saw [Company] and wanted to ask you one question about your federal pipeline. Nothing to sell. Just one question.
+
+If you're open to a 5-minute conversation, my direct line is (202) 276-2913. I'll send a note too so you have it in writing.
+
+Talk soon."</div>
+        <div class="beat"><b>Record it once, then send it as a Slybroadcast or voicemail-drop</b>Consistency beats improv. Your voice is the brand.</div>
+      </div>
+      <div class="script-foot"><span>Follow within 30 minutes with the email</span><span class="stat">Callback rate: 3-6%</span></div>
+    </div>
+
+    <div class="script">
+      <div class="script-head">
+        <div>
+          <div class="lbl">Voicemail · Touch 02</div>
+          <h3>Second VM (Day 14)</h3>
+        </div>
+        <div class="meta">15-18 seconds<b>Reference prior touch</b></div>
+        <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      </div>
+      <div class="script-body">
+        <div class="content mono">"Hi [First Name], Dr. McKnight again — The Contracting Preacher.
+
+Called and emailed last week about federal contracts for [Company]. Didn't want to keep bothering you without checking one more time.
+
+If it's the right fit, I'd love a quick conversation. If not, just reply to the email that says 'not now' and I'll stop reaching out.
+
+Either way — grateful for the two seconds. (202) 276-2913."</div>
+      </div>
+      <div class="script-foot"><span>Softer than VM #1 · Give them an exit</span><span class="stat">Callback rate: 4-7%</span></div>
+    </div>
+  </section>
+
+  <!-- ═══════ FOLLOWUPS ═══════ -->
+  <section id="followup">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">Follow-Up <em>Emails</em></h2>
+      <span class="sec-sub">After-call · after-proposal · after-award</span>
+    </div>
+
+    <div class="script">
+      <div class="script-head">
+        <div>
+          <div class="lbl">Follow-Up · Post Discovery Call</div>
+          <h3>After the Fit Call</h3>
+        </div>
+        <div class="meta">Same day · within 4 hours<b>Warm summary</b></div>
+        <button class="copy-btn" onclick="copyText(this)">Copy</button>
+      </div>
+      <div class="script-body">
+        <div class="subject">Subject line<b>Notes from our call — plus next steps</b></div>
+        <div class="content">[First Name] —
+
+Grateful for the time today. Quick recap so we're on the same page:
+
+<b>Where you are:</b> [1-line paraphrase of their current state]
+
+<b>What you want:</b> [1-line paraphrase of their goal]
+
+<b>What I recommended:</b> [1-line — Foundation, Pursuit, or Retainer]
+
+<b>What I'll send next:</b>
+  → Custom estimate (24-48 hrs)
+  → SAM.gov readiness checklist
+  → One case study relevant to your industry
+
+If anything above sounds off, tell me now — better to catch it before I put the proposal together.
+
+Talk soon,
+
+Dr. McKnight
+The Contracting Preacher</div>
+      </div>
+      <div class="script-foot"><span>Never let 24 hours pass after a good call</span><span class="stat">Progression rate: 50%+</span></div>
+    </div>
+  </section>
+
+  <!-- ═══════ OBJECTIONS ═══════ -->
+  <section id="objections">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <h2 class="sec-title">Objection <em>Handling</em></h2>
+      <span class="sec-sub">The 5 objections you'll hear · every single time</span>
+    </div>
+
+    <div class="script">
+      <div class="script-head"><div><div class="lbl">Objection · 01</div><h3>"We already work with a consultant."</h3></div><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+      <div class="script-body">
+        <div class="content">"Great — that means you already understand the value. Two quick questions: (1) how's their win rate been? (2) do they only bid when you can win, or do they bid whenever the deadline is open? If those two answers make you happy, I'll leave you alone. If not, worth a 15-min second opinion."</div>
+      </div>
+    </div>
+
+    <div class="script">
+      <div class="script-head"><div><div class="lbl">Objection · 02</div><h3>"It's not the right time."</h3></div><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+      <div class="script-body">
+        <div class="content">"Understood. When you say not the right time — is it a bandwidth thing, a cash-flow thing, or is federal not on the horizon at all? Different situations, different answers. I don't want to push if it's genuinely not fit — but if it's bandwidth, that's exactly what I solve."</div>
+      </div>
+    </div>
+
+    <div class="script">
+      <div class="script-head"><div><div class="lbl">Objection · 03</div><h3>"Send me some info."</h3></div><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+      <div class="script-body">
+        <div class="content">"Happy to. So the info actually helps you — one quick question first: what's the specific outcome you'd want from federal contracts in the next 12 months? That way I send something relevant instead of a brochure that sits in your inbox."</div>
+      </div>
+    </div>
+
+    <div class="script">
+      <div class="script-head"><div><div class="lbl">Objection · 04</div><h3>"How much does it cost?"</h3></div><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+      <div class="script-body">
+        <div class="content">"Fair question. Depends entirely on scope, but ballpark: our Foundation package (SAM + first cert + capability statement) is around $2,850. Full pursuit with a proposal is roughly $4,500. Ongoing retainer is $1,850 a month. Any of those feel wildly outside your range?"</div>
+      </div>
+    </div>
+
+    <div class="script">
+      <div class="script-head"><div><div class="lbl">Objection · 05</div><h3>"Can you guarantee we'll win a contract?"</h3></div><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+      <div class="script-body">
+        <div class="content">"No — and be careful of anyone who does. What I guarantee is: I only bid when you can win. I document the process. I show you the compliance matrix before we submit. If we don't win, you have a clear reason why and a stronger position for the next one. That's the honest answer."</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="toast" id="toast">Copied</div>
+
+<script>
+function copyText(btn){
+  const body = btn.closest('.script').querySelector('.script-body');
+  const subject = body.querySelector('.subject b');
+  const content = body.querySelector('.content');
+  let out = '';
+  if(subject) out += 'SUBJECT: ' + subject.textContent + '\n\n';
+  out += content.innerText.replace(/\[.*?\]/g, m => m);
+  navigator.clipboard.writeText(out).then(() => {
+    btn.classList.add('copied'); btn.textContent = '✓ Copied';
+    toast('Copied to clipboard');
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 1600);
+  });
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.remove('show'), 2200);
+}
+</script>
+
+</body>
+</html>

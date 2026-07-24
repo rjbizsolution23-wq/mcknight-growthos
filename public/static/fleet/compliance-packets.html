@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Compliance Packets — McKnight Opportunity Group</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --ok:#2F6B4A; --warn:#B87A1F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:40px 20px;-webkit-font-smoothing:antialiased}
+  .book{max-width:820px;margin:0 auto}
+
+  /* NAV */
+  nav.local{position:sticky;top:0;background:rgba(235,228,210,.95);backdrop-filter:blur(6px);padding:12px 0;margin:-40px -20px 24px;padding-left:20px;padding-right:20px;z-index:20;border-bottom:1px solid var(--line)}
+  nav.local .inner{max-width:820px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  nav.local a{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--slate);text-transform:uppercase;text-decoration:none;padding:5px 10px;border:1px solid transparent;border-radius:2px;font-weight:600}
+  nav.local a:hover{border-color:var(--gold-2);color:var(--gold-2)}
+
+  /* ONE-PAGE SHEET */
+  .sheet{background:#fff;box-shadow:0 30px 60px -30px rgba(10,22,40,.4);border-radius:2px;aspect-ratio:8.5/11;position:relative;overflow:hidden;margin-bottom:36px;page-break-after:always}
+  .sheet::before{content:"";position:absolute;top:0;left:0;right:0;height:8px;z-index:2}
+  .sheet.housing::before{background:linear-gradient(90deg,#0A1628 0%,#0A1628 62%,#2F6B4A 62%,#2F6B4A 100%)}
+  .sheet.capital::before{background:linear-gradient(90deg,#0A1628 0%,#0A1628 62%,#9B7A2B 62%,#9B7A2B 100%)}
+  .sheet.mortgage::before{background:linear-gradient(90deg,#0A1628 0%,#0A1628 62%,#4A5FA5 62%,#4A5FA5 100%)}
+  .sheet.freight::before{background:linear-gradient(90deg,#0A1628 0%,#0A1628 62%,#B8823A 62%,#B8823A 100%)}
+  .sheet.fleetworks::before{background:linear-gradient(90deg,#0A1628 0%,#0A1628 62%,#5C6B7C 62%,#5C6B7C 100%)}
+  .sheet.earlylearning::before{background:linear-gradient(90deg,#0A1628 0%,#0A1628 62%,#B37A8C 62%,#B37A8C 100%)}
+
+  .sheet .head{background:var(--navy);color:var(--ivory);padding:20px 32px 18px;position:relative;overflow:hidden}
+  .sheet .head::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.18),transparent 50%);pointer-events:none}
+  .sheet .head-row{display:flex;justify-content:space-between;align-items:center;gap:16px;position:relative;margin-bottom:12px}
+  .sheet .brand{display:flex;align-items:center;gap:10px}
+  .sheet .brand svg{width:36px;height:36px;flex:none}
+  .sheet .brand.housing svg{color:#2F6B4A}
+  .sheet .brand.capital svg{color:#9B7A2B}
+  .sheet .brand.mortgage svg{color:#4A5FA5}
+  .sheet .brand.freight svg{color:#B8823A}
+  .sheet .brand.fleetworks svg{color:#5C6B7C}
+  .sheet .brand.earlylearning svg{color:#B37A8C}
+  .sheet .brand .txt{font-family:var(--serif);font-weight:700;font-size:12px;line-height:1.1}
+  .sheet .brand .txt h1{font-family:var(--serif);font-size:15px;font-weight:800;letter-spacing:-.005em}
+  .sheet .brand .txt span{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:400;margin-top:2px;opacity:.85}
+  .sheet .brand.housing .txt span{color:#2F6B4A}
+  .sheet .brand.capital .txt span{color:#9B7A2B}
+  .sheet .brand.mortgage .txt span{color:#4A5FA5}
+  .sheet .brand.freight .txt span{color:#B8823A}
+  .sheet .brand.fleetworks .txt span{color:#5C6B7C}
+  .sheet .brand.earlylearning .txt span{color:#B37A8C}
+
+  .sheet .stamp{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;text-align:right;line-height:1.7;position:relative}
+  .sheet.housing .stamp{color:#8FCBA8}
+  .sheet.capital .stamp{color:#E4CB92}
+  .sheet.mortgage .stamp{color:#A8B5DE}
+  .sheet.freight .stamp{color:#E4CB92}
+  .sheet.fleetworks .stamp{color:#BFC8D4}
+  .sheet.earlylearning .stamp{color:#E4C1CD}
+  .sheet .stamp b{color:var(--ivory);display:block;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0;text-transform:none;margin-top:2px}
+
+  .sheet .head h2{font-family:var(--serif);font-size:28px;font-weight:800;letter-spacing:-.015em;line-height:1;position:relative;margin-top:6px}
+  .sheet .head h2 em{font-style:italic;font-weight:400}
+  .sheet.housing .head h2 em{color:#8FCBA8}
+  .sheet.capital .head h2 em{color:#E4CB92}
+  .sheet.mortgage .head h2 em{color:#A8B5DE}
+  .sheet.freight .head h2 em{color:#E4CB92}
+  .sheet.fleetworks .head h2 em{color:#BFC8D4}
+  .sheet.earlylearning .head h2 em{color:#E4C1CD}
+  .sheet .head .sub{font-family:var(--serif);font-style:italic;font-size:12px;margin-top:4px;position:relative;line-height:1.4}
+  .sheet.housing .head .sub{color:#8FCBA8}
+  .sheet.capital .head .sub{color:#E4CB92}
+  .sheet.mortgage .head .sub{color:#A8B5DE}
+  .sheet.freight .head .sub{color:#E4CB92}
+  .sheet.fleetworks .head .sub{color:#BFC8D4}
+  .sheet.earlylearning .head .sub{color:#E4C1CD}
+
+  .sheet .body{padding:16px 32px 12px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .sheet .col h3{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;margin-bottom:8px;padding-bottom:5px;border-bottom:1.5px solid var(--navy)}
+  .sheet.housing .col h3{color:#2F6B4A;border-bottom-color:#2F6B4A}
+  .sheet.capital .col h3{color:#9B7A2B;border-bottom-color:#9B7A2B}
+  .sheet.mortgage .col h3{color:#4A5FA5;border-bottom-color:#4A5FA5}
+  .sheet.freight .col h3{color:#B8823A;border-bottom-color:#B8823A}
+  .sheet.fleetworks .col h3{color:#5C6B7C;border-bottom-color:#5C6B7C}
+  .sheet.earlylearning .col h3{color:#B37A8C;border-bottom-color:#B37A8C}
+
+  .sheet ul{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .sheet ul li{display:flex;gap:9px;align-items:flex-start;padding:4px 0;font-size:10.5px;line-height:1.4;color:var(--navy);border-bottom:1px dashed var(--line)}
+  .sheet ul li:last-child{border:0}
+  .sheet ul li::before{content:"";width:11px;height:11px;flex:none;border:1.5px solid var(--navy);border-radius:1px;margin-top:2px}
+  .sheet ul li b{font-weight:700;color:var(--navy);display:block}
+  .sheet ul li span{color:var(--slate);font-size:10px;display:block;line-height:1.4;margin-top:1px}
+
+  .sheet .warn-strip{background:#FBEEEE;border-left:3px solid var(--red);padding:8px 14px;margin:0 32px 8px;font-size:10.5px;color:#5B1414;line-height:1.5;border-radius:0 2px 2px 0;font-family:var(--sans)}
+  .sheet .warn-strip b{font-weight:700}
+
+  .sheet .steps{padding:0 32px 8px}
+  .sheet .steps h3{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;margin-bottom:8px;padding-bottom:5px;border-bottom:1.5px solid var(--navy)}
+  .sheet.housing .steps h3{color:#2F6B4A;border-bottom-color:#2F6B4A}
+  .sheet.capital .steps h3{color:#9B7A2B;border-bottom-color:#9B7A2B}
+  .sheet.mortgage .steps h3{color:#4A5FA5;border-bottom-color:#4A5FA5}
+  .sheet.freight .steps h3{color:#B8823A;border-bottom-color:#B8823A}
+  .sheet.fleetworks .steps h3{color:#5C6B7C;border-bottom-color:#5C6B7C}
+  .sheet.earlylearning .steps h3{color:#B37A8C;border-bottom-color:#B37A8C}
+  .sheet .step-row{display:grid;grid-template-columns:36px 1fr 90px;gap:12px;padding:6px 0;border-bottom:1px dashed var(--line);align-items:center}
+  .sheet .step-row:last-child{border:0}
+  .sheet .step-row .n{font-family:var(--serif);font-size:22px;font-weight:800;line-height:.9;letter-spacing:-.02em;text-align:center}
+  .sheet.housing .step-row .n{color:#2F6B4A}
+  .sheet.capital .step-row .n{color:#9B7A2B}
+  .sheet.mortgage .step-row .n{color:#4A5FA5}
+  .sheet.freight .step-row .n{color:#B8823A}
+  .sheet.fleetworks .step-row .n{color:#5C6B7C}
+  .sheet.earlylearning .step-row .n{color:#B37A8C}
+  .sheet .step-row .info b{font-family:var(--serif);font-size:12.5px;font-weight:700;display:block;letter-spacing:-.005em}
+  .sheet .step-row .info span{font-size:10px;color:var(--slate);line-height:1.5}
+  .sheet .step-row .time{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em;text-align:right;font-weight:700}
+  .sheet.housing .step-row .time{color:#2F6B4A}
+  .sheet.capital .step-row .time{color:#9B7A2B}
+  .sheet.mortgage .step-row .time{color:#4A5FA5}
+  .sheet.freight .step-row .time{color:#B8823A}
+  .sheet.fleetworks .step-row .time{color:#5C6B7C}
+  .sheet.earlylearning .step-row .time{color:#B37A8C}
+
+  .sheet .foot{position:absolute;bottom:0;left:0;right:0;background:var(--navy);color:var(--gold-3);padding:8px 32px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;line-height:1.7}
+  .sheet .foot b{color:var(--ivory);font-weight:600}
+  .sheet .foot .verse{font-family:var(--serif);font-style:italic;font-size:10px;text-transform:none;letter-spacing:0}
+  .sheet.housing .foot .verse{color:#8FCBA8}
+  .sheet.capital .foot .verse{color:#E4CB92}
+  .sheet.mortgage .foot .verse{color:#A8B5DE}
+  .sheet.freight .foot .verse{color:#E4CB92}
+  .sheet.fleetworks .foot .verse{color:#BFC8D4}
+  .sheet.earlylearning .foot .verse{color:#E4C1CD}
+
+  @media print{ body{background:#fff;padding:0} nav.local{display:none} .sheet{box-shadow:none;aspect-ratio:auto;height:11in;width:8.5in;margin:0} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".35"/>
+    <rect x="46" y="26" width="8" height="46" fill="currentColor" opacity=".85"/>
+    <rect x="32" y="36" width="36" height="6" fill="currentColor" opacity=".85"/>
+  </symbol>
+</svg>
+
+<div class="book">
+
+  <nav class="local"><div class="inner">
+    <a href="#housing">Housing</a>
+    <a href="#capital">Capital Ready</a>
+    <a href="#mortgage">MortgageOS</a>
+    <a href="#freight">Freight</a>
+    <a href="#fleetworks">FleetWorks</a>
+    <a href="#earlylearning">Early Learning</a>
+  </div></nav>
+
+  <!-- ═════ 1. HOUSING ═════ -->
+  <div class="sheet housing" id="housing">
+    <div class="head">
+      <div class="head-row">
+        <div class="brand housing">
+          <svg><use href="#mark"/></svg>
+          <div class="txt"><h1>McKnight Housing Initiative</h1><span>Nonprofit · 501(c)(3)</span></div>
+        </div>
+        <div class="stamp">Compliance Packet · P0<b>Volume 11 · Sheet 1 of 6</b></div>
+      </div>
+      <h2>Housing <em>Compliance</em></h2>
+      <div class="sub">Nothing publishes claiming 501(c)(3), CHDO, property ownership, or active housing programs until every checkbox on this sheet is documented on file.</div>
+    </div>
+
+    <div class="warn-strip">
+      <b>⚠ Absolute rule.</b> Public claims of nonprofit status, CHDO certification, active housing counseling, or property control are legally-sensitive claims. Nothing publishes without the IRS letter, board records, and program documentation attached.
+    </div>
+
+    <div class="body">
+      <div class="col">
+        <h3>Entity &amp; Governance</h3>
+        <ul>
+          <li><div><b>Legal Name Filed</b><span>Nonprofit corp registered w/ state</span></div></li>
+          <li><div><b>IRS 501(c)(3) Determination Letter</b><span>On file · date + effective</span></div></li>
+          <li><div><b>Articles of Incorporation</b><span>Nonprofit purpose clause</span></div></li>
+          <li><div><b>Bylaws (Current)</b><span>Board election + meeting rules</span></div></li>
+          <li><div><b>Board Roster</b><span>≥3 independent members</span></div></li>
+          <li><div><b>Board Independence Documented</b><span>No majority related-party control</span></div></li>
+          <li><div><b>Conflict-of-Interest Policy</b><span>Signed by all board + staff</span></div></li>
+          <li><div><b>Whistleblower Policy</b><span>IRS Form 990 requirement</span></div></li>
+          <li><div><b>Document-Retention Policy</b><span>7-year default</span></div></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h3>Programs, Property &amp; Fair Housing</h3>
+        <ul>
+          <li><div><b>Current Programs Defined</b><span>Written scope · beneficiaries · outcomes</span></div></li>
+          <li><div><b>Service Territory</b><span>Counties / states served</span></div></li>
+          <li><div><b>Property Ownership / Control</b><span>Deeds · leases · MOUs</span></div></li>
+          <li><div><b>Existing Grants Documented</b><span>Awarded amount · reporting cadence</span></div></li>
+          <li><div><b>Development Partners</b><span>Signed MOUs</span></div></li>
+          <li><div><b>Property Managers</b><span>Executed management agreements</span></div></li>
+          <li><div><b>Housing Counsel Retained</b><span>Attorney of record</span></div></li>
+          <li><div><b>Grant Accountant</b><span>CPA familiar w/ nonprofit 990 filings</span></div></li>
+          <li><div><b>Fair-Housing Procedures</b><span>Written · signed · posted</span></div></li>
+          <li><div><b>Applicant Appeal Process</b><span>Written · timing defined</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="steps">
+      <h3>Readiness Sequence — Before Public Launch</h3>
+      <div class="step-row"><div class="n">1</div><div class="info"><b>State Nonprofit Formation</b><span>File articles · pay fees · confirm good standing</span></div><div class="time">1-2 wks</div></div>
+      <div class="step-row"><div class="n">2</div><div class="info"><b>IRS Form 1023 (or 1023-EZ)</b><span>Apply for 501(c)(3) recognition</span></div><div class="time">2-8 mo</div></div>
+      <div class="step-row"><div class="n">3</div><div class="info"><b>Board Seating &amp; Governance Docs</b><span>Bylaws · COI · minutes · officer election</span></div><div class="time">Parallel</div></div>
+      <div class="step-row"><div class="n">4</div><div class="info"><b>CHDO Designation (if applicable)</b><span>HOME-program qualification via state HFA</span></div><div class="time">3-6 mo</div></div>
+      <div class="step-row"><div class="n">5</div><div class="info"><b>Programs + Reporting Live</b><span>Public claims OK only after determination letter</span></div><div class="time">Post-letter</div></div>
+    </div>
+
+    <div class="foot">
+      <span>Counsel: <b>—</b> · CPA: <b>—</b></span>
+      <span class="verse">"…faithfully done." — Prov 16:3</span>
+    </div>
+  </div>
+
+  <!-- ═════ 2. CAPITAL READY ═════ -->
+  <div class="sheet capital" id="capital">
+    <div class="head">
+      <div class="head-row">
+        <div class="brand capital">
+          <svg><use href="#mark"/></svg>
+          <div class="txt"><h1>McKnight Capital Ready</h1><span>Credit · Funding · Consumer Services</span></div>
+        </div>
+        <div class="stamp">Compliance Packet · P0<b>Volume 11 · Sheet 2 of 6</b></div>
+      </div>
+      <h2>Capital Ready <em>Compliance</em></h2>
+      <div class="sub">Consumer credit services are regulated at both federal and state level. State-by-state licensing, bonding, and disclosure rules apply — never launch a new state without confirming lane rules.</div>
+    </div>
+
+    <div class="warn-strip">
+      <b>⚠ Regulated activity.</b> Credit-repair, credit-restoration, and consumer-funding services are governed by CROA (federal), state credit-services-organization laws, bonding requirements, and advertising rules. Every advertising claim requires attorney review.
+    </div>
+
+    <div class="body">
+      <div class="col">
+        <h3>Client Contracts &amp; Disclosures</h3>
+        <ul>
+          <li><div><b>Client Agreement (Reviewed)</b><span>Attorney sign-off · CROA compliant</span></div></li>
+          <li><div><b>Credit Disclosures</b><span>Consumer rights · timing · fees</span></div></li>
+          <li><div><b>Right of Cancellation Notice</b><span>3-business-day CROA right</span></div></li>
+          <li><div><b>Consumer Authorization</b><span>Signed before any credit-bureau action</span></div></li>
+          <li><div><b>Refund Policy (Written)</b><span>Pro-rata refund terms defined</span></div></li>
+          <li><div><b>Complaint Policy</b><span>Response window · escalation path</span></div></li>
+          <li><div><b>Data-Sharing Authorization</b><span>Explicit · time-limited</span></div></li>
+          <li><div><b>Advertising Claims Log</b><span>Every public claim traceable to evidence</span></div></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h3>Licensing, Bonding &amp; Partners</h3>
+        <ul>
+          <li><div><b>State Licensing Matrix</b><span>Per-state license/registration status</span></div></li>
+          <li><div><b>State Surety Bonds</b><span>Bond amount by state (varies)</span></div></li>
+          <li><div><b>Attorney of Record</b><span>Contract signed · escalation path</span></div></li>
+          <li><div><b>Attorney Referral Agreement</b><span>Documented fee structure · disclosure</span></div></li>
+          <li><div><b>Funding-Provider Relationships</b><span>Signed partner agreements</span></div></li>
+          <li><div><b>Existing Software Vendors</b><span>Data-processing agreements on file</span></div></li>
+          <li><div><b>Billing Workflow</b><span>Advance-fee prohibitions honored</span></div></li>
+          <li><div><b>Dispute Workflow</b><span>Consumer + bureau processes</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="steps">
+      <h3>Readiness Sequence — Per State Lane</h3>
+      <div class="step-row"><div class="n">1</div><div class="info"><b>Attorney Legal-State Review</b><span>Confirm CROA + state credit-services-org law</span></div><div class="time">1-2 wks</div></div>
+      <div class="step-row"><div class="n">2</div><div class="info"><b>State Registration + Bond</b><span>File · fund bond · receive certificate</span></div><div class="time">2-6 wks</div></div>
+      <div class="step-row"><div class="n">3</div><div class="info"><b>Client Agreement Finalized</b><span>Attorney-reviewed · state-conformed</span></div><div class="time">Parallel</div></div>
+      <div class="step-row"><div class="n">4</div><div class="info"><b>Advertising Claims Approved</b><span>Every stat + testimonial reviewed</span></div><div class="time">Ongoing</div></div>
+      <div class="step-row"><div class="n">5</div><div class="info"><b>Public Launch in State</b><span>Only after registration active + docs signed</span></div><div class="time">Post-reg</div></div>
+    </div>
+
+    <div class="foot">
+      <span>Attorney: <b>—</b> · Bond carrier: <b>—</b></span>
+      <span class="verse">"…faithfully done." — Prov 16:3</span>
+    </div>
+  </div>
+
+  <!-- ═════ 3. MORTGAGEOS ═════ -->
+  <div class="sheet mortgage" id="mortgage">
+    <div class="head">
+      <div class="head-row">
+        <div class="brand mortgage">
+          <svg><use href="#mark"/></svg>
+          <div class="txt"><h1>McKnight MortgageOS</h1><span>Software · Mortgage Industry Tools</span></div>
+        </div>
+        <div class="stamp">Compliance Packet · P0<b>Volume 11 · Sheet 3 of 6</b></div>
+      </div>
+      <h2>MortgageOS <em>Compliance</em></h2>
+      <div class="sub">Any software that surfaces or applies mortgage program rules (loan limits · guidelines · calculators) must clearly disclaim, cite official sources, and route decisions to licensed humans.</div>
+    </div>
+
+    <div class="warn-strip">
+      <b>⚠ Every loan limit and program rule must be verified against the official source before production display.</b> Stale data in a mortgage tool is a legal exposure — not a bug.
+    </div>
+
+    <div class="body">
+      <div class="col">
+        <h3>Legal &amp; Data Foundation</h3>
+        <ul>
+          <li><div><b>Software Legal Entity</b><span>DE LLC or C-Corp · IP-assigned</span></div></li>
+          <li><div><b>Mortgage Counsel Review</b><span>Every disclaimer + workflow reviewed</span></div></li>
+          <li><div><b>Final Disclaimers Published</b><span>"Not a lender · not legal advice"</span></div></li>
+          <li><div><b>Official Guideline Sources Documented</b><span>Fannie · Freddie · FHA · VA · USDA</span></div></li>
+          <li><div><b>Guideline-Update Process</b><span>Cadence · owner · verification steps</span></div></li>
+          <li><div><b>Human-Review Process</b><span>Licensed LO/broker in loop for edge cases</span></div></li>
+          <li><div><b>Test-Data Policy</b><span>No real borrower data in sandbox</span></div></li>
+          <li><div><b>Data-Retention Policy</b><span>By data class + jurisdiction</span></div></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h3>Security &amp; Operations</h3>
+        <ul>
+          <li><div><b>Information-Security Program</b><span>Written · SOC 2 track</span></div></li>
+          <li><div><b>Vendor List (Current)</b><span>All processors + subprocessors listed</span></div></li>
+          <li><div><b>API Terms + AUP</b><span>Public · acceptable-use enforced</span></div></li>
+          <li><div><b>SLA Published</b><span>Uptime + response target</span></div></li>
+          <li><div><b>Incident-Response Plan</b><span>Written · tested · notification tree</span></div></li>
+          <li><div><b>Data-Processing Agreement (DPA)</b><span>Signed w/ every enterprise customer</span></div></li>
+          <li><div><b>Insurance Coverage</b><span>Cyber + E&amp;O · limits documented</span></div></li>
+          <li><div><b>Change-Log Public</b><span>Guideline updates visible to users</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="steps">
+      <h3>Pre-Launch Verification Sequence</h3>
+      <div class="step-row"><div class="n">1</div><div class="info"><b>Mortgage Counsel Retained + Reviewed</b><span>Loan tools + disclaimers approved</span></div><div class="time">2-4 wks</div></div>
+      <div class="step-row"><div class="n">2</div><div class="info"><b>Guideline Sources Locked</b><span>Fannie/Freddie/FHA/VA/USDA URLs documented</span></div><div class="time">1 wk</div></div>
+      <div class="step-row"><div class="n">3</div><div class="info"><b>Human-Review Layer Live</b><span>Edge cases routed to licensed reviewer</span></div><div class="time">Parallel</div></div>
+      <div class="step-row"><div class="n">4</div><div class="info"><b>Security Baseline</b><span>SOC 2 Type I · pen-test · IR plan</span></div><div class="time">4-8 wks</div></div>
+      <div class="step-row"><div class="n">5</div><div class="info"><b>Sandbox → Production</b><span>Only after counsel + security sign-off</span></div><div class="time">Post-audit</div></div>
+    </div>
+
+    <div class="foot">
+      <span>Mortgage counsel: <b>—</b> · Cyber ins: <b>—</b></span>
+      <span class="verse">"…faithfully done." — Prov 16:3</span>
+    </div>
+  </div>
+
+  <!-- ═════ 4. FREIGHT ═════ -->
+  <div class="sheet freight" id="freight">
+    <div class="head">
+      <div class="head-row">
+        <div class="brand freight">
+          <svg><use href="#mark"/></svg>
+          <div class="txt"><h1>McKnight Freight Systems</h1><span>Transportation · FMCSA Regulated</span></div>
+        </div>
+        <div class="stamp">Compliance Packet · P0<b>Volume 11 · Sheet 4 of 6</b></div>
+      </div>
+      <h2>Freight <em>Compliance</em></h2>
+      <div class="sub">FMCSA requires an active USDOT number, MC authority, insurance filings, drug-and-alcohol program, and driver qualification files before you can legally move commercial freight for hire.</div>
+    </div>
+
+    <div class="warn-strip">
+      <b>⚠ FMCSA-regulated operator.</b> Public marketing that suggests active freight operations before USDOT + MC + insurance + BOC-3 are all confirmed active is a false-hire representation. Wait for confirmation.
+    </div>
+
+    <div class="body">
+      <div class="col">
+        <h3>Federal Authority &amp; Insurance</h3>
+        <ul>
+          <li><div><b>USDOT Number Active</b><span>Register + biennial update current</span></div></li>
+          <li><div><b>MC Authority Granted</b><span>Motor carrier operating authority issued</span></div></li>
+          <li><div><b>Operating Status "Authorized"</b><span>Not just applied — actually authorized</span></div></li>
+          <li><div><b>BOC-3 Filed</b><span>Process-agent designations by state</span></div></li>
+          <li><div><b>UCR Current</b><span>Unified Carrier Registration paid</span></div></li>
+          <li><div><b>Insurance (BI/PD + Cargo)</b><span>$750K min BI/PD · Cargo per contract</span></div></li>
+          <li><div><b>Form MCS-90 Endorsement</b><span>On file at FMCSA</span></div></li>
+          <li><div><b>Factoring Agreement</b><span>Signed w/ approved factor if applicable</span></div></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h3>Drivers, Equipment &amp; Safety</h3>
+        <ul>
+          <li><div><b>Driver Qualification Files</b><span>DQ file per driver · 391.51</span></div></li>
+          <li><div><b>Drug &amp; Alcohol Program</b><span>Consortium enrollment · testing pool</span></div></li>
+          <li><div><b>Clearinghouse Query</b><span>Pre-employment + annual queries</span></div></li>
+          <li><div><b>Hours-of-Service Provider</b><span>ELD-compliant HOS tracking</span></div></li>
+          <li><div><b>ELD Provider (Registered)</b><span>On FMCSA registered device list</span></div></li>
+          <li><div><b>Maintenance Program</b><span>Written · records per DVIR/396</span></div></li>
+          <li><div><b>Accident Register</b><span>Kept per 390.15 · 3-year retention</span></div></li>
+          <li><div><b>Safety Policies</b><span>Written · trained · signed acknowledgments</span></div></li>
+          <li><div><b>Lease / Owner-Op Agreements</b><span>Signed · settlement statement template</span></div></li>
+          <li><div><b>Broker/Carrier Agreements</b><span>Signed per lane</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="steps">
+      <h3>Federal Authority Sequence</h3>
+      <div class="step-row"><div class="n">1</div><div class="info"><b>USDOT + MC Filing</b><span>MCS-150 + OP-1 · federal fees</span></div><div class="time">1-2 wks filing</div></div>
+      <div class="step-row"><div class="n">2</div><div class="info"><b>Insurance Filed w/ FMCSA</b><span>Carrier files BMC-91 + BMC-34</span></div><div class="time">Post-filing</div></div>
+      <div class="step-row"><div class="n">3</div><div class="info"><b>21-Day Protest Period</b><span>FMCSA public notice period</span></div><div class="time">21 days</div></div>
+      <div class="step-row"><div class="n">4</div><div class="info"><b>BOC-3 + UCR Complete</b><span>Process agents + annual UCR paid</span></div><div class="time">Parallel</div></div>
+      <div class="step-row"><div class="n">5</div><div class="info"><b>Operating Status "Authorized"</b><span>Only then can public marketing begin</span></div><div class="time">30-60 days total</div></div>
+    </div>
+
+    <div class="foot">
+      <span>USDOT: <b>—</b> · MC: <b>—</b> · Insurance: <b>—</b></span>
+      <span class="verse">"…faithfully done." — Prov 16:3</span>
+    </div>
+  </div>
+
+  <!-- ═════ 5. FLEETWORKS ═════ -->
+  <div class="sheet fleetworks" id="fleetworks">
+    <div class="head">
+      <div class="head-row">
+        <div class="brand fleetworks">
+          <svg><use href="#mark"/></svg>
+          <div class="txt"><h1>McKnight FleetWorks</h1><span>Repair · Mobile + Physical Shop</span></div>
+        </div>
+        <div class="stamp">Compliance Packet · P0<b>Volume 11 · Sheet 5 of 6</b></div>
+      </div>
+      <h2>FleetWorks <em>Compliance</em></h2>
+      <div class="sub">Commercial vehicle repair combines garage-liability insurance, environmental handling (waste oil, tires, refrigerants), and customer-authorization law. Skip a step, invite a claim.</div>
+    </div>
+
+    <div class="warn-strip">
+      <b>⚠ Consumer-repair statutes vary by state.</b> Written estimates, change-order approvals, and customer-signed authorization are legally required in most states before work begins. Never let a tech skip the paperwork.
+    </div>
+
+    <div class="body">
+      <div class="col">
+        <h3>Operator &amp; Insurance</h3>
+        <ul>
+          <li><div><b>Legal Operator Entity</b><span>Separate from freight operator</span></div></li>
+          <li><div><b>Physical / Mobile Status</b><span>Location or service-area declared</span></div></li>
+          <li><div><b>Service Area Boundary</b><span>Miles / counties / states served</span></div></li>
+          <li><div><b>Garage Liability Insurance</b><span>Vehicles in custody covered</span></div></li>
+          <li><div><b>Workers' Comp (WC)</b><span>Per state · every tech</span></div></li>
+          <li><div><b>Auto Liability (Mobile Trucks)</b><span>Service vehicles on road</span></div></li>
+          <li><div><b>Umbrella Policy</b><span>Excess liability recommended</span></div></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h3>Operations &amp; Environmental</h3>
+        <ul>
+          <li><div><b>Technician Qualifications</b><span>ASE certs · CDL if applicable</span></div></li>
+          <li><div><b>DOT Inspection Authority (Fed)</b><span>If offering annual inspections</span></div></li>
+          <li><div><b>Tool &amp; Equipment List</b><span>Calibrated · insured</span></div></li>
+          <li><div><b>Waste-Oil Handling</b><span>Licensed hauler contract</span></div></li>
+          <li><div><b>Tire Disposal</b><span>State fee + hauler contract</span></div></li>
+          <li><div><b>Refrigerant Handling (EPA 609)</b><span>Certified tech on staff</span></div></li>
+          <li><div><b>Parts Suppliers &amp; Warranty</b><span>Documented · pass-through terms</span></div></li>
+          <li><div><b>Customer Authorization Form</b><span>Signed pre-work + change orders</span></div></li>
+          <li><div><b>Estimate / Change-Order Policy</b><span>Written · % threshold rule</span></div></li>
+          <li><div><b>Fleet Credit Terms</b><span>Net 30/60 defined · signed apps</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="steps">
+      <h3>Operational Launch Sequence</h3>
+      <div class="step-row"><div class="n">1</div><div class="info"><b>Insurance Bound</b><span>Garage · WC · Auto · Umbrella all active</span></div><div class="time">2-4 wks</div></div>
+      <div class="step-row"><div class="n">2</div><div class="info"><b>Environmental Contracts</b><span>Waste oil · tires · refrigerant handlers</span></div><div class="time">1-2 wks</div></div>
+      <div class="step-row"><div class="n">3</div><div class="info"><b>Customer Paperwork Locked</b><span>Auth form · estimate · change-order</span></div><div class="time">1 wk</div></div>
+      <div class="step-row"><div class="n">4</div><div class="info"><b>Tech Certifications On File</b><span>ASE · EPA 609 · CDL if needed</span></div><div class="time">Parallel</div></div>
+      <div class="step-row"><div class="n">5</div><div class="info"><b>First Fleet Contract</b><span>Only after all above verified</span></div><div class="time">Post-cert</div></div>
+    </div>
+
+    <div class="foot">
+      <span>Garage carrier: <b>—</b> · WC carrier: <b>—</b></span>
+      <span class="verse">"…faithfully done." — Prov 16:3</span>
+    </div>
+  </div>
+
+  <!-- ═════ 6. EARLY LEARNING ═════ -->
+  <div class="sheet earlylearning" id="earlylearning">
+    <div class="head">
+      <div class="head-row">
+        <div class="brand earlylearning">
+          <svg><use href="#mark"/></svg>
+          <div class="txt"><h1>Early Learning Academy</h1><span>Licensed Childcare · SC</span></div>
+        </div>
+        <div class="stamp">Compliance Packet · P0<b>Volume 11 · Sheet 6 of 6</b></div>
+      </div>
+      <h2>Early Learning <em>Compliance</em></h2>
+      <div class="sub">Licensed childcare is one of the most heavily regulated small businesses in America. State DSS licensing, staff background checks, and facility inspections all precede any enrollment activity.</div>
+    </div>
+
+    <div class="warn-strip">
+      <b>⚠ Child safety is non-negotiable.</b> No enrollment marketing, no wait-list opens, no facility tours until license, staff background checks, CPR/first-aid, and emergency plan are all confirmed complete and posted.
+    </div>
+
+    <div class="body">
+      <div class="col">
+        <h3>Licensing &amp; Facility</h3>
+        <ul>
+          <li><div><b>Legal Provider Name</b><span>Entity listed on license</span></div></li>
+          <li><div><b>Childcare License</b><span>Current · SC DSS issued</span></div></li>
+          <li><div><b>Provider Number</b><span>DSS-assigned identifier</span></div></li>
+          <li><div><b>Facility Address on License</b><span>Physical address of care</span></div></li>
+          <li><div><b>Licensed Capacity</b><span>Total + per age group</span></div></li>
+          <li><div><b>Age Groups Approved</b><span>Infant · toddler · pre-K · school-age</span></div></li>
+          <li><div><b>Operating Hours Filed</b><span>Days + hours on license</span></div></li>
+          <li><div><b>Fire Marshal / Health Inspection</b><span>Passed · certificate posted</span></div></li>
+          <li><div><b>ABC Quality Status</b><span>Level filed + shared publicly</span></div></li>
+          <li><div><b>Inspection History Clean</b><span>Recent inspection reports on file</span></div></li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h3>Staff, Policies &amp; Family Docs</h3>
+        <ul>
+          <li><div><b>Staff Roster + Ratios</b><span>Meets state ratio + capacity rules</span></div></li>
+          <li><div><b>Staff Qualifications on File</b><span>Education · training hours</span></div></li>
+          <li><div><b>Background Checks (SLED + FBI)</b><span>Every staff · current · repeatable</span></div></li>
+          <li><div><b>CPR / First-Aid Current</b><span>Every staff · certificate on file</span></div></li>
+          <li><div><b>Curriculum Published</b><span>Written · developmentally appropriate</span></div></li>
+          <li><div><b>Tuition Rates Published</b><span>Per age group · discounts documented</span></div></li>
+          <li><div><b>Subsidy / Voucher Status</b><span>ABC Voucher · SC-provider eligible</span></div></li>
+          <li><div><b>Parent Handbook</b><span>Signed acknowledgment at enrollment</span></div></li>
+          <li><div><b>Emergency Plan Posted</b><span>Fire · lockdown · weather · medical</span></div></li>
+          <li><div><b>Medication Policy</b><span>Written · doctor's-order tracking</span></div></li>
+          <li><div><b>Authorized-Pickup Policy</b><span>Photo ID · consent forms</span></div></li>
+          <li><div><b>Incident Policy + Log</b><span>Documented per state rules</span></div></li>
+          <li><div><b>Photo/Video Consent</b><span>Explicit · per-child opt-in</span></div></li>
+          <li><div><b>Privacy Practices</b><span>Written · shared at enrollment</span></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="steps">
+      <h3>Pre-Opening Sequence</h3>
+      <div class="step-row"><div class="n">1</div><div class="info"><b>License Application Filed</b><span>SC DSS licensing packet complete</span></div><div class="time">Varies</div></div>
+      <div class="step-row"><div class="n">2</div><div class="info"><b>Facility Inspections</b><span>Fire · health · zoning · DSS site visit</span></div><div class="time">2-6 wks</div></div>
+      <div class="step-row"><div class="n">3</div><div class="info"><b>Staff Onboarding + Checks</b><span>Background · CPR/first-aid · training</span></div><div class="time">Parallel</div></div>
+      <div class="step-row"><div class="n">4</div><div class="info"><b>Policies Posted + Parent Docs Ready</b><span>Every required policy visible</span></div><div class="time">1 wk</div></div>
+      <div class="step-row"><div class="n">5</div><div class="info"><b>License Issued → Enrollment Opens</b><span>Only then does public marketing begin</span></div><div class="time">Post-license</div></div>
+    </div>
+
+    <div class="foot">
+      <span>DSS License #: <b>—</b> · ABC Level: <b>—</b></span>
+      <span class="verse">"…faithfully done." — Prov 16:3</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

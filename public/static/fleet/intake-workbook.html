@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Intake Workbook — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628;
+    --navy-2:#0F1E36;
+    --navy-3:#152947;
+    --gold:#C9A961;
+    --gold-2:#B08D3F;
+    --gold-3:#E4CB92;
+    --ivory:#F7F3EA;
+    --ivory-2:#EFE8D6;
+    --red:#8B1F1F;
+    --slate:#4A5568;
+    --slate-2:#718096;
+    --line:#E5DFD0;
+    --line-2:#D6CFB8;
+    --white:#FFFFFF;
+    --ok:#2F6B4A;
+    --warn:#B87A1F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);-webkit-font-smoothing:antialiased}
+  body{padding:56px 32px 120px}
+  .page{max-width:1180px;margin:0 auto}
+
+  /* DOC HEADER */
+  .doc-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--navy);padding-bottom:20px;margin-bottom:48px}
+  .doc-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .doc-head .title{font-family:var(--serif);font-size:26px;font-weight:700;margin-top:4px}
+  .doc-head .kv{display:flex;gap:28px;font-family:var(--mono);font-size:11px;color:var(--slate)}
+  .doc-head .kv b{color:var(--navy);display:block;letter-spacing:.14em;font-weight:600;text-transform:uppercase}
+
+  /* COVER */
+  .cover{background:var(--navy);color:var(--ivory);border-radius:2px;padding:72px 64px 56px;position:relative;overflow:hidden;min-height:560px;display:flex;flex-direction:column;justify-content:space-between;margin-bottom:80px}
+  .cover::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 85% 20%, rgba(201,169,97,.2), transparent 40%),
+    radial-gradient(circle at 15% 90%, rgba(201,169,97,.10), transparent 45%);
+    pointer-events:none}
+  .cover .corner{position:absolute;top:24px;right:32px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold);opacity:.7;text-transform:uppercase}
+  .cover .corner-l{position:absolute;top:24px;left:32px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold);opacity:.7;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+  .cover .corner-l svg{width:20px;height:20px}
+  .cover h1{font-family:var(--serif);font-size:80px;line-height:.96;font-weight:800;letter-spacing:-.02em;max-width:900px;position:relative;margin-top:80px}
+  .cover h1 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .cover .lede{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--gold-3);max-width:640px;margin-top:20px;line-height:1.5;position:relative}
+  .cover .toc-preview{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative;padding-top:32px;border-top:1px solid rgba(201,169,97,.35)}
+  .cover .toc-preview .cell{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--gold-3);text-transform:uppercase;line-height:1.7}
+  .cover .toc-preview .cell b{display:block;color:var(--ivory);font-family:var(--serif);font-size:16px;letter-spacing:0;text-transform:none;font-weight:600;margin-top:4px}
+
+  /* NAV */
+  .toc{background:var(--white);border:1px solid var(--line);padding:36px 40px;margin-bottom:64px;border-radius:2px;box-shadow:0 20px 40px -30px rgba(10,22,40,.15)}
+  .toc h3{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;margin-bottom:20px;font-weight:600}
+  .toc-list{columns:2;column-gap:56px}
+  .toc-list a{display:flex;justify-content:space-between;padding:9px 0;font-family:var(--serif);font-size:15px;color:var(--navy);text-decoration:none;border-bottom:1px dashed var(--line);font-weight:600;break-inside:avoid}
+  .toc-list a:hover{color:var(--red)}
+  .toc-list a .num{font-family:var(--mono);font-size:11px;color:var(--gold-2);font-weight:600;letter-spacing:.1em}
+  .toc-list a .dots{flex:1;border-bottom:1px dotted var(--line-2);margin:0 12px 4px;align-self:flex-end;height:1px}
+
+  /* PRINCIPLE BAR */
+  .principle{background:var(--navy);color:var(--ivory);padding:36px 44px;border-radius:2px;margin-bottom:72px;position:relative;overflow:hidden}
+  .principle::before{content:"";position:absolute;top:0;left:0;bottom:0;width:6px;background:var(--gold)}
+  .principle .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;font-weight:600}
+  .principle h3{font-family:var(--serif);font-size:36px;font-weight:800;letter-spacing:-.01em;line-height:1.05}
+  .principle h3 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .principle .cols{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:28px}
+  .principle .col h5{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(201,169,97,.35);color:var(--gold-3);font-weight:600}
+  .principle .col.can h5::before{content:"✓ ";color:var(--gold)}
+  .principle .col.cant h5::before{content:"× ";color:#F5A5A5}
+  .principle ul{list-style:none;font-size:14px;line-height:2;color:var(--ivory);opacity:.92}
+  .principle .col.cant ul{color:#F5D5D5}
+
+  /* SECTION */
+  section{margin-bottom:80px;scroll-margin-top:32px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:32px;border-bottom:1px solid var(--navy);padding-bottom:16px}
+  .sec-num{font-family:var(--mono);font-size:14px;letter-spacing:.16em;color:var(--gold-2);font-weight:600}
+  .sec-title{font-family:var(--serif);font-size:38px;font-weight:700;letter-spacing:-.01em;line-height:1.05}
+  .sec-title em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-sub{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);text-align:right}
+  .sec-intro{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--slate);max-width:820px;margin-bottom:32px;line-height:1.5}
+
+  /* SUBSECTION */
+  .sub{background:var(--white);border:1px solid var(--line);border-radius:2px;padding:32px 36px;margin-bottom:20px;position:relative}
+  .sub .kicker{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .sub .kicker h4{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:-.005em}
+  .sub .kicker .tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+
+  /* FIELDS */
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+  .fields.three{grid-template-columns:1fr 1fr 1fr}
+  .fields.one{grid-template-columns:1fr}
+  .field{display:flex;flex-direction:column;gap:4px;padding:10px 0;border-bottom:1px dashed var(--line-2)}
+  .field label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:500}
+  .field .line{height:20px;border-bottom:1px solid var(--navy);opacity:.4}
+  .field.filled .line{border-bottom-color:var(--gold-2);opacity:1}
+  .field .value{font-family:var(--serif);font-size:15px;color:var(--navy);padding-top:2px;font-style:italic;opacity:.6}
+
+  /* CHECKLIST */
+  .checklist{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px}
+  .checklist.three{grid-template-columns:1fr 1fr 1fr}
+  .chk{display:flex;gap:12px;align-items:flex-start;font-size:13.5px;line-height:1.5;color:var(--slate);padding:6px 0}
+  .chk::before{content:"";width:14px;height:14px;flex:none;border:1.5px solid var(--navy);border-radius:1px;margin-top:2px}
+  .chk.check::before{content:"✓";background:var(--navy);color:var(--gold);font-family:var(--mono);font-weight:700;font-size:10px;text-align:center;line-height:11px;border-color:var(--navy)}
+  .chk b{color:var(--navy);font-weight:600}
+
+  /* CALLOUT / WARNING */
+  .callout{background:var(--ivory);border-left:4px solid var(--gold);padding:20px 24px;margin:24px 0;font-family:var(--serif);font-style:italic;font-size:15px;color:var(--slate);line-height:1.6;border-radius:0 2px 2px 0}
+  .callout.warn{border-left-color:var(--red);background:#FBEEEE;color:#5B1414}
+  .callout.warn::before{content:"⚠ ";font-family:var(--sans);font-style:normal;font-weight:700;color:var(--red);letter-spacing:.1em}
+  .callout b{color:var(--navy);font-style:normal;font-weight:600}
+  .callout.warn b{color:#5B1414}
+
+  /* TABLE */
+  table{width:100%;border-collapse:collapse;background:var(--white);border:1px solid var(--line);border-radius:2px;overflow:hidden;margin:16px 0}
+  th{background:var(--navy);color:var(--gold-3);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:14px 20px;text-align:left;font-weight:600}
+  td{padding:14px 20px;border-top:1px solid var(--line);font-size:14px;color:var(--navy);font-family:var(--sans)}
+  td.mono{font-family:var(--mono);font-size:12px;color:var(--slate)}
+  td .band{display:inline-block;padding:3px 10px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;border-radius:2px}
+  .band.priority{background:var(--navy);color:var(--gold-3)}
+  .band.strong{background:var(--gold);color:var(--navy)}
+  .band.gap{background:var(--ivory-2);color:var(--navy);border:1px solid var(--gold-2)}
+  .band.monitor{background:var(--line);color:var(--slate)}
+  .band.nobid{background:#FBEEEE;color:var(--red);border:1px solid var(--red)}
+  .band.reject{background:var(--red);color:var(--ivory)}
+  tr:nth-child(even) td{background:#FBF9F3}
+
+  /* DUAL COL */
+  .dual{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .dual .card{background:var(--white);border:1px solid var(--line);padding:24px 28px;border-radius:2px}
+  .dual .card h5{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+  .dual .card h6{font-family:var(--serif);font-size:18px;margin-bottom:10px;font-weight:700}
+  .dual .card ul{list-style:none;font-size:13.5px;line-height:1.85;color:var(--slate)}
+  .dual .card ul li::before{content:"→ ";color:var(--gold-2);font-family:var(--mono);font-weight:700}
+
+  /* WORKFLOW */
+  .flow{background:var(--white);border:1px solid var(--line);padding:32px;border-radius:2px;font-family:var(--mono);font-size:13px;line-height:1.9;color:var(--navy)}
+  .flow-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .flow-step{background:var(--ivory);border-left:3px solid var(--gold);padding:14px 16px;border-radius:0 2px 2px 0;font-family:var(--sans);font-size:13px;font-weight:500;color:var(--navy);position:relative}
+  .flow-step .n{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--gold-2);text-transform:uppercase;font-weight:600;display:block;margin-bottom:4px}
+  .flow-step.gate{background:var(--navy);color:var(--ivory);border-left-color:var(--red)}
+  .flow-step.gate .n{color:var(--gold-3)}
+  .flow-step.output{background:var(--gold);color:var(--navy);border-left-color:var(--navy)}
+  .flow-step.output .n{color:var(--navy-2)}
+
+  /* SCORING */
+  .score-row{display:flex;align-items:center;gap:20px;padding:14px 20px;background:var(--white);border:1px solid var(--line);border-radius:2px;margin-bottom:8px}
+  .score-row .factor{font-family:var(--serif);font-size:16px;font-weight:600;flex:0 0 240px}
+  .score-row .bar{flex:1;height:10px;background:var(--ivory-2);border-radius:1px;overflow:hidden;position:relative}
+  .score-row .bar span{display:block;height:100%;background:linear-gradient(90deg, var(--navy), var(--gold))}
+  .score-row .weight{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--navy);flex:0 0 60px;text-align:right}
+
+  /* GATES */
+  .gates{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  .gate-item{background:var(--white);border:1px solid var(--line);border-left:3px solid var(--red);padding:14px 18px;font-size:13px;color:var(--navy);border-radius:0 2px 2px 0}
+  .gate-item b{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--red);text-transform:uppercase;font-weight:600;margin-bottom:4px}
+
+  /* STARTER FORM */
+  .form-wrap{background:var(--white);border:2px solid var(--navy);border-radius:2px;padding:44px 48px;position:relative}
+  .form-wrap::before{content:"";position:absolute;top:0;left:0;right:0;height:8px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+  .form-wrap .stamp{position:absolute;top:20px;right:32px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+  .form-wrap h3{font-family:var(--serif);font-size:32px;font-weight:800;margin-bottom:6px;letter-spacing:-.01em}
+  .form-wrap .sub-txt{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--slate);margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+  .form-block{margin-bottom:28px}
+  .form-block h5{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;margin-bottom:16px;font-weight:600;padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+  /* LOOKING FOR */
+  .lookfor{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .lookfor label{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--navy);padding:8px 12px;border:1px solid var(--line);border-radius:2px;font-family:var(--sans)}
+  .lookfor label::before{content:"";width:14px;height:14px;border:1.5px solid var(--navy);border-radius:1px;flex:none}
+
+  /* 12 LAUNCH */
+  .launch{background:var(--navy);color:var(--ivory);padding:44px 48px;border-radius:2px;position:relative;overflow:hidden}
+  .launch::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 90% 10%, rgba(201,169,97,.2),transparent 55%)}
+  .launch .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:600;position:relative}
+  .launch h3{font-family:var(--serif);font-size:44px;font-weight:800;line-height:1.02;letter-spacing:-.01em;margin:8px 0 24px;position:relative;max-width:720px}
+  .launch h3 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .launch .items{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;position:relative}
+  .launch .item{display:flex;gap:16px;align-items:flex-start}
+  .launch .item .n{font-family:var(--serif);font-size:32px;font-weight:800;color:var(--gold);line-height:1;flex:none;width:44px}
+  .launch .item .txt{font-size:14px;color:var(--ivory);line-height:1.4;padding-top:6px}
+  .launch .item .txt b{display:block;color:var(--gold-3);font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;margin-top:4px}
+  .launch .fine{margin-top:32px;padding-top:20px;border-top:1px solid rgba(201,169,97,.3);font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--gold-3);position:relative;line-height:1.7}
+  .launch .fine b{color:var(--ivory);font-weight:600}
+
+  /* FOOTER */
+  .end{border-top:1px solid var(--navy);margin-top:56px;padding-top:32px;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase}
+  .end .verse{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--navy);text-transform:none;letter-spacing:0;margin-bottom:12px}
+
+  /* PILL */
+  .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .pill{display:inline-block;padding:5px 12px;background:var(--ivory);border:1px solid var(--line-2);font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--navy);text-transform:uppercase;border-radius:20px;font-weight:500}
+  .pill.gold{background:var(--gold);border-color:var(--gold-2);color:var(--navy)}
+  .pill.red{background:#FBEEEE;border-color:var(--red);color:var(--red)}
+
+  /* SA/GEO */
+  .sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .sc-card{background:var(--white);border:1px solid var(--line);padding:24px 28px;border-radius:2px}
+  .sc-card h5{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin-bottom:12px}
+  .sc-card ul{list-style:none;font-size:14px;line-height:1.85;color:var(--slate)}
+  .sc-card ul li{padding:4px 0;border-bottom:1px dashed var(--line);display:flex;justify-content:space-between}
+  .sc-card ul li:last-child{border:0}
+  .sc-card ul li b{color:var(--navy);font-weight:600}
+
+  @media (max-width:900px){
+    .cover h1{font-size:44px}
+    .fields,.checklist,.dual,.sc-grid,.principle .cols{grid-template-columns:1fr}
+    .toc-list{columns:1}
+    .flow-grid{grid-template-columns:1fr 1fr}
+    .lookfor,.launch .items{grid-template-columns:1fr}
+    .gates{grid-template-columns:1fr}
+    .cover .toc-preview{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- Logo symbol -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="tcp-mark" viewBox="0 0 100 100">
+      <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+      <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="var(--gold, #C9A961)" stroke-width="1.5" opacity=".55"/>
+      <rect x="46" y="26" width="8" height="46" fill="var(--gold, #C9A961)"/>
+      <rect x="32" y="36" width="36" height="6" fill="var(--gold, #C9A961)"/>
+      <rect x="26" y="76" width="48" height="1.5" fill="var(--gold, #C9A961)"/>
+      <rect x="32" y="80" width="36" height="1" fill="var(--gold, #C9A961)" opacity=".6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="page">
+
+<!-- DOC HEADER -->
+<div class="doc-head">
+  <div>
+    <div class="meta">Business Data Room · Volume 02</div>
+    <div class="title">Client Intake Workbook &amp; AI Opportunity Engine</div>
+  </div>
+  <div class="kv">
+    <div><b>Practice</b>The Contracting Preacher</div>
+    <div><b>Principal</b>Dr. McKnight</div>
+    <div><b>Issued</b>Jul 2026</div>
+    <div><b>Version</b>1.0</div>
+  </div>
+</div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="corner-l">
+    <svg style="color:var(--gold)"><use href="#tcp-mark"/></svg>
+    TCP · Federal Contracting · Faith · Expertise
+  </div>
+  <div class="corner">Vol. 02 / Intake</div>
+
+  <div>
+    <h1>Everything we need,<br><em>before we bid.</em></h1>
+    <div class="lede">A structured intake, a verified data room, an AI opportunity engine — and clear, non-negotiable rules for what the AI can and cannot do on your behalf.</div>
+  </div>
+
+  <div class="toc-preview">
+    <div class="cell">§ 01–07<b>Identity, Ownership &amp; Capability</b></div>
+    <div class="cell">§ 08–13<b>Grants, Contracts, Capital, Compliance</b></div>
+    <div class="cell">§ 14–17<b>Data Room, Scoring, Workflow, Output</b></div>
+    <div class="cell">§ 18–20<b>SC, Starter Form, Launch List</b></div>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h3>Table of Contents · 20 Sections</h3>
+  <div class="toc-list">
+    <a href="#s0"><span class="num">00</span><span>Non-Negotiable Truth</span><span class="dots"></span><span class="num">03</span></a>
+    <a href="#s1"><span class="num">01</span><span>Minimum Information to Start</span><span class="dots"></span><span class="num">04</span></a>
+    <a href="#s2"><span class="num">02</span><span>Ownership &amp; Certifications</span><span class="dots"></span><span class="num">06</span></a>
+    <a href="#s3"><span class="num">03</span><span>Business Capabilities</span><span class="dots"></span><span class="num">09</span></a>
+    <a href="#s4"><span class="num">04</span><span>Problem, Solution, Positioning</span><span class="dots"></span><span class="num">11</span></a>
+    <a href="#s5"><span class="num">05</span><span>Customer &amp; Market Evidence</span><span class="dots"></span><span class="num">13</span></a>
+    <a href="#s6"><span class="num">06</span><span>Past Performance</span><span class="dots"></span><span class="num">15</span></a>
+    <a href="#s7"><span class="num">07</span><span>Financial Information</span><span class="dots"></span><span class="num">17</span></a>
+    <a href="#s8"><span class="num">08</span><span>Grant Readiness</span><span class="dots"></span><span class="num">19</span></a>
+    <a href="#s9"><span class="num">09</span><span>Contract Readiness</span><span class="dots"></span><span class="num">21</span></a>
+    <a href="#s10"><span class="num">10</span><span>VC &amp; Angel Readiness</span><span class="dots"></span><span class="num">23</span></a>
+    <a href="#s11"><span class="num">11</span><span>Sponsorship Readiness</span><span class="dots"></span><span class="num">25</span></a>
+    <a href="#s12"><span class="num">12</span><span>Loans &amp; Financing</span><span class="dots"></span><span class="num">27</span></a>
+    <a href="#s13"><span class="num">13</span><span>Legal, Compliance &amp; Risk</span><span class="dots"></span><span class="num">29</span></a>
+    <a href="#s14"><span class="num">14</span><span>Master Business Data Room</span><span class="dots"></span><span class="num">31</span></a>
+    <a href="#s15"><span class="num">15</span><span>AI Opportunity Scoring Engine</span><span class="dots"></span><span class="num">33</span></a>
+    <a href="#s16"><span class="num">16</span><span>End-to-End AI Workflow</span><span class="dots"></span><span class="num">35</span></a>
+    <a href="#s17"><span class="num">17</span><span>What the AI Generates</span><span class="dots"></span><span class="num">37</span></a>
+    <a href="#s18"><span class="num">18</span><span>South Carolina Profile</span><span class="dots"></span><span class="num">39</span></a>
+    <a href="#s19"><span class="num">19</span><span>Copy-and-Complete Starter</span><span class="dots"></span><span class="num">41</span></a>
+    <a href="#s20"><span class="num">20</span><span>Immediate Launch Requirements</span><span class="dots"></span><span class="num">43</span></a>
+  </div>
+</div>
+
+<!-- ═══════ SECTION 00 · PRINCIPLE ═══════ -->
+<section id="s0">
+  <div class="sec-head">
+    <span class="sec-num">§ 00</span>
+    <h2 class="sec-title">Non-Negotiable <em>Truth</em></h2>
+    <span class="sec-sub">The rules of the road<br>before we start</span>
+  </div>
+
+  <div class="principle">
+    <div class="lbl">Guiding Principle</div>
+    <h3>The AI works <em>with you.</em> It doesn't sign <em>for you.</em></h3>
+
+    <div class="cols">
+      <div class="col can">
+        <h5>AI CAN</h5>
+        <ul>
+          <li>Search opportunities across federal, state &amp; local</li>
+          <li>Check eligibility against certifications &amp; capacity</li>
+          <li>Research past winners and incumbents</li>
+          <li>Score fit and recommend bid / no-bid</li>
+          <li>Draft narratives, compliance matrices &amp; forms</li>
+          <li>Populate non-sensitive application fields</li>
+          <li>Build proposal packages &amp; check completeness</li>
+          <li>Track deadlines &amp; draft follow-ups</li>
+        </ul>
+      </div>
+      <div class="col cant">
+        <h5>AI MUST NOT</h5>
+        <ul>
+          <li>Invent revenue, customers, certifications or past performance</li>
+          <li>Falsify ownership or demographic status</li>
+          <li>Sign certifications on behalf of the owner</li>
+          <li>Submit binding applications without owner / AOR approval</li>
+          <li>Guarantee an award</li>
+          <li>Handle passwords, MFA codes or bank credentials in chat</li>
+          <li>Relabel commercial work as federal past performance</li>
+          <li>Bypass the human gate on Grants.gov submissions</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <b>Grants.gov reality check:</b> Final submissions require an Authorized Organizational Representative. Every legally binding certification stays behind an owner / AOR approval gate — no exceptions, no shortcuts.
+  </div>
+</section>
+
+<!-- ═══════ SECTION 01 · IDENTITY ═══════ -->
+<section id="s1">
+  <div class="sec-head">
+    <span class="sec-num">§ 01</span>
+    <h2 class="sec-title">Minimum Information to Start</h2>
+    <span class="sec-sub">Business identity ·<br>Registrations · Contacts</span>
+  </div>
+  <p class="sec-intro">These essential fields let the system match opportunities accurately. Nothing bloated. Nothing missing.</p>
+
+  <!-- Business identity -->
+  <div class="sub">
+    <div class="kicker"><h4>1.1 · Business Identity</h4><span class="tag">Required · 18 fields</span></div>
+    <div class="fields">
+      <div class="field"><label>Exact Legal Business Name</label><div class="line"></div></div>
+      <div class="field"><label>DBA / Brand Name</label><div class="line"></div></div>
+      <div class="field"><label>Entity Type (LLC · Corp · Nonprofit · Sole Prop)</label><div class="line"></div></div>
+      <div class="field"><label>State of Formation</label><div class="line"></div></div>
+      <div class="field"><label>Formation Date</label><div class="line"></div></div>
+      <div class="field"><label>Fiscal-Year End</label><div class="line"></div></div>
+      <div class="field"><label>Principal Business Address</label><div class="line"></div></div>
+      <div class="field"><label>Mailing Address (if different)</label><div class="line"></div></div>
+      <div class="field"><label>Business Telephone</label><div class="line"></div></div>
+      <div class="field"><label>General Business Email</label><div class="line"></div></div>
+      <div class="field"><label>Website</label><div class="line"></div></div>
+      <div class="field"><label>Social Profiles</label><div class="line"></div></div>
+      <div class="field"><label>Counties Served</label><div class="line"></div></div>
+      <div class="field"><label>States Served</label><div class="line"></div></div>
+      <div class="field"><label>Delivery Capability (Local · National · Remote)</label><div class="line"></div></div>
+      <div class="field"><label>For-Profit or Nonprofit</label><div class="line"></div></div>
+      <div class="field"><label>Current Operating Status</label><div class="line"></div></div>
+      <div class="field"><label>Areas Company Can Perform Work</label><div class="line"></div></div>
+    </div>
+  </div>
+
+  <!-- Government identifiers -->
+  <div class="sub">
+    <div class="kicker"><h4>1.2 · Government Identifiers</h4><span class="tag">Sensitive · Encrypted vault</span></div>
+    <div class="fields">
+      <div class="field"><label>EIN (stored securely)</label><div class="line"></div></div>
+      <div class="field"><label>Unique Entity ID (UEI)</label><div class="line"></div></div>
+      <div class="field"><label>CAGE Code</label><div class="line"></div></div>
+      <div class="field"><label>SAM.gov Expiration Date</label><div class="line"></div></div>
+      <div class="field"><label>SC State Vendor Number</label><div class="line"></div></div>
+      <div class="field"><label>SCEIS Registration Status</label><div class="line"></div></div>
+      <div class="field"><label>Grants.gov Organization Profile</label><div class="line"></div></div>
+      <div class="field"><label>Grants.gov EBiz POC</label><div class="line"></div></div>
+      <div class="field"><label>Grants.gov Authorized Representative (AOR)</label><div class="line"></div></div>
+      <div class="field"><label>SBIR Company Registry ID (if applicable)</label><div class="line"></div></div>
+      <div class="field"><label>NIH eRA Commons Credentials (if applicable)</label><div class="line"></div></div>
+      <div class="field"><label>State / Local Vendor IDs</label><div class="line"></div></div>
+    </div>
+    <div class="callout warn"><b>Never collected in intake:</b> passwords, MFA codes, banking credentials, full SSN. Those live in a restricted encrypted vault with owner approval only.</div>
+  </div>
+
+  <!-- Contact authority -->
+  <div class="sub">
+    <div class="kicker"><h4>1.3 · Contact Authority Matrix</h4><span class="tag">One person per role</span></div>
+    <table>
+      <thead><tr><th>Role</th><th>Name</th><th>Phone / Email</th><th>Signing Authority</th></tr></thead>
+      <tbody>
+        <tr><td>Legal Owner</td><td class="mono">—</td><td class="mono">—</td><td>✓</td></tr>
+        <tr><td>Authorized Signer</td><td class="mono">—</td><td class="mono">—</td><td>✓</td></tr>
+        <tr><td>Proposal Contact</td><td class="mono">—</td><td class="mono">—</td><td>—</td></tr>
+        <tr><td>Contract Administrator</td><td class="mono">—</td><td class="mono">—</td><td>Partial</td></tr>
+        <tr><td>Financial Contact</td><td class="mono">—</td><td class="mono">—</td><td>Financials only</td></tr>
+        <tr><td>Grants.gov AOR</td><td class="mono">—</td><td class="mono">—</td><td>✓ (grants)</td></tr>
+        <tr><td>SAM.gov Entity Admin</td><td class="mono">—</td><td class="mono">—</td><td>Registration only</td></tr>
+        <tr><td>Technical Lead</td><td class="mono">—</td><td class="mono">—</td><td>—</td></tr>
+        <tr><td>Sponsorship / Investor Relations</td><td class="mono">—</td><td class="mono">—</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 02 · OWNERSHIP ═══════ -->
+<section id="s2">
+  <div class="sec-head">
+    <span class="sec-num">§ 02</span>
+    <h2 class="sec-title">Ownership &amp; Certifications</h2>
+    <span class="sec-sub">Every owner · Every cert ·<br>Every geographic edge</span>
+  </div>
+  <p class="sec-intro">Ownership unlocks set-asides. Certifications unlock lanes. Geography unlocks bonuses. Get all three exact.</p>
+
+  <div class="sub">
+    <div class="kicker"><h4>2.1 · Owner Profile</h4><span class="tag">Per owner · Encrypted</span></div>
+    <div class="fields three">
+      <div class="field"><label>Full Legal Name</label><div class="line"></div></div>
+      <div class="field"><label>Ownership %</label><div class="line"></div></div>
+      <div class="field"><label>Voting Control %</label><div class="line"></div></div>
+      <div class="field"><label>Citizenship / Residency</label><div class="line"></div></div>
+      <div class="field"><label>Veteran Status</label><div class="line"></div></div>
+      <div class="field"><label>Service-Disabled Veteran</label><div class="line"></div></div>
+      <div class="field"><label>Gender</label><div class="line"></div></div>
+      <div class="field"><label>Socially / Economically Disadvantaged</label><div class="line"></div></div>
+      <div class="field"><label>Disability Status</label><div class="line"></div></div>
+      <div class="field"><label>Tribal Affiliation</label><div class="line"></div></div>
+      <div class="field"><label>Primary Residence</label><div class="line"></div></div>
+      <div class="field"><label>Day-to-Day Role</label><div class="line"></div></div>
+      <div class="field"><label>Resume / Bio on File</label><div class="line"></div></div>
+      <div class="field"><label>Other Businesses Owned</label><div class="line"></div></div>
+      <div class="field"><label>Ownership Changes (Last 5 Yrs)</label><div class="line"></div></div>
+    </div>
+    <div class="callout"><b>Rule:</b> Demographic data is stored encrypted, accessed only when an application specifically requires it. It powers eligibility — nothing else.</div>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>2.2 · Federal Certifications</h5>
+      <h6>Track status, dates &amp; evidence</h6>
+      <div class="checklist" style="grid-template-columns:1fr">
+        <div class="chk">Small Business (SB)</div>
+        <div class="chk">Small Disadvantaged Business (SDB)</div>
+        <div class="chk">8(a) Business Development</div>
+        <div class="chk">HUBZone</div>
+        <div class="chk">Women-Owned Small Business (WOSB)</div>
+        <div class="chk">Economically Disadvantaged WOSB (EDWOSB)</div>
+        <div class="chk">Veteran-Owned Small Business (VOSB)</div>
+        <div class="chk">Service-Disabled Veteran-Owned (SDVOSB)</div>
+        <div class="chk">AbilityOne (where applicable)</div>
+      </div>
+    </div>
+    <div class="card">
+      <h5>2.3 · South Carolina Certifications</h5>
+      <h6>State + local advantages</h6>
+      <div class="checklist" style="grid-template-columns:1fr">
+        <div class="chk">SC Minority Business Enterprise (MBE)</div>
+        <div class="chk">SCDOT DBE (Disadvantaged Business)</div>
+        <div class="chk">SCDOT SBE (Small Business)</div>
+        <div class="chk">SCDOT Contractor Prequalification</div>
+        <div class="chk">SC Construction Licenses</div>
+        <div class="chk">Residential Builder Licenses</div>
+        <div class="chk">Professional Licenses</div>
+        <div class="chk">Local Minority / Supplier-Diversity Certs</div>
+        <div class="chk">Airport ACDBE (where applicable)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:20px">
+    <div class="kicker"><h4>2.4 · Geographic Eligibility Signals</h4><span class="tag">Unlock hidden lanes</span></div>
+    <div class="pills">
+      <span class="pill">Principal Office Census Tract</span>
+      <span class="pill">Employee Work Locations</span>
+      <span class="pill gold">HUBZone Status</span>
+      <span class="pill">Rural Status</span>
+      <span class="pill gold">Opportunity Zone</span>
+      <span class="pill">Low-to-Moderate-Income Area</span>
+      <span class="pill">Historically Underserved Community</span>
+      <span class="pill">Qualified Census Tract</span>
+      <span class="pill red">Disaster-Affected Area</span>
+      <span class="pill">County Economic-Distress Designation</span>
+    </div>
+    <div class="callout">Geographic eligibility can unlock contracts, grants, tax incentives, and impact-investment programs the applicant didn't know existed.</div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 03 · CAPABILITIES ═══════ -->
+<section id="s3">
+  <div class="sec-head">
+    <span class="sec-num">§ 03</span>
+    <h2 class="sec-title">Business Capabilities</h2>
+    <span class="sec-sub">What you actually deliver<br>· in precise detail</span>
+  </div>
+
+  <div class="sub">
+    <div class="kicker"><h4>3.1 · Core Offering — one profile per product / service</h4><span class="tag">Per line item</span></div>
+    <div class="fields three">
+      <div class="field"><label>Name of Offering</label><div class="line"></div></div>
+      <div class="field"><label>Plain-English Description</label><div class="line"></div></div>
+      <div class="field"><label>Customer Problem Solved</label><div class="line"></div></div>
+      <div class="field"><label>Deliverables</label><div class="line"></div></div>
+      <div class="field"><label>Delivery Method</label><div class="line"></div></div>
+      <div class="field"><label>Typical Timeline</label><div class="line"></div></div>
+      <div class="field"><label>Current Price</label><div class="line"></div></div>
+      <div class="field"><label>Unit Cost</label><div class="line"></div></div>
+      <div class="field"><label>Gross Margin</label><div class="line"></div></div>
+      <div class="field"><label>Geographic Availability</label><div class="line"></div></div>
+      <div class="field"><label>Capacity / Month</label><div class="line"></div></div>
+      <div class="field"><label>Maximum Contract Size</label><div class="line"></div></div>
+      <div class="field"><label>Minimum Viable Engagement</label><div class="line"></div></div>
+      <div class="field"><label>Required Licenses</label><div class="line"></div></div>
+      <div class="field"><label>Required Insurance</label><div class="line"></div></div>
+      <div class="field"><label>Differentiators</label><div class="line"></div></div>
+      <div class="field"><label>Comparable Past Projects</label><div class="line"></div></div>
+      <div class="field"><label>Certifications Relevant</label><div class="line"></div></div>
+    </div>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>3.2 · Government Classification</h5>
+      <div class="checklist" style="grid-template-columns:1fr">
+        <div class="chk"><b>Primary NAICS</b> — six-digit code</div>
+        <div class="chk"><b>Secondary NAICS</b> — up to 5 more</div>
+        <div class="chk"><b>PSC / FSC</b> Product/Service Codes</div>
+        <div class="chk"><b>NIGP</b> commodity codes</div>
+        <div class="chk"><b>UNSPSC</b> codes</div>
+        <div class="chk"><b>SIC</b> when requested</div>
+        <div class="chk">Contracting-officer search keywords</div>
+        <div class="chk">Set-aside eligibility by NAICS</div>
+        <div class="chk">Applicable size standards</div>
+      </div>
+    </div>
+    <div class="card">
+      <h5>3.3 · Contracting Capacity</h5>
+      <div class="checklist" style="grid-template-columns:1fr">
+        <div class="chk">Prime contractor eligible</div>
+        <div class="chk">Subcontractor ready</div>
+        <div class="chk">Bonding capacity documented</div>
+        <div class="chk">Line of credit in place</div>
+        <div class="chk">Mobilization capacity</div>
+        <div class="chk">Employees / contractors count</div>
+        <div class="chk">Equipment &amp; vehicles owned</div>
+        <div class="chk">Facilities &amp; warehouse capacity</div>
+        <div class="chk">Security clearances</div>
+        <div class="chk">Quality-control system</div>
+        <div class="chk">Cybersecurity level (CMMC?)</div>
+        <div class="chk">Emergency-response availability</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 04 · PROBLEM / SOLUTION ═══════ -->
+<section id="s4">
+  <div class="sec-head">
+    <span class="sec-num">§ 04</span>
+    <h2 class="sec-title">Problem, Solution &amp; Positioning</h2>
+    <span class="sec-sub">One approved truth set<br>every narrative flows from</span>
+  </div>
+  <p class="sec-intro">Every proposal, pitch, grant narrative, and marketing asset draws from these three canonical answers. Approve them once — the AI reuses them everywhere.</p>
+
+  <div class="dual">
+    <div class="card">
+      <h5>4.1 · Problem Statement</h5>
+      <ul>
+        <li>What problem does the business solve?</li>
+        <li>Who experiences the problem?</li>
+        <li>How large is the problem?</li>
+        <li>What does the problem cost?</li>
+        <li>Why are current solutions inadequate?</li>
+        <li>Why must the problem be solved now?</li>
+        <li>What evidence proves the problem exists?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>4.2 · Solution Statement</h5>
+      <ul>
+        <li>What exactly does the company provide?</li>
+        <li>How does it work?</li>
+        <li>What is technically or operationally different?</li>
+        <li>Why is it faster, safer or more effective?</li>
+        <li>What measurable result does it produce?</li>
+        <li>What IP supports it?</li>
+        <li>What prevents competitors from copying it?</li>
+        <li>What evidence proves it works?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:20px">
+    <div class="kicker"><h4>4.3 · Competitive Analysis — 5 competitors minimum</h4><span class="tag">Per competitor</span></div>
+    <table>
+      <thead><tr><th>Competitor</th><th>Website</th><th>Product</th><th>Pricing</th><th>Segment</th><th>Threat</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td><span class="band monitor">TBD</span></td></tr>
+        <tr><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td><span class="band monitor">TBD</span></td></tr>
+        <tr><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td><span class="band monitor">TBD</span></td></tr>
+        <tr><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td><span class="band monitor">TBD</span></td></tr>
+        <tr><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td><span class="band monitor">TBD</span></td></tr>
+      </tbody>
+    </table>
+    <div class="pills"><span class="pill">Contract History</span><span class="pill">Funding History</span><span class="pill">Strengths</span><span class="pill">Weaknesses</span><span class="pill">Differentiation</span><span class="pill">Replacement Risk</span><span class="pill gold">Partnering Opportunity</span></div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 05 · CUSTOMER & MARKET ═══════ -->
+<section id="s5">
+  <div class="sec-head">
+    <span class="sec-num">§ 05</span>
+    <h2 class="sec-title">Customer &amp; Market Evidence</h2>
+    <span class="sec-sub">Who buys · How much ·<br>What proves it</span>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>5.1 · Target Customers</h5>
+      <ul>
+        <li>Federal / State / County / Municipal Agencies</li>
+        <li>School Systems &amp; Universities</li>
+        <li>Healthcare Systems</li>
+        <li>Enterprise Customers</li>
+        <li>Small Businesses &amp; Consumers</li>
+        <li>Nonprofits</li>
+        <li>Prime Contractors</li>
+        <li>Target Sponsors &amp; Investors</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>5.2 · Market Evidence Metrics</h5>
+      <ul>
+        <li>TAM · SAM · SOM</li>
+        <li>Customer count · Active / Paying</li>
+        <li>Pipeline · Conversion · Retention · Churn</li>
+        <li>Avg contract value · CAC · LTV</li>
+        <li>MRR · ARR · YoY growth</li>
+        <li>LOIs · Preorders · Pilots · Partnerships</li>
+        <li>Testimonials &amp; Customer References</li>
+        <li>Waitlist depth</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout"><b>VC lens:</b> Investors evaluate team, validation, progress, and market potential — not just the idea. These metrics are what makes an intake investable.</div>
+</section>
+
+<!-- ═══════ SECTION 06 · PAST PERFORMANCE ═══════ -->
+<section id="s6">
+  <div class="sec-head">
+    <span class="sec-num">§ 06</span>
+    <h2 class="sec-title">Past Performance</h2>
+    <span class="sec-sub">The single strongest<br>federal asset you have</span>
+  </div>
+
+  <div class="sub">
+    <div class="kicker"><h4>6.1 · Per Engagement Record</h4><span class="tag">Repeat for each</span></div>
+    <div class="fields three">
+      <div class="field"><label>Customer Name</label><div class="line"></div></div>
+      <div class="field"><label>Government or Commercial</label><div class="line"></div></div>
+      <div class="field"><label>Contract / PO Number</label><div class="line"></div></div>
+      <div class="field"><label>Prime or Subcontract</label><div class="line"></div></div>
+      <div class="field"><label>Start / End Dates</label><div class="line"></div></div>
+      <div class="field"><label>Contract Value</label><div class="line"></div></div>
+      <div class="field"><label>Amount Received</label><div class="line"></div></div>
+      <div class="field"><label>NAICS / PSC Codes</label><div class="line"></div></div>
+      <div class="field"><label>Performance Location</label><div class="line"></div></div>
+      <div class="field"><label>Project Manager</label><div class="line"></div></div>
+      <div class="field"><label>Customer Reference (Name)</label><div class="line"></div></div>
+      <div class="field"><label>Reference Phone / Email</label><div class="line"></div></div>
+      <div class="field"><label>Scope of Work</label><div class="line"></div></div>
+      <div class="field"><label>Deliverables</label><div class="line"></div></div>
+      <div class="field"><label>Challenges Encountered</label><div class="line"></div></div>
+      <div class="field"><label>Corrective Actions</label><div class="line"></div></div>
+      <div class="field"><label>Results / Quantified Outcomes</label><div class="line"></div></div>
+      <div class="field"><label>On-Time · On-Budget</label><div class="line"></div></div>
+      <div class="field"><label>CPARS Rating (if applicable)</label><div class="line"></div></div>
+      <div class="field"><label>Permission to Publish</label><div class="line"></div></div>
+    </div>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>6.2 · Acceptable Evidence</h5>
+      <ul>
+        <li>Executed contracts / POs</li>
+        <li>Paid invoices &amp; Award letters</li>
+        <li>Notices to proceed</li>
+        <li>Client acceptance letters</li>
+        <li>CPARS reports &amp; Performance evaluations</li>
+        <li>Reference letters</li>
+        <li>Case studies with before/after data</li>
+        <li>Analytics screenshots</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>6.3 · When Federal PP is Thin</h5>
+      <p style="font-size:14px;color:var(--slate);line-height:1.7;margin-bottom:10px">Translate comparable commercial experience <b style="color:var(--navy)">honestly</b>.</p>
+      <ul>
+        <li>Match scope, size, or complexity — say so</li>
+        <li>Match customer type or industry — say so</li>
+        <li>Never relabel commercial work as federal</li>
+        <li>Cite the parallel, not the equivalence</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 07 · FINANCIAL ═══════ -->
+<section id="s7">
+  <div class="sec-head">
+    <span class="sec-num">§ 07</span>
+    <h2 class="sec-title">Financial Information</h2>
+    <span class="sec-sub">History · Forecast · Ask ·<br>Owner details (vault only)</span>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>7.1 · Historical (up to 3 yrs)</h5>
+      <ul>
+        <li>P&amp;L · Balance Sheet · Cash Flow</li>
+        <li>Business tax returns</li>
+        <li>Revenue by customer / product / geography</li>
+        <li>A/R &amp; A/P aging</li>
+        <li>Debt schedule · Payroll summary</li>
+        <li>Bank statements &amp; current cash balance</li>
+        <li>Monthly burn · Gross margin · Operating margin</li>
+        <li>Existing grants, loans, investor capital</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>7.2 · Forecast</h5>
+      <ul>
+        <li>12-month monthly forecast</li>
+        <li>3-year annual forecast</li>
+        <li>Hiring plan &amp; capex plan</li>
+        <li>Revenue &amp; expense assumptions</li>
+        <li>Working-capital requirements</li>
+        <li>Break-even analysis</li>
+        <li>Best / Base / Worst-case scenarios</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:20px">
+    <div class="kicker"><h4>7.3 · The Ask — Funding Request</h4><span class="tag">One-page truth</span></div>
+    <div class="fields three">
+      <div class="field"><label>Exact Amount Requested</label><div class="line"></div></div>
+      <div class="field"><label>Minimum Viable Amount</label><div class="line"></div></div>
+      <div class="field"><label>Maximum Useful Amount</label><div class="line"></div></div>
+      <div class="field"><label>Use of Funds</label><div class="line"></div></div>
+      <div class="field"><label>Spending Timeline</label><div class="line"></div></div>
+      <div class="field"><label>Expected Milestones</label><div class="line"></div></div>
+      <div class="field"><label>Jobs Created / Retained</label><div class="line"></div></div>
+      <div class="field"><label>Revenue Impact</label><div class="line"></div></div>
+      <div class="field"><label>Community Impact</label><div class="line"></div></div>
+      <div class="field"><label>Matching Funds Available</label><div class="line"></div></div>
+      <div class="field"><label>Owner Contribution</label><div class="line"></div></div>
+      <div class="field"><label>Collateral · Repayment · Equity Offered</label><div class="line"></div></div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <b>Owner financials (SBA Form 413, personal returns, credit auth):</b> Only collected when specifically required. Stored in an <b>encrypted restricted vault</b> — never in ordinary chat, email, or shared folders.
+  </div>
+</section>
+
+<!-- ═══════ SECTION 08 · GRANTS ═══════ -->
+<section id="s8">
+  <div class="sec-head">
+    <span class="sec-num">§ 08</span>
+    <h2 class="sec-title">Grant Readiness</h2>
+    <span class="sec-sub">Eligibility · Project design ·<br>Budget · Documents</span>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>8.1 · Eligibility Screen</h5>
+      <ul>
+        <li>Applicant type &amp; org age</li>
+        <li>For-profit / nonprofit status</li>
+        <li>Project location &amp; beneficiary population</li>
+        <li>Minority / veteran / women ownership</li>
+        <li>Active SAM &amp; Grants.gov registrations</li>
+        <li>Matching-fund availability</li>
+        <li>Fiscal sponsor if applicable</li>
+        <li>Previous federal awards</li>
+        <li>Debarment / exclusion status</li>
+        <li>Audit &amp; lobbying disclosure status</li>
+        <li>Conflict-of-interest disclosures</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>8.2 · Project Design</h5>
+      <ul>
+        <li>Project title &amp; executive summary</li>
+        <li>Statement of need</li>
+        <li>Target population &amp; service area</li>
+        <li>Goals &amp; measurable objectives</li>
+        <li>Activities &amp; timeline</li>
+        <li>Staffing &amp; partners</li>
+        <li>Evaluation plan &amp; sustainability plan</li>
+        <li>Risk management &amp; community involvement</li>
+        <li>Equity &amp; accessibility plan</li>
+        <li>Environmental considerations</li>
+        <li>Data-collection plan</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:20px">
+    <div class="kicker"><h4>8.3 · Grant Budget Line Items</h4><span class="tag">Standard federal categories</span></div>
+    <div class="pills">
+      <span class="pill">Personnel</span>
+      <span class="pill">Fringe Benefits</span>
+      <span class="pill">Travel</span>
+      <span class="pill">Equipment</span>
+      <span class="pill">Supplies</span>
+      <span class="pill">Contractual</span>
+      <span class="pill">Construction</span>
+      <span class="pill">Other Direct</span>
+      <span class="pill">Indirect Costs</span>
+      <span class="pill gold">Matching Funds</span>
+      <span class="pill gold">In-Kind Contributions</span>
+      <span class="pill">Budget Narrative</span>
+      <span class="pill">Cost Assumptions</span>
+    </div>
+  </div>
+
+  <div class="callout"><b>Federal grant reality:</b> Applicants generally need an active SAM.gov registration and UEI <b>before</b> applying through Grants.gov. If SAM is expired, we fix that first — the deadline waits for no one.</div>
+</section>
+
+<!-- ═══════ SECTION 09 · CONTRACTS ═══════ -->
+<section id="s9">
+  <div class="sec-head">
+    <span class="sec-num">§ 09</span>
+    <h2 class="sec-title">Government-Contract Readiness</h2>
+    <span class="sec-sub">Admin · Content library ·<br>Bid / no-bid gate</span>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>9.1 · Administrative Documents</h5>
+      <ul>
+        <li>Active SAM · UEI · CAGE code</li>
+        <li>IRS info matching SAM · W-9 · EFT banking</li>
+        <li>State vendor registration</li>
+        <li>Procurement portal registrations</li>
+        <li>Certifications &amp; org chart</li>
+        <li>Resumes · licenses · insurance certificates</li>
+        <li>Bonding letter · safety record</li>
+        <li>Quality-control &amp; cybersecurity plans</li>
+        <li>Subcontractor list · teaming agreements</li>
+        <li>Joint-venture &amp; mentor-protégé docs</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>9.2 · Reusable Proposal Library</h5>
+      <ul>
+        <li>Executive summary · Technical approach</li>
+        <li>Management approach · Staffing plan</li>
+        <li>Transition plan · QC plan · Risk mgmt</li>
+        <li>Communications · Cybersecurity plan</li>
+        <li>Supply-chain plan</li>
+        <li>Small-business participation plan</li>
+        <li>Sustainability plan</li>
+        <li>Past-performance narratives</li>
+        <li>Key-personnel resumes</li>
+        <li>Price narrative · Assumptions &amp; exceptions</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:20px">
+    <div class="kicker"><h4>9.3 · Bid / No-Bid Gate — before we write a word</h4><span class="tag">All must be YES</span></div>
+    <div class="checklist three">
+      <div class="chk check">Company is eligible</div>
+      <div class="chk check">SAM active through award date</div>
+      <div class="chk check">Every mandatory requirement satisfiable</div>
+      <div class="chk check">Relevant past performance available</div>
+      <div class="chk check">Required licensing active</div>
+      <div class="chk check">Can finance performance</div>
+      <div class="chk check">Can obtain required bonds</div>
+      <div class="chk check">Deadline realistic</div>
+      <div class="chk check">Incumbent vulnerable</div>
+      <div class="chk check">Buyer budget known / estimated</div>
+      <div class="chk check">Competitive on price</div>
+      <div class="chk check">Viable teaming partner (if needed)</div>
+      <div class="chk check">Expected profit &gt; pursuit cost</div>
+    </div>
+    <div class="callout warn"><b>Discipline:</b> No-bid weak opportunities early. Protect time. Chase fit — not noise.</div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 10 · VC / ANGEL ═══════ -->
+<section id="s10">
+  <div class="sec-head">
+    <span class="sec-num">§ 10</span>
+    <h2 class="sec-title">VC &amp; Angel Readiness</h2>
+    <span class="sec-sub">Company info · Narrative ·<br>Data room</span>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>10.1 · Company Info</h5>
+      <ul>
+        <li>Incorporation docs · EIN · DE registration</li>
+        <li>Foreign qualifications</li>
+        <li>Cap table &amp; founder ownership</li>
+        <li>Option pool · SAFEs · Convertibles · Warrants</li>
+        <li>Previous fundraising · Valuation history</li>
+        <li>Investor rights &amp; Board composition</li>
+        <li>Material contracts · Pending litigation</li>
+        <li>IP ownership</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>10.2 · Investor Narrative</h5>
+      <ul>
+        <li>One-sentence description</li>
+        <li>Problem &amp; solution</li>
+        <li>Product demonstration</li>
+        <li>Market size · Business model · Traction</li>
+        <li>Competitive advantage &amp; GTM strategy</li>
+        <li>Team · Financials · Ask</li>
+        <li>Use of funds · Milestones unlocked</li>
+        <li>Long-term vision · Exit paths</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout warn"><b>Securities law reality:</b> Raising money from investors can constitute an offer or sale of securities. Use an applicable registration exemption or a registered offering path. Involve qualified securities counsel <b>before</b> soliciting investment.</div>
+</section>
+
+<!-- ═══════ SECTION 11 · SPONSORS ═══════ -->
+<section id="s11">
+  <div class="sec-head">
+    <span class="sec-num">§ 11</span>
+    <h2 class="sec-title">Sponsorship Readiness</h2>
+    <span class="sec-sub">Sponsors buy access ·<br>not goodwill</span>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>11.1 · Sponsorship Profile</h5>
+      <ul>
+        <li>Event / program / platform</li>
+        <li>Mission &amp; audience size</li>
+        <li>Demographics · Geography · Industries</li>
+        <li>Job titles · Purchasing authority</li>
+        <li>Email list · Social following · Traffic</li>
+        <li>Engagement rate · Event attendance</li>
+        <li>Media reach · Press coverage</li>
+        <li>Community impact · Previous sponsors</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>11.2 · Sponsor Inventory</h5>
+      <ul>
+        <li>Naming rights · Presenting sponsor</li>
+        <li>Stage branding · Digital advertising</li>
+        <li>Email inclusion · Social content</li>
+        <li>Speaking &amp; product-demo opportunities</li>
+        <li>Lead-capture rights · VIP access</li>
+        <li>Booth space · Scholarship naming</li>
+        <li>Content-series &amp; newsletter sponsorship</li>
+        <li>Category exclusivity · Employee engagement</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:20px">
+    <div class="kicker"><h4>11.3 · Tier Package Structure</h4><span class="tag">Per tier</span></div>
+    <table>
+      <thead><tr><th>Tier</th><th>Price</th><th># Available</th><th>Deliverables</th><th>Est. Impressions</th><th>Exclusivity</th></tr></thead>
+      <tbody>
+        <tr><td><b>Presenting</b></td><td class="mono">$—</td><td class="mono">1</td><td class="mono">All-in</td><td class="mono">—</td><td>✓</td></tr>
+        <tr><td><b>Platinum</b></td><td class="mono">$—</td><td class="mono">2</td><td class="mono">Premium</td><td class="mono">—</td><td>Category</td></tr>
+        <tr><td><b>Gold</b></td><td class="mono">$—</td><td class="mono">4</td><td class="mono">Standard+</td><td class="mono">—</td><td>—</td></tr>
+        <tr><td><b>Silver</b></td><td class="mono">$—</td><td class="mono">6</td><td class="mono">Standard</td><td class="mono">—</td><td>—</td></tr>
+        <tr><td><b>Community</b></td><td class="mono">$—</td><td class="mono">Open</td><td class="mono">Listing</td><td class="mono">—</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 12 · LOANS ═══════ -->
+<section id="s12">
+  <div class="sec-head">
+    <span class="sec-num">§ 12</span>
+    <h2 class="sec-title">Loans &amp; Financing</h2>
+    <span class="sec-sub">Lender-ready package<br>· complete or don't apply</span>
+  </div>
+
+  <div class="sub">
+    <div class="kicker"><h4>12.1 · Loan-Readiness Documents</h4><span class="tag">All 15 · Complete package</span></div>
+    <div class="checklist three">
+      <div class="chk">Business plan</div>
+      <div class="chk">Loan amount &amp; use of funds</div>
+      <div class="chk">Repayment source</div>
+      <div class="chk">Historical financials (3 yrs)</div>
+      <div class="chk">Business tax returns</div>
+      <div class="chk">Debt schedule</div>
+      <div class="chk">Bank statements</div>
+      <div class="chk">A/R &amp; A/P aging</div>
+      <div class="chk">Personal financial statement</div>
+      <div class="chk">Collateral schedule</div>
+      <div class="chk">Equipment quotes</div>
+      <div class="chk">Purchase / Lease agreements</div>
+      <div class="chk">Franchise docs (if applicable)</div>
+      <div class="chk">Management resumes</div>
+      <div class="chk">Ownership information</div>
+    </div>
+    <div class="callout"><b>SBA guidance:</b> The SBA provides formal business-plan guidance and uses Form 413 for personal financial information in applicable programs. Use their template — don't reinvent.</div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 13 · LEGAL / COMPLIANCE ═══════ -->
+<section id="s13">
+  <div class="sec-head">
+    <span class="sec-num">§ 13</span>
+    <h2 class="sec-title">Legal, Compliance &amp; Risk</h2>
+    <span class="sec-sub">Corporate · Contracts ·<br>Insurance · Policies</span>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>13.1 · Corporate &amp; Contracts</h5>
+      <ul>
+        <li>Articles / bylaws · Operating agreement</li>
+        <li>Good-standing certificate</li>
+        <li>Ownership ledger · Board minutes</li>
+        <li>DBAs · Foreign registrations</li>
+        <li>Customer &amp; vendor agreements</li>
+        <li>Subcontract &amp; teaming agreements</li>
+        <li>NDAs · Leases · Loan agreements</li>
+        <li>Sponsorship &amp; licensing agreements</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>13.2 · Insurance Portfolio</h5>
+      <ul>
+        <li>General liability</li>
+        <li>Professional liability (E&amp;O)</li>
+        <li>Cyber liability</li>
+        <li>Workers' compensation</li>
+        <li>Commercial auto</li>
+        <li>Umbrella</li>
+        <li>Directors &amp; officers (D&amp;O)</li>
+        <li>Errors &amp; omissions</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:20px">
+    <div class="kicker"><h4>13.3 · Compliance Policies on File</h4><span class="tag">Federal-facing minimum</span></div>
+    <div class="checklist three">
+      <div class="chk">Privacy policy</div>
+      <div class="chk">Terms of service</div>
+      <div class="chk">Accessibility policy</div>
+      <div class="chk">Information-security policy</div>
+      <div class="chk">Incident-response plan</div>
+      <div class="chk">Records-retention policy</div>
+      <div class="chk">Conflict-of-interest policy</div>
+      <div class="chk">Whistleblower policy</div>
+      <div class="chk">Code of ethics</div>
+      <div class="chk">EEO policy</div>
+      <div class="chk">Drug-free workplace policy</div>
+      <div class="chk">Debarment certification</div>
+      <div class="chk">Lobbying disclosures</div>
+      <div class="chk">Foreign ownership disclosures</div>
+      <div class="chk">Export-control assessment</div>
+      <div class="chk">Environmental compliance</div>
+      <div class="chk">OSHA / safety records</div>
+      <div class="chk">Pending claims / litigation</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 14 · DATA ROOM ═══════ -->
+<section id="s14">
+  <div class="sec-head">
+    <span class="sec-num">§ 14</span>
+    <h2 class="sec-title">Master Business Data Room</h2>
+    <span class="sec-sub">24-folder taxonomy ·<br>Every document tagged</span>
+  </div>
+
+  <div class="sub">
+    <div class="kicker"><h4>14.1 · Folder Structure</h4><span class="tag">Version-controlled</span></div>
+    <div class="checklist three" style="font-family:var(--mono);font-size:12.5px;letter-spacing:.02em">
+      <div class="chk check"><b>01</b>&nbsp;Corporate</div>
+      <div class="chk check"><b>02</b>&nbsp;Ownership</div>
+      <div class="chk check"><b>03</b>&nbsp;Registrations</div>
+      <div class="chk check"><b>04</b>&nbsp;Certifications</div>
+      <div class="chk check"><b>05</b>&nbsp;Licenses</div>
+      <div class="chk check"><b>06</b>&nbsp;Insurance</div>
+      <div class="chk check"><b>07</b>&nbsp;Financials</div>
+      <div class="chk check"><b>08</b>&nbsp;Tax Returns</div>
+      <div class="chk check"><b>09</b>&nbsp;Past Performance</div>
+      <div class="chk check"><b>10</b>&nbsp;Capabilities</div>
+      <div class="chk check"><b>11</b>&nbsp;Products &amp; Services</div>
+      <div class="chk check"><b>12</b>&nbsp;Team &amp; Resumes</div>
+      <div class="chk check"><b>13</b>&nbsp;Customers &amp; Traction</div>
+      <div class="chk check"><b>14</b>&nbsp;Contracts</div>
+      <div class="chk check"><b>15</b>&nbsp;Intellectual Property</div>
+      <div class="chk check"><b>16</b>&nbsp;Grant Library</div>
+      <div class="chk check"><b>17</b>&nbsp;Proposal Library</div>
+      <div class="chk check"><b>18</b>&nbsp;Investor Data Room</div>
+      <div class="chk check"><b>19</b>&nbsp;Sponsorship</div>
+      <div class="chk check"><b>20</b>&nbsp;Policies &amp; Compliance</div>
+      <div class="chk check"><b>21</b>&nbsp;Awards &amp; References</div>
+      <div class="chk check"><b>22</b>&nbsp;Opportunity Research</div>
+      <div class="chk check"><b>23</b>&nbsp;Submitted Applications</div>
+      <div class="chk check"><b>24</b>&nbsp;Post-Award Reporting</div>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:20px">
+    <div class="kicker"><h4>14.2 · Every Document Needs a Metadata Row</h4><span class="tag">Non-negotiable</span></div>
+    <table>
+      <thead><tr><th>Field</th><th>Purpose</th><th>Required</th></tr></thead>
+      <tbody>
+        <tr><td>Owner</td><td>Who is responsible for this document</td><td>✓</td></tr>
+        <tr><td>Version</td><td>Semantic version (v1.0, v1.1…)</td><td>✓</td></tr>
+        <tr><td>Effective Date</td><td>When it took effect</td><td>✓</td></tr>
+        <tr><td>Expiration Date</td><td>Renewal trigger</td><td>✓</td></tr>
+        <tr><td>Confidentiality Level</td><td>Public · Internal · Restricted · Vault</td><td>✓</td></tr>
+        <tr><td>Verified Status</td><td>Verified by whom, when</td><td>✓</td></tr>
+        <tr><td>Supporting Evidence</td><td>Backing docs linked</td><td>✓</td></tr>
+        <tr><td>Allowed Use</td><td>Proposals · Marketing · Internal only</td><td>✓</td></tr>
+        <tr><td>Last Reviewed Date</td><td>Freshness check</td><td>✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 15 · SCORING ═══════ -->
+<section id="s15">
+  <div class="sec-head">
+    <span class="sec-num">§ 15</span>
+    <h2 class="sec-title">AI Opportunity <em>Scoring Engine</em></h2>
+    <span class="sec-sub">Disqualifiers · Weights ·<br>Decision bands</span>
+  </div>
+
+  <div class="sub">
+    <div class="kicker"><h4>15.1 · Hard Disqualifiers</h4><span class="tag">Auto-reject · No override</span></div>
+    <div class="gates">
+      <div class="gate-item"><b>Eligibility</b>Applicant type is ineligible</div>
+      <div class="gate-item"><b>Geography</b>Business location is ineligible</div>
+      <div class="gate-item"><b>Certification</b>Required certification is absent</div>
+      <div class="gate-item"><b>Registration</b>SAM will not be active at award</div>
+      <div class="gate-item"><b>Timeline</b>Deadline is impossible</div>
+      <div class="gate-item"><b>Match Funding</b>Required match unavailable</div>
+      <div class="gate-item"><b>License</b>Required license absent</div>
+      <div class="gate-item"><b>Conflict</b>COI rule cannot be satisfied</div>
+      <div class="gate-item"><b>Experience</b>Required experience unprovable</div>
+      <div class="gate-item"><b>Integrity</b>Submission would require false certification</div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="kicker"><h4>15.2 · Weighted Fit Score · 100 pts</h4><span class="tag">Applied post-eligibility</span></div>
+    <div class="score-row"><span class="factor">Eligibility</span><div class="bar"><span style="width:100%"></span></div><span class="weight">20</span></div>
+    <div class="score-row"><span class="factor">Capability Alignment</span><div class="bar"><span style="width:75%"></span></div><span class="weight">15</span></div>
+    <div class="score-row"><span class="factor">Past Performance</span><div class="bar"><span style="width:75%"></span></div><span class="weight">15</span></div>
+    <div class="score-row"><span class="factor">Customer / Agency Alignment</span><div class="bar"><span style="width:50%"></span></div><span class="weight">10</span></div>
+    <div class="score-row"><span class="factor">Geographic Alignment</span><div class="bar"><span style="width:50%"></span></div><span class="weight">10</span></div>
+    <div class="score-row"><span class="factor">Financial Capacity</span><div class="bar"><span style="width:50%"></span></div><span class="weight">10</span></div>
+    <div class="score-row"><span class="factor">Competitive Positioning</span><div class="bar"><span style="width:50%"></span></div><span class="weight">10</span></div>
+    <div class="score-row"><span class="factor">Deadline Readiness</span><div class="bar"><span style="width:25%"></span></div><span class="weight">5</span></div>
+    <div class="score-row"><span class="factor">Strategic Value</span><div class="bar"><span style="width:25%"></span></div><span class="weight">5</span></div>
+  </div>
+
+  <div class="sub">
+    <div class="kicker"><h4>15.3 · Decision Bands</h4><span class="tag">What we do at each score</span></div>
+    <table>
+      <thead><tr><th>Score</th><th>Band</th><th>Action</th><th>Owner Notified</th></tr></thead>
+      <tbody>
+        <tr><td>90–100</td><td><span class="band priority">Priority Pursuit</span></td><td>Full package, all-hands, executive review</td><td>Same day</td></tr>
+        <tr><td>80–89</td><td><span class="band strong">Strong Pursuit</span></td><td>Standard bid team, on schedule</td><td>Within 24 hrs</td></tr>
+        <tr><td>70–79</td><td><span class="band gap">Pursue w/ Partner</span></td><td>Teaming or capability gap plan first</td><td>Within 48 hrs</td></tr>
+        <tr><td>60–69</td><td><span class="band monitor">Monitor</span></td><td>Watch list; re-evaluate at next amendment</td><td>Weekly digest</td></tr>
+        <tr><td>Below 60</td><td><span class="band nobid">No-Bid</span></td><td>Decline; log lessons for future intake tuning</td><td>Digest only</td></tr>
+        <tr><td>Any DQ</td><td><span class="band reject">Reject</span></td><td>Automatic — regardless of score</td><td>Immediate</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><b>Separate scoring models per lane:</b> government contracts · grants · SBIR/STTR · VC · loans · sponsorships · accelerators · corporate supplier programs. One engine — many rubrics.</div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 16 · WORKFLOW ═══════ -->
+<section id="s16">
+  <div class="sec-head">
+    <span class="sec-num">§ 16</span>
+    <h2 class="sec-title">End-to-End AI Workflow</h2>
+    <span class="sec-sub">18 stages · 3 human gates ·<br>1 approval bar</span>
+  </div>
+
+  <div class="flow">
+    <div class="flow-grid">
+      <div class="flow-step"><span class="n">01</span>Business Intake</div>
+      <div class="flow-step"><span class="n">02</span>Document Extraction</div>
+      <div class="flow-step"><span class="n">03</span>Fact Verification</div>
+      <div class="flow-step"><span class="n">04</span>Capability &amp; Eligibility Profile</div>
+      <div class="flow-step"><span class="n">05</span>Daily Opportunity Search</div>
+      <div class="flow-step"><span class="n">06</span>Deduplication</div>
+      <div class="flow-step gate"><span class="n">07 · Gate</span>Hard Eligibility Gate</div>
+      <div class="flow-step"><span class="n">08</span>Weighted Fit Scoring</div>
+      <div class="flow-step"><span class="n">09</span>Bid / No-Bid Recommendation</div>
+      <div class="flow-step"><span class="n">10</span>Application Compliance Matrix</div>
+      <div class="flow-step"><span class="n">11</span>Draft Narrative &amp; Forms</div>
+      <div class="flow-step"><span class="n">12</span>Evidence Validation</div>
+      <div class="flow-step"><span class="n">13</span>Budget &amp; Pricing Review</div>
+      <div class="flow-step gate"><span class="n">14 · Gate</span>Authorized Human Approval</div>
+      <div class="flow-step output"><span class="n">15 · Output</span>Submission</div>
+      <div class="flow-step"><span class="n">16</span>Confirmation Capture</div>
+      <div class="flow-step"><span class="n">17</span>Follow-up &amp; Amendments</div>
+      <div class="flow-step output"><span class="n">18 · Output</span>Award / Loss Analysis → Memory Update</div>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:24px">
+    <div class="kicker"><h4>16.1 · Required Approval Gates — Owner / AOR Must Sign</h4><span class="tag">Non-delegable</span></div>
+    <div class="checklist three">
+      <div class="chk check">Banking details</div>
+      <div class="chk check">Tax identifiers</div>
+      <div class="chk check">Ownership certifications</div>
+      <div class="chk check">Demographic certifications</div>
+      <div class="chk check">Lobbying disclosures</div>
+      <div class="chk check">Debarment certifications</div>
+      <div class="chk check">Grant assurances</div>
+      <div class="chk check">Final pricing</div>
+      <div class="chk check">Equity terms</div>
+      <div class="chk check">Loan guarantees</div>
+      <div class="chk check">Legal representations</div>
+      <div class="chk check">Application submission</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 17 · OUTPUTS ═══════ -->
+<section id="s17">
+  <div class="sec-head">
+    <span class="sec-num">§ 17</span>
+    <h2 class="sec-title">What the AI Generates</h2>
+    <span class="sec-sub">Once the profile is verified ·<br>everything downstream is fast</span>
+  </div>
+
+  <div class="dual">
+    <div class="card">
+      <h5>17.1 · Contracting</h5>
+      <ul>
+        <li>Government capability statement</li>
+        <li>Corporate capabilities deck</li>
+        <li>SAM description &amp; small-business profile copy</li>
+        <li>Sources-sought responses · RFIs · RFQs</li>
+        <li>RFP compliance matrices</li>
+        <li>Technical &amp; management proposals</li>
+        <li>Past-performance volumes</li>
+        <li>Staffing plans · Price narratives</li>
+        <li>Teaming-partner outreach</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>17.2 · Grants</h5>
+      <ul>
+        <li>Grant-readiness assessment</li>
+        <li>Statement of need · Project narrative</li>
+        <li>Logic model · Goals &amp; objectives</li>
+        <li>Implementation timeline</li>
+        <li>Evaluation plan · Sustainability plan</li>
+        <li>Budget narrative</li>
+        <li>Letters-of-support templates</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>17.3 · Investors</h5>
+      <ul>
+        <li>Pitch deck &amp; investor memo</li>
+        <li>One-page teaser</li>
+        <li>Financial model</li>
+        <li>Data-room index</li>
+        <li>Target-investor list</li>
+        <li>Personalized outreach sequences</li>
+        <li>Due-diligence responses</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h5>17.4 · Sponsors &amp; Financing</h5>
+      <ul>
+        <li>Sponsorship deck &amp; tier packages</li>
+        <li>Activation concepts</li>
+        <li>Prospect list &amp; outreach sequences</li>
+        <li>Fulfillment tracker · Impact report</li>
+        <li>Lender-ready business plan</li>
+        <li>Use-of-funds statement</li>
+        <li>Loan package index</li>
+        <li>Financial projections · Debt-service analysis</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 18 · SOUTH CAROLINA ═══════ -->
+<section id="s18">
+  <div class="sec-head">
+    <span class="sec-num">§ 18</span>
+    <h2 class="sec-title">South Carolina Profile</h2>
+    <span class="sec-sub">The home-turf advantage ·<br>fields unique to SC</span>
+  </div>
+
+  <div class="sc-grid">
+    <div class="sc-card">
+      <h5>18.1 · SC Geographic &amp; Political</h5>
+      <ul>
+        <li>County<b>—</b></li>
+        <li>Municipality<b>—</b></li>
+        <li>Congressional District<b>—</b></li>
+        <li>Rural / Urban Designation<b>—</b></li>
+        <li>HUBZone Status<b>—</b></li>
+      </ul>
+    </div>
+    <div class="sc-card">
+      <h5>18.2 · SC State Registrations</h5>
+      <ul>
+        <li>SC Secretary of State Status<b>—</b></li>
+        <li>SC Dept. of Revenue Accounts<b>—</b></li>
+        <li>Local Business License<b>—</b></li>
+        <li>SC Vendor Number<b>—</b></li>
+        <li>SCEIS Registration<b>—</b></li>
+      </ul>
+    </div>
+    <div class="sc-card">
+      <h5>18.3 · SC Certifications</h5>
+      <ul>
+        <li>SC MBE Status<b>—</b></li>
+        <li>SCDOT DBE / SBE<b>—</b></li>
+        <li>SCDOT Prequalification<b>—</b></li>
+        <li>SC Contractor License<b>—</b></li>
+        <li>Residential Builder License<b>—</b></li>
+        <li>Workers' Comp Status<b>—</b></li>
+      </ul>
+    </div>
+    <div class="sc-card">
+      <h5>18.4 · SC Relationships</h5>
+      <ul>
+        <li>Local Chamber Memberships<b>—</b></li>
+        <li>Economic-Development Contacts<b>—</b></li>
+        <li>County / Municipal Vendor Registrations<b>—</b></li>
+        <li>Target SC Agencies<b>—</b></li>
+        <li>Target Federal Installations<b>—</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout"><b>Free assistance in-state:</b> SC APEX Accelerator and South Carolina SBDC offer no-cost consulting for federal contract readiness. Use them alongside — not instead of — a dedicated consultant.</div>
+</section>
+
+<!-- ═══════ SECTION 19 · STARTER FORM ═══════ -->
+<section id="s19">
+  <div class="sec-head">
+    <span class="sec-num">§ 19</span>
+    <h2 class="sec-title">Copy-and-Complete Starter</h2>
+    <span class="sec-sub">Send first · No passwords ·<br>No SSNs · No banking</span>
+  </div>
+
+  <div class="form-wrap">
+    <span class="stamp">Intake Form · v1.0</span>
+    <h3>Client Starter Intake</h3>
+    <div class="sub-txt">Fill this and return. Everything else can wait. — Dr. McKnight</div>
+
+    <div class="form-block">
+      <h5>A · Business Identity</h5>
+      <div class="fields">
+        <div class="field"><label>Legal Business Name</label><div class="line"></div></div>
+        <div class="field"><label>DBA / Brand</label><div class="line"></div></div>
+        <div class="field"><label>Website</label><div class="line"></div></div>
+        <div class="field"><label>Entity Type</label><div class="line"></div></div>
+        <div class="field"><label>State of Formation</label><div class="line"></div></div>
+        <div class="field"><label>Formation Date</label><div class="line"></div></div>
+        <div class="field"><label>Business Address</label><div class="line"></div></div>
+        <div class="field"><label>County</label><div class="line"></div></div>
+        <div class="field"><label>Phone</label><div class="line"></div></div>
+        <div class="field"><label>Business Email</label><div class="line"></div></div>
+        <div class="field"><label>For-Profit or Nonprofit</label><div class="line"></div></div>
+        <div class="field"><label>Fiscal-Year End</label><div class="line"></div></div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <h5>B · Ownership</h5>
+      <div class="fields">
+        <div class="field"><label>Owner Name</label><div class="line"></div></div>
+        <div class="field"><label>Owner Role</label><div class="line"></div></div>
+        <div class="field"><label>Ownership %</label><div class="line"></div></div>
+        <div class="field"><label>Authorized Signer</label><div class="line"></div></div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <h5>C · Registrations &amp; Credentials</h5>
+      <div class="fields">
+        <div class="field"><label>UEI</label><div class="line"></div></div>
+        <div class="field"><label>CAGE Code</label><div class="line"></div></div>
+        <div class="field"><label>SAM Status / Expiration</label><div class="line"></div></div>
+        <div class="field"><label>SC Vendor Number</label><div class="line"></div></div>
+        <div class="field"><label>Grants.gov Status</label><div class="line"></div></div>
+        <div class="field"><label>Current Certifications</label><div class="line"></div></div>
+        <div class="field"><label>Active Licenses</label><div class="line"></div></div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <h5>D · Capabilities</h5>
+      <div class="fields">
+        <div class="field"><label>Primary NAICS</label><div class="line"></div></div>
+        <div class="field"><label>Secondary NAICS</label><div class="line"></div></div>
+        <div class="field"><label>Products / Services</label><div class="line"></div></div>
+        <div class="field"><label>Target Customers</label><div class="line"></div></div>
+        <div class="field"><label>Service Area</label><div class="line"></div></div>
+        <div class="field"><label>Max Contract Capacity</label><div class="line"></div></div>
+        <div class="field"><label># Employees</label><div class="line"></div></div>
+        <div class="field"><label># Contractors</label><div class="line"></div></div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <h5>E · Financial Snapshot</h5>
+      <div class="fields three">
+        <div class="field"><label>2023 Revenue</label><div class="line"></div></div>
+        <div class="field"><label>2024 Revenue</label><div class="line"></div></div>
+        <div class="field"><label>2025 Revenue</label><div class="line"></div></div>
+        <div class="field"><label>2026 YTD Revenue</label><div class="line"></div></div>
+        <div class="field"><label>Monthly Recurring Revenue</label><div class="line"></div></div>
+        <div class="field"><label>Current Cash</label><div class="line"></div></div>
+        <div class="field"><label>Current Debt</label><div class="line"></div></div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <h5>F · Track Record &amp; References</h5>
+      <div class="fields one">
+        <div class="field"><label>Top Completed Project · 01</label><div class="line"></div></div>
+        <div class="field"><label>Top Completed Project · 02</label><div class="line"></div></div>
+        <div class="field"><label>Top Completed Project · 03</label><div class="line"></div></div>
+        <div class="field"><label>Current Customers</label><div class="line"></div></div>
+        <div class="field"><label>Customer Results / Outcomes</label><div class="line"></div></div>
+        <div class="field"><label>Letters of Reference Available?</label><div class="line"></div></div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <h5>G · Funding &amp; Goals</h5>
+      <div class="fields three">
+        <div class="field"><label>Funding Needed</label><div class="line"></div></div>
+        <div class="field"><label>Minimum Amount</label><div class="line"></div></div>
+        <div class="field"><label>Ideal Amount</label><div class="line"></div></div>
+        <div class="field"><label>Use of Funds</label><div class="line"></div></div>
+        <div class="field"><label>Jobs Created</label><div class="line"></div></div>
+        <div class="field"><label>Project Timeline</label><div class="line"></div></div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <h5>H · Which Lanes Matter First</h5>
+      <div class="lookfor">
+        <label>Federal Contracts</label>
+        <label>South Carolina Contracts</label>
+        <label>County / City Contracts</label>
+        <label>Grants</label>
+        <label>SBIR / STTR</label>
+        <label>Loans</label>
+        <label>Investors (VC / Angel)</label>
+        <label>Accelerators</label>
+        <label>Sponsors</label>
+        <label>Prime Contractor Partners</label>
+        <label>Corporate Supplier Programs</label>
+        <label>Sponsorships (Outbound)</label>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <h5>I · Open Field</h5>
+      <div class="fields one">
+        <div class="field"><label>Deadlines Already Known</label><div class="line"></div></div>
+        <div class="field"><label>Current Applications in Flight</label><div class="line"></div></div>
+        <div class="field"><label>Biggest Business Goal</label><div class="line"></div></div>
+        <div class="field"><label>Biggest Readiness Gap</label><div class="line"></div></div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <b>Do not send in this form:</b> passwords · MFA codes · complete SSNs · full tax returns · bank account numbers · credit-card data. Those are collected separately, in an encrypted vault, at the moment of need.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ SECTION 20 · LAUNCH ═══════ -->
+<section id="s20">
+  <div class="sec-head">
+    <span class="sec-num">§ 20</span>
+    <h2 class="sec-title">Immediate Launch Requirements</h2>
+    <span class="sec-sub">The 12 items that unlock<br>day-one opportunity search</span>
+  </div>
+
+  <div class="launch">
+    <div class="lbl">Send These 12 · We Start Today</div>
+    <h3>Twelve fields.<br><em>Then we hunt.</em></h3>
+    <div class="items">
+      <div class="item"><div class="n">01</div><div class="txt">Exact business name<b>Legal + DBA</b></div></div>
+      <div class="item"><div class="n">02</div><div class="txt">Website URL<b>Public-facing</b></div></div>
+      <div class="item"><div class="n">03</div><div class="txt">One-paragraph business description<b>What you actually do</b></div></div>
+      <div class="item"><div class="n">04</div><div class="txt">Location + service area<b>City · County · State · Radius</b></div></div>
+      <div class="item"><div class="n">05</div><div class="txt">Ownership profile<b>%'s · veteran · woman · disadvantaged</b></div></div>
+      <div class="item"><div class="n">06</div><div class="txt">NAICS codes, if known<b>Primary + secondary</b></div></div>
+      <div class="item"><div class="n">07</div><div class="txt">Certifications held<b>Federal + state</b></div></div>
+      <div class="item"><div class="n">08</div><div class="txt">Registration status<b>SAM · SC vendor · Grants.gov</b></div></div>
+      <div class="item"><div class="n">09</div><div class="txt">Revenue range<b>Last 3 years</b></div></div>
+      <div class="item"><div class="n">10</div><div class="txt">Three strongest completed projects<b>Client · Value · Outcome</b></div></div>
+      <div class="item"><div class="n">11</div><div class="txt">Funding ask &amp; use of funds<b>Amount · timeline · milestones</b></div></div>
+      <div class="item"><div class="n">12</div><div class="txt">Which lanes matter first<b>Contracts · grants · VC · sponsors · loans</b></div></div>
+    </div>
+    <div class="fine">
+      <b>Reminder — never in chat:</b> passwords · SSNs · complete tax returns · banking credentials. Those live in an encrypted vault we set up together, with owner approval on every access.
+    </div>
+  </div>
+</section>
+
+<!-- END -->
+<div class="end">
+  <div class="verse">"Commit to the Lord whatever you do, and he will establish your plans."</div>
+  Intake Workbook · Volume 02 · The Contracting Preacher · Dr. McKnight · Issued July 2026
+</div>
+
+</div>
+</body>
+</html>

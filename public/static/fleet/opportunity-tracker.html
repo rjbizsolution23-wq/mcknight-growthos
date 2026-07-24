@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Opportunity Tracker — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0; --line-2:#D6CFB8;
+    --ok:#2F6B4A;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body{padding:32px 24px 60px;min-height:100vh}
+
+  /* HEADER */
+  header{max-width:1400px;margin:0 auto 24px;background:var(--navy);color:var(--ivory);padding:24px 32px;border-radius:2px;position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:24px}
+  header::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 90% 20%,rgba(201,169,97,.18),transparent 50%);pointer-events:none}
+  .brand{display:flex;align-items:center;gap:12px;position:relative}
+  .brand svg{width:36px;height:36px;color:var(--gold);flex:none}
+  .brand .txt{font-family:var(--serif);font-weight:700;font-size:15px;line-height:1.05}
+  .brand .txt h1{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1}
+  .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400;margin-top:3px}
+  header .stats{display:flex;gap:24px;position:relative}
+  header .stats .st{text-align:right;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;font-weight:600;line-height:1.5}
+  header .stats .st b{display:block;font-family:var(--serif);font-size:26px;color:var(--gold-3);font-weight:800;letter-spacing:-.01em}
+  header .actions{display:flex;gap:8px;position:relative}
+  header button{background:var(--gold);color:var(--navy);padding:10px 16px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border:0;border-radius:2px;cursor:pointer;transition:all .15s}
+  header button:hover{background:var(--gold-3)}
+  header button.ghost{background:transparent;color:var(--gold-3);border:1px solid var(--gold-3)}
+  header button.ghost:hover{background:var(--gold-3);color:var(--navy)}
+
+  /* BOARD */
+  .board{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:16px;align-items:start}
+  .col{background:#fff;border-radius:2px;border:1px solid var(--line);min-height:70vh;padding:0;overflow:hidden;display:flex;flex-direction:column}
+  .col-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:var(--ivory);position:relative}
+  .col-head::before{content:"";position:absolute;top:0;left:0;right:0;height:3px}
+  .col[data-col="lead"] .col-head::before{background:var(--slate)}
+  .col[data-col="qualify"] .col-head::before{background:var(--gold-2)}
+  .col[data-col="bidding"] .col-head::before{background:var(--gold)}
+  .col[data-col="submitted"] .col-head::before{background:var(--navy)}
+  .col[data-col="won"] .col-head::before{background:var(--ok)}
+  .col-head h3{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--navy);text-transform:uppercase;font-weight:700}
+  .col-head .count{background:var(--navy);color:var(--gold-3);padding:2px 10px;border-radius:20px;font-family:var(--mono);font-size:10px;letter-spacing:.05em;font-weight:600;min-width:28px;text-align:center}
+  .col[data-col="won"] .col-head .count{background:var(--ok);color:#fff}
+  .col-body{padding:12px;flex:1;display:flex;flex-direction:column;gap:10px;min-height:60vh}
+  .col-body.drag-over{background:var(--ivory)}
+
+  /* CARD */
+  .oppo{background:#fff;border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:2px;padding:12px 14px;cursor:grab;transition:all .12s;box-shadow:0 2px 6px -3px rgba(10,22,40,.15);position:relative}
+  .oppo:hover{border-color:var(--gold-2);box-shadow:0 6px 14px -6px rgba(10,22,40,.2)}
+  .oppo:active{cursor:grabbing}
+  .oppo.dragging{opacity:.4}
+  .oppo .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+  .oppo .title{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:-.005em;line-height:1.15;flex:1}
+  .oppo .score{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--navy);background:var(--gold);padding:3px 8px;border-radius:2px;flex:none;letter-spacing:.02em}
+  .oppo .score.priority{background:var(--gold-3)}
+  .oppo .score.strong{background:var(--gold)}
+  .oppo .score.gap{background:var(--ivory-2);border:1px solid var(--gold-2)}
+  .oppo .score.monitor{background:transparent;color:var(--slate);border:1px solid var(--line-2)}
+  .oppo .score.nobid{background:#FBEEEE;color:var(--red);border:1px solid var(--red)}
+  .oppo .agency{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--slate);text-transform:uppercase;font-weight:500;margin-bottom:6px}
+  .oppo .meta{display:flex;justify-content:space-between;font-size:11px;color:var(--slate);padding-top:6px;border-top:1px dashed var(--line);margin-top:6px}
+  .oppo .meta .val{font-family:var(--serif);font-weight:700;color:var(--navy);font-size:13px;letter-spacing:-.005em}
+  .oppo .meta .due{font-family:var(--mono);font-size:10px;color:var(--gold-2);font-weight:600}
+  .oppo .meta .due.soon{color:var(--red)}
+  .oppo .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+  .oppo .tag{font-family:var(--mono);font-size:9px;letter-spacing:.08em;padding:2px 6px;background:var(--ivory);color:var(--navy);border-radius:2px;text-transform:uppercase;font-weight:600}
+  .oppo .tag.setaside{background:var(--navy);color:var(--gold-3)}
+  .oppo .del{position:absolute;top:8px;right:8px;background:transparent;border:0;color:var(--slate);opacity:0;cursor:pointer;font-size:16px;transition:all .12s;padding:2px 6px;border-radius:2px}
+  .oppo:hover .del{opacity:.6}
+  .oppo .del:hover{opacity:1;color:var(--red);background:#FBEEEE}
+
+  .add-card{border:1.5px dashed var(--line-2);background:transparent;border-radius:2px;padding:12px;cursor:pointer;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;font-weight:600;transition:all .12s;margin-top:auto}
+  .add-card:hover{border-color:var(--gold-2);color:var(--gold-2);background:var(--ivory)}
+
+  /* MODAL */
+  .modal-bg{position:fixed;inset:0;background:rgba(10,22,40,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(4px)}
+  .modal-bg.show{display:flex}
+  .modal{background:#fff;border-radius:2px;padding:0;max-width:520px;width:100%;box-shadow:0 30px 80px -30px rgba(0,0,0,.5);overflow:hidden}
+  .modal::before{content:"";display:block;height:6px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+  .modal .head{padding:24px 32px 16px;border-bottom:1px solid var(--line)}
+  .modal .head h3{font-family:var(--serif);font-size:24px;font-weight:800;letter-spacing:-.01em}
+  .modal .body{padding:24px 32px}
+  .modal .fld{margin-bottom:16px}
+  .modal .fld label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600;margin-bottom:5px}
+  .modal .fld input,.modal .fld select{width:100%;padding:10px 12px;border:1px solid var(--line-2);border-radius:2px;font-family:var(--serif);font-size:14px;color:var(--navy);outline:none}
+  .modal .fld input:focus{border-color:var(--gold-2)}
+  .modal .fld.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .modal .foot{padding:16px 32px 24px;display:flex;justify-content:flex-end;gap:8px;background:var(--ivory);border-top:1px solid var(--line)}
+  .modal .foot button{padding:10px 20px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border-radius:2px;cursor:pointer;border:0}
+  .modal .foot .save{background:var(--navy);color:var(--gold-3)}
+  .modal .foot .save:hover{background:var(--gold);color:var(--navy)}
+  .modal .foot .cancel{background:transparent;color:var(--slate);border:1px solid var(--line-2)}
+  .modal .foot .cancel:hover{background:#fff}
+
+  .checkgroup{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:4px}
+  .checkgroup label{display:flex;gap:6px;align-items:center;padding:6px 8px;border:1px solid var(--line-2);border-radius:2px;font-size:11px;cursor:pointer;font-family:var(--sans);color:var(--navy);text-transform:none;letter-spacing:0}
+  .checkgroup label:hover{background:var(--ivory)}
+  .checkgroup input[type="checkbox"]{width:12px;height:12px;accent-color:var(--navy);cursor:pointer;flex:none}
+  .checkgroup label:has(input:checked){background:var(--navy);color:var(--ivory);border-color:var(--navy);font-weight:600}
+
+  @media (max-width:1200px){
+    .board{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:700px){
+    .board{grid-template-columns:1fr}
+    header{flex-direction:column;align-items:flex-start}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#0A1628" stroke-width="1.5" opacity=".45"/>
+    <rect x="46" y="26" width="8" height="46" fill="#0A1628"/>
+    <rect x="32" y="36" width="36" height="6" fill="#0A1628"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#0A1628"/>
+  </symbol>
+</svg>
+
+<header>
+  <div class="brand">
+    <svg><use href="#mark"/></svg>
+    <div class="txt">
+      <h1>Opportunity Tracker</h1>
+      <span>The Contracting Preacher · v1.0</span>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="st"><b id="s-total">0</b>Active</div>
+    <div class="st"><b id="s-value">$0</b>Pipeline Value</div>
+    <div class="st"><b id="s-won">$0</b>Won YTD</div>
+    <div class="st"><b id="s-winrate">—</b>Win Rate</div>
+  </div>
+  <div class="actions">
+    <button onclick="openModal()">+ New Opportunity</button>
+    <button class="ghost" onclick="exportJSON()">↓ Export</button>
+    <button class="ghost" onclick="clearAll()">✕ Clear</button>
+  </div>
+</header>
+
+<div class="board" id="board">
+  <div class="col" data-col="lead">
+    <div class="col-head"><h3>Lead</h3><span class="count">0</span></div>
+    <div class="col-body" data-drop="lead"></div>
+  </div>
+  <div class="col" data-col="qualify">
+    <div class="col-head"><h3>Qualify · Scoring</h3><span class="count">0</span></div>
+    <div class="col-body" data-drop="qualify"></div>
+  </div>
+  <div class="col" data-col="bidding">
+    <div class="col-head"><h3>Writing · Bidding</h3><span class="count">0</span></div>
+    <div class="col-body" data-drop="bidding"></div>
+  </div>
+  <div class="col" data-col="submitted">
+    <div class="col-head"><h3>Submitted · Waiting</h3><span class="count">0</span></div>
+    <div class="col-body" data-drop="submitted"></div>
+  </div>
+  <div class="col" data-col="won">
+    <div class="col-head"><h3>Won · Active</h3><span class="count">0</span></div>
+    <div class="col-body" data-drop="won"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="head"><h3 id="modalTitle">New Opportunity</h3></div>
+    <div class="body">
+      <div class="fld"><label>Opportunity Name / Number</label><input id="f_title" placeholder="e.g. RFP W912GB-26-R-0042"></div>
+      <div class="fld"><label>Agency / Buyer</label><input id="f_agency" placeholder="e.g. USDA · GSA · Dept. of Veterans Affairs"></div>
+      <div class="fld row">
+        <div><label>Est. Value</label><input id="f_value" placeholder="$2.4M"></div>
+        <div><label>Due Date</label><input type="date" id="f_due"></div>
+      </div>
+      <div class="fld row">
+        <div><label>Score (0-100)</label><input type="number" id="f_score" min="0" max="100" value="70"></div>
+        <div>
+          <label>Column</label>
+          <select id="f_col">
+            <option value="lead">Lead</option>
+            <option value="qualify">Qualify · Scoring</option>
+            <option value="bidding">Writing · Bidding</option>
+            <option value="submitted">Submitted · Waiting</option>
+            <option value="won">Won · Active</option>
+          </select>
+        </div>
+      </div>
+      <div class="fld">
+        <label>Set-Asides / Tags</label>
+        <div class="checkgroup">
+          <label><input type="checkbox" value="8(a)">8(a)</label>
+          <label><input type="checkbox" value="HUBZone">HUBZone</label>
+          <label><input type="checkbox" value="WOSB">WOSB</label>
+          <label><input type="checkbox" value="SDVOSB">SDVOSB</label>
+          <label><input type="checkbox" value="SB">Small Biz</label>
+          <label><input type="checkbox" value="Prime">Prime</label>
+          <label><input type="checkbox" value="Sub">Subcontract</label>
+          <label><input type="checkbox" value="Teaming">Teaming</label>
+          <label><input type="checkbox" value="Grant">Grant</label>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <button class="cancel" onclick="closeModal()">Cancel</button>
+      <button class="save" onclick="saveCard()">Save Opportunity</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'tcp_pipeline_v1';
+let state = { cards: [] };
+let editingId = null;
+
+/* Seed data — helpful for first-time view */
+const seed = [
+  { id: 'c1', title: 'USDA Rural Facility Maint', agency: 'USDA · Southeast Region', value: '$2.4M', due: '2026-08-15', score: 92, col: 'bidding', tags: ['8(a)', 'Prime'] },
+  { id: 'c2', title: 'VA IT Staff Aug', agency: 'Dept. of Veterans Affairs', value: '$890K', due: '2026-08-29', score: 85, col: 'qualify', tags: ['SDVOSB', 'Prime'] },
+  { id: 'c3', title: 'GSA Janitorial Region 4', agency: 'General Services Admin', value: '$1.1M', due: '2026-09-03', score: 74, col: 'lead', tags: ['HUBZone', 'Sub'] },
+  { id: 'c4', title: 'DoD Cybersecurity Assessment', agency: 'Dept. of Defense', value: '$3.2M', due: '2026-08-22', score: 78, col: 'qualify', tags: ['Teaming', 'Prime'] },
+  { id: 'c5', title: 'HUD Community Grant', agency: 'HUD · Rural Housing', value: '$450K', due: '2026-10-01', score: 88, col: 'lead', tags: ['Grant', 'WOSB'] },
+  { id: 'c6', title: 'Torres Logistics (SC MBE)', agency: 'SC State Contract', value: '$620K', due: '2026-07-30', score: 95, col: 'submitted', tags: ['SB', 'Prime'] },
+  { id: 'c7', title: 'Charleston Airport ACDBE', agency: 'Charleston Intl Airport', value: '$1.8M', due: '2026-08-06', score: 82, col: 'won', tags: ['SB', 'Prime'] },
+];
+
+function load(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){
+    try { state = JSON.parse(raw); } catch(e){ state = { cards: seed }; }
+  } else {
+    state = { cards: seed };
+  }
+  render();
+}
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function bandFor(score){
+  if(score >= 90) return 'priority';
+  if(score >= 80) return 'strong';
+  if(score >= 70) return 'gap';
+  if(score >= 60) return 'monitor';
+  return 'nobid';
+}
+
+function daysUntil(dateStr){
+  if(!dateStr) return null;
+  const d = new Date(dateStr);
+  const now = new Date();
+  return Math.ceil((d - now) / 86400000);
+}
+
+function render(){
+  const cols = ['lead','qualify','bidding','submitted','won'];
+  cols.forEach(c => {
+    const body = document.querySelector(`[data-drop="${c}"]`);
+    body.innerHTML = '';
+    const cards = state.cards.filter(x => x.col === c);
+    cards.forEach(card => body.appendChild(renderCard(card)));
+    /* Add-card button */
+    const add = document.createElement('button');
+    add.className = 'add-card';
+    add.textContent = '+ Add Opportunity';
+    add.onclick = () => openModal(null, c);
+    body.appendChild(add);
+    /* count */
+    document.querySelector(`.col[data-col="${c}"] .count`).textContent = cards.length;
+  });
+
+  /* Header stats */
+  const active = state.cards.filter(c => c.col !== 'won').length;
+  document.getElementById('s-total').textContent = active;
+  const pipeline = state.cards.filter(c => c.col !== 'won').reduce((sum, c) => sum + parseValue(c.value), 0);
+  document.getElementById('s-value').textContent = fmt(pipeline);
+  const won = state.cards.filter(c => c.col === 'won').reduce((sum, c) => sum + parseValue(c.value), 0);
+  document.getElementById('s-won').textContent = fmt(won);
+  const submittedOrWon = state.cards.filter(c => c.col === 'won' || c.col === 'submitted').length;
+  const wonCount = state.cards.filter(c => c.col === 'won').length;
+  document.getElementById('s-winrate').textContent = submittedOrWon > 0 ? Math.round((wonCount / submittedOrWon) * 100) + '%' : '—';
+}
+
+function parseValue(v){
+  if(!v) return 0;
+  const s = v.replace(/[$,]/g,'').toLowerCase().trim();
+  if(s.endsWith('m')) return parseFloat(s) * 1000000;
+  if(s.endsWith('k')) return parseFloat(s) * 1000;
+  return parseFloat(s) || 0;
+}
+function fmt(n){
+  if(n >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M';
+  if(n >= 1000) return '$' + (n/1000).toFixed(0) + 'K';
+  return '$' + n;
+}
+
+function renderCard(card){
+  const el = document.createElement('div');
+  el.className = 'oppo';
+  el.draggable = true;
+  el.dataset.id = card.id;
+  const days = daysUntil(card.due);
+  const dueClass = (days !== null && days <= 7) ? 'due soon' : 'due';
+  const dueText = days === null ? '—' : days < 0 ? 'Past due' : days === 0 ? 'Due today' : days + 'd left';
+  el.innerHTML = `
+    <button class="del" onclick="deleteCard('${card.id}', event)" title="Delete">×</button>
+    <div class="top">
+      <div class="title">${escapeHtml(card.title)}</div>
+      <div class="score ${bandFor(card.score)}">${card.score}</div>
+    </div>
+    <div class="agency">${escapeHtml(card.agency || '—')}</div>
+    <div class="tags">${(card.tags || []).map(t => `<span class="tag ${t === '8(a)' || t.includes('WOSB') || t.includes('HUB') || t.includes('SDV') ? 'setaside' : ''}">${escapeHtml(t)}</span>`).join('')}</div>
+    <div class="meta">
+      <span class="val">${escapeHtml(card.value || '—')}</span>
+      <span class="${dueClass}">${dueText}</span>
+    </div>
+  `;
+  el.addEventListener('dragstart', e => {
+    el.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', card.id);
+  });
+  el.addEventListener('dragend', () => el.classList.remove('dragging'));
+  el.addEventListener('click', e => {
+    if(e.target.classList.contains('del')) return;
+    openModal(card.id);
+  });
+  return el;
+}
+
+function escapeHtml(s){ return String(s || '').replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* Drag & drop */
+document.querySelectorAll('.col-body').forEach(body => {
+  body.addEventListener('dragover', e => {
+    e.preventDefault();
+    body.classList.add('drag-over');
+  });
+  body.addEventListener('dragleave', () => body.classList.remove('drag-over'));
+  body.addEventListener('drop', e => {
+    e.preventDefault();
+    body.classList.remove('drag-over');
+    const id = e.dataTransfer.getData('text/plain');
+    const card = state.cards.find(c => c.id === id);
+    if(card){
+      card.col = body.dataset.drop;
+      save(); render();
+    }
+  });
+});
+
+/* Modal */
+function openModal(id, defaultCol){
+  editingId = id || null;
+  document.getElementById('modalTitle').textContent = id ? 'Edit Opportunity' : 'New Opportunity';
+  const modal = document.getElementById('modal');
+  const c = id ? state.cards.find(x => x.id === id) : null;
+  document.getElementById('f_title').value = c?.title || '';
+  document.getElementById('f_agency').value = c?.agency || '';
+  document.getElementById('f_value').value = c?.value || '';
+  document.getElementById('f_due').value = c?.due || '';
+  document.getElementById('f_score').value = c?.score ?? 70;
+  document.getElementById('f_col').value = c?.col || defaultCol || 'lead';
+  document.querySelectorAll('.checkgroup input').forEach(cb => {
+    cb.checked = (c?.tags || []).includes(cb.value);
+  });
+  modal.classList.add('show');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('show'); editingId = null; }
+document.getElementById('modal').addEventListener('click', e => {
+  if(e.target.id === 'modal') closeModal();
+});
+
+function saveCard(){
+  const title = document.getElementById('f_title').value.trim();
+  if(!title){ alert('Opportunity name required'); return; }
+  const tags = [...document.querySelectorAll('.checkgroup input:checked')].map(cb => cb.value);
+  const data = {
+    id: editingId || 'c' + Date.now(),
+    title,
+    agency: document.getElementById('f_agency').value.trim(),
+    value: document.getElementById('f_value').value.trim(),
+    due: document.getElementById('f_due').value,
+    score: +document.getElementById('f_score').value || 0,
+    col: document.getElementById('f_col').value,
+    tags,
+  };
+  if(editingId){
+    const idx = state.cards.findIndex(c => c.id === editingId);
+    if(idx >= 0) state.cards[idx] = data;
+  } else {
+    state.cards.push(data);
+  }
+  save(); render(); closeModal();
+}
+
+function deleteCard(id, ev){
+  ev.stopPropagation();
+  if(!confirm('Delete this opportunity?')) return;
+  state.cards = state.cards.filter(c => c.id !== id);
+  save(); render();
+}
+
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `tcp-pipeline-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function clearAll(){
+  if(!confirm('Clear entire pipeline? This cannot be undone.')) return;
+  state = { cards: [] };
+  save(); render();
+}
+
+load();
+</script>
+
+</body>
+</html>

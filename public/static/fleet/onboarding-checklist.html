@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Client Onboarding — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0; --line-2:#D6CFB8;
+    --ok:#2F6B4A;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#EBE4D2;font-family:var(--sans);color:var(--navy)}
+  body{padding:40px 20px 100px}
+  .page{max-width:1080px;margin:0 auto;background:#fff;border-radius:2px;box-shadow:0 20px 50px -30px rgba(10,22,40,.2);overflow:hidden}
+  .page::before{content:"";display:block;height:8px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+
+  header{padding:40px 48px 32px;border-bottom:1px solid var(--line);position:relative}
+  .brand-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand svg{width:46px;height:46px;color:var(--navy);flex:none}
+  .brand .txt{font-family:var(--serif);font-weight:700;font-size:16px;line-height:1.05}
+  .brand .txt h1{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1}
+  .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;margin-top:3px;font-weight:500}
+  .meta{text-align:right;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;line-height:1.7}
+  .meta b{color:var(--navy);display:block;font-family:var(--sans);font-size:13px;letter-spacing:0;text-transform:none;font-weight:600;margin-top:2px}
+
+  header h2{font-family:var(--serif);font-size:52px;font-weight:800;letter-spacing:-.02em;line-height:1;margin-bottom:12px}
+  header h2 em{font-style:italic;color:var(--red);font-weight:600}
+  header .lede{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--slate);max-width:640px;line-height:1.5}
+
+  .client-strip{margin-top:28px;padding:20px 24px;background:var(--ivory);border-left:4px solid var(--gold);display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+  .client-strip .fld label{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin-bottom:3px}
+  .client-strip .fld input{background:transparent;border:0;border-bottom:1px dashed var(--line-2);padding:5px 0;font-family:var(--serif);font-size:15px;color:var(--navy);width:100%;outline:none;font-weight:600}
+  .client-strip .fld input:focus{border-bottom-color:var(--gold-2)}
+
+  /* PROGRESS OVERVIEW */
+  .overview{padding:24px 48px;background:var(--navy);color:var(--ivory);display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:24px;position:relative;overflow:hidden}
+  .overview::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 50%,rgba(201,169,97,.15),transparent 60%);pointer-events:none}
+  .overview .st{position:relative}
+  .overview .st b{font-family:var(--serif);font-size:36px;font-weight:800;color:var(--gold-3);letter-spacing:-.01em;line-height:1;display:block}
+  .overview .st span{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-top:6px;display:block}
+  .overview .bar{height:6px;background:rgba(201,169,97,.2);border-radius:1px;overflow:hidden;margin-top:8px}
+  .overview .bar span{display:block;height:100%;background:var(--gold);transition:width .3s}
+
+  /* PHASE */
+  .phase{padding:36px 48px;border-bottom:1px solid var(--line);position:relative}
+  .phase::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px}
+  .phase.p1::before{background:linear-gradient(180deg,var(--gold-3),var(--gold))}
+  .phase.p2::before{background:linear-gradient(180deg,var(--gold),var(--gold-2))}
+  .phase.p3::before{background:linear-gradient(180deg,var(--gold-2),var(--navy))}
+  .phase-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .phase-head h3{font-family:var(--serif);font-size:36px;font-weight:800;letter-spacing:-.01em}
+  .phase-head h3 em{font-style:italic;color:var(--red);font-weight:600}
+  .phase-head .days{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600;text-align:right}
+  .phase-head .days b{display:block;font-family:var(--serif);font-size:44px;color:var(--navy);font-weight:800;letter-spacing:-.02em;line-height:1}
+
+  .checklist{display:flex;flex-direction:column;gap:6px}
+  .item{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;border:1px solid var(--line-2);border-radius:2px;cursor:pointer;transition:all .12s;background:#fff}
+  .item:hover{background:var(--ivory)}
+  .item input{width:18px;height:18px;flex:none;margin-top:2px;accent-color:var(--navy);cursor:pointer}
+  .item .body{flex:1}
+  .item .title{font-family:var(--serif);font-size:16px;font-weight:600;letter-spacing:-.005em;line-height:1.25}
+  .item .desc{font-size:12.5px;color:var(--slate);line-height:1.5;margin-top:3px}
+  .item .owner{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--gold-2);text-transform:uppercase;font-weight:600;flex:none;padding-top:2px;width:110px;text-align:right}
+  .item:has(input:checked){background:#F4F9F5;border-color:var(--ok)}
+  .item:has(input:checked) .title{color:var(--slate);text-decoration:line-through;text-decoration-color:var(--ok);text-decoration-thickness:2px}
+  .item:has(input:checked) .owner{color:var(--ok)}
+
+  /* SIGN-OFF */
+  .signoff{padding:36px 48px;background:var(--ivory);border-bottom:1px solid var(--line)}
+  .signoff h4{font-family:var(--serif);font-size:24px;font-weight:800;letter-spacing:-.01em;margin-bottom:16px}
+  .signoff .row{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px}
+  .sig-box{padding:16px 0;border-bottom:1.5px solid var(--navy)}
+  .sig-box label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;font-weight:600;margin-top:6px}
+  .sig-box input{background:transparent;border:0;font-family:var(--serif);font-size:22px;font-style:italic;color:var(--navy);width:100%;padding:8px 0;outline:none}
+  .sig-box.date{border-bottom-style:dashed}
+  .sig-box.date input{font-style:normal;font-size:16px}
+
+  /* FOOTER */
+  footer{padding:24px 48px;background:var(--navy);color:var(--gold-3);text-align:center;font-family:var(--serif);font-style:italic;font-size:16px;line-height:1.5}
+  footer .ref{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:8px;font-style:normal;font-weight:600}
+
+  .actions{padding:20px 48px;background:#fff;display:flex;justify-content:center;gap:10px}
+  .actions button{background:var(--navy);color:var(--gold-3);padding:12px 24px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border:0;border-radius:2px;cursor:pointer;transition:all .15s}
+  .actions button:hover{background:var(--gold);color:var(--navy)}
+  .actions button.ghost{background:transparent;color:var(--navy);border:1px solid var(--navy)}
+  .actions button.ghost:hover{background:var(--navy);color:var(--gold-3)}
+
+  @media print{
+    body{background:#fff;padding:0}
+    .page{box-shadow:none}
+    .actions{display:none}
+    .item{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="page">
+  <header>
+    <div class="brand-row">
+      <div class="brand">
+        <svg><use href="#mark"/></svg>
+        <div class="txt"><h1>Client Onboarding</h1><span>The Contracting Preacher · 90-Day Roadmap</span></div>
+      </div>
+      <div class="meta">Vol. 04 · Onboarding<b>Version 1.0 · July 2026</b></div>
+    </div>
+    <h2>From day one <em>— to day 90.</em></h2>
+    <div class="lede">Every client, every engagement, walks the same trusted path. Signable checkpoints. Named owners. No surprises.</div>
+
+    <div class="client-strip">
+      <div class="fld"><label>Client Name</label><input placeholder="Business legal name"></div>
+      <div class="fld"><label>Engagement Start Date</label><input type="date"></div>
+      <div class="fld"><label>Package</label><input placeholder="Starter · Pursuit · Retainer"></div>
+    </div>
+  </header>
+
+  <div class="overview">
+    <div class="st"><b id="ov-total">0/0</b><span>Tasks Complete</span><div class="bar"><span id="ov-bar" style="width:0%"></span></div></div>
+    <div class="st"><b id="ov-p1">0/0</b><span>Phase 1 · Days 1-30</span><div class="bar"><span id="ov-bar1" style="width:0%"></span></div></div>
+    <div class="st"><b id="ov-p2">0/0</b><span>Phase 2 · Days 31-60</span><div class="bar"><span id="ov-bar2" style="width:0%"></span></div></div>
+    <div class="st"><b id="ov-p3">0/0</b><span>Phase 3 · Days 61-90</span><div class="bar"><span id="ov-bar3" style="width:0%"></span></div></div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase p1" data-phase="1">
+    <div class="phase-head">
+      <h3>Phase 1 · <em>Foundation</em></h3>
+      <div class="days"><b>30</b>Days · Registration &amp; Intake</div>
+    </div>
+    <div class="checklist">
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Welcome call &amp; kickoff (30 min)</div><div class="desc">Introductions · engagement scope · communication cadence · confirm goals.</div></div><div class="owner">Dr. McKnight</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Send &amp; receive completed Client Intake Form</div><div class="desc">All 9 sections completed · flagged missing fields · encrypted vault access set up for sensitive data.</div></div><div class="owner">Client + Ops</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Verify business identity documents</div><div class="desc">Articles of formation · EIN letter · state Good Standing certificate · operating agreement.</div></div><div class="owner">Ops</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">SAM.gov entity registration (or renewal)</div><div class="desc">Complete SAM.gov registration · UEI issued · CAGE code assigned · banking/EFT confirmed matches IRS records.</div></div><div class="owner">Dr. McKnight</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">NAICS code optimization</div><div class="desc">Primary + up to 5 secondary codes selected · size standards confirmed · PSC/FSC codes cross-mapped.</div></div><div class="owner">Dr. McKnight</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Ownership + certification eligibility screen</div><div class="desc">Determine 8(a) / HUBZone / WOSB / SDVOSB eligibility · document supporting evidence.</div></div><div class="owner">Dr. McKnight</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">First capability statement draft delivered</div><div class="desc">One-page federal-buyer-ready capability statement · reviewed with client · revisions incorporated.</div></div><div class="owner">Proposal Team</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Data room provisioned</div><div class="desc">24-folder taxonomy set up · initial documents uploaded · access rights configured · sensitive vault segregated.</div></div><div class="owner">Ops</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">30-day check-in call</div><div class="desc">Review progress · surface blockers · confirm Phase 2 targets.</div></div><div class="owner">Dr. McKnight</div></label>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase p2" data-phase="2">
+    <div class="phase-head">
+      <h3>Phase 2 · <em>Pipeline</em></h3>
+      <div class="days"><b>60</b>Days · Certifications &amp; Targeting</div>
+    </div>
+    <div class="checklist">
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Certification applications submitted</div><div class="desc">Applicable certs (8(a) / WOSB / HUBZone / SDVOSB) filed · SBA acknowledgments received · timeline confirmed.</div></div><div class="owner">Dr. McKnight</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">SC state registrations</div><div class="desc">SC MBE · SCDOT DBE/SBE · county/municipal vendor registrations · local chamber outreach.</div></div><div class="owner">Ops</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Grants.gov organization profile complete</div><div class="desc">EBiz POC + AOR designated · profile matches SAM data · practice grant workflow validated.</div></div><div class="owner">Dr. McKnight</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Opportunity scanning live</div><div class="desc">Daily search across SAM.gov, Grants.gov, GSA eBuy, state portals · deduplication + tagging active.</div></div><div class="owner">Ops · AI Engine</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">First shortlist scored &amp; delivered</div><div class="desc">5-8 top opportunities scored via Bid/No-Bid engine · client walk-through call · priorities ranked.</div></div><div class="owner">Dr. McKnight</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Proposal content library built</div><div class="desc">Executive summary · technical approach · management approach · QC · cybersecurity · past performance narratives drafted.</div></div><div class="owner">Proposal Team</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Teaming outreach opened</div><div class="desc">Prime-contractor introductions · JV opportunities · mentor-protégé prospects · at least 3 conversations started.</div></div><div class="owner">Dr. McKnight</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">60-day check-in call</div><div class="desc">Review pipeline · confirm first-bid target · unblock any pending items.</div></div><div class="owner">Dr. McKnight</div></label>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase p3" data-phase="3">
+    <div class="phase-head">
+      <h3>Phase 3 · <em>First Bid</em></h3>
+      <div class="days"><b>90</b>Days · Submission &amp; Growth</div>
+    </div>
+    <div class="checklist">
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Bid/No-Bid decision recorded</div><div class="desc">Target opportunity scored + logged · pursuit team + roles confirmed · authorized rep briefed.</div></div><div class="owner">Dr. McKnight + Client AOR</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Compliance matrix built</div><div class="desc">Every RFP requirement mapped to volume/section · owner assigned · status tracked.</div></div><div class="owner">Proposal Mgr</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Draft proposal internal review (color review)</div><div class="desc">Pink → Red → Gold-team reviews complete · client SME sign-off on technical content.</div></div><div class="owner">Proposal Team</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Pricing volume finalized</div><div class="desc">Cost build-up · subcontractor quotes · margin review · client authorized-rep price approval.</div></div><div class="owner">Client AOR</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Authorized-rep final sign-off &amp; submission</div><div class="desc">Owner or AOR signs certifications · package uploaded through required portal · confirmation captured.</div></div><div class="owner">Client AOR</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">Post-submission follow-up scheduled</div><div class="desc">Debrief request queued · CO clarification response ready · timeline for award notification tracked.</div></div><div class="owner">Dr. McKnight</div></label>
+      <label class="item"><input type="checkbox"><div class="body"><div class="title">90-day review &amp; renewal / retainer conversation</div><div class="desc">Full engagement retrospective · lessons captured to memory · ongoing pipeline plan agreed.</div></div><div class="owner">Dr. McKnight + Client</div></label>
+    </div>
+  </div>
+
+  <!-- SIGN-OFF -->
+  <div class="signoff">
+    <h4>Engagement Sign-Off</h4>
+    <p style="font-family:var(--serif);font-style:italic;font-size:14px;color:var(--slate);line-height:1.5">Both parties confirm receipt of this 90-day roadmap and acknowledge the responsibilities outlined above.</p>
+    <div class="row">
+      <div>
+        <div class="sig-box"><input placeholder="Signature"><label>Client Authorized Representative</label></div>
+        <div class="sig-box date" style="margin-top:14px"><input type="date"><label>Date</label></div>
+      </div>
+      <div>
+        <div class="sig-box"><input placeholder="Signature" value="Dr. McKnight"><label>The Contracting Preacher · Dr. McKnight</label></div>
+        <div class="sig-box date" style="margin-top:14px"><input type="date"><label>Date</label></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button onclick="window.print()">⎙ Print / Save PDF</button>
+    <button class="ghost" onclick="exportState()">↓ Export Progress</button>
+    <button class="ghost" onclick="if(confirm('Reset all checkboxes?')){document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);update();}">↺ Reset</button>
+  </div>
+
+  <footer>
+    "Commit to the Lord whatever you do, and he will establish your plans."
+    <span class="ref">— Proverbs 16:3 · Client Onboarding · TheContractingPreacher.com</span>
+  </footer>
+</div>
+
+<script>
+function update(){
+  const all = document.querySelectorAll('.item input');
+  const done = document.querySelectorAll('.item input:checked');
+  document.getElementById('ov-total').textContent = done.length + '/' + all.length;
+  document.getElementById('ov-bar').style.width = ((done.length / all.length) * 100 || 0) + '%';
+
+  [1,2,3].forEach(p => {
+    const phaseItems = document.querySelectorAll(`.phase[data-phase="${p}"] .item input`);
+    const phaseDone = document.querySelectorAll(`.phase[data-phase="${p}"] .item input:checked`);
+    document.getElementById('ov-p' + p).textContent = phaseDone.length + '/' + phaseItems.length;
+    document.getElementById('ov-bar' + p).style.width = ((phaseDone.length / phaseItems.length) * 100 || 0) + '%';
+  });
+}
+document.querySelectorAll('.item input').forEach(cb => cb.addEventListener('change', update));
+function exportState(){
+  const rows = [...document.querySelectorAll('.item')].map(el => ({
+    phase: el.closest('.phase').dataset.phase,
+    task: el.querySelector('.title').textContent,
+    owner: el.querySelector('.owner').textContent,
+    complete: el.querySelector('input').checked
+  }));
+  const blob = new Blob([JSON.stringify(rows, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'onboarding-progress.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+update();
+</script>
+
+</body>
+</html>

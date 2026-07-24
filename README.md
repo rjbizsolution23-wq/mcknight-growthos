@@ -442,6 +442,30 @@ Fail-soft chain — first configured provider wins, automatic fallthrough on err
 - Live prod campaign generation E2E test passed (Workers AI), test row cleaned.
 - Sitemap now 73 routes (incl. `/traffic`).
 
+
+## v6.6 — Fleet Command Center (Official MOG Handoff Package)
+
+Dr. McKnight's complete **Fleet Command Center** handoff — 27 pixel-committed HTML deliverables, brand assets, and design tokens — is now integrated and served live from GrowthOS.
+
+### Fleet Command Center page (`/fleet`)
+Organized directory of the entire package, grouped exactly per the handoff spec:
+- **P0 Command Tools** (publication gate): Verification Packet · Fleet Dashboard · Fleet Brand System · Legal Entity Map · Clearance Tracker · Compliance Packets
+- **Brand Kit & Identity**: Brand Portal · Brand Kit · Media & Presence Pack
+- **Client-Facing Tools**: Client Intake · Bid Scorecard · Opportunity Kanban · Compliance Matrix · Onboarding · Intake Workbook
+- **Business Operations**: Practical Assets (invoice/NDA/teaming) · Capability Statement · SAM Checklist
+- **Sales · Voice · Media**: Outreach Kit · Testimonials · Thank You & Certificate · Grant Tracker · FAQ
+- **Content**: Proposal Deck (with `deck_stage.js` engine) · Newsletter · Award Announcements
+- Publication Lockdown banner + 10-brand fleet pill strip (official accent hexes from the handoff)
+
+### Static package (`/static/fleet/`)
+- All 27 documents served verbatim with slugified filenames; internal cross-links rewritten so the package's own `index.html` hub navigates correctly.
+- `assets/` — official OG image, horizontal logos (light/dark), shield marks (gold/navy/outline), favicon, apple-touch-icon.
+- Developer files: `design-tokens.css` (paste-ready TCP tokens), `tailwind.config.example.js`, `deck_stage.js`, `HANDOFF-README.md` (full 30-deliverable spec).
+
+### Verified
+- 27/27 documents return 200 in production; brand assets, tokens, and deck engine all live.
+- Sitemap now 74 routes (incl. `/fleet`).
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Thank You + Certificate — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:48px 24px 100px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1180px;margin:0 auto}
+
+  .doc-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--navy);padding-bottom:20px;margin-bottom:36px}
+  .doc-head .title{font-family:var(--serif);font-size:26px;font-weight:700;margin-top:4px}
+  .doc-head .meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+  .doc-head .kv{display:flex;gap:28px;font-family:var(--mono);font-size:11px;color:var(--slate)}
+  .doc-head .kv b{color:var(--navy);display:block;letter-spacing:.14em;font-weight:600;text-transform:uppercase}
+
+  section{margin-bottom:56px}
+  .sec-head{display:flex;align-items:baseline;gap:24px;margin-bottom:22px;border-bottom:1px solid rgba(10,22,40,.15);padding-bottom:14px}
+  .sec-num{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--gold-2);font-weight:600}
+  .sec-title{font-family:var(--serif);font-size:28px;font-weight:800;letter-spacing:-.015em}
+  .sec-title em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-sub{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)}
+
+  /* THANK-YOU CARD (folded 5×7) */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .card-doc{aspect-ratio:5/7;background:#fff;border-radius:2px;position:relative;overflow:hidden;box-shadow:0 30px 60px -30px rgba(10,22,40,.4);padding:44px 40px;display:flex;flex-direction:column;justify-content:space-between}
+  .card-doc.dark{background:var(--navy);color:var(--ivory)}
+  .card-doc.dark::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.22),transparent 50%);pointer-events:none}
+  .card-doc .lbl-mini{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;font-weight:700;position:relative}
+  .card-doc.dark .lbl-mini{color:var(--gold)}
+  .card-doc .brand{display:flex;align-items:center;gap:10px;position:relative}
+  .card-doc .brand svg{width:34px;height:34px;color:var(--navy)}
+  .card-doc.dark .brand svg{color:var(--gold)}
+  .card-doc .brand .txt{font-family:var(--serif);font-weight:700;font-size:13px;line-height:1.1}
+  .card-doc.dark .brand .txt{color:var(--ivory)}
+  .card-doc .brand .txt span{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--gold-2);text-transform:uppercase;font-weight:500;margin-top:2px}
+  .card-doc.dark .brand .txt span{color:var(--gold-3)}
+
+  .card-doc h2{font-family:var(--serif);font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1;position:relative;margin:24px 0 14px}
+  .card-doc h2 em{font-style:italic;color:var(--red);font-weight:600}
+  .card-doc.dark h2 em{color:var(--gold-3)}
+  .card-doc .msg{font-family:var(--serif);font-style:italic;font-size:16px;line-height:1.55;color:var(--slate);position:relative;max-width:340px}
+  .card-doc.dark .msg{color:var(--gold-3)}
+  .card-doc .sign{font-family:var(--serif);font-style:italic;font-size:26px;color:var(--navy);position:relative;margin-top:24px;letter-spacing:-.005em}
+  .card-doc.dark .sign{color:var(--ivory)}
+  .card-doc .sign-line{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600;margin-top:4px}
+  .card-doc.dark .sign-line{color:var(--gold-3)}
+  .card-doc .foot{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600;position:relative;padding-top:14px;border-top:1px solid var(--line);text-align:center;line-height:1.7}
+  .card-doc.dark .foot{color:var(--gold-3);border-top-color:rgba(201,169,97,.3)}
+  .card-doc .foot .verse{font-family:var(--serif);font-style:italic;font-size:11px;text-transform:none;letter-spacing:0;color:var(--gold-2);margin-top:4px}
+  .card-doc.dark .foot .verse{color:var(--gold)}
+
+  /* POSTCARD (6×4 landscape) */
+  .postcard{aspect-ratio:6/4;background:#fff;border-radius:2px;overflow:hidden;box-shadow:0 20px 40px -20px rgba(10,22,40,.35);display:grid;grid-template-columns:1fr 1fr}
+  .postcard .front{background:var(--navy);color:var(--ivory);padding:28px 32px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between}
+  .postcard .front::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.24),transparent 50%);pointer-events:none}
+  .postcard .front .brand{display:flex;align-items:center;gap:10px;position:relative}
+  .postcard .front .brand svg{width:32px;height:32px;color:var(--gold)}
+  .postcard .front .brand .txt{font-family:var(--serif);font-weight:700;font-size:12px;line-height:1.1}
+  .postcard .front .brand .txt span{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--gold-3);text-transform:uppercase;font-weight:500;margin-top:2px}
+  .postcard .front h3{font-family:var(--serif);font-size:32px;font-weight:800;letter-spacing:-.01em;line-height:1;position:relative;margin-top:16px}
+  .postcard .front h3 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .postcard .front .lede{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--gold-3);position:relative;margin-top:6px}
+  .postcard .front .foot{font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;position:relative;font-weight:600}
+
+  .postcard .back{padding:24px 26px;background:#fff;display:grid;grid-template-columns:1fr 100px;gap:14px}
+  .postcard .back .msg-area{border-right:1px dashed var(--line);padding-right:14px}
+  .postcard .back .msg-area .lbl{font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-bottom:8px}
+  .postcard .back .msg-area p{font-family:var(--serif);font-style:italic;font-size:12.5px;line-height:1.5;color:var(--slate)}
+  .postcard .back .msg-area .sig{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--navy);margin-top:8px}
+  .postcard .back .addr .stamp{width:60px;height:60px;border:2px dashed var(--line);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600}
+  .postcard .back .addr .to{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:700;text-align:center;line-height:1.6}
+
+  /* CERTIFICATE (8.5×11 landscape) */
+  .cert{aspect-ratio:11/8.5;background:#fff;border:1px solid var(--line);border-radius:2px;position:relative;overflow:hidden;box-shadow:0 30px 60px -30px rgba(10,22,40,.4);padding:0}
+  .cert-frame{position:absolute;inset:24px;border:2px solid var(--gold);pointer-events:none}
+  .cert-frame::before{content:"";position:absolute;inset:6px;border:1px solid var(--gold);opacity:.5}
+  .cert-inner{padding:56px 72px;height:100%;display:flex;flex-direction:column;justify-content:space-between;position:relative}
+  .cert-top{display:flex;justify-content:space-between;align-items:center;position:relative}
+  .cert-top .brand{display:flex;align-items:center;gap:14px}
+  .cert-top .brand svg{width:52px;height:52px;color:var(--navy)}
+  .cert-top .brand .txt{font-family:var(--serif);font-weight:700;font-size:14px;line-height:1.05}
+  .cert-top .brand .txt h1{font-family:var(--serif);font-size:16px;font-weight:800;letter-spacing:-.005em}
+  .cert-top .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;font-weight:500;margin-top:2px}
+  .cert-top .seal svg{width:80px;height:80px;color:var(--gold)}
+  .cert-body{text-align:center;position:relative;padding:16px 0}
+  .cert-body .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.4em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+  .cert-body h2{font-family:var(--serif);font-size:56px;font-weight:800;letter-spacing:-.02em;line-height:1;margin:14px 0 6px}
+  .cert-body h2 em{font-style:italic;color:var(--red);font-weight:600}
+  .cert-body .presented{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--slate);margin-top:6px}
+  .cert-body .recipient{font-family:var(--serif);font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1;color:var(--navy);margin:20px 0 10px;padding:14px 0;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)}
+  .cert-body .desc{font-family:var(--serif);font-size:15px;color:var(--slate);line-height:1.55;max-width:600px;margin:0 auto}
+  .cert-body .desc b{color:var(--navy);font-weight:700}
+  .cert-foot{display:grid;grid-template-columns:1fr 1fr;gap:64px;padding-top:20px;position:relative}
+  .cert-sig{padding-top:12px;border-top:1.5px solid var(--navy)}
+  .cert-sig .name{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--navy);letter-spacing:-.005em}
+  .cert-sig .role{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600;margin-top:4px}
+  .cert-corner{position:absolute;bottom:56px;right:72px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--gold-2);text-transform:uppercase;text-align:right;line-height:1.7;font-weight:600}
+  .cert-corner b{display:block;font-family:var(--serif);font-size:14px;font-weight:800;color:var(--navy);letter-spacing:-.005em;text-transform:none}
+
+  /* GOLD ORNAMENT */
+  .cert-orn{position:absolute;top:50%;transform:translateY(-50%);width:20px;height:60%}
+  .cert-orn.left{left:6px}
+  .cert-orn.right{right:6px}
+  .cert-orn::before,.cert-orn::after{content:"";position:absolute;top:0;bottom:0;width:1px;background:var(--gold)}
+  .cert-orn::before{left:6px;opacity:.4}
+  .cert-orn::after{right:6px}
+
+  @media (max-width:900px){ .cards{grid-template-columns:1fr} }
+  @media print{ body{background:#fff;padding:0} .card-doc, .postcard, .cert{box-shadow:none;page-break-inside:avoid} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+  </symbol>
+  <symbol id="seal" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="currentColor" stroke-width=".6" opacity=".5"/>
+    <defs><path id="cseal" d="M 60 60 m -38 0 a 38 38 0 1 1 76 0" fill="none"/></defs>
+    <text font-family="IBM Plex Mono, monospace" font-size="6.5" fill="currentColor" letter-spacing="2.2">
+      <textPath href="#cseal" startOffset="10%">FAITHFULLY DONE · EST. FEDERAL ·</textPath>
+    </text>
+    <g transform="translate(35,35) scale(0.5)">
+      <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="#0A1628"/>
+      <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+      <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    </g>
+  </symbol>
+</svg>
+
+<div class="page">
+  <div class="doc-head">
+    <div>
+      <div class="meta">Volume 09 · Client Ceremonies</div>
+      <div class="title">Thank-You Card · Postcard · Certificate</div>
+    </div>
+    <div class="kv">
+      <div><b>Formats</b>Fold-card · Postcard · 11×8.5 cert</div>
+      <div><b>Version</b>1.0</div>
+    </div>
+  </div>
+
+  <!-- THANK-YOU CARDS -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">Thank-You <em>Cards</em></h2>
+      <span class="sec-sub">5×7 folded · print two-per-page</span>
+    </div>
+
+    <div class="cards">
+      <div class="card-doc">
+        <div>
+          <div class="lbl-mini">Card · Ivory</div>
+          <div class="brand" style="margin-top:12px">
+            <svg><use href="#mark"/></svg>
+            <div class="txt">The Contracting Preacher<span>Dr. McKnight</span></div>
+          </div>
+        </div>
+        <div>
+          <h2>Thank <em>you.</em></h2>
+          <div class="msg">Working alongside [Client First Name] has been a real gift. The trust matters. The work matters. Grateful for both.</div>
+          <div class="sign" style="margin-top:20px">— Dr. McKnight</div>
+          <div class="sign-line">The Contracting Preacher</div>
+        </div>
+        <div class="foot">
+          (202) 276-2913 · thecontractingpreacher.com
+          <div class="verse">"…faithfully done." — Prov 16:3</div>
+        </div>
+      </div>
+
+      <div class="card-doc dark">
+        <div>
+          <div class="lbl-mini">Card · Navy</div>
+          <div class="brand" style="margin-top:12px">
+            <svg><use href="#mark"/></svg>
+            <div class="txt">The Contracting Preacher<span>Dr. McKnight</span></div>
+          </div>
+        </div>
+        <div>
+          <h2>With <em>gratitude.</em></h2>
+          <div class="msg">Every referral and every good word travels farther than you know. Thank you for trusting our practice with your name.</div>
+          <div class="sign" style="margin-top:20px">— Dr. McKnight</div>
+          <div class="sign-line">The Contracting Preacher</div>
+        </div>
+        <div class="foot">
+          (202) 276-2913 · thecontractingpreacher.com
+          <div class="verse">"…faithfully done." — Prov 16:3</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POSTCARD -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">Postcard <em>· 6×4</em></h2>
+      <span class="sec-sub">Direct-mail follow-up · trade-show handout</span>
+    </div>
+
+    <div class="postcard">
+      <div class="front">
+        <div class="brand">
+          <svg><use href="#mark"/></svg>
+          <div class="txt">The Contracting Preacher<span>Federal Consulting</span></div>
+        </div>
+        <div>
+          <h3>Federal contracts,<br><em>faithfully done.</em></h3>
+          <div class="lede">A greeting from Dr. McKnight's practice.</div>
+        </div>
+        <div class="foot">Columbia · Charleston · Summerville · Hilton Head</div>
+      </div>
+      <div class="back">
+        <div class="msg-area">
+          <div class="lbl">Message</div>
+          <p>Was thinking of your practice this week. If federal contracts have crossed your mind — even briefly — a 15-minute call costs nothing. If not, my warmest regards regardless.</p>
+          <div class="sig">— Dr. M.</div>
+        </div>
+        <div class="addr">
+          <div class="stamp">POSTAGE</div>
+          <div class="to">To:<br>________<br>________<br>________</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATE -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Certificate of <em>Engagement</em></h2>
+      <span class="sec-sub">11×8.5 landscape · frame-worthy · client milestones</span>
+    </div>
+
+    <div class="cert">
+      <div class="cert-frame"></div>
+      <div class="cert-orn left"></div>
+      <div class="cert-orn right"></div>
+
+      <div class="cert-inner">
+        <div class="cert-top">
+          <div class="brand">
+            <svg><use href="#mark"/></svg>
+            <div class="txt"><h1>The Contracting Preacher</h1><span>Federal Contracting Consultant</span></div>
+          </div>
+          <div class="seal"><svg><use href="#seal"/></svg></div>
+        </div>
+
+        <div class="cert-body">
+          <div class="lbl">Certificate of Engagement</div>
+          <h2>Federal Contract <em>Readiness</em></h2>
+          <div class="presented">This certificate is proudly presented to</div>
+          <div class="recipient">[ Client Business Name ]</div>
+          <div class="desc">for the successful completion of the <b>Federal Foundation Engagement</b> — SAM.gov registration, capability statement, and initial certification submission — in partnership with Dr. McKnight and The Contracting Preacher practice.</div>
+        </div>
+
+        <div class="cert-foot">
+          <div class="cert-sig">
+            <div class="name">Dr. McKnight</div>
+            <div class="role">Federal Contracting Consultant · The Contracting Preacher</div>
+          </div>
+          <div class="cert-sig">
+            <div class="name">&nbsp;</div>
+            <div class="role">Client Authorized Signature · Date</div>
+          </div>
+        </div>
+
+        <div class="cert-corner">
+          Issued · July 24, 2026
+          <b>No. TCP-CERT-0001</b>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="border-top:1px solid var(--navy);margin-top:32px;padding-top:20px;text-align:center;font-family:var(--serif);font-style:italic;color:var(--slate);font-size:14px">
+    Client Ceremonies · The Contracting Preacher · Print at professional stock
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-2);margin-top:6px;font-style:normal;font-weight:600">"…faithfully done." — Prov 16:3</div>
+  </div>
+</div>
+
+</body>
+</html>

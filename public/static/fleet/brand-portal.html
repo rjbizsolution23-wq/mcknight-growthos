@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Brand Portal — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --slate-2:#718096;
+    --line:#E5DFD0; --line-2:#D6CFB8;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);-webkit-font-smoothing:antialiased}
+
+  /* ═══════ APP LAYOUT ═══════ */
+  .app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+
+  /* ═══════ SIDEBAR ═══════ */
+  aside{background:var(--navy);color:var(--ivory);padding:32px 24px;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+  aside::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%, rgba(201,169,97,.15),transparent 50%);pointer-events:none}
+  aside .brand{display:flex;align-items:center;gap:12px;padding-bottom:20px;border-bottom:1px solid rgba(201,169,97,.25);margin-bottom:24px;position:relative}
+  aside .brand svg{width:38px;height:38px;color:var(--gold);flex:none}
+  aside .brand .txt{font-family:var(--serif);font-weight:700;font-size:15px;line-height:1.1}
+  aside .brand .txt span{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400;margin-top:3px}
+
+  aside h3{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:12px;position:relative}
+
+  aside nav{display:flex;flex-direction:column;gap:2px;margin-bottom:28px;position:relative}
+  aside nav a{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;color:var(--ivory);text-decoration:none;font-size:13px;border-radius:2px;opacity:.7;transition:all .15s;cursor:pointer;border-left:2px solid transparent}
+  aside nav a:hover{opacity:1;background:rgba(201,169,97,.08)}
+  aside nav a.active{opacity:1;background:rgba(201,169,97,.12);color:var(--gold-3);border-left-color:var(--gold)}
+  aside nav a .ct{font-family:var(--mono);font-size:9px;color:var(--gold);opacity:.7;letter-spacing:.05em;font-weight:600;background:rgba(201,169,97,.12);padding:2px 6px;border-radius:8px;min-width:22px;text-align:center}
+
+  aside .search{position:relative;margin-bottom:20px}
+  aside .search input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(201,169,97,.25);color:var(--ivory);padding:10px 12px 10px 34px;font-family:var(--sans);font-size:13px;border-radius:2px;outline:none}
+  aside .search input:focus{border-color:var(--gold)}
+  aside .search input::placeholder{color:rgba(228,203,146,.5)}
+  aside .search::before{content:"⌕";position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:14px}
+
+  aside .contact{margin-top:auto;padding-top:20px;border-top:1px solid rgba(201,169,97,.25);position:relative;font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--gold-3);line-height:1.7}
+  aside .contact b{color:var(--ivory);display:block;font-family:var(--sans);font-weight:600;font-size:13px;letter-spacing:0;margin-bottom:4px}
+  aside .contact .verse{font-family:var(--serif);font-style:italic;font-size:11px;color:var(--gold);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(201,169,97,.2);letter-spacing:0}
+
+  /* ═══════ MAIN ═══════ */
+  main{overflow-y:auto;overflow-x:hidden}
+
+  /* ─── HERO ─── */
+  .hero{background:var(--navy);color:var(--ivory);padding:52px 56px 48px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 85% 30%, rgba(201,169,97,.18),transparent 45%),
+    radial-gradient(circle at 15% 100%, rgba(139,31,31,.08),transparent 50%);
+    pointer-events:none}
+  .hero h1{font-family:var(--serif);font-size:56px;line-height:.98;font-weight:800;letter-spacing:-.02em;position:relative;max-width:820px}
+  .hero h1 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .hero .lede{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--gold-3);max-width:640px;margin-top:16px;line-height:1.5;position:relative}
+  .hero .quick-actions{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap;position:relative}
+  .hero .quick-actions button{background:transparent;border:1px solid var(--gold);color:var(--gold-3);padding:12px 20px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;cursor:pointer;border-radius:2px;transition:all .15s}
+  .hero .quick-actions button:hover{background:var(--gold);color:var(--navy)}
+  .hero .quick-actions button.primary{background:var(--gold);color:var(--navy)}
+  .hero .quick-actions button.primary:hover{background:var(--gold-3)}
+
+  /* ─── SECTION ─── */
+  section{padding:52px 56px;border-bottom:1px solid var(--line);scroll-margin-top:0}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid rgba(10,22,40,.15)}
+  .sec-head h2{font-family:var(--serif);font-size:36px;font-weight:800;letter-spacing:-.015em}
+  .sec-head h2 em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-head .sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase}
+  .sec-intro{font-family:var(--serif);font-style:italic;color:var(--slate);font-size:15px;margin-bottom:24px;max-width:760px;line-height:1.5}
+
+  /* ─── LOGO GRID ─── */
+  .logo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .logo-card{background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden;display:flex;flex-direction:column;transition:all .15s}
+  .logo-card:hover{border-color:var(--gold-2);box-shadow:0 12px 30px -18px rgba(10,22,40,.25);transform:translateY(-2px)}
+  .logo-preview{aspect-ratio:5/3;background:#fff;display:flex;align-items:center;justify-content:center;padding:30px;position:relative;border-bottom:1px solid var(--line);overflow:hidden}
+  .logo-preview.dark{background:var(--navy)}
+  .logo-preview.ivory{background:var(--ivory)}
+  .logo-preview.gold{background:var(--gold)}
+  .logo-preview.checker{background:
+    linear-gradient(45deg,#e8e8e8 25%,transparent 25%),
+    linear-gradient(-45deg,#e8e8e8 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,#e8e8e8 75%),
+    linear-gradient(-45deg,transparent 75%,#e8e8e8 75%);
+    background-size:16px 16px;
+    background-position:0 0,0 8px,8px -8px,-8px 0}
+  .logo-preview svg,.logo-preview img{max-width:100%;max-height:100%;object-fit:contain}
+  .logo-preview .badge{position:absolute;top:10px;left:12px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600;background:rgba(255,255,255,.9);padding:3px 8px;border-radius:1px}
+  .logo-preview.dark .badge{background:rgba(10,22,40,.7);color:var(--gold-3)}
+  .logo-preview.gold .badge{background:rgba(10,22,40,.15);color:var(--navy)}
+
+  .logo-info{padding:16px 18px;flex:1;display:flex;flex-direction:column;gap:10px}
+  .logo-info .title{font-family:var(--serif);font-size:16px;font-weight:700;letter-spacing:-.005em;display:flex;justify-content:space-between;align-items:center}
+  .logo-info .title .filename{font-family:var(--mono);font-size:10px;color:var(--slate);letter-spacing:.05em;font-weight:500}
+  .logo-info .desc{font-size:12px;color:var(--slate);line-height:1.45}
+  .download-row{display:flex;gap:5px;margin-top:auto;padding-top:10px;border-top:1px dashed var(--line);flex-wrap:wrap}
+  .dl-btn{background:var(--ivory);border:1px solid var(--line-2);color:var(--navy);padding:6px 10px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;cursor:pointer;border-radius:2px;transition:all .12s;display:flex;align-items:center;gap:4px}
+  .dl-btn:hover{background:var(--navy);color:var(--gold-3);border-color:var(--navy)}
+  .dl-btn.primary{background:var(--navy);color:var(--gold-3);border-color:var(--navy)}
+  .dl-btn.primary:hover{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+  .dl-btn .arrow{opacity:.6}
+
+  /* ─── COLOR GRID ─── */
+  .color-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .color-card{background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden;transition:all .15s;cursor:default}
+  .color-card:hover{border-color:var(--gold-2);box-shadow:0 12px 30px -18px rgba(10,22,40,.25);transform:translateY(-2px)}
+  .color-chip{aspect-ratio:2.3/1;position:relative;display:flex;align-items:flex-end;padding:16px 20px}
+  .color-chip.dark .name-badge{color:rgba(255,255,255,.9)}
+  .color-chip.light .name-badge{color:rgba(10,22,40,.75)}
+  .color-chip .name-badge{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:-.005em}
+  .color-info{padding:14px 20px;display:flex;flex-direction:column;gap:8px}
+  .color-info .code-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .color-info .code-row label{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase;font-weight:600;flex:none;width:36px}
+  .color-info .code-row .val{flex:1;font-family:var(--mono);font-size:12px;color:var(--navy);letter-spacing:.05em;font-weight:500}
+  .copy-btn{background:transparent;border:1px solid var(--line-2);color:var(--slate);padding:4px 8px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;cursor:pointer;border-radius:2px;transition:all .12s;min-width:60px}
+  .copy-btn:hover{background:var(--navy);color:var(--gold-3);border-color:var(--navy)}
+  .copy-btn.copied{background:var(--gold);color:var(--navy);border-color:var(--gold-2)}
+
+  /* Palette bulk actions */
+  .bulk-bar{display:flex;justify-content:space-between;align-items:center;background:var(--ivory);border:1px dashed var(--gold-2);padding:12px 18px;border-radius:2px;margin-bottom:16px}
+  .bulk-bar .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;font-weight:600}
+  .bulk-bar .actions{display:flex;gap:6px}
+  .bulk-bar button{background:transparent;border:1px solid var(--gold-2);color:var(--gold-2);padding:6px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;cursor:pointer;border-radius:2px;transition:all .12s}
+  .bulk-bar button:hover{background:var(--navy);color:var(--gold-3);border-color:var(--navy)}
+
+  /* ─── TYPOGRAPHY ─── */
+  .type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .type-card{background:#fff;border:1px solid var(--line);border-radius:2px;padding:28px 28px 22px;transition:all .15s}
+  .type-card:hover{border-color:var(--gold-2)}
+  .type-card .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin-bottom:8px}
+  .type-card .fam{font-size:13px;color:var(--slate);margin-bottom:20px;font-family:var(--mono);letter-spacing:.02em}
+  .type-card .spec{line-height:1;font-weight:800;letter-spacing:-.02em;color:var(--navy);margin-bottom:20px}
+  .type-card.serif .spec{font-family:var(--serif);font-size:80px}
+  .type-card.sans .spec{font-family:var(--sans);font-size:68px}
+  .type-card.mono .spec{font-family:var(--mono);font-size:60px;font-weight:500}
+
+  .type-card .weights{padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:14px;display:flex;flex-direction:column;gap:4px}
+  .type-card .weights span{font-size:13px;color:var(--navy)}
+  .type-card.serif .weights span{font-family:var(--serif)}
+  .type-card.sans .weights span{font-family:var(--sans)}
+  .type-card.mono .weights span{font-family:var(--mono);font-size:12px}
+  .type-card .actions{display:flex;gap:6px;flex-wrap:wrap}
+  .type-card .actions button{background:var(--ivory);border:1px solid var(--line-2);color:var(--navy);padding:7px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;cursor:pointer;border-radius:2px;transition:all .12s;flex:1;min-width:0}
+  .type-card .actions button:hover{background:var(--navy);color:var(--gold-3);border-color:var(--navy)}
+
+  /* ─── TEMPLATES ─── */
+  .templ-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .templ-card{background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden;transition:all .15s;display:flex;flex-direction:column}
+  .templ-card:hover{border-color:var(--gold-2);box-shadow:0 12px 30px -18px rgba(10,22,40,.25);transform:translateY(-2px)}
+  .templ-thumb{aspect-ratio:16/10;position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:var(--navy);color:var(--ivory);padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+  .templ-thumb::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(201,169,97,.2),transparent 55%);pointer-events:none}
+  .templ-thumb.ivory{background:var(--ivory);color:var(--navy)}
+  .templ-thumb.ivory::before{background:none}
+  .templ-thumb .badge{position:relative;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .templ-thumb.ivory .badge{color:var(--gold-2)}
+  .templ-thumb .glyph{position:relative;font-family:var(--serif);font-size:38px;font-weight:800;letter-spacing:-.02em;line-height:.95;max-width:80%}
+  .templ-thumb .glyph em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .templ-thumb.ivory .glyph em{color:var(--red)}
+  .templ-info{padding:16px 18px;flex:1;display:flex;flex-direction:column;gap:8px}
+  .templ-info .title{font-family:var(--serif);font-size:17px;font-weight:700;letter-spacing:-.005em}
+  .templ-info .desc{font-size:12.5px;color:var(--slate);line-height:1.5;flex:1}
+  .templ-info .actions{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+  .templ-info .actions a{flex:1;background:var(--navy);color:var(--gold-3);text-decoration:none;padding:8px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;border-radius:2px;text-align:center;transition:all .12s}
+  .templ-info .actions a:hover{background:var(--gold);color:var(--navy)}
+  .templ-info .actions a.ghost{background:transparent;color:var(--navy);border:1px solid var(--line-2)}
+  .templ-info .actions a.ghost:hover{background:var(--navy);color:var(--gold-3);border-color:var(--navy)}
+
+  /* ─── CSS / TOKEN BLOCK ─── */
+  .token-block{background:var(--navy);color:var(--gold-3);padding:24px 28px;border-radius:2px;font-family:var(--mono);font-size:12.5px;line-height:1.8;overflow:auto;position:relative}
+  .token-block .lbl{position:absolute;top:12px;right:16px;font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .token-block .k{color:var(--gold)}
+  .token-block .v{color:var(--gold-3)}
+  .token-block .c{color:rgba(228,203,146,.5)}
+  .token-copy{position:absolute;top:12px;right:120px;background:var(--gold);color:var(--navy);border:0;padding:5px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;cursor:pointer;border-radius:2px}
+  .token-copy:hover{background:var(--gold-3)}
+  .token-copy.copied{background:var(--gold-3)}
+
+  /* ─── TOAST ─── */
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--gold-3);padding:14px 22px;border-radius:2px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;box-shadow:0 20px 40px -20px rgba(10,22,40,.5);border-left:3px solid var(--gold);opacity:0;transform:translateY(20px);transition:all .25s;z-index:200}
+  .toast.show{opacity:1;transform:translateY(0)}
+  .toast b{color:var(--ivory);font-weight:600}
+
+  /* ─── SIZE PICKER MODAL ─── */
+  .modal-bg{position:fixed;inset:0;background:rgba(10,22,40,.75);display:none;align-items:center;justify-content:center;z-index:300;padding:20px;backdrop-filter:blur(6px)}
+  .modal-bg.show{display:flex}
+  .modal{background:#fff;border-radius:2px;max-width:560px;width:100%;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.5)}
+  .modal::before{content:"";display:block;height:6px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+  .modal .m-head{padding:24px 32px 16px;border-bottom:1px solid var(--line)}
+  .modal .m-head h3{font-family:var(--serif);font-size:24px;font-weight:800;letter-spacing:-.01em}
+  .modal .m-head p{font-family:var(--serif);font-style:italic;color:var(--slate);font-size:13px;margin-top:4px}
+  .modal .m-body{padding:24px 32px}
+  .modal .presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+  .modal .preset{background:var(--ivory);border:1px solid var(--line-2);color:var(--navy);padding:12px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;cursor:pointer;border-radius:2px;transition:all .12s;text-align:center}
+  .modal .preset:hover{background:var(--navy);color:var(--gold-3);border-color:var(--navy)}
+  .modal .preset b{display:block;font-family:var(--serif);font-size:14px;font-weight:700;letter-spacing:-.005em;text-transform:none;margin-bottom:2px}
+  .modal .custom{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding-top:14px;border-top:1px dashed var(--line)}
+  .modal .fld label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600;margin-bottom:5px}
+  .modal .fld input,.modal .fld select{width:100%;padding:9px 12px;border:1px solid var(--line-2);border-radius:2px;font-family:var(--sans);font-size:13px;color:var(--navy);outline:none}
+  .modal .fld input:focus,.modal .fld select:focus{border-color:var(--gold-2)}
+  .modal .m-foot{padding:16px 32px 24px;display:flex;justify-content:space-between;align-items:center;background:var(--ivory);border-top:1px solid var(--line)}
+  .modal .m-foot .cancel{background:transparent;border:0;color:var(--slate);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;cursor:pointer;padding:8px 12px}
+  .modal .m-foot .save{background:var(--navy);color:var(--gold-3);border:0;padding:12px 24px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;cursor:pointer;border-radius:2px}
+  .modal .m-foot .save:hover{background:var(--gold);color:var(--navy)}
+
+  /* ─── FILTER (search) ─── */
+  .hidden{display:none !important}
+
+  @media (max-width:1100px){
+    .app{grid-template-columns:1fr}
+    aside{position:static;height:auto;padding:24px}
+    aside nav{flex-direction:row;flex-wrap:wrap;gap:6px}
+    aside nav a{flex:0 1 auto}
+    .logo-grid,.color-grid,.type-grid,.templ-grid{grid-template-columns:repeat(2,1fr)}
+    .hero{padding:36px 24px}
+    section{padding:36px 24px}
+    .hero h1{font-size:36px}
+  }
+  @media (max-width:700px){
+    .logo-grid,.color-grid,.type-grid,.templ-grid{grid-template-columns:1fr}
+    .modal .presets,.modal .custom{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- SVG symbols reused across the portal -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+    <rect x="32" y="80" width="36" height="1" fill="#C9A961" opacity=".6"/>
+  </symbol>
+</svg>
+
+<div class="app">
+
+  <!-- ═══════ SIDEBAR ═══════ -->
+  <aside>
+    <div class="brand">
+      <svg><use href="#mark"/></svg>
+      <div class="txt">The Contracting Preacher<span>Brand Portal · v1.0</span></div>
+    </div>
+
+    <div class="search">
+      <input id="q" type="search" placeholder="Search assets…" oninput="filter()">
+    </div>
+
+    <h3>Sections</h3>
+    <nav id="nav">
+      <a href="#logos" class="active" data-sec="logos"><span>Logos</span><span class="ct">7</span></a>
+      <a href="#colors" data-sec="colors"><span>Colors</span><span class="ct">6</span></a>
+      <a href="#typography" data-sec="typography"><span>Typography</span><span class="ct">3</span></a>
+      <a href="#templates" data-sec="templates"><span>Templates</span><span class="ct">13</span></a>
+      <a href="#tokens" data-sec="tokens"><span>Design Tokens</span><span class="ct">CSS</span></a>
+      <a href="#contact" data-sec="contact"><span>Practice Info</span><span class="ct">→</span></a>
+    </nav>
+
+    <h3>Quick Downloads</h3>
+    <nav>
+      <a onclick="downloadEverything()"><span>All Logos (ZIP-ish)</span><span class="ct">↓</span></a>
+      <a onclick="copyPalette('css')"><span>Copy CSS Palette</span><span class="ct">⧉</span></a>
+      <a onclick="copyPalette('tailwind')"><span>Tailwind Config</span><span class="ct">⧉</span></a>
+      <a onclick="downloadOG()"><span>OG Image (1200×630)</span><span class="ct">↓</span></a>
+    </nav>
+
+    <div class="contact">
+      <b>Dr. McKnight</b>
+      (202) 276-2913<br>
+      info@thecontractingpreacher.com<br>
+      thecontractingpreacher.com
+      <div class="verse">"…he will establish your plans." — Prov 16:3</div>
+    </div>
+  </aside>
+
+  <!-- ═══════ MAIN ═══════ -->
+  <main>
+
+    <!-- HERO -->
+    <div class="hero">
+      <h1>Every asset. Every format.<br><em>One click.</em></h1>
+      <div class="lede">Download logos as SVG, PNG or JPG at any size. Copy colors as HEX, RGB, HSL or CSS. Grab fonts, tokens, templates. Everything the practice ships — instantly usable.</div>
+      <div class="quick-actions">
+        <button class="primary" onclick="scrollTo('logos')">↓ Browse Logos</button>
+        <button onclick="scrollTo('colors')">🎨 Color Palette</button>
+        <button onclick="scrollTo('templates')">📄 Templates</button>
+        <button onclick="scrollTo('tokens')">⌨ Design Tokens</button>
+      </div>
+    </div>
+
+    <!-- ═══════ LOGOS ═══════ -->
+    <section id="logos" data-section="Logos">
+      <div class="sec-head">
+        <h2>Logo <em>Library</em></h2>
+        <span class="sub">7 files · SVG native · PNG/JPG on demand</span>
+      </div>
+      <p class="sec-intro">Click any download button to grab the SVG instantly, or hit "PNG…" to pick a size + background. Every logo scales without loss.</p>
+
+      <div class="logo-grid" id="logo-grid">
+        <!-- Cards injected by JS -->
+      </div>
+    </section>
+
+    <!-- ═══════ COLORS ═══════ -->
+    <section id="colors" data-section="Colors">
+      <div class="sec-head">
+        <h2>Color <em>Palette</em></h2>
+        <span class="sub">6 swatches · click any code to copy</span>
+      </div>
+
+      <div class="bulk-bar">
+        <span class="lbl">Bulk Actions</span>
+        <div class="actions">
+          <button onclick="copyPalette('css')">Copy CSS Variables</button>
+          <button onclick="copyPalette('tailwind')">Copy Tailwind Config</button>
+          <button onclick="copyPalette('scss')">Copy SCSS</button>
+          <button onclick="copyPalette('json')">Copy JSON</button>
+          <button onclick="downloadPalette()">↓ Download .ase</button>
+        </div>
+      </div>
+
+      <div class="color-grid" id="color-grid">
+        <!-- Injected by JS -->
+      </div>
+    </section>
+
+    <!-- ═══════ TYPOGRAPHY ═══════ -->
+    <section id="typography" data-section="Typography">
+      <div class="sec-head">
+        <h2>Type <em>System</em></h2>
+        <span class="sub">3 families · Google Fonts · Free forever</span>
+      </div>
+      <p class="sec-intro">All three families are on Google Fonts. Grab the import snippet, copy the CSS stack, or open the Google Fonts page to download the .ttf/.woff2.</p>
+
+      <div class="type-grid">
+        <div class="type-card serif" data-name="Playfair Display Serif Display">
+          <div class="lbl">Display · Serif</div>
+          <div class="fam">Playfair Display · 5 weights</div>
+          <div class="spec">Aa</div>
+          <div class="weights">
+            <span style="font-weight:400">Regular · Scripture</span>
+            <span style="font-weight:600">Semibold · Subheads</span>
+            <span style="font-weight:700">Bold · Headlines</span>
+            <span style="font-weight:800">Extrabold · Hero</span>
+            <span style="font-weight:400;font-style:italic">Italic · Emphasis</span>
+          </div>
+          <div class="actions">
+            <button onclick="copyText(&quot;'Playfair Display', Georgia, serif&quot;, this)">⧉ CSS Stack</button>
+            <button onclick="copyText('&lt;link href=\'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&amp;display=swap\' rel=\'stylesheet\'&gt;', this)">⧉ Import</button>
+            <button onclick="window.open('https://fonts.google.com/specimen/Playfair+Display','_blank')">↗ Fonts</button>
+          </div>
+        </div>
+
+        <div class="type-card sans" data-name="Inter Sans Body">
+          <div class="lbl">Body · Sans-Serif</div>
+          <div class="fam">Inter · 5 weights</div>
+          <div class="spec">Aa</div>
+          <div class="weights">
+            <span style="font-weight:300">Light · Fine print</span>
+            <span style="font-weight:400">Regular · Body copy</span>
+            <span style="font-weight:500">Medium · Emphasis</span>
+            <span style="font-weight:600">Semibold · UI</span>
+            <span style="font-weight:700">Bold · CTAs</span>
+          </div>
+          <div class="actions">
+            <button onclick="copyText(&quot;'Inter', system-ui, sans-serif&quot;, this)">⧉ CSS Stack</button>
+            <button onclick="copyText('&lt;link href=\'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap\' rel=\'stylesheet\'&gt;', this)">⧉ Import</button>
+            <button onclick="window.open('https://fonts.google.com/specimen/Inter','_blank')">↗ Fonts</button>
+          </div>
+        </div>
+
+        <div class="type-card mono" data-name="IBM Plex Mono Accent Metadata">
+          <div class="lbl">Accent · Monospace</div>
+          <div class="fam">IBM Plex Mono · 3 weights</div>
+          <div class="spec">Aa</div>
+          <div class="weights">
+            <span style="font-weight:400">Regular · Metadata</span>
+            <span style="font-weight:500">Medium · Stats</span>
+            <span style="font-weight:600">Semibold · Tags &amp; labels</span>
+          </div>
+          <div class="actions">
+            <button onclick="copyText(&quot;'IBM Plex Mono', ui-monospace, monospace&quot;, this)">⧉ CSS Stack</button>
+            <button onclick="copyText('&lt;link href=\'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap\' rel=\'stylesheet\'&gt;', this)">⧉ Import</button>
+            <button onclick="window.open('https://fonts.google.com/specimen/IBM+Plex+Mono','_blank')">↗ Fonts</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════ TEMPLATES ═══════ -->
+    <section id="templates" data-section="Templates Documents">
+      <div class="sec-head">
+        <h2>Templates &amp; <em>Documents</em></h2>
+        <span class="sub">13 assets · Live HTML · Print to PDF</span>
+      </div>
+      <p class="sec-intro">Open any template to view/edit. Everything prints beautifully to PDF via Cmd/Ctrl+P.</p>
+
+      <div class="templ-grid" id="templ-grid">
+        <!-- Injected by JS -->
+      </div>
+    </section>
+
+    <!-- ═══════ DESIGN TOKENS ═══════ -->
+    <section id="tokens" data-section="Design Tokens CSS Tailwind SCSS JSON Variables">
+      <div class="sec-head">
+        <h2>Design <em>Tokens</em></h2>
+        <span class="sub">CSS · Tailwind · SCSS · JSON</span>
+      </div>
+      <p class="sec-intro">Paste-ready code snippets for every stack. The palette, the type, the spacing scale, the radius scale — pick your format.</p>
+
+      <div class="token-block">
+        <span class="lbl">CSS Custom Properties</span>
+        <button class="token-copy" onclick="copyToken('css', this)">Copy</button>
+<pre id="css-tokens" style="white-space:pre-wrap;margin-top:6px"><span class="c">/* The Contracting Preacher — Design Tokens */</span>
+<span class="k">:root</span> {
+  <span class="c">/* Colors */</span>
+  <span class="k">--navy</span>: <span class="v">#0A1628</span>;
+  <span class="k">--gold</span>: <span class="v">#C9A961</span>;
+  <span class="k">--gold-dark</span>: <span class="v">#B08D3F</span>;
+  <span class="k">--gold-light</span>: <span class="v">#E4CB92</span>;
+  <span class="k">--ivory</span>: <span class="v">#F7F3EA</span>;
+  <span class="k">--red</span>: <span class="v">#8B1F1F</span>;
+  <span class="k">--slate</span>: <span class="v">#4A5568</span>;
+
+  <span class="c">/* Type */</span>
+  <span class="k">--font-serif</span>: <span class="v">'Playfair Display', Georgia, serif</span>;
+  <span class="k">--font-sans</span>:  <span class="v">'Inter', system-ui, sans-serif</span>;
+  <span class="k">--font-mono</span>:  <span class="v">'IBM Plex Mono', ui-monospace, monospace</span>;
+
+  <span class="c">/* Scale (4pt base) */</span>
+  <span class="k">--sp-xs</span>: <span class="v">4px</span>;   <span class="k">--sp-sm</span>: <span class="v">8px</span>;
+  <span class="k">--sp-md</span>: <span class="v">16px</span>;  <span class="k">--sp-lg</span>: <span class="v">24px</span>;
+  <span class="k">--sp-xl</span>: <span class="v">32px</span>;  <span class="k">--sp-2xl</span>: <span class="v">48px</span>;
+  <span class="k">--sp-3xl</span>: <span class="v">64px</span>; <span class="k">--sp-4xl</span>: <span class="v">96px</span>;
+}</pre>
+      </div>
+
+      <div class="token-block" style="margin-top:16px">
+        <span class="lbl">Tailwind Config Extension</span>
+        <button class="token-copy" onclick="copyToken('tailwind', this)">Copy</button>
+<pre id="tw-tokens" style="white-space:pre-wrap;margin-top:6px"><span class="c">// tailwind.config.js</span>
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        tcp: {
+          navy: <span class="v">'#0A1628'</span>,
+          gold: <span class="v">'#C9A961'</span>,
+          <span class="k">'gold-dark'</span>: <span class="v">'#B08D3F'</span>,
+          <span class="k">'gold-light'</span>: <span class="v">'#E4CB92'</span>,
+          ivory: <span class="v">'#F7F3EA'</span>,
+          red: <span class="v">'#8B1F1F'</span>,
+          slate: <span class="v">'#4A5568'</span>,
+        }
+      },
+      fontFamily: {
+        serif: [<span class="v">'Playfair Display'</span>, <span class="v">'Georgia'</span>, <span class="v">'serif'</span>],
+        sans:  [<span class="v">'Inter'</span>, <span class="v">'system-ui'</span>, <span class="v">'sans-serif'</span>],
+        mono:  [<span class="v">'IBM Plex Mono'</span>, <span class="v">'monospace'</span>],
+      }
+    }
+  }
+}</pre>
+      </div>
+
+      <div class="token-block" style="margin-top:16px">
+        <span class="lbl">SCSS Variables</span>
+        <button class="token-copy" onclick="copyToken('scss', this)">Copy</button>
+<pre id="scss-tokens" style="white-space:pre-wrap;margin-top:6px"><span class="c">// _tokens.scss</span>
+<span class="k">$navy</span>:       <span class="v">#0A1628</span>;
+<span class="k">$gold</span>:       <span class="v">#C9A961</span>;
+<span class="k">$gold-dark</span>:  <span class="v">#B08D3F</span>;
+<span class="k">$gold-light</span>: <span class="v">#E4CB92</span>;
+<span class="k">$ivory</span>:      <span class="v">#F7F3EA</span>;
+<span class="k">$red</span>:        <span class="v">#8B1F1F</span>;
+<span class="k">$slate</span>:      <span class="v">#4A5568</span>;
+
+<span class="k">$font-serif</span>: <span class="v">'Playfair Display', Georgia, serif</span>;
+<span class="k">$font-sans</span>:  <span class="v">'Inter', system-ui, sans-serif</span>;
+<span class="k">$font-mono</span>:  <span class="v">'IBM Plex Mono', monospace</span>;</pre>
+      </div>
+
+      <div class="token-block" style="margin-top:16px">
+        <span class="lbl">JSON (Style Dictionary / Figma Tokens)</span>
+        <button class="token-copy" onclick="copyToken('json', this)">Copy</button>
+<pre id="json-tokens" style="white-space:pre-wrap;margin-top:6px">{
+  <span class="k">"color"</span>: {
+    <span class="k">"navy"</span>:    { <span class="k">"value"</span>: <span class="v">"#0A1628"</span> },
+    <span class="k">"gold"</span>:    { <span class="k">"value"</span>: <span class="v">"#C9A961"</span> },
+    <span class="k">"ivory"</span>:   { <span class="k">"value"</span>: <span class="v">"#F7F3EA"</span> },
+    <span class="k">"red"</span>:     { <span class="k">"value"</span>: <span class="v">"#8B1F1F"</span> },
+    <span class="k">"slate"</span>:   { <span class="k">"value"</span>: <span class="v">"#4A5568"</span> }
+  },
+  <span class="k">"font"</span>: {
+    <span class="k">"serif"</span>: { <span class="k">"value"</span>: <span class="v">"Playfair Display"</span> },
+    <span class="k">"sans"</span>:  { <span class="k">"value"</span>: <span class="v">"Inter"</span> },
+    <span class="k">"mono"</span>:  { <span class="k">"value"</span>: <span class="v">"IBM Plex Mono"</span> }
+  }
+}</pre>
+      </div>
+    </section>
+
+    <!-- ═══════ PRACTICE INFO ═══════ -->
+    <section id="contact" data-section="Contact Practice Info Address Phone Email">
+      <div class="sec-head">
+        <h2>Practice <em>Info</em></h2>
+        <span class="sub">Copy any field · use anywhere</span>
+      </div>
+
+      <div class="color-grid" id="info-grid">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- SIZE PICKER MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="m-head">
+      <h3 id="m-title">Download as PNG</h3>
+      <p id="m-sub">Pick a preset or set a custom size.</p>
+    </div>
+    <div class="m-body">
+      <div class="presets" id="presets">
+        <button class="preset" onclick="pick(256,256,'transparent')"><b>256×256</b>Icon</button>
+        <button class="preset" onclick="pick(512,512,'transparent')"><b>512×512</b>App</button>
+        <button class="preset" onclick="pick(1024,1024,'transparent')"><b>1024×1024</b>High-res</button>
+        <button class="preset" onclick="pick(2048,2048,'transparent')"><b>2048×2048</b>Print</button>
+        <button class="preset" onclick="pick(1200,630,'#0A1628')"><b>1200×630</b>OG Image</button>
+        <button class="preset" onclick="pick(1500,500,'#0A1628')"><b>1500×500</b>Twitter</button>
+      </div>
+      <div class="custom">
+        <div class="fld"><label>Width (px)</label><input type="number" id="c-w" value="1024" min="16" max="8000"></div>
+        <div class="fld"><label>Height (px)</label><input type="number" id="c-h" value="1024" min="16" max="8000"></div>
+        <div class="fld">
+          <label>Background</label>
+          <select id="c-bg">
+            <option value="transparent">Transparent</option>
+            <option value="#FFFFFF">White</option>
+            <option value="#0A1628">Navy</option>
+            <option value="#C9A961">Gold</option>
+            <option value="#F7F3EA">Ivory</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="m-foot">
+      <button class="cancel" onclick="closeModal()">Cancel</button>
+      <button class="save" onclick="downloadCustom()">↓ Download PNG</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   DATA
+   ═══════════════════════════════════════════════════════════════ */
+
+const LOGO_DATA = [
+  {
+    id: 'primary',
+    title: 'Primary Lockup',
+    filename: 'logo-primary.svg',
+    desc: 'Full horizontal lockup — shield mark + wordmark + descriptor. Use on light backgrounds.',
+    bg: 'ivory',
+    tags: 'primary lockup wordmark full horizontal',
+    svg: primarySvg(),
+  },
+  {
+    id: 'reversed',
+    title: 'Reversed / Dark',
+    filename: 'logo-reversed.svg',
+    desc: 'For dark backgrounds — ivory wordmark with gold shield. Includes solid navy field.',
+    bg: 'dark',
+    tags: 'reversed dark navy inverse',
+    svg: reversedSvg(),
+  },
+  {
+    id: 'mark-navy',
+    title: 'Shield · Navy',
+    filename: 'logo-mark-navy.svg',
+    desc: 'Icon-only navy shield with gold cross accent. Use as favicon, avatar, or seal.',
+    bg: 'ivory',
+    tags: 'shield mark icon navy',
+    svg: markSvg('#0A1628'),
+  },
+  {
+    id: 'mark-gold',
+    title: 'Shield · Gold',
+    filename: 'logo-mark-gold.svg',
+    desc: 'Gold shield with navy accents. Use over navy or as a metallic-style print accent.',
+    bg: 'dark',
+    tags: 'shield mark icon gold',
+    svg: markSvg('#C9A961', '#0A1628'),
+  },
+  {
+    id: 'monogram',
+    title: 'TCP Monogram',
+    filename: 'logo-monogram.svg',
+    desc: 'Circle-set TCP wordmark. Compact — great for social avatars, buttons, watermarks.',
+    bg: 'ivory',
+    tags: 'monogram TCP circle avatar initials',
+    svg: monogramSvg(),
+  },
+  {
+    id: 'seal',
+    title: 'Seal Stamp',
+    filename: 'logo-seal.svg',
+    desc: 'Ceremonial seal with curved text — "FEDERAL CONTRACTING · FAITH · EXPERTISE."',
+    bg: 'ivory',
+    tags: 'seal stamp emblem badge',
+    svg: sealSvg(),
+  },
+  {
+    id: 'favicon',
+    title: 'Favicon',
+    filename: 'logo-favicon.svg',
+    desc: 'Simplified square-optimized mark for browser tabs, app icons, and OS-level chrome.',
+    bg: 'checker',
+    tags: 'favicon icon app tab browser',
+    svg: faviconSvg(),
+  },
+];
+
+const COLOR_DATA = [
+  { name: 'Federal Navy',  hex: '#0A1628', role: 'Primary · Authority',  dark: true  },
+  { name: 'Pulpit Gold',   hex: '#C9A961', role: 'Accent · Prestige',    dark: false },
+  { name: 'Signal Red',    hex: '#8B1F1F', role: 'CTA · Urgency',        dark: true  },
+  { name: 'Warm Ivory',    hex: '#F7F3EA', role: 'Base · Warm neutral',  dark: false },
+  { name: 'Slate Grey',    hex: '#4A5568', role: 'Text · Secondary',     dark: true  },
+  { name: 'Pure White',    hex: '#FFFFFF', role: 'Base · Pure',          dark: false },
+];
+
+const TEMPLATES = [
+  { file: 'Brand Kit.html',           title: 'Brand Kit',                 desc: '15-section identity system — logos, palette, type, business cards, letterhead, email, social, patterns, header/footer, voice.', tags: 'brand kit identity system logos palette' },
+  { file: 'Intake Workbook.html',     title: 'Intake Workbook',           desc: '20-section operating manual — AI rules, intake, ownership, past performance, grants, contracts, VC, sponsors, loans, scoring engine.', tags: 'intake workbook ai engine operating' },
+  { file: 'Capability Statement.html',title: 'Capability Statement',      desc: 'One-page SAM/GSA-ready federal document. Company overview, differentiators, NAICS, certifications, past performance.', tags: 'capability statement federal sam gsa' },
+  { file: 'Client Intake Form.html',  title: 'Client Intake Form',        desc: 'Live web intake — autosave, progress tracking, JSON export, mailto submit. Ship-ready.', tags: 'client intake form live web' },
+  { file: 'Proposal Deck.html',       title: 'Proposal Deck',             desc: '12-slide 1920×1080 pitch deck. Cover, problem, solution, process, past performance, investment, CTA.', tags: 'proposal deck slides pitch presentation' },
+  { file: 'Bid Scorecard.html',       title: 'Bid / No-Bid Scorecard',    desc: 'Interactive 100-point scoring engine — 10 disqualifiers + 9 weighted factors. Live sliders + JSON export.', tags: 'bid scorecard no-bid scoring 100 points' },
+  { file: 'Opportunity Tracker.html', title: 'Opportunity Tracker',       desc: 'Drag-drop Kanban pipeline — Lead → Won. Auto-calc value, win rate, days-until-due.', tags: 'opportunity tracker kanban pipeline' },
+  { file: 'Compliance Matrix.html',   title: 'Compliance Matrix (RTM)',   desc: 'Federal requirement traceability matrix. Every RFP line mapped, owned, status-tracked.', tags: 'compliance matrix rtm requirement traceability' },
+  { file: 'Onboarding Checklist.html',title: 'Onboarding Checklist',      desc: '90-day client roadmap. 24 checkpoints, 3 phases, sign-off blocks, progress bars.', tags: 'onboarding checklist 90-day client' },
+  { file: 'SAM Registration Checklist.html', title: 'SAM.gov Checklist',  desc: 'One-page client handout. Everything needed before registration + 5-step process.', tags: 'sam gov registration checklist handout' },
+  { file: 'Newsletter Template.html', title: 'Weekly Newsletter',         desc: '"From the Pulpit" email template — opportunities, tip of the week, verse, CTA.', tags: 'newsletter email pulpit weekly template' },
+  { file: 'Award Announcements.html', title: 'Award Announcements',       desc: '6 square social posts + LinkedIn long-form + one-page press release for client wins.', tags: 'award announcement social linkedin press release' },
+  { file: 'index.html',               title: 'Asset Library Index',       desc: 'Master directory linking every deliverable in the practice. Print-and-export dashboard.', tags: 'index library directory master dashboard' },
+];
+
+const CONTACT_INFO = [
+  { name: 'Company Name',         value: 'The Contracting Preacher' },
+  { name: 'Principal',            value: 'Dr. McKnight' },
+  { name: 'Tagline',              value: 'Federal contracting, faithfully done.' },
+  { name: 'Phone',                value: '(202) 276-2913' },
+  { name: 'Email',                value: 'info@thecontractingpreacher.com' },
+  { name: 'Website',              value: 'thecontractingpreacher.com' },
+  { name: 'HQ Address',           value: '1225 Laurel Street, Ste 415, Columbia, SC 29201' },
+  { name: 'Hours',                value: 'Mon–Fri · 8am–6pm ET' },
+  { name: 'Scripture Anchor',     value: '"Commit to the Lord whatever you do…" — Proverbs 16:3' },
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   SVG GENERATORS (kept small — one source, reusable)
+   ═══════════════════════════════════════════════════════════════ */
+
+function markSvg(fill = '#0A1628', accent = '#C9A961') {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <title>TCP Shield Mark</title>
+  <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="${fill}"/>
+  <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="${accent}" stroke-width="1.5" opacity=".55"/>
+  <rect x="46" y="26" width="8" height="46" fill="${accent}"/>
+  <rect x="32" y="36" width="36" height="6" fill="${accent}"/>
+  <rect x="26" y="76" width="48" height="1.5" fill="${accent}"/>
+  <rect x="32" y="80" width="36" height="1" fill="${accent}" opacity=".6"/>
+</svg>`;
+}
+
+function primarySvg() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 140" width="520" height="140">
+  <title>The Contracting Preacher — Primary Logo</title>
+  <g transform="translate(10,20)">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="#0A1628"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+    <rect x="32" y="80" width="36" height="1" fill="#C9A961" opacity=".6"/>
+  </g>
+  <g transform="translate(130,0)" fill="#0A1628">
+    <text x="0" y="42" font-family="'IBM Plex Mono', monospace" font-size="11" letter-spacing="3.5" fill="#B08D3F" font-weight="500">DR. MCKNIGHT</text>
+    <text x="0" y="78" font-family="'Playfair Display', Georgia, serif" font-size="30" font-weight="700" letter-spacing="-0.5">The Contracting Preacher</text>
+    <text x="0" y="102" font-family="'IBM Plex Mono', monospace" font-size="10" letter-spacing="3" fill="#4A5568" font-weight="500">FEDERAL CONTRACTING CONSULTANT</text>
+  </g>
+</svg>`;
+}
+
+function reversedSvg() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 140" width="520" height="140">
+  <title>The Contracting Preacher — Reversed Logo</title>
+  <rect width="520" height="140" fill="#0A1628"/>
+  <g transform="translate(10,20)">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="#C9A961"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#0A1628" stroke-width="1.5" opacity=".45"/>
+    <rect x="46" y="26" width="8" height="46" fill="#0A1628"/>
+    <rect x="32" y="36" width="36" height="6" fill="#0A1628"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#0A1628"/>
+  </g>
+  <g transform="translate(130,0)" fill="#F7F3EA">
+    <text x="0" y="42" font-family="'IBM Plex Mono', monospace" font-size="11" letter-spacing="3.5" fill="#E4CB92" font-weight="500">DR. MCKNIGHT</text>
+    <text x="0" y="78" font-family="'Playfair Display', Georgia, serif" font-size="30" font-weight="700" letter-spacing="-0.5">The Contracting Preacher</text>
+    <text x="0" y="102" font-family="'IBM Plex Mono', monospace" font-size="10" letter-spacing="3" fill="#E4CB92" font-weight="500" opacity="0.8">FEDERAL CONTRACTING CONSULTANT</text>
+  </g>
+</svg>`;
+}
+
+function monogramSvg() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <title>TCP Monogram</title>
+  <circle cx="50" cy="50" r="46" fill="none" stroke="#0A1628" stroke-width="2"/>
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#0A1628" stroke-width=".6" opacity=".4"/>
+  <text x="50" y="60" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="34" font-weight="800" fill="#0A1628" letter-spacing="-1">TCP</text>
+  <text x="50" y="78" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="6.5" letter-spacing="2.5" fill="#0A1628" opacity=".7">EST · FEDERAL</text>
+</svg>`;
+}
+
+function sealSvg() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <title>The Contracting Preacher — Seal</title>
+  <circle cx="60" cy="60" r="56" fill="none" stroke="#0A1628" stroke-width="1"/>
+  <circle cx="60" cy="60" r="50" fill="none" stroke="#0A1628" stroke-width=".5" opacity=".5"/>
+  <defs><path id="curve" d="M 60 60 m -42 0 a 42 42 0 1 1 84 0" fill="none"/></defs>
+  <text font-family="IBM Plex Mono, monospace" font-size="7" fill="#0A1628" letter-spacing="2.4">
+    <textPath href="#curve" startOffset="8%">FEDERAL CONTRACTING · FAITH · EXPERTISE ·</textPath>
+  </text>
+  <g transform="translate(30,30) scale(0.6)">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="#0A1628"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+    <rect x="26" y="76" width="48" height="1.5" fill="#C9A961"/>
+  </g>
+</svg>`;
+}
+
+function faviconSvg() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <title>TCP Favicon</title>
+  <rect width="100" height="100" fill="#0A1628"/>
+  <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="2"/>
+  <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+  <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+</svg>`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RENDERERS
+   ═══════════════════════════════════════════════════════════════ */
+
+function renderLogos() {
+  const grid = document.getElementById('logo-grid');
+  grid.innerHTML = LOGO_DATA.map(l => `
+    <div class="logo-card" data-name="${l.tags} ${l.title}">
+      <div class="logo-preview ${l.bg}">
+        <span class="badge">${l.filename}</span>
+        ${l.svg}
+      </div>
+      <div class="logo-info">
+        <div class="title">${l.title}</div>
+        <div class="desc">${l.desc}</div>
+        <div class="download-row">
+          <button class="dl-btn primary" onclick="downloadSvg('${l.id}')">↓ SVG</button>
+          <button class="dl-btn" onclick="openModal('${l.id}','png')">↓ PNG…</button>
+          <button class="dl-btn" onclick="openModal('${l.id}','jpg')">↓ JPG…</button>
+          <button class="dl-btn" onclick="copySvg('${l.id}', this)">⧉ Code</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderColors() {
+  const grid = document.getElementById('color-grid');
+  grid.innerHTML = COLOR_DATA.map(c => {
+    const rgb = hexToRgb(c.hex);
+    const hsl = hexToHsl(c.hex);
+    return `
+      <div class="color-card" data-name="${c.name} ${c.hex} ${c.role}">
+        <div class="color-chip ${c.dark ? 'dark' : 'light'}" style="background:${c.hex}">
+          <div class="name-badge">${c.name}</div>
+        </div>
+        <div class="color-info">
+          <div class="code-row"><label>HEX</label><span class="val">${c.hex}</span><button class="copy-btn" onclick="copyText('${c.hex}', this)">Copy</button></div>
+          <div class="code-row"><label>RGB</label><span class="val">${rgb}</span><button class="copy-btn" onclick="copyText('${rgb}', this)">Copy</button></div>
+          <div class="code-row"><label>HSL</label><span class="val">${hsl}</span><button class="copy-btn" onclick="copyText('${hsl}', this)">Copy</button></div>
+          <div class="code-row" style="padding-top:6px;border-top:1px dashed var(--line)"><label style="width:100%">${c.role}</label></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTemplates() {
+  const grid = document.getElementById('templ-grid');
+  grid.innerHTML = TEMPLATES.map(t => {
+    const ivory = ['Capability Statement', 'Client Intake Form', 'SAM.gov Checklist', 'Bid / No-Bid Scorecard'].includes(t.title);
+    const glyph = t.title.split(' ').slice(0, 3).join(' ');
+    return `
+      <div class="templ-card" data-name="${t.tags} ${t.title}">
+        <div class="templ-thumb ${ivory ? 'ivory' : ''}">
+          <span class="badge">${t.file.replace('.html','')}</span>
+          <div class="glyph">${glyph}<em>.</em></div>
+        </div>
+        <div class="templ-info">
+          <div class="title">${t.title}</div>
+          <div class="desc">${t.desc}</div>
+          <div class="actions">
+            <a href="${encodeURI(t.file)}" target="_blank">↗ Open</a>
+            <a class="ghost" href="${encodeURI(t.file)}" target="_blank" onclick="setTimeout(()=>window.open('${encodeURI(t.file)}','_blank'),50);return false" >⎙ Print/PDF</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderContact() {
+  const grid = document.getElementById('info-grid');
+  grid.innerHTML = CONTACT_INFO.map(i => `
+    <div class="color-card" data-name="${i.name} ${i.value}">
+      <div class="color-chip dark" style="background:linear-gradient(135deg,var(--navy),var(--navy-2));min-height:80px">
+        <div class="name-badge" style="font-size:14px;font-family:var(--mono);letter-spacing:.18em;color:var(--gold);text-transform:uppercase;font-weight:600">${i.name}</div>
+      </div>
+      <div class="color-info">
+        <div class="code-row" style="padding:4px 0"><span class="val" style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--navy);line-height:1.4">${i.value}</span></div>
+        <div class="code-row"><button class="copy-btn" style="width:100%;padding:8px" onclick="copyText(\`${i.value.replace(/`/g, '\\`')}\`, this)">⧉ Copy</button></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HELPERS — color conversion
+   ═══════════════════════════════════════════════════════════════ */
+
+function hexToRgb(hex) {
+  const h = hex.replace('#','');
+  const r = parseInt(h.substring(0,2), 16);
+  const g = parseInt(h.substring(2,4), 16);
+  const b = parseInt(h.substring(4,6), 16);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+function hexToHsl(hex) {
+  const h = hex.replace('#','');
+  let r = parseInt(h.substring(0,2), 16) / 255;
+  let g = parseInt(h.substring(2,4), 16) / 255;
+  let b = parseInt(h.substring(4,6), 16) / 255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b);
+  let hh = 0, s = 0, l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch(max) {
+      case r: hh = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: hh = (b - r) / d + 2; break;
+      case b: hh = (r - g) / d + 4; break;
+    }
+    hh /= 6;
+  }
+  return `hsl(${Math.round(hh*360)}, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOWNLOADS
+   ═══════════════════════════════════════════════════════════════ */
+
+function downloadSvg(id) {
+  const logo = LOGO_DATA.find(l => l.id === id);
+  const blob = new Blob([logo.svg], {type: 'image/svg+xml;charset=utf-8'});
+  triggerDownload(blob, logo.filename);
+  toast(`Downloaded ${logo.filename}`);
+}
+
+async function svgToRaster(svgText, width, height, format, bgColor) {
+  return new Promise((resolve, reject) => {
+    const svg = new Blob([svgText], {type: 'image/svg+xml'});
+    const url = URL.createObjectURL(svg);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (bgColor && bgColor !== 'transparent') {
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, width, height);
+      }
+      // fit contain
+      const aspect = img.width / img.height;
+      let dw = width, dh = height, dx = 0, dy = 0;
+      if (aspect > width / height) { dh = width / aspect; dy = (height - dh) / 2; }
+      else { dw = height * aspect; dx = (width - dw) / 2; }
+      ctx.drawImage(img, dx, dy, dw, dh);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(blob => resolve(blob), format === 'jpg' ? 'image/jpeg' : 'image/png', 0.95);
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+async function downloadRaster(id, width, height, format, bgColor) {
+  const logo = LOGO_DATA.find(l => l.id === id);
+  // JPG can't be transparent — force white
+  if (format === 'jpg' && bgColor === 'transparent') bgColor = '#FFFFFF';
+  const blob = await svgToRaster(logo.svg, width, height, format, bgColor);
+  const name = `${logo.filename.replace('.svg','')}-${width}x${height}.${format}`;
+  triggerDownload(blob, name);
+  toast(`Downloaded ${name}`);
+}
+
+function triggerDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+
+async function downloadEverything() {
+  toast('Preparing all logo SVGs…');
+  for (const logo of LOGO_DATA) {
+    const blob = new Blob([logo.svg], {type: 'image/svg+xml'});
+    triggerDownload(blob, logo.filename);
+    await new Promise(r => setTimeout(r, 200));
+  }
+  toast(`Downloaded ${LOGO_DATA.length} SVG files`);
+}
+
+function downloadOG() {
+  const a = document.createElement('a');
+  a.href = 'assets/og-image.png';
+  a.download = 'tcp-og-image-1200x630.png';
+  a.click();
+  toast('Downloaded OG image');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   COPY HELPERS
+   ═══════════════════════════════════════════════════════════════ */
+
+function copyText(text, btn) {
+  const decoded = new DOMParser().parseFromString(text, 'text/html').body.textContent;
+  navigator.clipboard.writeText(decoded).then(() => {
+    toast(`Copied: ${decoded.length > 40 ? decoded.slice(0,40)+'…' : decoded}`);
+    if (btn) {
+      const orig = btn.textContent;
+      btn.classList.add('copied');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.classList.remove('copied'); btn.textContent = orig; }, 1400);
+    }
+  }).catch(() => toast('Copy failed — try again'));
+}
+
+function copySvg(id, btn) {
+  const logo = LOGO_DATA.find(l => l.id === id);
+  navigator.clipboard.writeText(logo.svg).then(() => {
+    toast('SVG code copied to clipboard');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.classList.add('copied');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.classList.remove('copied'); btn.textContent = orig; }, 1400);
+    }
+  });
+}
+
+function copyToken(kind, btn) {
+  const el = document.getElementById(kind + '-tokens');
+  const text = el.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    toast(`Copied ${kind.toUpperCase()} tokens`);
+    btn.classList.add('copied');
+    btn.textContent = '✓ Copied';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 1400);
+  });
+}
+
+function copyPalette(kind) {
+  let out = '';
+  if (kind === 'css') {
+    out = ':root {\n' + COLOR_DATA.map(c => `  --${c.name.toLowerCase().replace(/\s+/g,'-')}: ${c.hex};`).join('\n') + '\n}';
+  } else if (kind === 'tailwind') {
+    out = 'colors: {\n  tcp: {\n' + COLOR_DATA.map(c => `    "${c.name.toLowerCase().replace(/\s+/g,'-')}": "${c.hex}",`).join('\n') + '\n  }\n}';
+  } else if (kind === 'scss') {
+    out = COLOR_DATA.map(c => `$${c.name.toLowerCase().replace(/\s+/g,'-')}: ${c.hex};`).join('\n');
+  } else if (kind === 'json') {
+    out = JSON.stringify(COLOR_DATA.reduce((acc, c) => (acc[c.name.toLowerCase().replace(/\s+/g,'-')] = c.hex, acc), {}), null, 2);
+  }
+  navigator.clipboard.writeText(out).then(() => toast(`Copied palette as ${kind.toUpperCase()}`));
+}
+
+function downloadPalette() {
+  // Simple text-based .ase-like fallback: Adobe swatch exchange requires binary,
+  // so we ship a portable text palette (Sketch/Figma compatible)
+  const gpl = 'GIMP Palette\nName: The Contracting Preacher\nColumns: 3\n#\n' +
+    COLOR_DATA.map(c => {
+      const r = parseInt(c.hex.slice(1,3),16), g = parseInt(c.hex.slice(3,5),16), b = parseInt(c.hex.slice(5,7),16);
+      return `${String(r).padStart(3)} ${String(g).padStart(3)} ${String(b).padStart(3)}\t${c.name}`;
+    }).join('\n');
+  const blob = new Blob([gpl], {type: 'text/plain'});
+  triggerDownload(blob, 'the-contracting-preacher.gpl');
+  toast('Downloaded palette (.gpl — Photoshop, Sketch, Figma, GIMP)');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MODAL
+   ═══════════════════════════════════════════════════════════════ */
+
+let modalContext = { id: null, format: 'png' };
+
+function openModal(id, format) {
+  modalContext = { id, format };
+  const logo = LOGO_DATA.find(l => l.id === id);
+  document.getElementById('m-title').textContent = `${logo.title} — Download as ${format.toUpperCase()}`;
+  document.getElementById('m-sub').textContent = `Pick a preset or set a custom size. Background applies to PNG only if transparent isn't selected.`;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+async function pick(w, h, bg) {
+  await downloadRaster(modalContext.id, w, h, modalContext.format, bg);
+  closeModal();
+}
+async function downloadCustom() {
+  const w = +document.getElementById('c-w').value || 1024;
+  const h = +document.getElementById('c-h').value || 1024;
+  const bg = document.getElementById('c-bg').value;
+  await downloadRaster(modalContext.id, w, h, modalContext.format, bg);
+  closeModal();
+}
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal') closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════════════════════════════ */
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = `<b>✓</b> ${msg}`;
+  t.classList.add('show');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAV + SEARCH
+   ═══════════════════════════════════════════════════════════════ */
+
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+document.querySelectorAll('#nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    scrollTo(a.dataset.sec);
+  });
+});
+/* Highlight active nav on scroll */
+const sections = ['logos','colors','typography','templates','tokens','contact'];
+window.addEventListener('scroll', () => {
+  const y = window.scrollY + 120;
+  let cur = 'logos';
+  for (const s of sections) {
+    const el = document.getElementById(s);
+    if (el && el.offsetTop <= y) cur = s;
+  }
+  document.querySelectorAll('#nav a[data-sec]').forEach(a => {
+    a.classList.toggle('active', a.dataset.sec === cur);
+  });
+}, {passive: true});
+
+/* Search filter */
+function filter() {
+  const q = document.getElementById('q').value.toLowerCase().trim();
+  const cards = document.querySelectorAll('[data-name]');
+  cards.forEach(c => {
+    const match = !q || c.dataset.name.toLowerCase().includes(q);
+    c.classList.toggle('hidden', !match);
+  });
+  // Also hide sections that have no visible cards
+  sections.forEach(s => {
+    const sec = document.getElementById(s);
+    if (!sec) return;
+    const visibleCards = sec.querySelectorAll('[data-name]:not(.hidden)').length;
+    const allCards = sec.querySelectorAll('[data-name]').length;
+    if (allCards > 0) sec.classList.toggle('hidden', q && visibleCards === 0);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════════ */
+
+renderLogos();
+renderColors();
+renderTemplates();
+renderContact();
+</script>
+
+</body>
+</html>

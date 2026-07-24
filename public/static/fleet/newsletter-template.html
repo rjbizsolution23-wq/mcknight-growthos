@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>From the Pulpit — Weekly Newsletter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);padding:40px 20px;color:var(--navy)}
+  .env{max-width:680px;margin:0 auto}
+  .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin-bottom:12px;text-align:center;font-weight:500}
+  .email{background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 20px 40px -30px rgba(10,22,40,.3)}
+
+  /* HERO */
+  .hero{background:var(--navy);color:var(--ivory);padding:32px 40px 28px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 90% 20%,rgba(201,169,97,.2),transparent 50%);pointer-events:none}
+  .brand{display:flex;align-items:center;gap:10px;position:relative;margin-bottom:20px}
+  .brand svg{width:36px;height:36px;color:var(--gold);flex:none}
+  .brand .txt{font-family:var(--serif);font-weight:700;font-size:15px;line-height:1.05}
+  .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400;margin-top:3px}
+  .issue-tag{position:absolute;top:32px;right:40px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:600;line-height:1.7;text-align:right}
+  .issue-tag b{color:var(--gold-3);display:block;font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;margin-top:2px}
+  .hero h1{font-family:var(--serif);font-size:36px;font-weight:800;letter-spacing:-.01em;line-height:1.05;position:relative;max-width:520px}
+  .hero h1 em{font-style:italic;color:var(--gold-3);font-weight:400}
+  .hero .sub{font-family:var(--serif);font-style:italic;color:var(--gold-3);font-size:15px;margin-top:8px;position:relative}
+
+  /* BODY */
+  .body{padding:32px 40px 40px;color:var(--navy);font-size:15px;line-height:1.7}
+  .body p{margin-bottom:14px}
+  .body .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1.5px solid var(--navy);margin-top:24px}
+  .body .kicker:first-child{margin-top:0}
+
+  /* OPPORTUNITY LIST */
+  .oppo-list{display:flex;flex-direction:column;gap:10px;margin:12px 0 16px}
+  .oppo{background:var(--ivory);border-left:3px solid var(--gold);padding:14px 18px;border-radius:0 2px 2px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+  .oppo .info{flex:1}
+  .oppo .name{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--navy);line-height:1.2;margin-bottom:2px}
+  .oppo .agency{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--slate);text-transform:uppercase;font-weight:500}
+  .oppo .value{font-family:var(--serif);font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.01em;line-height:1;text-align:right;flex:none}
+  .oppo .value span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--red);text-transform:uppercase;font-weight:600;margin-top:4px;text-align:right}
+
+  /* TIP */
+  .tip{background:var(--navy);color:var(--ivory);padding:24px 28px;border-radius:2px;margin:20px 0;position:relative;overflow:hidden}
+  .tip::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.16),transparent 55%);pointer-events:none}
+  .tip .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:8px;position:relative}
+  .tip h3{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:-.005em;line-height:1.2;position:relative;margin-bottom:8px}
+  .tip p{color:var(--gold-3);font-size:14px;line-height:1.6;position:relative;margin:0}
+
+  /* VERSE */
+  .verse-block{background:transparent;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;margin:20px 0;text-align:center}
+  .verse-block .verse{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--slate);line-height:1.45;max-width:440px;margin:0 auto}
+  .verse-block .ref{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600;margin-top:8px}
+
+  /* CTA */
+  .cta-block{text-align:center;padding:24px 0 8px}
+  .btn{display:inline-block;background:var(--red);color:var(--ivory);padding:14px 32px;text-decoration:none;font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:2px}
+  .cta-block .sub{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;margin-top:10px;font-weight:500}
+
+  /* SIGNOFF */
+  .signoff{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--serif);font-style:italic;color:var(--slate);font-size:14px}
+  .signoff b{font-family:var(--serif);font-style:normal;font-weight:800;color:var(--navy);display:block;font-size:16px;margin-top:2px}
+
+  /* FOOTER */
+  .foot{background:var(--navy);color:var(--gold-3);padding:22px 40px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-align:center;text-transform:uppercase;line-height:1.8}
+  .foot a{color:var(--gold);text-decoration:none;margin:0 4px}
+  .foot .brand-mini{margin-bottom:10px;font-family:var(--serif);font-style:italic;font-size:13px;color:var(--gold-3);text-transform:none;letter-spacing:0}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#0A1628" stroke-width="1.5" opacity=".45"/>
+    <rect x="46" y="26" width="8" height="46" fill="#0A1628"/>
+    <rect x="32" y="36" width="36" height="6" fill="#0A1628"/>
+  </symbol>
+</svg>
+
+<div class="env">
+  <div class="lbl">Email Template · From the Pulpit · Weekly Newsletter</div>
+  <div class="email">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="issue-tag">Issue No. 47<b>July 23, 2026</b></div>
+      <div class="brand">
+        <svg><use href="#mark"/></svg>
+        <div class="txt">From the Pulpit<span>Federal Contracts Weekly · Dr. McKnight</span></div>
+      </div>
+      <h1>Three 8(a) contracts closing <em>this Friday.</em></h1>
+      <div class="sub">Plus: the one line that keeps proposals out of the trash bin.</div>
+    </div>
+
+    <!-- BODY -->
+    <div class="body">
+      <p>Angela, good morning —</p>
+      <p>Every Friday afternoon, a stack of federal opportunities closes for good. This week has three that shouldn't slip past a qualified 8(a) — especially in the Southeast.</p>
+
+      <div class="kicker">This Week's Opportunities</div>
+      <div class="oppo-list">
+        <div class="oppo">
+          <div class="info">
+            <div class="name">USDA — Rural Facility Maintenance</div>
+            <div class="agency">Southeast Region · 8(a) Set-Aside · Closes Fri</div>
+          </div>
+          <div class="value">$2.4M<span>Closes Aug 15</span></div>
+        </div>
+        <div class="oppo">
+          <div class="info">
+            <div class="name">Dept. of Veterans Affairs — IT Staff Aug</div>
+            <div class="agency">VA · SDVOSB Preferred · Closes Fri</div>
+          </div>
+          <div class="value">$890K<span>Closes Aug 15</span></div>
+        </div>
+        <div class="oppo">
+          <div class="info">
+            <div class="name">GSA — Janitorial Services Region 4</div>
+            <div class="agency">GSA · HUBZone Priority · Closes Fri</div>
+          </div>
+          <div class="value">$1.1M<span>Closes Aug 15</span></div>
+        </div>
+      </div>
+
+      <div class="kicker">Tip of the Week</div>
+      <div class="tip">
+        <div class="lbl">The one line</div>
+        <h3>"Confirmed capability + confirmed capacity."</h3>
+        <p>Put it in your executive summary. Contracting officers scan for it. Vague strengths lose to specific confirmations every time. Say what you can do, prove you can do it, and prove you have the room to do it now.</p>
+      </div>
+
+      <div class="kicker">Verse of the Week</div>
+      <div class="verse-block">
+        <div class="verse">"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters."</div>
+        <div class="ref">— Colossians 3 : 23</div>
+      </div>
+
+      <p>If any of these opportunities look like yours, hit reply. We'll do a 15-minute fit check before you spend a single hour on the response.</p>
+
+      <div class="cta-block">
+        <a class="btn" href="#">See This Week's Full List →</a>
+        <div class="sub">Free · 30-min · No obligation</div>
+      </div>
+
+      <div class="signoff">
+        In service,
+        <b>Dr. McKnight</b>
+        The Contracting Preacher · (202) 276-2913
+      </div>
+    </div>
+
+    <!-- FOOT -->
+    <div class="foot">
+      <div class="brand-mini">"…he will establish your plans." — Proverbs 16:3</div>
+      <div>You're 1 of 2,000+ small business owners getting this weekly</div>
+      <div style="margin-top:6px">
+        <a href="#">Unsubscribe</a> ·
+        <a href="#">Preferences</a> ·
+        <a href="#">Website</a> ·
+        <a href="#">Book Consultation</a>
+      </div>
+      <div style="margin-top:8px;opacity:.7">1225 Laurel St, Ste 415 · Columbia, SC 29201</div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Clearance Tracker — McKnight Opportunity Group</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0; --line-2:#D6CFB8;
+    --ok:#2F6B4A; --warn:#B87A1F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:32px 24px 100px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1360px;margin:0 auto}
+
+  header{background:var(--navy);color:var(--ivory);padding:28px 40px;border-radius:2px;position:relative;overflow:hidden;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:24px}
+  header::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.2),transparent 55%);pointer-events:none}
+  .brand{display:flex;align-items:center;gap:12px;position:relative}
+  .brand svg{width:40px;height:40px;color:var(--gold);flex:none}
+  .brand .txt{font-family:var(--serif);font-weight:700;font-size:15px;line-height:1.05}
+  .brand .txt h1{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.01em;line-height:1}
+  .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400;margin-top:3px}
+  header .stats{display:flex;gap:22px;position:relative}
+  header .stats .st{text-align:right;font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;font-weight:600;line-height:1.6}
+  header .stats .st b{display:block;font-family:var(--serif);font-size:26px;color:var(--gold-3);font-weight:800;letter-spacing:-.01em}
+  header .actions{display:flex;gap:8px;position:relative}
+  header button{background:var(--gold);color:var(--navy);padding:10px 16px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border:0;border-radius:2px;cursor:pointer;transition:all .15s}
+  header button:hover{background:var(--gold-3)}
+  header button.ghost{background:transparent;color:var(--gold-3);border:1px solid var(--gold-3)}
+  header button.ghost:hover{background:var(--gold-3);color:var(--navy)}
+
+  .lockdown{background:#FBEEEE;border-left:4px solid var(--red);padding:14px 22px;margin-bottom:24px;border-radius:0 2px 2px 0;font-size:13px;color:#5B1414;line-height:1.5}
+  .lockdown b{font-weight:700;font-family:var(--mono);letter-spacing:.06em;font-size:11px;text-transform:uppercase;display:block;margin-bottom:4px}
+
+  /* LEGEND */
+  .legend{background:#fff;border:1px solid var(--line);border-radius:2px;padding:16px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+  .lg-item{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:600;display:flex;align-items:center;gap:8px}
+  .lg-dot{width:12px;height:12px;border-radius:50%;flex:none}
+  .lg-dot.clear{background:var(--ok)}
+  .lg-dot.hold{background:var(--warn)}
+  .lg-dot.risk{background:var(--red)}
+  .lg-dot.unknown{background:var(--slate);opacity:.3}
+
+  /* MAIN TABLE */
+  .grid{background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden;box-shadow:0 12px 30px -20px rgba(10,22,40,.2)}
+  .grid-row{display:grid;grid-template-columns:200px 1fr;border-top:1px solid var(--line);transition:all .12s}
+  .grid-row:first-child{border-top:0}
+  .grid-row:hover{background:#FBF9F3}
+  .grid-row.head{background:var(--navy);color:var(--gold-3);border:0}
+  .grid-row.head:hover{background:var(--navy)}
+  .grid-row.head .cell{padding:14px 14px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border-right:1px solid rgba(201,169,97,.15);text-align:center}
+  .grid-row.head .cell:last-child{border-right:0}
+  .grid-row.head .cell-name{text-align:left}
+
+  .cell-name{padding:16px 20px;background:var(--ivory);border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;gap:2px}
+  .cell-name .id{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--gold-2);text-transform:uppercase;font-weight:700}
+  .cell-name .name{font-family:var(--serif);font-size:15px;font-weight:800;letter-spacing:-.005em;line-height:1.15;color:var(--navy)}
+  .cell-name .domain{font-family:var(--mono);font-size:10px;color:var(--slate);letter-spacing:.02em;margin-top:2px}
+
+  .cell-checks{display:grid;grid-template-columns:repeat(8,1fr);gap:0}
+  .check-cell{padding:12px 8px;border-right:1px solid var(--line);text-align:center;cursor:pointer;transition:all .12s;position:relative;font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--slate);text-transform:uppercase;font-weight:600;display:flex;align-items:center;justify-content:center;gap:5px;min-height:56px}
+  .check-cell:last-child{border-right:0}
+  .check-cell:hover{background:var(--ivory)}
+  .check-cell .dot{width:12px;height:12px;border-radius:50%;flex:none;transition:all .12s}
+  .check-cell .dot.unknown{background:var(--slate);opacity:.3}
+  .check-cell .dot.clear{background:var(--ok)}
+  .check-cell .dot.hold{background:var(--warn)}
+  .check-cell .dot.risk{background:var(--red)}
+  .check-cell.state-clear{background:#F1F7F3}
+  .check-cell.state-hold{background:#FFF6E1}
+  .check-cell.state-risk{background:#FBEEEE}
+
+  /* DETAIL PANEL (per brand row expandable) */
+  details.brand-det{background:#fff;border:1px solid var(--line);border-radius:2px;margin-top:12px;overflow:hidden}
+  details.brand-det summary{padding:14px 20px;cursor:pointer;background:var(--ivory);font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold-2);text-transform:uppercase;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+  details.brand-det summary::-webkit-details-marker{display:none}
+  details.brand-det summary::after{content:"▸";transition:transform .15s}
+  details.brand-det[open] summary::after{transform:rotate(90deg)}
+  details.brand-det .body{padding:20px 24px}
+  .notes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .note-fld{display:flex;flex-direction:column;gap:5px}
+  .note-fld label{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--slate);text-transform:uppercase;font-weight:700}
+  .note-fld input,.note-fld textarea{background:transparent;border:0;border-bottom:1px dashed var(--line-2);padding:6px 4px;font-family:var(--serif);font-size:14px;color:var(--navy);outline:none;font-style:italic}
+  .note-fld textarea{border:1px solid var(--line-2);border-radius:2px;padding:8px 10px;font-family:var(--sans);font-size:13px;font-style:normal;line-height:1.5;min-height:60px;resize:vertical}
+  .note-fld input:focus,.note-fld textarea:focus{border-color:var(--gold-2);border-bottom-color:var(--gold-2)}
+
+  /* CLICK MENU */
+  .menu{position:fixed;background:var(--navy);color:var(--ivory);border-radius:4px;padding:6px;display:none;z-index:300;box-shadow:0 20px 40px -20px rgba(0,0,0,.5);min-width:180px}
+  .menu.show{display:block}
+  .menu button{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:0;color:var(--ivory);padding:8px 12px;font-family:var(--sans);font-size:13px;cursor:pointer;text-align:left;border-radius:2px;transition:all .1s}
+  .menu button:hover{background:rgba(201,169,97,.15)}
+  .menu button .dot{width:10px;height:10px;border-radius:50%;flex:none}
+  .menu button .txt{flex:1}
+  .menu button .kbd{font-family:var(--mono);font-size:9px;letter-spacing:.1em;opacity:.5}
+
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--gold-3);padding:12px 20px;border-radius:2px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;opacity:0;transform:translateY(20px);transition:all .25s;z-index:200;border-left:3px solid var(--gold)}
+  .toast.show{opacity:1;transform:translateY(0)}
+
+  @media (max-width:1000px){
+    .cell-checks{grid-template-columns:repeat(4,1fr)}
+    header{flex-direction:column;align-items:flex-start}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="page">
+
+  <header>
+    <div class="brand">
+      <svg><use href="#mark"/></svg>
+      <div class="txt"><h1>Clearance Tracker</h1><span>Name · Trademark · Domain · Handle Clearance</span></div>
+    </div>
+    <div class="stats">
+      <div class="st"><b id="s-total">13</b>Names Tracked</div>
+      <div class="st"><b id="s-clear">0</b>Fully Clear</div>
+      <div class="st"><b id="s-risk">0</b>Risk Flagged</div>
+      <div class="st"><b id="s-pending">0</b>Unchecked</div>
+    </div>
+    <div class="actions">
+      <button onclick="exportJSON()">↓ Export</button>
+      <button class="ghost" onclick="resetAll()">↺ Reset</button>
+    </div>
+  </header>
+
+  <div class="lockdown">
+    <b>⚠ Section 3 of Fleet Verification Packet</b>
+    No mark, taglines, social handles, or public claims launch under any of these names until every clearance dot on the row is <b>Clear</b> (green). Click a dot to cycle Unknown → Clear → Hold → Risk. Add notes and links in the expandable detail row below.
+  </div>
+
+  <div class="legend">
+    <div class="lg-item"><span class="lg-dot unknown"></span> Unknown · not yet checked</div>
+    <div class="lg-item"><span class="lg-dot clear"></span> Clear · no conflict found</div>
+    <div class="lg-item"><span class="lg-dot hold"></span> Hold · pending / conditional</div>
+    <div class="lg-item"><span class="lg-dot risk"></span> Risk · counsel review required</div>
+  </div>
+
+  <div class="grid">
+    <div class="grid-row head">
+      <div class="cell cell-name">Name · Domain</div>
+      <div class="cell-checks">
+        <div class="cell">SC SoS</div>
+        <div class="cell">USPTO TM</div>
+        <div class="cell">State TM</div>
+        <div class="cell">Common-Law</div>
+        <div class="cell">Domain</div>
+        <div class="cell">Socials</div>
+        <div class="cell">Similar-Risk</div>
+        <div class="cell">Counsel</div>
+      </div>
+    </div>
+
+    <div id="rows"></div>
+  </div>
+
+  <!-- DETAIL EXPANSION PANELS -->
+  <div id="details" style="margin-top:24px"></div>
+
+</div>
+
+<div class="menu" id="menu">
+  <button onclick="setState('unknown')"><span class="dot unknown"></span><span class="txt">Unknown</span><span class="kbd">U</span></button>
+  <button onclick="setState('clear')"><span class="dot clear"></span><span class="txt">Clear</span><span class="kbd">C</span></button>
+  <button onclick="setState('hold')"><span class="dot hold"></span><span class="txt">Hold · Pending</span><span class="kbd">H</span></button>
+  <button onclick="setState('risk')"><span class="dot risk"></span><span class="txt">Risk · Escalate</span><span class="kbd">R</span></button>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+const STORAGE_KEY = 'mog_clearance_v1';
+
+const BRANDS = [
+  { id: 'mog',  name: 'McKnight Opportunity Group',     domain: 'McKnightOpportunityGroup.com' },
+  { id: 'tcp',  name: 'The Contracting Preacher',       domain: 'TheContractingPreacher.com' },
+  { id: 'tcpos',name: 'Contracting Preacher OS',        domain: 'ContractingPreacherOS.com (TBD)' },
+  { id: 'mhi',  name: 'McKnight Housing Initiative',    domain: 'McKnightHousing.org' },
+  { id: 'mcr',  name: 'McKnight Capital Ready',         domain: 'McKnightCapitalReady.com' },
+  { id: 'cros', name: 'Capital Ready OS',               domain: 'CapitalReadyOS.com (TBD)' },
+  { id: 'mmos', name: 'McKnight MortgageOS',            domain: 'McKnightMortgageOS.com' },
+  { id: 'mgos', name: 'McKnight GrowthOS',              domain: 'McKnightGrowthOS.com' },
+  { id: 'mfs',  name: 'McKnight Freight Systems',       domain: 'McKnightFreightSystems.com' },
+  { id: 'mdh',  name: 'McKnight DriverHub',             domain: 'McKnightDriverHub.com (TBD)' },
+  { id: 'mfw',  name: 'McKnight FleetWorks',            domain: 'McKnightFleetWorks.com' },
+  { id: 'fwsh', name: 'FleetWorks ServiceHub',          domain: 'FleetWorksServiceHub.com (TBD)' },
+  { id: 'mela', name: 'McKnight Early Learning Academy',domain: 'McKnightEarlyLearning.com' },
+];
+
+const CHECKS = ['sc_sos','uspto','state_tm','common','domain','socials','similar','counsel'];
+const NEXT_STATE = { unknown: 'clear', clear: 'hold', hold: 'risk', risk: 'unknown' };
+const KBD_MAP = { u: 'unknown', c: 'clear', h: 'hold', r: 'risk' };
+
+let state = {};
+let activeCell = null;
+
+function load(){
+  try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e){ state = {}; }
+  render();
+}
+function save(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  render();
+}
+
+function getState(brandId, check){
+  return state[brandId]?.[check] || 'unknown';
+}
+function setStateFor(brandId, check, val){
+  if(!state[brandId]) state[brandId] = {};
+  state[brandId][check] = val;
+  save();
+}
+
+function cycle(brandId, check){
+  const cur = getState(brandId, check);
+  setStateFor(brandId, check, NEXT_STATE[cur]);
+}
+
+function render(){
+  const rows = document.getElementById('rows');
+  rows.innerHTML = BRANDS.map(b => `
+    <div class="grid-row">
+      <div class="cell-name">
+        <div class="id">${b.id.toUpperCase()}</div>
+        <div class="name">${b.name}</div>
+        <div class="domain">${b.domain}</div>
+      </div>
+      <div class="cell-checks">
+        ${CHECKS.map(c => {
+          const st = getState(b.id, c);
+          return `<div class="check-cell state-${st}" onclick="onCellClick(event,'${b.id}','${c}')"><span class="dot ${st}"></span>${st === 'unknown' ? '—' : st[0].toUpperCase() + st.slice(1)}</div>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  /* details panels */
+  const dcont = document.getElementById('details');
+  dcont.innerHTML = BRANDS.map(b => {
+    const notes = state[b.id]?.notes || {};
+    return `
+      <details class="brand-det" ${b.id === 'tcp' ? 'open' : ''}>
+        <summary>▸ ${b.id.toUpperCase()} · ${b.name} — Notes &amp; Evidence Links</summary>
+        <div class="body">
+          <div class="notes-grid">
+            <div class="note-fld"><label>USPTO TM Search — link/date/result</label><input value="${escapeAttr(notes.uspto_note)}" oninput="updateNote('${b.id}','uspto_note',this.value)"></div>
+            <div class="note-fld"><label>SC Secretary of State — filing/status</label><input value="${escapeAttr(notes.scsos_note)}" oninput="updateNote('${b.id}','scsos_note',this.value)"></div>
+            <div class="note-fld"><label>Domain Registrar &amp; expiration</label><input value="${escapeAttr(notes.domain_note)}" oninput="updateNote('${b.id}','domain_note',this.value)"></div>
+            <div class="note-fld"><label>Social Handles Secured</label><input value="${escapeAttr(notes.socials_note)}" oninput="updateNote('${b.id}','socials_note',this.value)" placeholder="LinkedIn · X · IG · YouTube · TikTok"></div>
+            <div class="note-fld" style="grid-column:1/-1"><label>Similar-name findings + attorney notes</label><textarea oninput="updateNote('${b.id}','similar_note',this.value)">${escapeAttr(notes.similar_note)}</textarea></div>
+          </div>
+        </div>
+      </details>
+    `;
+  }).join('');
+
+  updateStats();
+}
+
+function updateNote(brandId, key, val){
+  if(!state[brandId]) state[brandId] = {};
+  if(!state[brandId].notes) state[brandId].notes = {};
+  state[brandId].notes[key] = val;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function escapeAttr(s){ return String(s || '').replace(/"/g, '&quot;'); }
+
+function updateStats(){
+  let clear = 0, risk = 0, unknown = 0;
+  BRANDS.forEach(b => {
+    const allChecks = CHECKS.map(c => getState(b.id, c));
+    if(allChecks.every(s => s === 'clear')) clear++;
+    if(allChecks.some(s => s === 'risk')) risk++;
+    if(allChecks.every(s => s === 'unknown')) unknown++;
+  });
+  document.getElementById('s-clear').textContent = clear;
+  document.getElementById('s-risk').textContent = risk;
+  document.getElementById('s-pending').textContent = unknown;
+}
+
+/* click menu */
+function onCellClick(evt, brandId, check){
+  evt.stopPropagation();
+  activeCell = { brandId, check };
+  const menu = document.getElementById('menu');
+  const r = evt.currentTarget.getBoundingClientRect();
+  const menuW = 200;
+  let left = r.left;
+  if(left + menuW > window.innerWidth) left = window.innerWidth - menuW - 10;
+  menu.style.left = left + 'px';
+  menu.style.top = (r.bottom + window.scrollY + 4) + 'px';
+  menu.classList.add('show');
+}
+function setState(val){
+  if(!activeCell) return;
+  setStateFor(activeCell.brandId, activeCell.check, val);
+  activeCell = null;
+  document.getElementById('menu').classList.remove('show');
+}
+document.addEventListener('click', e => {
+  if(!e.target.closest('.menu') && !e.target.closest('.check-cell')){
+    document.getElementById('menu').classList.remove('show');
+    activeCell = null;
+  }
+});
+document.addEventListener('keydown', e => {
+  const menu = document.getElementById('menu');
+  if(!menu.classList.contains('show')) return;
+  const k = e.key.toLowerCase();
+  if(KBD_MAP[k]){ setState(KBD_MAP[k]); e.preventDefault(); }
+  if(e.key === 'Escape'){ menu.classList.remove('show'); activeCell = null; }
+});
+
+function resetAll(){
+  if(!confirm('Reset all clearance state? Notes will also clear.')) return;
+  state = {};
+  localStorage.removeItem(STORAGE_KEY);
+  render();
+  toast('Cleared');
+}
+function exportJSON(){
+  const report = BRANDS.map(b => ({
+    id: b.id, name: b.name, domain: b.domain,
+    clearance: CHECKS.reduce((acc, c) => (acc[c] = getState(b.id, c), acc), {}),
+    notes: state[b.id]?.notes || {},
+  }));
+  const blob = new Blob([JSON.stringify({generated: new Date().toISOString(), fleet: report}, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `clearance-tracker-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  URL.revokeObjectURL(url);
+  toast('Exported');
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+load();
+</script>
+
+</body>
+</html>

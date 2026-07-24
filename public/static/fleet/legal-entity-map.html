@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Legal Entity Map — McKnight Opportunity Group</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0; --line-2:#D6CFB8;
+    --ok:#2F6B4A; --warn:#B87A1F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);padding:48px 24px 100px;-webkit-font-smoothing:antialiased}
+  .page{max-width:1240px;margin:0 auto;background:#fff;border-radius:2px;overflow:hidden;box-shadow:0 20px 50px -30px rgba(10,22,40,.2)}
+  .page::before{content:"";display:block;height:8px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+
+  header{padding:36px 48px 24px;border-bottom:1px solid var(--line);position:relative}
+  .brand{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+  .brand svg{width:44px;height:44px;color:var(--navy);flex:none}
+  .brand .txt{font-family:var(--serif);font-weight:700;font-size:16px;line-height:1.05}
+  .brand .txt h1{font-family:var(--serif);font-size:20px;font-weight:800;letter-spacing:-.01em}
+  .brand .txt span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;font-weight:500;margin-top:2px}
+  header h2{font-family:var(--serif);font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1;margin-bottom:8px}
+  header h2 em{font-style:italic;color:var(--red);font-weight:600}
+  header p{font-family:var(--serif);font-style:italic;color:var(--slate);font-size:16px;max-width:760px;line-height:1.5}
+
+  .warn{background:#FBEEEE;border-left:4px solid var(--red);padding:14px 20px;margin:24px 48px;border-radius:0 2px 2px 0;font-size:13px;color:#5B1414;line-height:1.55}
+  .warn b{font-weight:700}
+
+  section{padding:32px 48px;border-bottom:1px solid var(--line)}
+  section:last-of-type{border:0}
+  .sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .sec-head h3{font-family:var(--serif);font-size:24px;font-weight:800;letter-spacing:-.01em}
+  .sec-head h3 em{font-style:italic;color:var(--red);font-weight:600}
+  .sec-head .tag{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+
+  /* TREE */
+  .tree{background:var(--ivory);border:1px solid var(--line);border-radius:2px;padding:32px;position:relative}
+  .node{background:#fff;border:1px solid var(--line-2);border-radius:2px;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:10px;position:relative}
+  .node.parent{background:var(--navy);color:var(--ivory);border-color:var(--navy)}
+  .node.parent::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(201,169,97,.16),transparent 55%);pointer-events:none}
+  .node .info{position:relative}
+  .node .id{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--gold-2);text-transform:uppercase;font-weight:700}
+  .node.parent .id{color:var(--gold)}
+  .node .name{font-family:var(--serif);font-size:18px;font-weight:800;letter-spacing:-.005em;margin-top:2px}
+  .node.parent .name{color:var(--ivory)}
+  .node .role{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;margin-top:2px}
+  .node.parent .role{color:var(--gold-3);opacity:.85}
+  .node .meta{display:flex;gap:20px;font-family:var(--mono);font-size:10px;color:var(--slate);text-transform:uppercase;letter-spacing:.1em;position:relative}
+  .node.parent .meta{color:var(--gold-3);opacity:.9}
+  .node .meta b{color:var(--navy);display:block;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:0;text-transform:none;margin-top:2px}
+  .node.parent .meta b{color:var(--ivory)}
+
+  .children{margin-left:24px;padding-left:20px;border-left:2px dashed var(--gold-2);padding-top:8px}
+
+  /* AUTHORITY MATRIX */
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-top:12px}
+  th{background:var(--navy);color:var(--gold-3);font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:12px 14px;text-align:left;font-weight:700}
+  td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top;color:var(--navy);line-height:1.5}
+  td.mono{font-family:var(--mono);font-size:11px;color:var(--slate);letter-spacing:.03em}
+  td b{color:var(--navy);font-weight:700;font-family:var(--serif);font-size:14px;letter-spacing:-.005em;display:block;margin-bottom:2px}
+  tr:nth-child(even) td{background:#FBF9F3}
+  td.yes{color:var(--ok);font-weight:700}
+  td.no{color:var(--red);font-weight:700}
+  td.na{color:var(--slate);opacity:.5}
+
+  /* INTERCOMPANY AGREEMENTS */
+  .agreements{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .agr{background:var(--ivory);border-left:3px solid var(--gold);padding:14px 18px;border-radius:0 2px 2px 0}
+  .agr h5{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--gold-2);text-transform:uppercase;font-weight:700;margin-bottom:6px}
+  .agr h4{font-family:var(--serif);font-size:15px;font-weight:800;letter-spacing:-.005em;margin-bottom:4px}
+  .agr p{font-size:12px;color:var(--slate);line-height:1.5}
+  .agr .between{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--navy);margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-weight:600}
+
+  footer{padding:20px 48px;background:var(--navy);color:var(--gold-3);text-align:center;font-family:var(--serif);font-style:italic;font-size:14px;line-height:1.5}
+  footer .ref{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:6px;font-style:normal;font-weight:600}
+
+  @media print{ body{background:#fff;padding:0} .page{box-shadow:none} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="0 0 100 100">
+    <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z" fill="currentColor"/>
+    <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#C9A961" stroke-width="1.5" opacity=".55"/>
+    <rect x="46" y="26" width="8" height="46" fill="#C9A961"/>
+    <rect x="32" y="36" width="36" height="6" fill="#C9A961"/>
+  </symbol>
+</svg>
+
+<div class="page">
+  <header>
+    <div class="brand">
+      <svg><use href="#mark"/></svg>
+      <div class="txt"><h1>Legal Entity Map</h1><span>McKnight Opportunity Group · P0 Foundation</span></div>
+    </div>
+    <h2>Who <em>owns</em> what. Who <em>signs</em> what.</h2>
+    <p>The structural blueprint that must exist on paper before a single site launches, a single client signs, or a single dollar flows. Every arrow needs a signed intercompany agreement — no handshake deals inside a family of brands.</p>
+  </header>
+
+  <div class="warn">
+    <b>⚠ This document is a template — not legal advice.</b> All entity structures, ownership decisions, tax elections, and intercompany agreements must be reviewed and executed by qualified counsel and a CPA before adoption. Nothing here should be treated as final until entity formation and formal opinions are on file.
+  </div>
+
+  <!-- Ownership tree -->
+  <section>
+    <div class="sec-head"><h3>1 · Ownership <em>Tree</em></h3><span class="tag">Draft · pending counsel</span></div>
+
+    <div class="tree">
+      <div class="node parent">
+        <div class="info">
+          <div class="id">00 · Parent</div>
+          <div class="name">McKnight Opportunity Group</div>
+          <div class="role">Holdings / Management · TBD entity type</div>
+        </div>
+        <div class="meta">
+          <div>Owner<b>Dr. McKnight</b></div>
+          <div>Formation<b>—</b></div>
+          <div>EIN<b>—</b></div>
+        </div>
+      </div>
+
+      <div class="children">
+        <div class="node">
+          <div class="info">
+            <div class="id">01 · Operator</div>
+            <div class="name">The Contracting Preacher</div>
+            <div class="role">Federal consulting · LLC recommended</div>
+          </div>
+          <div class="meta">
+            <div>Signer<b>Dr. McKnight</b></div>
+            <div>SAM UEI<b>—</b></div>
+            <div>Ins<b>E&amp;O + GL</b></div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="info">
+            <div class="id">02 · Nonprofit</div>
+            <div class="name">McKnight Housing Initiative</div>
+            <div class="role">501(c)(3) · Separate governance required</div>
+          </div>
+          <div class="meta">
+            <div>Board<b>Min 3 independent</b></div>
+            <div>IRS letter<b>—</b></div>
+            <div>Ins<b>D&amp;O + GL</b></div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="info">
+            <div class="id">03 · Operator</div>
+            <div class="name">McKnight Capital Ready</div>
+            <div class="role">Credit/funding · LLC · state bonds by lane</div>
+          </div>
+          <div class="meta">
+            <div>Signer<b>Dr. McKnight</b></div>
+            <div>Attorney<b>Required</b></div>
+            <div>Ins<b>Prof Liability</b></div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="info">
+            <div class="id">04 · Software IP</div>
+            <div class="name">McKnight MortgageOS</div>
+            <div class="role">Wholly owned by MOG · DE C-Corp option</div>
+          </div>
+          <div class="meta">
+            <div>IP<b>Assigned to entity</b></div>
+            <div>Counsel<b>Mortgage-specific</b></div>
+            <div>Ins<b>Cyber + E&amp;O</b></div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="info">
+            <div class="id">05 · Software IP</div>
+            <div class="name">McKnight GrowthOS</div>
+            <div class="role">Wholly owned by MOG</div>
+          </div>
+          <div class="meta">
+            <div>IP<b>Assigned</b></div>
+            <div>Signer<b>Dr. McKnight</b></div>
+            <div>Ins<b>Cyber + E&amp;O</b></div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="info">
+            <div class="id">06 · Operator</div>
+            <div class="name">McKnight Freight Systems</div>
+            <div class="role">Transportation LLC · USDOT + MC required</div>
+          </div>
+          <div class="meta">
+            <div>Signer<b>Dr. McKnight</b></div>
+            <div>USDOT<b>—</b></div>
+            <div>Ins<b>BI/PD + Cargo</b></div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="info">
+            <div class="id">07 · Operator</div>
+            <div class="name">McKnight FleetWorks</div>
+            <div class="role">Repair · LLC · Garage liability required</div>
+          </div>
+          <div class="meta">
+            <div>Signer<b>Dr. McKnight</b></div>
+            <div>Facility<b>—</b></div>
+            <div>Ins<b>Garage + WC</b></div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="info">
+            <div class="id">08 · Operator</div>
+            <div class="name">McKnight Early Learning Academy</div>
+            <div class="role">Licensed childcare · Separate entity strongly recommended</div>
+          </div>
+          <div class="meta">
+            <div>License<b>Childcare</b></div>
+            <div>Provider #<b>—</b></div>
+            <div>Ins<b>Prof + GL + AL</b></div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="info">
+            <div class="id">09 · Software IP</div>
+            <div class="name">McKnight LearningOS</div>
+            <div class="role">Wholly owned by MOG · COPPA review required</div>
+          </div>
+          <div class="meta">
+            <div>IP<b>Assigned</b></div>
+            <div>Counsel<b>COPPA / minors</b></div>
+            <div>Ins<b>Cyber + E&amp;O</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Authority Matrix -->
+  <section>
+    <div class="sec-head"><h3>2 · Authority <em>Matrix</em></h3><span class="tag">Per-entity permissions</span></div>
+    <p style="font-family:var(--serif);font-style:italic;color:var(--slate);font-size:14px;margin-bottom:12px">Who can bind which entity to what. Fill this in as counsel confirms.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Entity</th>
+          <th>Sign Clients</th>
+          <th>Sign Vendors</th>
+          <th>Bank Signer</th>
+          <th>Employs Staff</th>
+          <th>Owns Software IP</th>
+          <th>Files Taxes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><b>McKnight Opportunity Group</b><span class="mono">Parent / Holdings</span></td><td class="na">—</td><td class="yes">✓ (shared services)</td><td>Dr. McKnight</td><td class="yes">✓ (admin)</td><td class="yes">✓ (all)</td><td>Yes</td></tr>
+        <tr><td><b>The Contracting Preacher</b><span class="mono">Federal consulting</span></td><td class="yes">✓</td><td class="yes">✓</td><td>Dr. McKnight</td><td>Contractors</td><td class="na">—</td><td>Yes (own)</td></tr>
+        <tr><td><b>McKnight Housing Initiative</b><span class="mono">Nonprofit</span></td><td class="yes">✓ (grants)</td><td class="yes">✓</td><td>Board approved</td><td>Employees</td><td class="na">—</td><td>Yes (990)</td></tr>
+        <tr><td><b>McKnight Capital Ready</b><span class="mono">Credit / funding</span></td><td class="yes">✓ (regulated)</td><td class="yes">✓</td><td>Dr. McKnight</td><td>W-2 + 1099</td><td class="na">—</td><td>Yes</td></tr>
+        <tr><td><b>McKnight MortgageOS</b><span class="mono">Software</span></td><td class="yes">✓ (SaaS)</td><td class="yes">✓</td><td>Dr. McKnight</td><td>Contractors</td><td class="yes">✓</td><td>Yes</td></tr>
+        <tr><td><b>McKnight GrowthOS</b><span class="mono">Software</span></td><td class="yes">✓ (SaaS)</td><td class="yes">✓</td><td>Dr. McKnight</td><td>Contractors</td><td class="yes">✓</td><td>Yes</td></tr>
+        <tr><td><b>McKnight Freight Systems</b><span class="mono">Transportation</span></td><td class="yes">✓ (shippers/brokers)</td><td class="yes">✓ (drivers/factors)</td><td>Dr. McKnight</td><td>Drivers</td><td class="na">—</td><td>Yes</td></tr>
+        <tr><td><b>McKnight FleetWorks</b><span class="mono">Repair</span></td><td class="yes">✓ (fleet + retail)</td><td class="yes">✓ (parts)</td><td>Dr. McKnight</td><td>Techs (W-2)</td><td class="na">—</td><td>Yes</td></tr>
+        <tr><td><b>Early Learning Academy</b><span class="mono">Childcare</span></td><td class="yes">✓ (families)</td><td class="yes">✓</td><td>Dr. McKnight</td><td>Staff (W-2)</td><td class="na">—</td><td>Yes</td></tr>
+        <tr><td><b>McKnight LearningOS</b><span class="mono">Software</span></td><td class="yes">✓ (SaaS)</td><td class="yes">✓</td><td>Dr. McKnight</td><td>Contractors</td><td class="yes">✓</td><td>Yes</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Intercompany Agreements -->
+  <section>
+    <div class="sec-head"><h3>3 · Intercompany <em>Agreements</em></h3><span class="tag">Required · pre-launch</span></div>
+    <p style="font-family:var(--serif);font-style:italic;color:var(--slate);font-size:14px;margin-bottom:14px">Every value flowing between related entities needs a signed agreement so the IRS, auditors, and courts see clean lines.</p>
+
+    <div class="agreements">
+      <div class="agr">
+        <h5>Agreement · Type A</h5>
+        <h4>Management Services Agreement</h4>
+        <p>MOG provides shared admin, brand, marketing, and back-office to each operator. Operator pays MOG a documented management fee.</p>
+        <div class="between">MOG ↔ every operator</div>
+      </div>
+      <div class="agr">
+        <h5>Agreement · Type B</h5>
+        <h4>IP License Agreement</h4>
+        <p>MortgageOS / GrowthOS / LearningOS retain IP; other operators license the software under documented terms with defined fees.</p>
+        <div class="between">Software IPCos ↔ operators</div>
+      </div>
+      <div class="agr">
+        <h5>Agreement · Type C</h5>
+        <h4>Referral / Cross-Sell Agreement</h4>
+        <p>Formal referral fees between operators (e.g., TCP → Capital Ready → MortgageOS). Documented percentages, disclosed to clients.</p>
+        <div class="between">Operator ↔ operator</div>
+      </div>
+      <div class="agr">
+        <h5>Agreement · Type D</h5>
+        <h4>Sublease / Facilities Agreement</h4>
+        <p>Any shared physical space needs a documented sublease with fair-market rent so no entity subsidizes another off-books.</p>
+        <div class="between">Space-owner ↔ occupying entities</div>
+      </div>
+      <div class="agr">
+        <h5>Agreement · Type E</h5>
+        <h4>Employee/Contractor Assignment</h4>
+        <p>Which entity actually employs each person, and how time gets allocated across entities they support (with proper W-2/1099).</p>
+        <div class="between">Employer ↔ employee ↔ served entities</div>
+      </div>
+      <div class="agr">
+        <h5>Agreement · Type F</h5>
+        <h4>Nonprofit Firewall</h4>
+        <p>McKnight Housing Initiative operates under strict independence — no private inurement, board-approved arms-length dealings only.</p>
+        <div class="between">MHI ↔ all for-profit entities</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    "Commit to the Lord whatever you do, and he will establish your plans."
+    <span class="ref">— Proverbs 16:3 · Legal Entity Map · McKnight Opportunity Group</span>
+  </footer>
+</div>
+
+</body>
+</html>

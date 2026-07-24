@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Client Intake — The Contracting Preacher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --navy-2:#0F1E36; --gold:#C9A961; --gold-2:#B08D3F; --gold-3:#E4CB92;
+    --ivory:#F7F3EA; --ivory-2:#EFE8D6; --red:#8B1F1F; --slate:#4A5568; --line:#E5DFD0; --line-2:#D6CFB8;
+    --ok:#2F6B4A; --warn:#B87A1F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#EBE4D2;font-family:var(--sans);color:var(--navy);-webkit-font-smoothing:antialiased}
+  body{padding:40px 20px 120px}
+  .wrap{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:240px 1fr;gap:32px}
+
+  /* SIDEBAR */
+  aside{position:sticky;top:24px;align-self:start;background:var(--navy);color:var(--ivory);padding:28px 24px;border-radius:2px;overflow:hidden;position:relative}
+  aside::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0%, rgba(201,169,97,.18),transparent 55%);pointer-events:none}
+  aside .brand{display:flex;align-items:center;gap:10px;position:relative;padding-bottom:20px;border-bottom:1px solid rgba(201,169,97,.3);margin-bottom:20px}
+  aside .brand svg{width:36px;height:36px;flex:none;color:var(--gold)}
+  aside .brand .txt{font-family:var(--serif);font-weight:700;font-size:14px;line-height:1.1}
+  aside .brand .txt span{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.24em;color:var(--gold-3);text-transform:uppercase;font-weight:400;margin-top:3px}
+  aside h3{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:12px;position:relative}
+  aside nav{display:flex;flex-direction:column;gap:2px;position:relative;margin-bottom:24px}
+  aside nav a{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;color:var(--ivory);text-decoration:none;font-size:12.5px;border-radius:2px;font-family:var(--sans);opacity:.75;transition:all .15s}
+  aside nav a:hover{background:rgba(201,169,97,.1);opacity:1}
+  aside nav a.done{opacity:1;color:var(--gold-3)}
+  aside nav a.done::after{content:"✓";color:var(--gold);font-family:var(--mono);font-weight:700}
+  aside nav a .n{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:.1em;font-weight:600;width:22px}
+
+  aside .progress{position:relative;padding-top:16px;border-top:1px solid rgba(201,169,97,.3)}
+  aside .progress .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;font-weight:600;display:flex;justify-content:space-between}
+  aside .progress .bar{height:6px;background:rgba(201,169,97,.15);border-radius:1px;overflow:hidden}
+  aside .progress .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold-2),var(--gold-3));transition:width .3s}
+
+  aside .actions{margin-top:20px;display:flex;flex-direction:column;gap:6px;position:relative}
+  aside .actions button{background:transparent;border:1px solid var(--gold);color:var(--gold-3);padding:8px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;cursor:pointer;border-radius:2px;text-align:left;transition:all .15s}
+  aside .actions button:hover{background:var(--gold);color:var(--navy)}
+  aside .actions button.primary{background:var(--gold);color:var(--navy)}
+  aside .actions button.primary:hover{background:var(--gold-3)}
+
+  /* MAIN */
+  main{background:var(--white,#fff);border:1px solid var(--line);border-radius:2px;padding:0;box-shadow:0 20px 50px -30px rgba(10,22,40,.2);position:relative;overflow:hidden}
+  main::before{content:"";position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 62%,var(--gold) 62%,var(--gold) 100%)}
+  main header{padding:36px 40px 24px;border-bottom:1px solid var(--line)}
+  main header .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold-2);text-transform:uppercase;margin-bottom:6px;font-weight:600}
+  main header h1{font-family:var(--serif);font-size:36px;font-weight:800;letter-spacing:-.01em;line-height:1.05}
+  main header p{font-family:var(--serif);font-style:italic;color:var(--slate);margin-top:8px;font-size:15px}
+
+  section{padding:32px 40px;border-bottom:1px solid var(--line);scroll-margin-top:20px}
+  section:last-of-type{border:0}
+  section .sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  section .sec-head h2{font-family:var(--serif);font-size:22px;font-weight:700}
+  section .sec-head .tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold-2);text-transform:uppercase;font-weight:600}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px}
+  .grid.three{grid-template-columns:1fr 1fr 1fr}
+  .grid.one{grid-template-columns:1fr}
+
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field label{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--slate);text-transform:uppercase;font-weight:500;display:flex;justify-content:space-between}
+  .field label .req{color:var(--red);font-weight:700}
+  .field label .hint{color:var(--slate);opacity:.7;font-size:9px;text-transform:none;letter-spacing:.05em;font-style:italic}
+  .field input, .field textarea, .field select{
+    font-family:var(--serif);font-size:15px;color:var(--navy);padding:10px 12px;
+    background:transparent;border:0;border-bottom:1.5px solid var(--line-2);
+    transition:border-color .15s;outline:none;width:100%;
+  }
+  .field textarea{font-family:var(--sans);font-size:14px;border:1px solid var(--line-2);border-radius:2px;min-height:64px;padding:10px 12px;resize:vertical}
+  .field select{font-family:var(--sans);font-size:14px;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold-2) 50%),linear-gradient(135deg,var(--gold-2) 50%,transparent 50%);background-position:right 12px center;background-size:6px 6px;background-repeat:no-repeat;padding-right:32px}
+  .field input:focus, .field textarea:focus, .field select:focus{border-color:var(--gold-2)}
+  .field input:valid:not(:placeholder-shown), .field textarea:valid:not(:placeholder-shown){border-bottom-color:var(--gold-2)}
+  .field.filled input, .field.filled select{border-bottom-color:var(--gold-2)}
+
+  .checkgroup{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .checkgroup label{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line-2);border-radius:2px;font-size:13px;color:var(--navy);cursor:pointer;transition:all .12s;font-family:var(--sans)}
+  .checkgroup label:hover{background:var(--ivory)}
+  .checkgroup input[type="checkbox"]{width:15px;height:15px;accent-color:var(--navy);cursor:pointer;flex:none}
+  .checkgroup label:has(input:checked){background:var(--navy);color:var(--ivory);border-color:var(--navy)}
+
+  .warn{background:#FBEEEE;border-left:4px solid var(--red);padding:14px 18px;margin:16px 0;font-size:13px;color:#5B1414;line-height:1.5;border-radius:0 2px 2px 0;font-family:var(--sans)}
+  .warn b{font-weight:700}
+  .info{background:var(--ivory);border-left:4px solid var(--gold);padding:14px 18px;margin:16px 0;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--slate);line-height:1.55;border-radius:0 2px 2px 0}
+  .info b{color:var(--navy);font-style:normal;font-weight:600}
+
+  /* BOTTOM ACTION BAR */
+  .footer-bar{padding:24px 40px 32px;background:var(--navy);color:var(--ivory);display:flex;justify-content:space-between;align-items:center;gap:20px;position:relative;overflow:hidden}
+  .footer-bar::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 50%, rgba(201,169,97,.18),transparent 55%);pointer-events:none}
+  .footer-bar .verse{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--gold-3);position:relative;max-width:340px;line-height:1.5}
+  .footer-bar .buttons{display:flex;gap:10px;position:relative}
+  .footer-bar button{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;padding:12px 20px;border:0;border-radius:2px;cursor:pointer;transition:all .15s}
+  .footer-bar .btn-primary{background:var(--gold);color:var(--navy)}
+  .footer-bar .btn-primary:hover{background:var(--gold-3)}
+  .footer-bar .btn-ghost{background:transparent;color:var(--gold-3);border:1px solid var(--gold-3)}
+  .footer-bar .btn-ghost:hover{background:var(--gold-3);color:var(--navy)}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:var(--gold-3);padding:14px 20px;border-radius:2px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;box-shadow:0 20px 40px -20px rgba(10,22,40,.5);border-left:3px solid var(--gold);opacity:0;transform:translateY(20px);transition:all .25s;z-index:100}
+  .toast.show{opacity:1;transform:translateY(0)}
+  .toast b{color:var(--ivory);font-weight:600}
+
+  /* PRINT */
+  @media print{
+    body{background:#fff;padding:0}
+    .wrap{grid-template-columns:1fr;max-width:none;gap:0}
+    aside,.footer-bar .buttons{display:none}
+    main{border:0;box-shadow:none}
+    section{page-break-inside:avoid}
+    .field input, .field select{border-bottom-color:#0A1628 !important}
+  }
+  @media (max-width:900px){
+    .wrap{grid-template-columns:1fr}
+    aside{position:static}
+    .grid,.grid.three{grid-template-columns:1fr}
+    .checkgroup{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="brand">
+      <svg viewBox="0 0 100 100" fill="currentColor">
+        <path d="M50 4 L92 18 L92 52 C92 74 74 90 50 96 C26 90 8 74 8 52 L8 18 Z"/>
+        <path d="M50 12 L84 23 L84 52 C84 70 70 82 50 87 C30 82 16 70 16 52 L16 23 Z" fill="none" stroke="#0A1628" stroke-width="1.5" opacity=".45"/>
+        <rect x="46" y="26" width="8" height="46" fill="#0A1628"/>
+        <rect x="32" y="36" width="36" height="6" fill="#0A1628"/>
+      </svg>
+      <div class="txt">The Contracting Preacher<span>Client Intake · v1.0</span></div>
+    </div>
+
+    <h3>Sections</h3>
+    <nav id="nav">
+      <a href="#s-a"><span><span class="n">A</span>Business Identity</span></a>
+      <a href="#s-b"><span><span class="n">B</span>Ownership</span></a>
+      <a href="#s-c"><span><span class="n">C</span>Registrations</span></a>
+      <a href="#s-d"><span><span class="n">D</span>Capabilities</span></a>
+      <a href="#s-e"><span><span class="n">E</span>Financial</span></a>
+      <a href="#s-f"><span><span class="n">F</span>Track Record</span></a>
+      <a href="#s-g"><span><span class="n">G</span>Funding</span></a>
+      <a href="#s-h"><span><span class="n">H</span>Lanes</span></a>
+      <a href="#s-i"><span><span class="n">I</span>Open Field</span></a>
+    </nav>
+
+    <div class="progress">
+      <div class="lbl"><span>Progress</span><span id="pct">0%</span></div>
+      <div class="bar"><span id="progbar" style="width:0%"></span></div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="saveNow()">💾 Save Draft</button>
+      <button onclick="exportJSON()">↓ Export JSON</button>
+      <button onclick="window.print()">⎙ Print / PDF</button>
+      <button onclick="clearAll()" style="color:#F5A5A5;border-color:#F5A5A5">✕ Clear All</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <header>
+      <div class="lbl">Vol. 02 · Intake · Section 19</div>
+      <h1>Client Intake Form</h1>
+      <p>Fill what you can. Nothing on this form should include passwords, MFA codes, complete SSNs, banking credentials, or full tax returns — we handle those separately in a secure vault.</p>
+    </header>
+
+    <form id="intake" autocomplete="off">
+
+    <!-- A · Business Identity -->
+    <section id="s-a">
+      <div class="sec-head"><h2>A · Business Identity</h2><span class="tag">12 fields · Required</span></div>
+      <div class="grid">
+        <div class="field"><label>Legal Business Name <span class="req">*</span></label><input name="a_legal_name" placeholder="Exact name on formation docs" required></div>
+        <div class="field"><label>DBA / Brand</label><input name="a_dba" placeholder="If different from legal"></div>
+        <div class="field"><label>Website <span class="req">*</span></label><input type="url" name="a_website" placeholder="https://" required></div>
+        <div class="field">
+          <label>Entity Type <span class="req">*</span></label>
+          <select name="a_entity" required>
+            <option value="">— Select —</option>
+            <option>LLC</option><option>S-Corp</option><option>C-Corp</option>
+            <option>Nonprofit 501(c)(3)</option><option>Sole Proprietor</option>
+            <option>Partnership</option><option>LLP</option><option>Cooperative</option>
+          </select>
+        </div>
+        <div class="field"><label>State of Formation <span class="req">*</span></label><input name="a_state" placeholder="e.g. South Carolina" required></div>
+        <div class="field"><label>Formation Date <span class="req">*</span></label><input type="date" name="a_date" required></div>
+        <div class="field"><label>Business Address <span class="req">*</span></label><input name="a_addr" placeholder="Street, City, ZIP" required></div>
+        <div class="field"><label>County <span class="hint">unlocks HUBZone / rural</span></label><input name="a_county"></div>
+        <div class="field"><label>Phone <span class="req">*</span></label><input type="tel" name="a_phone" placeholder="(___) ___-____" required></div>
+        <div class="field"><label>Business Email <span class="req">*</span></label><input type="email" name="a_email" required></div>
+        <div class="field">
+          <label>For-Profit or Nonprofit <span class="req">*</span></label>
+          <select name="a_profit" required>
+            <option value="">— Select —</option>
+            <option>For-Profit</option><option>Nonprofit</option><option>Fiscally Sponsored</option>
+          </select>
+        </div>
+        <div class="field"><label>Fiscal-Year End <span class="hint">e.g. Dec 31</span></label><input name="a_fye" placeholder="Month, Day"></div>
+      </div>
+    </section>
+
+    <!-- B · Ownership -->
+    <section id="s-b">
+      <div class="sec-head"><h2>B · Ownership</h2><span class="tag">Encrypted · Eligibility only</span></div>
+      <div class="grid">
+        <div class="field"><label>Owner Name <span class="req">*</span></label><input name="b_owner" required></div>
+        <div class="field"><label>Owner Role / Title <span class="req">*</span></label><input name="b_role" required></div>
+        <div class="field"><label>Ownership Percentage <span class="req">*</span></label><input name="b_pct" placeholder="e.g. 100%" required></div>
+        <div class="field"><label>Authorized Signer (if different)</label><input name="b_signer"></div>
+      </div>
+      <div class="info">Additional owners &amp; demographic data (veteran / gender / disadvantaged status) are collected in a separate encrypted intake — used only when an application requires it.</div>
+    </section>
+
+    <!-- C · Registrations -->
+    <section id="s-c">
+      <div class="sec-head"><h2>C · Registrations &amp; Credentials</h2><span class="tag">No passwords · No MFA codes</span></div>
+      <div class="grid">
+        <div class="field"><label>UEI (Unique Entity ID)</label><input name="c_uei" placeholder="12-character SAM.gov ID"></div>
+        <div class="field"><label>CAGE Code</label><input name="c_cage" placeholder="5-character code"></div>
+        <div class="field">
+          <label>SAM.gov Status</label>
+          <select name="c_sam"><option value="">— Select —</option><option>Active</option><option>Expired</option><option>In Progress</option><option>Not Yet Registered</option></select>
+        </div>
+        <div class="field"><label>SAM.gov Expiration Date</label><input type="date" name="c_sam_exp"></div>
+        <div class="field"><label>SC Vendor Number</label><input name="c_sc_vendor"></div>
+        <div class="field">
+          <label>Grants.gov Status</label>
+          <select name="c_grants"><option value="">— Select —</option><option>AOR Active</option><option>Registered · No AOR</option><option>Not Registered</option></select>
+        </div>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Current Certifications <span class="hint">check all that apply</span></label>
+        <div class="checkgroup">
+          <label><input type="checkbox" name="c_cert_sb">Small Business</label>
+          <label><input type="checkbox" name="c_cert_sdb">Small Disadvantaged</label>
+          <label><input type="checkbox" name="c_cert_8a">8(a)</label>
+          <label><input type="checkbox" name="c_cert_hubzone">HUBZone</label>
+          <label><input type="checkbox" name="c_cert_wosb">WOSB</label>
+          <label><input type="checkbox" name="c_cert_edwosb">EDWOSB</label>
+          <label><input type="checkbox" name="c_cert_vosb">VOSB</label>
+          <label><input type="checkbox" name="c_cert_sdvosb">SDVOSB</label>
+          <label><input type="checkbox" name="c_cert_scmbe">SC MBE</label>
+          <label><input type="checkbox" name="c_cert_scdotdbe">SCDOT DBE</label>
+          <label><input type="checkbox" name="c_cert_scdotsbe">SCDOT SBE</label>
+          <label><input type="checkbox" name="c_cert_none">None Yet</label>
+        </div>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Active Licenses <span class="hint">contractor, professional, residential builder, etc.</span></label>
+        <textarea name="c_licenses" placeholder="One per line — include license number &amp; expiration"></textarea>
+      </div>
+    </section>
+
+    <!-- D · Capabilities -->
+    <section id="s-d">
+      <div class="sec-head"><h2>D · Capabilities</h2><span class="tag">What you actually deliver</span></div>
+      <div class="grid">
+        <div class="field"><label>Primary NAICS Code</label><input name="d_naics1" placeholder="6-digit code"></div>
+        <div class="field"><label>Secondary NAICS Codes</label><input name="d_naics2" placeholder="Comma-separated"></div>
+        <div class="field one" style="grid-column:1/-1"><label>Products / Services <span class="req">*</span></label><textarea name="d_offering" required placeholder="What do you do? Plain English — 2-3 sentences."></textarea></div>
+        <div class="field one" style="grid-column:1/-1"><label>Target Customers</label><textarea name="d_customers" placeholder="Federal agencies, primes, states, counties, industries…"></textarea></div>
+        <div class="field"><label>Service Area</label><input name="d_area" placeholder="Local · Regional · National · Remote"></div>
+        <div class="field"><label>Max Contract Capacity</label><input name="d_capacity" placeholder="$ or scope you can handle solo"></div>
+        <div class="field"><label># Employees</label><input type="number" name="d_emp" min="0"></div>
+        <div class="field"><label># Contractors / 1099s</label><input type="number" name="d_1099" min="0"></div>
+      </div>
+    </section>
+
+    <!-- E · Financial Snapshot -->
+    <section id="s-e">
+      <div class="sec-head"><h2>E · Financial Snapshot</h2><span class="tag">Ranges are fine · No bank #s</span></div>
+      <div class="grid three">
+        <div class="field"><label>2023 Revenue</label><input name="e_2023" placeholder="$"></div>
+        <div class="field"><label>2024 Revenue</label><input name="e_2024" placeholder="$"></div>
+        <div class="field"><label>2025 Revenue</label><input name="e_2025" placeholder="$"></div>
+        <div class="field"><label>2026 YTD Revenue</label><input name="e_2026" placeholder="$"></div>
+        <div class="field"><label>Monthly Recurring Revenue</label><input name="e_mrr" placeholder="$"></div>
+        <div class="field"><label>Current Cash Range</label><input name="e_cash" placeholder="$ range"></div>
+        <div class="field"><label>Current Debt Range</label><input name="e_debt" placeholder="$ range"></div>
+      </div>
+      <div class="warn"><b>Never send in this form:</b> account numbers, full tax returns, personal SSNs, credit info. Those live in a separate secure vault we set up together — with owner approval on every access.</div>
+    </section>
+
+    <!-- F · Track Record -->
+    <section id="s-f">
+      <div class="sec-head"><h2>F · Track Record &amp; References</h2><span class="tag">Federal past performance = your #1 asset</span></div>
+      <div class="grid one">
+        <div class="field"><label>Top Completed Project · 01 <span class="hint">client · value · outcome · date</span></label><textarea name="f_p1" placeholder="e.g. USDA Facility Maint — $2.1M — completed on time, on budget — 2024"></textarea></div>
+        <div class="field"><label>Top Completed Project · 02</label><textarea name="f_p2"></textarea></div>
+        <div class="field"><label>Top Completed Project · 03</label><textarea name="f_p3"></textarea></div>
+        <div class="field"><label>Current Customers</label><textarea name="f_customers" placeholder="Active engagements — anonymize if under NDA"></textarea></div>
+        <div class="field"><label>Notable Customer Results / Outcomes</label><textarea name="f_results" placeholder="Quantified where possible — $ saved, % efficiency, awards won, etc."></textarea></div>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Reference Letters Available?</label>
+        <div class="checkgroup" style="grid-template-columns:1fr 1fr 1fr 1fr">
+          <label><input type="checkbox" name="f_ref_yes">Yes · on file</label>
+          <label><input type="checkbox" name="f_ref_can">Can get</label>
+          <label><input type="checkbox" name="f_ref_cpars">CPARS scored</label>
+          <label><input type="checkbox" name="f_ref_none">Not yet</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- G · Funding -->
+    <section id="s-g">
+      <div class="sec-head"><h2>G · Funding &amp; Goals</h2><span class="tag">The ask · the use · the impact</span></div>
+      <div class="grid three">
+        <div class="field"><label>Funding Needed</label><input name="g_need" placeholder="$"></div>
+        <div class="field"><label>Minimum Viable Amount</label><input name="g_min" placeholder="$"></div>
+        <div class="field"><label>Ideal Amount</label><input name="g_ideal" placeholder="$"></div>
+      </div>
+      <div class="grid one">
+        <div class="field"><label>Use of Funds</label><textarea name="g_use" placeholder="Personnel · equipment · working capital · marketing · certifications · specific milestones"></textarea></div>
+        <div class="field"><label>Jobs Created / Retained</label><input name="g_jobs"></div>
+        <div class="field"><label>Project Timeline</label><input name="g_timeline" placeholder="e.g. 6 months, 12 months, quarterly"></div>
+      </div>
+    </section>
+
+    <!-- H · Lanes -->
+    <section id="s-h">
+      <div class="sec-head"><h2>H · Which Lanes Matter First</h2><span class="tag">Check all that apply — order priorities in "Open Field"</span></div>
+      <div class="checkgroup">
+        <label><input type="checkbox" name="h_fed">Federal Contracts</label>
+        <label><input type="checkbox" name="h_sc">SC State Contracts</label>
+        <label><input type="checkbox" name="h_local">County / City Contracts</label>
+        <label><input type="checkbox" name="h_grants">Grants (federal / state)</label>
+        <label><input type="checkbox" name="h_sbir">SBIR / STTR</label>
+        <label><input type="checkbox" name="h_loans">Loans / SBA financing</label>
+        <label><input type="checkbox" name="h_vc">Investors (VC / Angel)</label>
+        <label><input type="checkbox" name="h_accel">Accelerators / Incubators</label>
+        <label><input type="checkbox" name="h_sponsors">Sponsorships</label>
+        <label><input type="checkbox" name="h_primes">Prime-Contractor Teaming</label>
+        <label><input type="checkbox" name="h_supplier">Corporate Supplier Programs</label>
+        <label><input type="checkbox" name="h_gsa">GSA Schedule</label>
+      </div>
+    </section>
+
+    <!-- I · Open Field -->
+    <section id="s-i">
+      <div class="sec-head"><h2>I · Open Field</h2><span class="tag">Anything else we should know</span></div>
+      <div class="grid one">
+        <div class="field"><label>Deadlines Already Known</label><textarea name="i_deadlines" placeholder="e.g. RFP 12345 closes Aug 15 · Grant.gov opportunity ABC due Oct 1"></textarea></div>
+        <div class="field"><label>Current Applications in Flight</label><textarea name="i_active" placeholder="Anything already submitted or in progress"></textarea></div>
+        <div class="field"><label>Biggest Business Goal (Next 12 Months)</label><textarea name="i_goal"></textarea></div>
+        <div class="field"><label>Biggest Readiness Gap You Know About</label><textarea name="i_gap" placeholder="Cash, staffing, past performance, certification, cybersecurity, bonding, etc."></textarea></div>
+      </div>
+      <div class="info">By submitting this intake you agree to receive follow-up from Dr. McKnight's office at the phone &amp; email above. Your data is used solely to identify opportunities and prepare applications — never sold, never shared without your written approval.</div>
+    </section>
+
+    </form>
+
+    <!-- FOOTER BAR -->
+    <div class="footer-bar">
+      <div class="verse">"Commit to the Lord whatever you do, and he will establish your plans." — Proverbs 16:3</div>
+      <div class="buttons">
+        <button class="btn-ghost" onclick="saveNow()">Save Draft</button>
+        <button class="btn-ghost" onclick="exportJSON()">Export JSON</button>
+        <button class="btn-primary" onclick="submitIntake()">Send to Dr. McKnight →</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+const form = document.getElementById('intake');
+const STORAGE_KEY = 'tcp_intake_v1';
+
+/* LOAD saved state */
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    for(const [k,v] of Object.entries(data)){
+      const el = form.elements.namedItem(k);
+      if(!el) continue;
+      if(el.type === 'checkbox'){ el.checked = !!v; }
+      else { el.value = v; }
+    }
+  }catch(e){ console.warn('Load failed', e); }
+  updateProgress();
+}
+
+/* SAVE state (auto) */
+function saveState(){
+  const data = {};
+  for(const el of form.elements){
+    if(!el.name) continue;
+    if(el.type === 'checkbox') data[el.name] = el.checked;
+    else data[el.name] = el.value;
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  updateProgress();
+}
+
+/* PROGRESS + nav highlight */
+function updateProgress(){
+  const inputs = [...form.elements].filter(el => el.name && el.type !== 'submit');
+  const filled = inputs.filter(el => {
+    if(el.type === 'checkbox') return el.checked;
+    return el.value && el.value.trim() !== '';
+  }).length;
+  const pct = Math.round((filled / inputs.length) * 100);
+  document.getElementById('pct').textContent = pct + '%';
+  document.getElementById('progbar').style.width = pct + '%';
+
+  /* Mark done sections */
+  document.querySelectorAll('#nav a').forEach(a => {
+    const secId = a.getAttribute('href').slice(1);
+    const sec = document.getElementById(secId);
+    if(!sec) return;
+    const secInputs = sec.querySelectorAll('input, select, textarea');
+    const secFilled = [...secInputs].filter(el => {
+      if(el.type === 'checkbox') return el.checked;
+      return el.value && el.value.trim() !== '';
+    }).length;
+    a.classList.toggle('done', secFilled >= Math.max(1, Math.floor(secInputs.length * 0.5)));
+  });
+}
+
+/* MANUAL actions */
+function saveNow(){
+  saveState();
+  toast('Draft saved locally');
+}
+function exportJSON(){
+  const data = {};
+  for(const el of form.elements){
+    if(!el.name) continue;
+    if(el.type === 'checkbox') data[el.name] = el.checked;
+    else data[el.name] = el.value;
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const name = (data.a_legal_name || 'intake').replace(/[^a-z0-9]+/gi,'-').toLowerCase();
+  a.href = url;
+  a.download = `tcp-intake-${name}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('JSON downloaded');
+}
+function clearAll(){
+  if(!confirm('Clear all fields? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  form.reset();
+  updateProgress();
+  toast('Cleared');
+}
+function submitIntake(){
+  saveState();
+  const email = 'info@thecontractingpreacher.com';
+  const name = form.elements['a_legal_name']?.value || 'New Client';
+  const subj = encodeURIComponent(`Intake: ${name}`);
+  const body = encodeURIComponent(
+    `Dr. McKnight,\n\nAttached is my completed intake form (JSON export). Please review and let me know next steps.\n\nBusiness: ${name}\nContact: ${form.elements['b_owner']?.value || '—'}\nPhone: ${form.elements['a_phone']?.value || '—'}\n\nThank you.`
+  );
+  exportJSON();
+  setTimeout(() => {
+    window.location.href = `mailto:${email}?subject=${subj}&body=${body}`;
+    toast('JSON exported · attach it to the email');
+  }, 300);
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.innerHTML = `<b>✓</b> ${msg}`;
+  t.classList.add('show');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* Wire up autosave */
+form.addEventListener('input', saveState);
+form.addEventListener('change', saveState);
+
+/* Init */
+loadState();
+</script>
+
+</body>
+</html>

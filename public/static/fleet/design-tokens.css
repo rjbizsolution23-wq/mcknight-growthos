@@ -1,0 +1,295 @@
+/* ═══════════════════════════════════════════════════════════════
+   The Contracting Preacher — Design Tokens
+   Version 1.0 · Paste-ready for any codebase
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── Colors — Primary ─────────────────────────────────────── */
+  --tcp-navy:         #0A1628;   /* Primary · authority, headers, dark surfaces */
+  --tcp-navy-2:       #0F1E36;   /* Navy hover / secondary dark */
+  --tcp-navy-3:       #152947;   /* Navy tint for gradients */
+
+  /* ─── Colors — Accent (Gold family) ────────────────────────── */
+  --tcp-gold:         #C9A961;   /* Accent · prestige, active states, primary CTAs */
+  --tcp-gold-dark:    #B08D3F;   /* Gold hover / dim gold text */
+  --tcp-gold-light:   #E4CB92;   /* Gold accents on navy, subheads, scripture */
+
+  /* ─── Colors — Neutrals ────────────────────────────────────── */
+  --tcp-ivory:        #F7F3EA;   /* Base · warm neutral background */
+  --tcp-ivory-2:      #EFE8D6;   /* Ivory tint · dashed borders, hover fills */
+  --tcp-white:        #FFFFFF;
+  --tcp-body-bg:      #EBE4D2;   /* Global app-shell warm background */
+
+  /* ─── Colors — Semantic ────────────────────────────────────── */
+  --tcp-red:          #8B1F1F;   /* CTA · urgency ONLY, never decoration */
+  --tcp-ok:           #2F6B4A;   /* Success (use sparingly) */
+  --tcp-warn:         #B87A1F;   /* Warning */
+
+  /* ─── Colors — Text & Lines ────────────────────────────────── */
+  --tcp-slate:        #4A5568;   /* Secondary text */
+  --tcp-slate-2:      #718096;   /* Tertiary text */
+  --tcp-line:         #E5DFD0;   /* Default dividers */
+  --tcp-line-2:       #D6CFB8;   /* Emphasized dividers */
+
+  /* ─── Typography ───────────────────────────────────────────── */
+  --tcp-font-serif:   'Playfair Display', Georgia, serif;
+  --tcp-font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+  --tcp-font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+
+  /* ─── Type Scale ───────────────────────────────────────────── */
+  --tcp-fs-hero:      80px;
+  --tcp-fs-h1:        64px;
+  --tcp-fs-h2:        44px;
+  --tcp-fs-h3:        28px;
+  --tcp-fs-lede:      22px;
+  --tcp-fs-body:      16px;
+  --tcp-fs-small:     14px;
+  --tcp-fs-eyebrow:   12px;
+  --tcp-fs-mono:      11px;
+
+  /* ─── Line Heights ─────────────────────────────────────────── */
+  --tcp-lh-tight:     0.96;      /* Hero */
+  --tcp-lh-heading:   1.05;      /* H2/H3 */
+  --tcp-lh-normal:    1.5;       /* Body */
+  --tcp-lh-relaxed:   1.7;       /* Long-form reading */
+
+  /* ─── Letter Spacing ───────────────────────────────────────── */
+  --tcp-ls-hero:      -0.02em;
+  --tcp-ls-heading:   -0.01em;
+  --tcp-ls-body:      0;
+  --tcp-ls-eyebrow:   0.2em;
+  --tcp-ls-tag:       0.14em;
+
+  /* ─── Spacing (4pt baseline) ───────────────────────────────── */
+  --tcp-sp-xs:        4px;
+  --tcp-sp-sm:        8px;
+  --tcp-sp-md:        16px;
+  --tcp-sp-lg:        24px;
+  --tcp-sp-xl:        32px;
+  --tcp-sp-2xl:       48px;
+  --tcp-sp-3xl:       64px;
+  --tcp-sp-4xl:       96px;
+
+  /* ─── Radius ───────────────────────────────────────────────── */
+  --tcp-radius:       2px;       /* Almost everything */
+  --tcp-radius-pill:  20px;      /* Pills, tag counts */
+  --tcp-radius-full:  9999px;    /* Avatars */
+
+  /* ─── Shadows ──────────────────────────────────────────────── */
+  --tcp-shadow-sm:    0 2px 6px -3px rgba(10,22,40,0.15);
+  --tcp-shadow-card:  0 12px 30px -18px rgba(10,22,40,0.25);
+  --tcp-shadow-lift:  0 20px 40px -30px rgba(10,22,40,0.35);
+  --tcp-shadow-modal: 0 30px 80px -30px rgba(0,0,0,0.5);
+  --tcp-shadow-toast: 0 20px 40px -20px rgba(10,22,40,0.5);
+
+  /* ─── Motion ───────────────────────────────────────────────── */
+  --tcp-transition:   0.15s ease;
+  --tcp-transition-fast: 0.12s ease;
+  --tcp-transition-slow: 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* ─── Layout ───────────────────────────────────────────────── */
+  --tcp-container:    1360px;    /* Portal max-width */
+  --tcp-container-doc:1180px;    /* Print docs max-width */
+  --tcp-sidebar:      260px;     /* App shell sidebar */
+  --tcp-z-modal:      300;
+  --tcp-z-toast:      200;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Utility Gradients (as CSS custom properties for reuse)
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --tcp-gradient-aurora:
+    radial-gradient(circle at 85% 20%, rgba(201,169,97,0.20), transparent 45%),
+    radial-gradient(circle at 15% 90%, rgba(201,169,97,0.10), transparent 50%),
+    var(--tcp-navy);
+
+  --tcp-gradient-brand-strip:
+    linear-gradient(90deg, var(--tcp-navy) 0%, var(--tcp-navy) 62%, var(--tcp-gold) 62%, var(--tcp-gold) 100%);
+
+  --tcp-gradient-cta:
+    linear-gradient(135deg, var(--tcp-red) 0%, #6d1616 100%);
+
+  --tcp-gradient-dark-vertical:
+    linear-gradient(180deg, var(--tcp-navy) 0%, var(--tcp-navy-3) 100%);
+
+  --tcp-gradient-ivory-fade:
+    linear-gradient(180deg, var(--tcp-white) 0%, var(--tcp-ivory) 100%);
+
+  --tcp-gradient-slider:
+    linear-gradient(90deg, var(--tcp-navy), var(--tcp-gold));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Base Reset (opt-in — skip if your codebase has one)
+   ═══════════════════════════════════════════════════════════════ */
+
+.tcp-reset,
+.tcp-reset * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.tcp-reset {
+  background: var(--tcp-body-bg);
+  font-family: var(--tcp-font-sans);
+  color: var(--tcp-navy);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Font Import (uncomment if not loaded elsewhere)
+   ═══════════════════════════════════════════════════════════════ */
+
+/*
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+*/
+
+/* ═══════════════════════════════════════════════════════════════
+   Typography Utility Classes (optional)
+   ═══════════════════════════════════════════════════════════════ */
+
+.tcp-h1 {
+  font-family: var(--tcp-font-serif);
+  font-size: var(--tcp-fs-h1);
+  font-weight: 800;
+  line-height: var(--tcp-lh-tight);
+  letter-spacing: var(--tcp-ls-hero);
+}
+
+.tcp-h2 {
+  font-family: var(--tcp-font-serif);
+  font-size: var(--tcp-fs-h2);
+  font-weight: 700;
+  line-height: var(--tcp-lh-heading);
+  letter-spacing: var(--tcp-ls-heading);
+}
+
+.tcp-h3 {
+  font-family: var(--tcp-font-serif);
+  font-size: var(--tcp-fs-h3);
+  font-weight: 700;
+}
+
+.tcp-lede {
+  font-family: var(--tcp-font-serif);
+  font-style: italic;
+  font-size: var(--tcp-fs-lede);
+  line-height: var(--tcp-lh-normal);
+}
+
+.tcp-body {
+  font-family: var(--tcp-font-sans);
+  font-size: var(--tcp-fs-body);
+  line-height: var(--tcp-lh-normal);
+}
+
+.tcp-eyebrow {
+  font-family: var(--tcp-font-mono);
+  font-size: var(--tcp-fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--tcp-ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.tcp-tag {
+  font-family: var(--tcp-font-mono);
+  font-size: var(--tcp-fs-mono);
+  font-weight: 600;
+  letter-spacing: var(--tcp-ls-tag);
+  text-transform: uppercase;
+}
+
+/* Emphasis: italic gold accent — used inside headlines */
+.tcp-h1 em, .tcp-h2 em, .tcp-h3 em {
+  font-style: italic;
+  color: var(--tcp-gold-light);
+  font-weight: 400;
+}
+
+/* On dark backgrounds (navy) — italic gold; on light — italic red */
+.tcp-on-light em {
+  color: var(--tcp-red);
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Button Utility Classes (optional starter)
+   ═══════════════════════════════════════════════════════════════ */
+
+.tcp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tcp-sp-sm);
+  padding: 12px 24px;
+  font-family: var(--tcp-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: var(--tcp-radius);
+  border: 0;
+  cursor: pointer;
+  transition: all var(--tcp-transition-fast);
+  text-decoration: none;
+}
+
+.tcp-btn-primary {
+  background: var(--tcp-navy);
+  color: var(--tcp-gold-light);
+}
+
+.tcp-btn-primary:hover {
+  background: var(--tcp-gold);
+  color: var(--tcp-navy);
+}
+
+.tcp-btn-accent {
+  background: var(--tcp-gold);
+  color: var(--tcp-navy);
+}
+
+.tcp-btn-accent:hover {
+  background: var(--tcp-gold-light);
+}
+
+.tcp-btn-cta {
+  background: var(--tcp-red);
+  color: var(--tcp-ivory);
+}
+
+.tcp-btn-ghost {
+  background: transparent;
+  color: var(--tcp-navy);
+  border: 1px solid var(--tcp-line-2);
+}
+
+.tcp-btn-ghost:hover {
+  background: var(--tcp-navy);
+  color: var(--tcp-gold-light);
+  border-color: var(--tcp-navy);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Print Media (universal print polish)
+   ═══════════════════════════════════════════════════════════════ */
+
+@media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+  .tcp-no-print,
+  .tcp-actions,
+  nav,
+  button[type="button"] {
+    display: none !important;
+  }
+  section, .tcp-card {
+    page-break-inside: avoid;
+  }
+}
