@@ -6,7 +6,7 @@ export const FUNNEL_SLUGS = [
   'restaurant', 'dental', 'auto-services', 'salon', 'mortgage',
   'chiropractic', 'pet-care', 'landscaping', 'cleaning', 'childcare',
   'tutoring', 'accounting', 'photography', 'wedding-venue', 'moving',
-  'webinar-live', 'vsl',
+  'webinar-live', 'vsl', 'get-growthos',
   // v6.0 brand flagship sites — full fleet
   'opportunity-group', 'contracting-preacher', 'housing-initiative', 'capital-ready',
   'mortgageos', 'growth-command', 'freight-systems', 'fleetworks',

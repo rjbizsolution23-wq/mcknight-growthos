@@ -76,7 +76,7 @@ export const FUNNEL_PIPELINE: Record<string, string> = {
   'agency': 'consulting', 'coaching': 'consulting', 'saas-trial': 'consulting',
   'event-landing': 'consulting', 'sponsor-deck': 'govcon',
   'law-firm': 'consulting', 'accounting': 'capital', 'insurance': 'consulting',
-  'webinar-live': 'consulting', 'vsl': 'consulting',
+  'webinar-live': 'consulting', 'vsl': 'consulting', 'get-growthos': 'consulting',
   // v6.0 brand flagship sites — each feeds its own brand pipeline
   'opportunity-group': 'consulting',
   'contracting-preacher': 'govcon',

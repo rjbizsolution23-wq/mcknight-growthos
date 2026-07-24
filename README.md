@@ -507,6 +507,16 @@ AI agents & builders can now pull the entire McKnight brand system programmatica
 - `/docs` upgraded to a **Documentation Center** with doc-switcher tabs (Master Documentation | GTM & Sales Plan), deep-linkable via `?doc=` param; download/raw buttons follow the active doc.
 - Source: `public/static/docs/GTM-SALES-PLAN.md`
 
+## v6.8.0 — "Get GrowthOS" Sales Funnel (GTM Blocker #4)
+
+The offer funnel every GTM channel points at — built as a full registry funnel (slug `get-growthos`) with the complete param engine, style effects, tracking, and Change Agent editability.
+
+- **URL**: `/t/get-growthos` — wired to the **consulting** pipeline via `data-lead-form` → `/api/lead`
+- **8 sections**: Hero + demo-request form (name/company/email/phone/industry), Stack Math (tool-cost comparison), How It Works (3 steps + stat tiles), GrowthOS vs DIY vs Agency comparison table, 3 pricing tiers, Agency White-Label banner, Double Guarantee, FAQ (5, with FAQ schema), Final CTA
+- **Pricing tiers** (all editable via params): Launch `$497 + $97/mo` · Growth Command `$1,497 + $297/mo` (MOST POPULAR) · Empire `$4,997 + $797/mo`
+- **10 editable params**: `headline`, `subhead`, `cta`, `launchSetup`, `launchMo`, `growthSetup`, `growthMo`, `empireSetup`, `empireMo`, `guaranteeHours` — enabling the GTM plan's personalized-demo-link sales motion (e.g. `?headline=Built+for+Acme+Roofing&growthMo=%24397`)
+- Registered across templateRegistry / funnels (43 total) / clientos pipeline map / paramschema; auto-derived in sitemap, `/api/funnels`, and Builder
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---
