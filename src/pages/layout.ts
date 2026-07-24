@@ -97,6 +97,7 @@ ${extraHead}
         ['/analytics', 'Analytics', 'analytics'],
         ['/traffic', 'Traffic Engine', 'traffic'],
         ['/fleet', 'Fleet Command', 'fleet'],
+        ['/docs', 'Documentation', 'docs'],
         ['/webinars', 'Webinars', 'webinars'],
         ['/clients', 'ClientOS', 'clients'],
         ['/verify', 'Fleet Verify', 'verify'],

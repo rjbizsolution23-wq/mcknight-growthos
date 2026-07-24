@@ -495,6 +495,12 @@ AI agents & builders can now pull the entire McKnight brand system programmatica
 - `/fleet` page — new "Agent Access" section with clickable endpoints + connect snippets
 - CORS enabled on both `/api/brand/*` and `/mcp`; 5-min cache headers on brand JSON
 
+## v6.7.1 — Master Documentation (NEW)
+
+- **`/docs`** — full platform documentation rendered in-app: sticky filterable table of contents, download button, print-to-PDF. In the nav after Fleet Command.
+- **Source of truth**: `public/static/docs/MASTER-DOCUMENTATION.md` (raw at `/static/docs/MASTER-DOCUMENTATION.md`)
+- **18 sections**: platform overview, architecture, all 23 dashboard pages, 42 funnels, 31 URL params, Style & Effects Engine, Change Agent, Brand API + MCP, Fleet Command Center, full REST reference (70+ endpoints), integrations (38 vault keys), D1 schema (7 migrations), ClientOS, Traffic Engine, SEO/AEO, ops runbook, version history.
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---
