@@ -1133,6 +1133,63 @@ api.get('/clientos/stats', async (c) => {
 })
 
 // ── Health ─────────────────────────────────────────────────────
+// ── v6.2 FLEET VERIFICATION COMMAND CENTER ────────────────────
+// Trackable launch-readiness checklist (P0/P1/P2) per brand. Blocking items
+// gate a brand's launch: launch_ready only when every blocking item for that
+// brand (or 'fleet') is verified or na.
+const VERIFY_STATUSES = ['pending', 'in_progress', 'received', 'verified', 'blocked', 'na']
+
+api.get('/verify/summary', async (c) => {
+  if (!c.env?.DB) return c.json({ error: 'DB not configured' }, 500)
+  const rows = (await c.env.DB.prepare('SELECT brand, priority, status, blocking FROM verification_items').all()).results as Array<{ brand: string; priority: string; status: string; blocking: number }>
+  const brands: Record<string, { total: number; done: number; blocking: number; blockingDone: number }> = {}
+  const pri: Record<string, { total: number; done: number }> = {}
+  for (const r of rows) {
+    const done = r.status === 'verified' || r.status === 'na'
+    const b = (brands[r.brand] ||= { total: 0, done: 0, blocking: 0, blockingDone: 0 })
+    b.total++; if (done) b.done++
+    if (r.blocking) { b.blocking++; if (done) b.blockingDone++ }
+    const p = (pri[r.priority] ||= { total: 0, done: 0 })
+    p.total++; if (done) p.done++
+  }
+  const fleet = brands['fleet'] || { blocking: 0, blockingDone: 0, total: 0, done: 0 }
+  const launch: Record<string, boolean> = {}
+  for (const [b, v] of Object.entries(brands)) {
+    if (b === 'fleet') continue
+    launch[b] = v.blockingDone >= v.blocking && fleet.blockingDone >= fleet.blocking
+  }
+  return c.json({ ok: true, brands, priorities: pri, launch_ready: launch, total: rows.length })
+})
+
+api.get('/verify/items', async (c) => {
+  if (!c.env?.DB) return c.json({ error: 'DB not configured' }, 500)
+  const brand = c.req.query('brand'); const priority = c.req.query('priority')
+  const section = c.req.query('section'); const status = c.req.query('status')
+  const conds: string[] = []; const binds: string[] = []
+  if (brand) { conds.push('brand = ?'); binds.push(brand) }
+  if (priority) { conds.push('priority = ?'); binds.push(priority) }
+  if (section) { conds.push('section = ?'); binds.push(section) }
+  if (status) { conds.push('status = ?'); binds.push(status) }
+  const where = conds.length ? ' WHERE ' + conds.join(' AND ') : ''
+  const rows = await c.env.DB.prepare(`SELECT * FROM verification_items${where} ORDER BY CASE priority WHEN 'P0' THEN 0 WHEN 'P1' THEN 1 ELSE 2 END, blocking DESC, section, id`).bind(...binds).all()
+  return c.json({ ok: true, items: rows.results })
+})
+
+api.put('/verify/items/:id', async (c) => {
+  if (!c.env?.DB) return c.json({ error: 'DB not configured' }, 500)
+  const id = Number(c.req.param('id'))
+  const b = await c.req.json().catch(() => ({} as Record<string, unknown>))
+  const sets: string[] = []; const binds: unknown[] = []
+  if (typeof b.status === 'string' && VERIFY_STATUSES.includes(b.status)) { sets.push('status = ?'); binds.push(b.status) }
+  if (typeof b.evidence === 'string') { sets.push('evidence = ?'); binds.push(b.evidence.slice(0, 1000)) }
+  if (typeof b.notes === 'string') { sets.push('notes = ?'); binds.push(b.notes.slice(0, 2000)) }
+  if (!sets.length) return c.json({ error: 'Nothing to update (status/evidence/notes)' }, 400)
+  sets.push('updated_at = CURRENT_TIMESTAMP')
+  await c.env.DB.prepare(`UPDATE verification_items SET ${sets.join(', ')} WHERE id = ?`).bind(...binds, id).run()
+  const row = await c.env.DB.prepare('SELECT * FROM verification_items WHERE id = ?').bind(id).first()
+  return c.json({ ok: true, item: row })
+})
+
 api.get('/health', async (c) => {
   const mailConf = mailProvidersConfigured(c.env as MailEnv)
   const envAny = c.env as any

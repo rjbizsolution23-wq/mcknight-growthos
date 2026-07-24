@@ -363,6 +363,21 @@ Every funnel template now runs the **exact same branding pipeline** — no excep
 
 Brand matrix (verified in production): tax-lead/credit-*/accounting → emerald, mortgage → fintech blue, real-estate → green, moving → steel blue, auto-services → safety orange, childcare/tutoring → violet, sponsor-deck → gold, all other local funnels → GrowthOS cyan, 10 flagship sites → own accents.
 
+## v6.2 — Fleet Verification & Launch-Readiness Command Center (/verify)
+
+The complete P0/P1/P2 verification framework, operationalized as a live system — **146 tracked items, 76 launch-blocking**, seeded into D1 (`verification_items`, migration 0006):
+
+- **P0 (105 items)**: legal-entity map (per brand: legal name, DBA, EIN, ownership, signer, insurance, licenses, who owns software/employs staff/signs clients), name clearance ×13 (SC SoS, USPTO, common-law, domains, socials, attorney), domain decisions ×10 + governance, founder verified profile (every public credential needs evidence + permission), brand asset kits, exact service definitions, final pricing per brand, and 6 regulated compliance packets (Housing/Capital/Mortgage/Freight/FleetWorks/Early Learning) — each blocking.
+- **P1 (29 items)**: verified case studies (no anonymous stats without documented calculation), testimonial standards, portfolio evidence, SOPs ×10, staffing/permissions matrix (no cross-line auto-access), platform inventory, delegated dev access, client-data migration audit (no import without consent + suppression history), per-brand integrations.
+- **P2 (12 items)**: per-brand policy sets (not copy-pasted — different data/risk per business), support system, monitoring & recovery.
+- **Founder Fleet Verification Packet**: all 30 packet items tracked individually, key ones blocking.
+
+**Launch gates**: `/api/verify/summary` computes per-brand `launch_ready` — true only when all blocking items for the brand AND fleet-wide blocking items are verified/NA. `/verify` dashboard: gate cards per brand (READY/GATED + progress), filters (brand/priority/status/blocking-only), inline status updates + evidence/notes attach.
+
+**API**: `GET /api/verify/summary` · `GET /api/verify/items?brand=&priority=&section=&status=` · `PUT /api/verify/items/:id` `{status|evidence|notes}` (statuses: pending/in_progress/received/verified/blocked/na).
+
+**Standing position**: sites are built and deployed; production *claims* (credentials, stats, regulated language, contract pricing) stay out of public copy until the relevant gate is green.
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---

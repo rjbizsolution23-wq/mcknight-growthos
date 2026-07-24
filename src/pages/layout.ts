@@ -97,6 +97,7 @@ ${extraHead}
         ['/analytics', 'Analytics', 'analytics'],
         ['/webinars', 'Webinars', 'webinars'],
         ['/clients', 'ClientOS', 'clients'],
+        ['/verify', 'Fleet Verify', 'verify'],
         ['/deploy', 'CF Deploy', 'deploy'],
         ['/integrations', 'Integration Hub', 'integrations'],
         ['/brand', 'Brand Control Center', 'brand'],
