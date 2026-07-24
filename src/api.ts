@@ -178,6 +178,8 @@ api.post('/lead', async (c) => {
       const cid = clientos.clientId
       const coEnv = c.env as unknown as ClientOsEnv
       if (webinarReg?.ok) await logActivity(coEnv, cid, 'webinar', 'Registered for Zoom webinar', `Zoom ID ${webinarReg.zoomId}${joinUrl ? ' — unique join link issued' : ''}`, { actor: 'automation' })
+      // v6.3: failed auto-registration = follow-up task signal — staff must send the join link manually
+      if (webinarReg && !webinarReg.ok) await logActivity(coEnv, cid, 'task', 'ACTION NEEDED — Zoom auto-registration failed', `Zoom ID ${webinarReg.zoomId}: ${webinarReg.error || 'unknown error'}. Send join link manually.`, { actor: 'automation' })
       if (ghl.attempted && ghl.ok) await logActivity(coEnv, cid, 'system', 'Synced to GoHighLevel CRM', `Contact ${ghl.contactId || ''}`, { actor: 'automation' })
       const fired = hooks.filter((h) => h.ok).map((h) => h.channel)
       if (fired.length) await logActivity(coEnv, cid, 'system', 'Workflow notifications fired', fired.join(', '), { actor: 'automation' })
