@@ -212,6 +212,7 @@
         var r = await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
         if (!r.ok) throw new Error('HTTP ' + r.status)
         if (window.rjfTrack) window.rjfTrack('generate_lead', { source: data._source, offer: offer })
+        if ((window.__RJF || {}).confetti === '1' && window.rjfConfettiBurst) window.rjfConfettiBurst()
         btn.style.background = 'linear-gradient(135deg,#059669,#10b981)'
         btn.innerHTML = '<i class="fas fa-check" style="margin-right:8px"></i>Got it \u2014 we\u2019ll be in touch!'
         var redirect = (window.__RJF || {}).redirect

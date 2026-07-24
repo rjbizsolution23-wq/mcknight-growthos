@@ -231,6 +231,7 @@ document.querySelectorAll('[data-lead-form]').forEach(form => {
       form.querySelectorAll('input:not([type=checkbox]), textarea').forEach(i => i.value = '')
       // v2.2: conversion event to any loaded pixel + optional thank-you redirect (?redirect=)
       if (window.rjfTrack) window.rjfTrack('generate_lead', { source: data._source })
+      if ((window.__RJF || {}).confetti === '1' && window.rjfConfettiBurst) window.rjfConfettiBurst()
       const redirect = (window.__RJF || {}).redirect
       if (redirect) setTimeout(() => { location.href = redirect }, 900)
     } catch (err) {

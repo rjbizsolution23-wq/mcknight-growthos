@@ -66,6 +66,22 @@ export const COMMON_PARAMS: ParamDef[] = [
   { name: 'metaPixel', default: '(Meta pixel id)' },
   { name: 'ttPixel', default: '(TikTok pixel id)' },
   { name: 'deadline', default: '(ISO date for countdown timers)' },
+  // ── v6.4 STYLE & EFFECTS ENGINE — animations/effects are fully editable ──
+  { name: 'anim', default: "(entrance animation: fade | slide-up | slide-left | slide-right | zoom | flip | blur | none)" },
+  { name: 'animSpeed', default: '(animation speed: slow | normal | fast)' },
+  { name: 'fx', default: '(overall effect intensity: max | normal | subtle | off)' },
+  { name: 'particles', default: '(hero particle effect: stars | snow | bubbles | fireflies | confetti | none)' },
+  { name: 'confetti', default: '(1 = confetti burst when a lead submits the form)' },
+  { name: 'heroFx', default: '(hero background effect: aurora | blobs | spotlight | grid | waves | none)' },
+  { name: 'font', default: '(font preset: modern | elegant | bold | playful | mono)' },
+  { name: 'radius', default: '(corner style: sharp | soft | round | pill)' },
+  { name: 'btnFx', default: '(CTA button effect: pulse | shine | bounce | glow | shake | none)' },
+  { name: 'cursorFx', default: '(cursor effect: glow | ring | none)' },
+  { name: 'shadowFx', default: '(card shadows: soft | dramatic | neon | flat)' },
+  { name: 'bgPattern', default: '(page background pattern: dots | grid | noise | none)' },
+  { name: 'tilt', default: '(0 = disable 3D card tilt)' },
+  { name: 'kinetic', default: '(0 = disable kinetic headline animation)' },
+  { name: 'marquee', default: '(0 = disable marquee/scroll strips)' },
 ]
 
 const ALLOWED: Record<string, Set<string>> = {}

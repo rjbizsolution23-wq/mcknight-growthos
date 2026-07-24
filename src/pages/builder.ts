@@ -6,6 +6,15 @@ const field = (name: string, label: string, placeholder: string, type = 'text') 
   <input type="${type}" name="${name}" placeholder="${placeholder}" class="mt-1 w-full bg-[#060a14] border border-gray-700 focus:border-brand-cyan rounded-lg px-3 py-2.5 text-sm text-gray-200 outline-none">
 </label>`
 
+// v6.4 — dropdown for style/effect params ('' = keep default)
+const selectField = (name: string, label: string, options: string[]) => `
+<label class="block">
+  <span class="text-xs text-gray-400 font-medium">${label}</span>
+  <select name="${name}" class="mt-1 w-full bg-[#060a14] border border-gray-700 focus:border-brand-cyan rounded-lg px-3 py-2.5 text-sm text-gray-200 outline-none">
+    ${options.map(o => `<option value="${o}">${o === '' ? '(default)' : o}</option>`).join('')}
+  </select>
+</label>`
+
 export const builderPage = () => shell('Funnel Studio', 'builder', `
 <section id="builder-hero" class="mb-8">
   <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-3"><i class="fas fa-wand-magic-sparkles grad-text mr-2"></i>Funnel Studio</h1>
@@ -488,6 +497,23 @@ export const builderPage = () => shell('Funnel Studio', 'builder', `
         ${field('ogImage', 'OG Share Image URL (1200×630)', 'https://yoursite.com/og.jpg')}
       </div>
       <p class="text-[11px] text-gray-500">Every generated funnel auto-includes full meta tags, OG graph, Twitter cards & JSON-LD schema. Need a standalone pack (sitemap, robots.txt, AEO blocks)? Use the <a href="/seo" class="text-blue-300 underline">SEO Intelligence</a>.</p>
+
+      <p class="text-sm text-white font-semibold pt-3"><i class="fas fa-wand-magic-sparkles text-brand-cyan mr-2"></i>Style &amp; Effects Engine <span class="text-[10px] text-emerald-400 font-mono ml-1">v6.4 NEW</span></p>
+      <div class="grid grid-cols-2 gap-3">
+        ${selectField('anim', 'Entrance Animation', ['', 'fade', 'slide-up', 'slide-left', 'slide-right', 'zoom', 'flip', 'blur', 'none'])}
+        ${selectField('animSpeed', 'Animation Speed', ['', 'slow', 'normal', 'fast'])}
+        ${selectField('fx', 'Effect Intensity', ['', 'max', 'normal', 'subtle', 'off'])}
+        ${selectField('heroFx', 'Hero Background FX', ['', 'aurora', 'blobs', 'spotlight', 'grid', 'waves', 'none'])}
+        ${selectField('particles', 'Hero Particles', ['', 'stars', 'snow', 'bubbles', 'fireflies', 'confetti', 'none'])}
+        ${selectField('btnFx', 'CTA Button Effect', ['', 'pulse', 'shine', 'bounce', 'glow', 'shake', 'none'])}
+        ${selectField('font', 'Font Preset', ['', 'modern', 'elegant', 'bold', 'playful', 'mono'])}
+        ${selectField('radius', 'Corner Style', ['', 'sharp', 'soft', 'round', 'pill'])}
+        ${selectField('shadowFx', 'Card Shadows', ['', 'soft', 'dramatic', 'neon', 'flat'])}
+        ${selectField('bgPattern', 'Background Pattern', ['', 'dots', 'grid', 'noise', 'none'])}
+        ${selectField('cursorFx', 'Cursor Effect', ['', 'glow', 'ring', 'none'])}
+        <label class="flex items-center gap-2 bg-[#060a14] border border-gray-700 rounded-lg px-3 py-2.5 cursor-pointer text-xs text-gray-300"><input type="checkbox" name="confetti" value="1" class="w-4 h-4 accent-blue-500">🎉 Confetti burst on lead submit</label>
+      </div>
+      <p class="text-[11px] text-gray-500">Every choice is a URL param — the AI Change Agent can also apply these from plain English ("make it more exciting", "elegant luxury feel", "confetti when someone signs up").</p>
 
       <p class="text-sm text-white font-semibold pt-3"><i class="fas fa-paintbrush text-brand-cyan mr-2"></i>White-Label Client Branding <span class="text-[10px] text-amber-400 font-mono ml-1">SELL-READY</span></p>
       ${field('bizLogo', 'Client Logo URL (https… — injected into hero + footer)', 'https://client-site.com/logo.png')}

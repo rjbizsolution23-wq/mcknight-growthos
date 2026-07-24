@@ -5,10 +5,15 @@
 // Respects prefers-reduced-motion (CSS side disables transitions).
 (() => {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  // v6.4 — Style & Effects engine flags (set by funnelHead via URL params /
+  // Builder / Change Agent). fx=off kills all JS-driven visual effects too.
+  const FX = window.__RJF || {}
+  const fxOff = FX.fx === 'off' || reduced
+  const heroFxPref = FX.heroFx || '' // aurora | blobs | spotlight | grid | waves | none
 
   // ── 1 · Ambient gradient blobs in the hero ───────────────────
   const hero = document.querySelector('header') || document.querySelector('section')
-  if (hero && !reduced) {
+  if (hero && !reduced && !fxOff && heroFxPref !== 'none' && heroFxPref !== 'grid' && heroFxPref !== 'spotlight' && heroFxPref !== 'waves' && heroFxPref !== 'aurora') {
     const cs = getComputedStyle(hero)
     if (cs.position === 'static') hero.style.position = 'relative'
     if (cs.overflow !== 'hidden') hero.style.overflow = 'hidden'
@@ -147,11 +152,171 @@
   }
 
   // ── 6 · Aurora ambient layer in hero ────────────
-  if (hero && !reduced && !hero.querySelector('.rj-aurora')) {
+  // v6.4: suppressed when heroFx picks a different effect or fx=off
+  if (hero && !reduced && !fxOff && !hero.querySelector('.rj-aurora') && (heroFxPref === '' || heroFxPref === 'aurora')) {
     const au = document.createElement('div')
     au.className = 'rj-aurora'
     au.setAttribute('aria-hidden', 'true')
     hero.prepend(au)
+  }
+  // v6.4: heroFx=aurora on its own (blobs suppressed) still needs positioning
+  if (hero && heroFxPref === 'aurora') {
+    const cs = getComputedStyle(hero)
+    if (cs.position === 'static') hero.style.position = 'relative'
+    if (cs.overflow !== 'hidden') hero.style.overflow = 'hidden'
+  }
+
+  // ── 6b · v6.4: HERO FX — spotlight & waves (JS-driven variants) ──
+  if (hero && !fxOff && (heroFxPref === 'spotlight' || heroFxPref === 'waves' || heroFxPref === 'grid')) {
+    const cs = getComputedStyle(hero)
+    if (cs.position === 'static') hero.style.position = 'relative'
+    if (cs.overflow !== 'hidden') hero.style.overflow = 'hidden'
+    if (heroFxPref === 'spotlight') {
+      const sp = document.createElement('div')
+      sp.setAttribute('aria-hidden', 'true')
+      sp.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(600px circle at 50% 35%,' + (FX.fxHex2 || '#0ea5e9') + '30,transparent 65%);transition:background .15s ease'
+      hero.prepend(sp)
+      if (window.matchMedia('(pointer: fine)').matches) {
+        let sraf = null
+        hero.addEventListener('mousemove', (e) => {
+          if (sraf) return
+          sraf = requestAnimationFrame(() => {
+            const r = hero.getBoundingClientRect()
+            sp.style.background = 'radial-gradient(600px circle at ' + (e.clientX - r.left) + 'px ' + (e.clientY - r.top) + 'px,' + (FX.fxHex2 || '#0ea5e9') + '38,transparent 65%)'
+            sraf = null
+          })
+        })
+      }
+    }
+    if (heroFxPref === 'waves') {
+      const w = document.createElement('div')
+      w.className = 'rj-waves'
+      w.setAttribute('aria-hidden', 'true')
+      const hx = FX.fxHex || '#0ea5e9'
+      w.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C150,85 300,5 450,45 C600,85 750,5 900,45 C1050,85 1200,5 1350,45 L1350,90 L0,90 Z" fill="' + hx + '22"/><path d="M0,55 C180,15 360,90 540,55 C720,20 900,88 1080,55 C1200,35 1300,70 1350,55 L1350,90 L0,90 Z" fill="' + hx + '33"/></svg>'
+      hero.appendChild(w)
+    }
+  }
+
+  // ── 6c · v6.4: PARTICLES — stars/snow/bubbles/fireflies/confetti ──
+  if (hero && !fxOff && FX.particles) {
+    const kind = FX.particles
+    const cs2 = getComputedStyle(hero)
+    if (cs2.position === 'static') hero.style.position = 'relative'
+    if (cs2.overflow !== 'hidden') hero.style.overflow = 'hidden'
+    const cv = document.createElement('canvas')
+    cv.setAttribute('aria-hidden', 'true')
+    cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0'
+    hero.prepend(cv)
+    const ctx = cv.getContext('2d')
+    const N = kind === 'confetti' ? 70 : kind === 'stars' ? 90 : 45
+    const CONF_COLORS = [FX.fxHex || '#d4a72c', FX.fxHex2 || '#0ea5e9', '#f472b6', '#34d399', '#facc15', '#a78bfa']
+    let ps = []
+    const size = () => { cv.width = hero.offsetWidth; cv.height = hero.offsetHeight }
+    const spawn = () => {
+      ps = Array.from({ length: N }, () => {
+        const r = Math.random()
+        return {
+          x: Math.random() * cv.width, y: Math.random() * cv.height,
+          r: kind === 'bubbles' ? 3 + r * 9 : kind === 'confetti' ? 3 + r * 4 : 0.6 + r * 2.2,
+          vx: kind === 'snow' ? (Math.random() - .5) * .5 : (Math.random() - .5) * .3,
+          vy: kind === 'snow' ? .35 + r * .8 : kind === 'bubbles' ? -(.3 + r * .8) : kind === 'confetti' ? .5 + r * 1.2 : (Math.random() - .5) * .28,
+          a: .25 + Math.random() * .6, tw: Math.random() * Math.PI * 2,
+          c: kind === 'confetti' ? CONF_COLORS[Math.floor(Math.random() * CONF_COLORS.length)] : (kind === 'fireflies' ? (FX.fxHex || '#f4ce65') : '#ffffff'),
+          rot: Math.random() * Math.PI, vr: (Math.random() - .5) * .1
+        }
+      })
+    }
+    size(); spawn()
+    let last = 0
+    const tick = (t) => {
+      if (t - last > 33) { // ~30fps — cheap
+        last = t
+        ctx.clearRect(0, 0, cv.width, cv.height)
+        for (const p of ps) {
+          p.x += p.vx; p.y += p.vy; p.tw += .04; p.rot += p.vr
+          if (p.y > cv.height + 12) { p.y = -10; p.x = Math.random() * cv.width }
+          if (p.y < -12) { p.y = cv.height + 10; p.x = Math.random() * cv.width }
+          if (p.x > cv.width + 12) p.x = -10
+          if (p.x < -12) p.x = cv.width + 10
+          const alpha = kind === 'stars' || kind === 'fireflies' ? p.a * (0.55 + 0.45 * Math.sin(p.tw)) : p.a
+          ctx.globalAlpha = alpha
+          if (kind === 'confetti') {
+            ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.c
+            ctx.fillRect(-p.r, -p.r * .6, p.r * 2, p.r * 1.2); ctx.restore()
+          } else if (kind === 'bubbles') {
+            ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 1
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.stroke()
+          } else {
+            ctx.fillStyle = p.c
+            if (kind === 'fireflies') { ctx.shadowBlur = 8; ctx.shadowColor = p.c } else ctx.shadowBlur = 0
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill()
+            ctx.shadowBlur = 0
+          }
+        }
+        ctx.globalAlpha = 1
+      }
+      requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+    window.addEventListener('resize', () => { size(); spawn() }, { passive: true })
+  }
+
+  // ── 6c2 · v6.4: CONFETTI BURST — fired on lead submit (confetti=1) ──
+  window.rjfConfettiBurst = () => {
+    if (fxOff) return
+    const cv = document.createElement('canvas')
+    cv.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:100000'
+    document.body.appendChild(cv)
+    cv.width = innerWidth; cv.height = innerHeight
+    const ctx = cv.getContext('2d')
+    const COLORS = [FX.fxHex || '#d4a72c', FX.fxHex2 || '#0ea5e9', '#f472b6', '#34d399', '#facc15', '#a78bfa', '#fb7185']
+    const ps = Array.from({ length: 160 }, () => ({
+      x: innerWidth / 2, y: innerHeight * .55,
+      vx: (Math.random() - .5) * 16, vy: -6 - Math.random() * 12,
+      r: 4 + Math.random() * 5, rot: Math.random() * Math.PI, vr: (Math.random() - .5) * .3,
+      c: COLORS[Math.floor(Math.random() * COLORS.length)], life: 1
+    }))
+    let frames = 0
+    const tick = () => {
+      ctx.clearRect(0, 0, cv.width, cv.height)
+      for (const p of ps) {
+        p.x += p.vx; p.y += p.vy; p.vy += .35; p.vx *= .99; p.rot += p.vr; p.life -= .008
+        if (p.life <= 0) continue
+        ctx.globalAlpha = Math.max(0, p.life)
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.c
+        ctx.fillRect(-p.r, -p.r * .55, p.r * 2, p.r * 1.1); ctx.restore()
+      }
+      ctx.globalAlpha = 1
+      if (++frames < 150) requestAnimationFrame(tick); else cv.remove()
+    }
+    requestAnimationFrame(tick)
+  }
+
+  // ── 6d · v6.4: CURSOR FX — glow trail or outline ring ──────────
+  if (!fxOff && FX.cursorFx && window.matchMedia('(pointer: fine)').matches) {
+    const dot = document.createElement('div')
+    dot.setAttribute('aria-hidden', 'true')
+    const hx = FX.fxHex2 || FX.fxHex || '#0ea5e9'
+    dot.style.cssText = FX.cursorFx === 'ring'
+      ? 'position:fixed;width:34px;height:34px;border:2px solid ' + hx + ';border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .2s,height .2s,opacity .3s;opacity:0;mix-blend-mode:difference'
+      : 'position:fixed;width:26px;height:26px;background:radial-gradient(circle,' + hx + '80,transparent 70%);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);filter:blur(2px);transition:opacity .3s;opacity:0'
+    document.body.appendChild(dot)
+    let cx = 0, cy = 0, dx = 0, dy = 0, craf = null
+    const follow = () => {
+      dx += (cx - dx) * .22; dy += (cy - dy) * .22
+      dot.style.left = dx + 'px'; dot.style.top = dy + 'px'
+      craf = Math.abs(cx - dx) + Math.abs(cy - dy) > .3 ? requestAnimationFrame(follow) : null
+    }
+    document.addEventListener('mousemove', (e) => {
+      cx = e.clientX; cy = e.clientY; dot.style.opacity = '1'
+      if (!craf) craf = requestAnimationFrame(follow)
+    }, { passive: true })
+    document.addEventListener('mouseleave', () => { dot.style.opacity = '0' })
+    document.querySelectorAll('a,button').forEach(el => {
+      el.addEventListener('mouseenter', () => { if (FX.cursorFx === 'ring') { dot.style.width = '52px'; dot.style.height = '52px' } })
+      el.addEventListener('mouseleave', () => { if (FX.cursorFx === 'ring') { dot.style.width = '34px'; dot.style.height = '34px' } })
+    })
   }
 
   // ── 7 · Kinetic hero typography — char-by-char reveal on the H1 ──

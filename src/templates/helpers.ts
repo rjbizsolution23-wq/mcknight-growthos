@@ -121,6 +121,105 @@ export const accentRemapCss = (c1: string, c2: string, darkText: boolean): strin
   ::-webkit-scrollbar-thumb { background:linear-gradient(${c1},${c2}); }`
 }
 
+// ── v6.4 STYLE & EFFECTS ENGINE ─────────────────────────────────
+// Animations, effects, fonts, corner radius, shadows and background
+// patterns are now first-class editable parameters on EVERY funnel —
+// via URL params, the Builder, or the plain-English Change Agent.
+// CSS-only here; JS-driven effects (particles/cursor/heroFx/confetti)
+// are toggled through window.__RJF and executed by motion.js.
+const FONT_PRESETS: Record<string, { link: string; css: string }> = {
+  modern: { link: '', css: '' }, // default Inter/Poppins/Playfair stack
+  elegant: {
+    link: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Lora:wght@400;500;600&display=swap',
+    css: `h1,h2,h3,h4{font-family:'Cormorant Garamond',Georgia,serif!important;letter-spacing:0!important}body{font-family:'Lora',Georgia,serif!important}`
+  },
+  bold: {
+    link: 'https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700&display=swap',
+    css: `h1,h2{font-family:'Archivo Black',sans-serif!important;letter-spacing:-.01em!important;text-transform:uppercase}h3,h4{font-family:'Archivo',sans-serif!important;font-weight:700}body{font-family:'Archivo',sans-serif!important}`
+  },
+  playful: {
+    link: 'https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700&display=swap',
+    css: `h1,h2,h3,h4{font-family:'Fredoka',sans-serif!important;letter-spacing:0!important}body{font-family:'Nunito',sans-serif!important}`
+  },
+  mono: {
+    link: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap',
+    css: `h1,h2,h3,h4{font-family:'JetBrains Mono',monospace!important;letter-spacing:-.03em!important}body{font-family:'IBM Plex Sans',sans-serif!important}`
+  },
+}
+const RADIUS_MAP: Record<string, string> = { sharp: '4px', soft: '10px', round: '18px', pill: '26px' }
+
+export const styleFxCss = (q: Record<string, string | undefined>, c1: string, c2: string): { css: string; fontLink: string } => {
+  const parts: string[] = []
+  let fontLink = ''
+
+  // Entrance animation style for scroll reveals
+  const anim = (q.anim || '').toLowerCase()
+  const ANIM: Record<string, string> = {
+    'fade': `.mo-reveal{transform:none!important}`,
+    'slide-up': ``, // default
+    'slide-left': `.mo-reveal{transform:translateX(46px) scale(.99)!important}.mo-reveal.mo-in{transform:none!important}`,
+    'slide-right': `.mo-reveal{transform:translateX(-46px) scale(.99)!important}.mo-reveal.mo-in{transform:none!important}`,
+    'zoom': `.mo-reveal{transform:scale(.86)!important}.mo-reveal.mo-in{transform:none!important}`,
+    'flip': `.mo-reveal{transform:perspective(900px) rotateX(-14deg) translateY(20px)!important;transform-origin:top}.mo-reveal.mo-in{transform:none!important}`,
+    'blur': `.mo-reveal{filter:blur(12px);transform:translateY(14px)!important}.mo-reveal.mo-in{filter:blur(0);transform:none!important;transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1),filter .8s ease!important}`,
+    'none': `.mo-reveal{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}`,
+  }
+  if (anim && ANIM[anim] !== undefined && ANIM[anim]) parts.push(ANIM[anim])
+
+  // Animation speed
+  const spd = (q.animSpeed || '').toLowerCase()
+  if (spd === 'slow') parts.push(`.mo-reveal{transition-duration:1.3s!important}.rj-kinetic .rj-ch{animation-duration:1.1s!important}`)
+  if (spd === 'fast') parts.push(`.mo-reveal{transition-duration:.35s!important}.rj-kinetic .rj-ch{animation-duration:.35s!important}`)
+
+  // Overall FX intensity
+  const fx = (q.fx || '').toLowerCase()
+  if (fx === 'off') parts.push(`*,*::before,*::after{animation:none!important}.mo-reveal{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}.mo-blob,.rj-aurora{display:none!important}.rj-tilt{transform:none!important}`)
+  if (fx === 'subtle') parts.push(`.mo-blob{opacity:.2!important}.rj-aurora{opacity:.25!important}.pulse-glow{animation:none!important}.pulse-glow::after{display:none}.rj-glow-border::before{animation:none!important;opacity:.4}`)
+
+  // Font preset
+  const font = (q.font || '').toLowerCase()
+  if (font && FONT_PRESETS[font]) { parts.push(FONT_PRESETS[font].css); fontLink = FONT_PRESETS[font].link }
+
+  // Corner radius system
+  const rad = (q.radius || '').toLowerCase()
+  if (rad && RADIUS_MAP[rad]) {
+    const r = RADIUS_MAP[rad]
+    parts.push(`.rounded-lg,.rounded-xl,.rounded-2xl,.rounded-3xl{border-radius:${r}!important}${rad === 'pill' ? `a.pulse-glow,button,input[type=submit],.rounded-full{border-radius:9999px!important}a[class*="rounded"]{border-radius:9999px!important}` : `.rounded-full{border-radius:9999px!important}`}`)
+  }
+
+  // CTA button effect
+  const btn = (q.btnFx || '').toLowerCase()
+  if (btn === 'none') parts.push(`.pulse-glow{animation:none!important}.pulse-glow::after{display:none!important}`)
+  if (btn === 'shine') parts.push(`.pulse-glow{animation:none!important}`)
+  if (btn === 'glow') parts.push(`.pulse-glow{animation:none!important;box-shadow:0 0 24px ${c1}99,0 0 60px ${c1}55!important}.pulse-glow::after{display:none!important}`)
+  if (btn === 'bounce') parts.push(`.pulse-glow{animation:rjBtnBounce 2.2s cubic-bezier(.34,1.56,.64,1) infinite!important}@keyframes rjBtnBounce{0%,100%{transform:translateY(0)}12%{transform:translateY(-7px)}24%{transform:translateY(0)}36%{transform:translateY(-3px)}48%{transform:translateY(0)}}`)
+  if (btn === 'shake') parts.push(`.pulse-glow{animation:rjBtnShake 5s ease-in-out infinite!important}@keyframes rjBtnShake{0%,88%,100%{transform:rotate(0)}90%{transform:rotate(-2.5deg)}92%{transform:rotate(2.5deg)}94%{transform:rotate(-2deg)}96%{transform:rotate(1.5deg)}98%{transform:rotate(-.5deg)}}`)
+
+  // Card shadow system
+  const sh = (q.shadowFx || '').toLowerCase()
+  if (sh === 'flat') parts.push(`.shadow-md,.shadow-lg,.shadow-xl,.shadow-2xl,.mo-lift,.glass,.glass-dark{box-shadow:none!important}.mo-lift:hover{box-shadow:none!important}`)
+  if (sh === 'dramatic') parts.push(`.shadow-lg,.shadow-xl,.shadow-2xl{box-shadow:0 30px 70px -18px rgba(0,11,38,.45)!important}.mo-lift:hover{box-shadow:0 42px 90px -20px rgba(0,11,38,.55)!important}`)
+  if (sh === 'neon') parts.push(`.shadow-lg,.shadow-xl,.shadow-2xl,.mo-lift{box-shadow:0 0 22px ${c1}40,0 8px 34px rgba(0,11,38,.25)!important}.mo-lift:hover{box-shadow:0 0 38px ${c1}70,0 14px 44px rgba(0,11,38,.3)!important}`)
+
+  // Page background pattern
+  const bg = (q.bgPattern || '').toLowerCase()
+  if (bg === 'dots') parts.push(`body{background-image:radial-gradient(${c1}1f 1.2px,transparent 1.2px)!important;background-size:26px 26px!important}`)
+  if (bg === 'grid') parts.push(`body{background-image:linear-gradient(${c1}14 1px,transparent 1px),linear-gradient(90deg,${c1}14 1px,transparent 1px)!important;background-size:42px 42px!important}`)
+  if (bg === 'noise') parts.push(`body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}`)
+
+  // Kill switches for built-in motion pieces
+  if (q.kinetic === '0') parts.push(`.rj-kinetic .rj-ch{opacity:1!important;transform:none!important;animation:none!important}`)
+  if (q.marquee === '0') parts.push(`.rj-marquee{animation:none!important}`)
+  if (q.tilt === '0') parts.push(`.rj-tilt{transform:none!important}`)
+
+  // Hero FX overlays that are pure CSS (grid/waves handled here; aurora/spotlight/blobs via motion.js)
+  const hero = (q.heroFx || '').toLowerCase()
+  if (hero === 'grid') parts.push(`header,section:first-of-type{position:relative}header::before,section:first-of-type::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(${c2}1c 1px,transparent 1px),linear-gradient(90deg,${c2}1c 1px,transparent 1px);background-size:52px 52px;mask-image:radial-gradient(ellipse 90% 80% at 50% 30%,#000 30%,transparent 78%);-webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 30%,#000 30%,transparent 78%)}`)
+  if (hero === 'waves') parts.push(`@keyframes rjWave{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}.rj-waves{position:absolute;bottom:-2px;left:0;width:200%;height:90px;pointer-events:none;z-index:1;animation:rjWave 14s linear infinite}`)
+
+  return { css: parts.length ? `\n  /* v6.4 style-fx */\n  ${parts.join('\n  ')}` : '', fontLink }
+}
+
 export const param = (q: Record<string, string | undefined>, key: string, fallback: string) => {
   const v = q[key]
   return v && v.trim() ? esc(v.trim()) : fallback
@@ -186,6 +285,20 @@ export const funnelHead = (
   // Injected last so it wins over the funnel-brand layer.
   const brandCss = brandColor ? `
   :root { --rj-client:${brandColor}; --rj-client-2:${accentColor}; }${accentRemapCss(brandColor, accentColor || brandColor, hexLum(brandColor) > 0.62)}` : ''
+
+  // ── v6.4 STYLE & EFFECTS ENGINE — animations/effects fully editable ──
+  // CSS side generated here; JS-driven effects flow to motion.js via __RJF.
+  const fxC1 = brandColor || theme.color
+  const fxC2 = accentColor || theme.color2
+  const styleFx = styleFxCss(q, fxC1, fxC2)
+  const PARTICLES = ['stars', 'snow', 'bubbles', 'fireflies', 'confetti']
+  const HEROFX = ['aurora', 'blobs', 'spotlight', 'grid', 'waves', 'none']
+  if (q.particles && PARTICLES.includes(q.particles.toLowerCase())) rjfCfg.particles = q.particles.toLowerCase()
+  if (q.heroFx && HEROFX.includes(q.heroFx.toLowerCase())) rjfCfg.heroFx = q.heroFx.toLowerCase()
+  if (q.cursorFx && ['glow', 'ring'].includes(q.cursorFx.toLowerCase())) rjfCfg.cursorFx = q.cursorFx.toLowerCase()
+  if (q.confetti === '1') rjfCfg.confetti = '1'
+  if ((q.fx || '').toLowerCase() === 'off') rjfCfg.fx = 'off'
+  rjfCfg.fxHex = fxC1; rjfCfg.fxHex2 = fxC2
 
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
@@ -284,6 +397,7 @@ ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+${styleFx.fontLink ? `<link href="${styleFx.fontLink}" rel="stylesheet">` : ''}
 <style>
   /* ── McKnight GrowthOS Design System v1.0 — luxury glassmorphism 3.0 + kinetic motion ── */
   :root { --rj-royal:#003399; --rj-royal-deep:#002266; --rj-navy-black:#000B26; --rj-blue:#2563eb; --rj-cyan:#0ea5e9; --rj-gold:#F59E0B; }
@@ -386,7 +500,7 @@ ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</
     .mo-blob,.pulse-glow,.pulse-glow::after,.rj-aurora { animation:none; }
     .rj-kinetic .rj-ch { opacity:1; transform:none; animation:none; }
     a,button,i.fas,i.far,i.fab { transition:none; }
-  }${mcknightCss}${brandThemeCss}${darkCss}${brandCss}
+  }${mcknightCss}${brandThemeCss}${darkCss}${brandCss}${styleFx.css}
 </style>
 <script defer src="/static/motion.js"></script>
 <script>window.__RJF=${JSON.stringify(rjfCfg)}</script>
