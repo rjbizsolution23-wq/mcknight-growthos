@@ -18,6 +18,7 @@ import { processChangeRequest, revertChangeRequest, listChangeRequests } from '.
 import { FUNNEL_PARAMS, COMMON_PARAMS } from './paramschema'
 import { TEMPLATES } from './templateRegistry'
 import { zoomConfigured, zoomVerify, createZoomEvent, registerLead, listRegistrants, deleteZoomEvent, listStoredWebinars, findWebinarForFunnel, type ZoomEnv } from './zoom'
+import { PIPELINES, BRANDS, LIFECYCLE_STAGES, HEALTH_FACTORS, healthBand, computeHealth, logActivity, convertLeadToClient, pipelineForFunnel, type ClientOsEnv } from './clientos'
 
 type Bindings = GhlEnv & AiEnv & HooksEnv & {
   STRIPE_SECRET_KEY?: string
@@ -126,6 +127,14 @@ api.post('/lead', async (c) => {
   // ── v3.3: permanent D1 storage → powers the /leads LeadFlow CRM CRM ──
   const db = await saveLeadToD1(c.env, clean, ghl.contactId)
 
+  // ── v5.0: ClientOS bridge — every lead becomes a Client 360 record +
+  // an opportunity in the correct brand pipeline. Fail-soft always.
+  let clientos: { clientId?: number; opportunityId?: number; created?: boolean } | undefined
+  try {
+    const conv = await convertLeadToClient(c.env as unknown as ClientOsEnv, clean, db.id)
+    if (conv.ok) clientos = { clientId: conv.clientId, opportunityId: conv.opportunityId, created: conv.created }
+  } catch { /* leads must never break */ }
+
   // ── v4.0: Zoom auto-registration — if this funnel is linked to a webinar
   // (explicit _webinar field from the page, or a D1 webinar row with this
   // funnel slug), register the lead with Zoom and hand back their unique
@@ -169,7 +178,7 @@ api.post('/lead', async (c) => {
   if (!key) {
     // No email key configured — accept the lead so funnels never break,
     // flag that delivery is not wired yet.
-    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, joinUrl, webinar: webinarReg, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: ghl.ok ? 'Lead synced to GoHighLevel. Set RESEND_API_KEY to also enable email delivery.' : 'Lead accepted. Set RESEND_API_KEY and/or GHL_API_KEY to enable delivery (see /integrations).' })
+    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, joinUrl, webinar: webinarReg, clientos, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: ghl.ok ? 'Lead synced to GoHighLevel. Set RESEND_API_KEY to also enable email delivery.' : 'Lead accepted. Set RESEND_API_KEY and/or GHL_API_KEY to enable delivery (see /integrations).' })
   }
 
   const rows = Object.entries(clean)
@@ -192,9 +201,9 @@ api.post('/lead', async (c) => {
   })
   if (!res.ok) {
     const err = await res.text()
-    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, joinUrl, webinar: webinarReg, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: 'Lead accepted; email delivery failed', providerError: err.slice(0, 300) }, 200)
+    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, joinUrl, webinar: webinarReg, clientos, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: 'Lead accepted; email delivery failed', providerError: err.slice(0, 300) }, 200)
   }
-  return c.json({ ok: true, delivered: true, stored: db.saved, leadId: db.id, joinUrl, webinar: webinarReg, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, opportunity: ghl.opportunity, workflow: ghl.workflow, error: ghl.error } : undefined })
+  return c.json({ ok: true, delivered: true, stored: db.saved, leadId: db.id, joinUrl, webinar: webinarReg, clientos, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, opportunity: ghl.opportunity, workflow: ghl.workflow, error: ghl.error } : undefined })
 })
 
 // ── v3.4: GET /api/hooks/status — which fan-out channels are configured ──
@@ -865,9 +874,254 @@ api.get('/sms/status', async (c) => {
   return c.json({ ok: true, configured, from: env?.TWILIO_FROM || '', segments, log })
 })
 
+// ═══ v5.0: McKNIGHT CLIENTOS — CRM + CLIENT OPERATIONS ═════════
+// GrowthOS captures. ClientOS operates. Vertical pipelines deliver.
+
+// GET /api/clientos/meta — pipelines, brands, lifecycle, health factors
+api.get('/clientos/meta', (c) => c.json({ ok: true, pipelines: PIPELINES, brands: BRANDS, lifecycle: LIFECYCLE_STAGES, healthFactors: HEALTH_FACTORS }))
+
+// GET /api/clients?brand=&pipeline=&stage=&lifecycle=&q=&limit=&offset=
+api.get('/clients', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const q = c.req.query()
+  const limit = Math.min(parseInt(q.limit || '50', 10) || 50, 200)
+  const offset = Math.max(parseInt(q.offset || '0', 10) || 0, 0)
+  const conds: string[] = []
+  const binds: unknown[] = []
+  if (q.brand) { conds.push('brand = ?'); binds.push(q.brand.slice(0, 40)) }
+  if (q.lifecycle) { conds.push('lifecycle_stage = ?'); binds.push(q.lifecycle.slice(0, 40)) }
+  if (q.q) { conds.push('(first_name LIKE ? OR last_name LIKE ? OR email LIKE ? OR phone LIKE ? OR business_name LIKE ?)'); const like = `%${q.q.slice(0, 80)}%`; binds.push(like, like, like, like, like) }
+  const where = conds.length ? `WHERE ${conds.join(' AND ')}` : ''
+  const rows = await c.env.DB.prepare(`SELECT * FROM clients ${where} ORDER BY updated_at DESC LIMIT ? OFFSET ?`).bind(...binds, limit, offset).all()
+  const count = await c.env.DB.prepare(`SELECT COUNT(*) as n FROM clients ${where}`).bind(...binds).first<any>()
+  return c.json({ ok: true, clients: rows.results, total: count?.n || 0 })
+})
+
+// POST /api/clients — create/update a client manually
+api.post('/clients', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  let b: Record<string, any>
+  try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const FIELDS = ['client_type','first_name','last_name','preferred_name','email','secondary_email','phone','alt_phone','preferred_channel','language','timezone','address','city','state','zip','county','business_name','dba','entity_type','website','industry','naics','employees','revenue_range','uei','cage','sam_expiration','certifications','licenses','business_goals','funding_needs','lead_source','campaign','funnel','referral_partner','referral_code','assigned_to','brand','lifecycle_stage','next_action','tags','risk_flags']
+  if (b.lifecycle_stage && !(LIFECYCLE_STAGES as readonly string[]).includes(b.lifecycle_stage)) return c.json({ ok: false, error: `Invalid lifecycle stage. Allowed: ${LIFECYCLE_STAGES.join(', ')}` }, 400)
+  if (b.brand && !BRANDS[b.brand]) return c.json({ ok: false, error: `Invalid brand. Allowed: ${Object.keys(BRANDS).join(', ')}` }, 400)
+
+  if (b.id) {
+    const sets: string[] = []; const binds: unknown[] = []
+    for (const f of FIELDS) if (f in b) { sets.push(`${f} = ?`); binds.push(String(b[f] ?? '').slice(0, 500) || null) }
+    if (!sets.length) return c.json({ ok: false, error: 'No fields to update' }, 400)
+    binds.push(parseInt(b.id, 10))
+    await c.env.DB.prepare(`UPDATE clients SET ${sets.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`).bind(...binds).run()
+    if (b.lifecycle_stage) await logActivity(c.env as unknown as ClientOsEnv, parseInt(b.id, 10), 'stage', `Lifecycle → ${b.lifecycle_stage}`, '', { actor: 'admin' })
+    return c.json({ ok: true, id: parseInt(b.id, 10), updated: true })
+  }
+  if (!b.email && !b.phone) return c.json({ ok: false, error: 'email or phone required' }, 400)
+  const cols: string[] = []; const binds: unknown[] = []
+  for (const f of FIELDS) if (f in b && b[f] != null && String(b[f]).trim()) { cols.push(f); binds.push(String(b[f]).slice(0, 500)) }
+  const r = await c.env.DB.prepare(`INSERT INTO clients (${cols.join(',')}, consent_ts, last_contact) VALUES (${cols.map(() => '?').join(',')}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`).bind(...binds).run()
+  const id = r.meta.last_row_id as number
+  await logActivity(c.env as unknown as ClientOsEnv, id, 'system', 'Client created manually', '', { actor: 'admin' })
+  return c.json({ ok: true, id, created: true })
+})
+
+// GET /api/clients/:id — Client 360: profile + opportunities + timeline + tasks + tickets + docs + health
+api.get('/clients/:id', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const id = parseInt(c.req.param('id'), 10)
+  const client = await c.env.DB.prepare('SELECT * FROM clients WHERE id = ?').bind(id).first()
+  if (!client) return c.json({ ok: false, error: 'Client not found' }, 404)
+  const [opps, timeline, tasks, tix, docs, refs] = await Promise.all([
+    c.env.DB.prepare('SELECT * FROM opportunities WHERE client_id = ? ORDER BY updated_at DESC').bind(id).all(),
+    c.env.DB.prepare('SELECT * FROM activities WHERE client_id = ? ORDER BY id DESC LIMIT 100').bind(id).all(),
+    c.env.DB.prepare('SELECT * FROM client_tasks WHERE client_id = ? ORDER BY (status = \'done\'), due_date').bind(id).all(),
+    c.env.DB.prepare('SELECT * FROM tickets WHERE client_id = ? ORDER BY id DESC LIMIT 50').bind(id).all(),
+    c.env.DB.prepare('SELECT * FROM client_documents WHERE client_id = ? ORDER BY id DESC').bind(id).all(),
+    c.env.DB.prepare('SELECT * FROM referrals WHERE referrer_client_id = ? OR referred_client_id = ? ORDER BY id DESC LIMIT 50').bind(id, id).all(),
+  ])
+  const health = await computeHealth(c.env as unknown as ClientOsEnv, id)
+  return c.json({ ok: true, client, health: { ...health, ...healthBand(health.score) }, opportunities: opps.results, timeline: timeline.results, tasks: tasks.results, tickets: tix.results, documents: docs.results, referrals: refs.results })
+})
+
+// POST /api/clients/:id/activity { kind, subject, body?, direction? } — log a touch
+api.post('/clients/:id/activity', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const id = parseInt(c.req.param('id'), 10)
+  let b: any; try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  if (!b.subject?.trim()) return c.json({ ok: false, error: 'subject required' }, 400)
+  const kind = ['note','email','sms','call','meeting','document','payment','system'].includes(b.kind) ? b.kind : 'note'
+  await logActivity(c.env as unknown as ClientOsEnv, id, kind, b.subject.trim(), (b.body || '').trim(), { direction: b.direction, actor: 'admin' })
+  return c.json({ ok: true })
+})
+
+// GET /api/opportunities?pipeline= — kanban board data
+api.get('/opportunities', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const pipeline = c.req.query('pipeline') || 'consulting'
+  if (!PIPELINES[pipeline]) return c.json({ ok: false, error: 'Unknown pipeline' }, 400)
+  const rows = await c.env.DB.prepare(`SELECT o.*, cl.first_name, cl.last_name, cl.email, cl.phone, cl.business_name, cl.health_score FROM opportunities o JOIN clients cl ON cl.id = o.client_id WHERE o.pipeline = ? AND o.status = 'open' ORDER BY o.updated_at DESC LIMIT 300`).bind(pipeline).all()
+  const closed = await c.env.DB.prepare(`SELECT status, COUNT(*) as n, SUM(value) as v FROM opportunities WHERE pipeline = ? AND status != 'open' GROUP BY status`).bind(pipeline).all()
+  return c.json({ ok: true, pipeline, name: PIPELINES[pipeline].name, stages: PIPELINES[pipeline].stages, opportunities: rows.results, closed: closed.results })
+})
+
+// POST /api/opportunities/:id/move { stage } | { status: won|lost, lost_reason? }
+api.post('/opportunities/:id/move', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const id = parseInt(c.req.param('id'), 10)
+  let b: any; try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const opp = await c.env.DB.prepare('SELECT * FROM opportunities WHERE id = ?').bind(id).first<any>()
+  if (!opp) return c.json({ ok: false, error: 'Opportunity not found' }, 404)
+  if (b.status === 'won' || b.status === 'lost') {
+    const closeValue = typeof b.value === 'number' ? b.value : (opp.value || 0)
+    await c.env.DB.prepare("UPDATE opportunities SET status = ?, value = ?, lost_reason = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?").bind(b.status, closeValue, (b.lost_reason || '').slice(0, 300) || null, id).run()
+    if (b.status === 'won') await c.env.DB.prepare("UPDATE clients SET lifecycle_stage = 'active', account_value = account_value + ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?").bind(closeValue, opp.client_id).run()
+    if (b.status === 'lost') await c.env.DB.prepare("UPDATE clients SET lifecycle_stage = 'lost', updated_at = CURRENT_TIMESTAMP WHERE id = ?").bind(opp.client_id).run()
+    await logActivity(c.env as unknown as ClientOsEnv, opp.client_id, 'stage', `Opportunity ${b.status}: ${opp.title}`, b.lost_reason || '', { opportunityId: id, actor: 'admin' })
+    return c.json({ ok: true, status: b.status })
+  }
+  const stages = PIPELINES[opp.pipeline]?.stages || []
+  if (!b.stage || !stages.includes(b.stage)) return c.json({ ok: false, error: `Invalid stage for ${opp.pipeline}. Allowed: ${stages.join(' | ')}` }, 400)
+  await c.env.DB.prepare('UPDATE opportunities SET stage = ?, stage_entered_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ?').bind(b.stage, id).run()
+  await logActivity(c.env as unknown as ClientOsEnv, opp.client_id, 'stage', `${PIPELINES[opp.pipeline].name}: ${opp.stage} → ${b.stage}`, '', { opportunityId: id, actor: 'admin' })
+  if (typeof b.value === 'number') await c.env.DB.prepare('UPDATE opportunities SET value = ? WHERE id = ?').bind(b.value, id).run()
+  return c.json({ ok: true, stage: b.stage })
+})
+
+// POST /api/clients/:id/tasks { title, description?, due_date?, priority?, assigned_to? }
+api.post('/clients/:id/tasks', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const id = parseInt(c.req.param('id'), 10)
+  let b: any; try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  if (!b.title?.trim()) return c.json({ ok: false, error: 'title required' }, 400)
+  const r = await c.env!.DB!.prepare('INSERT INTO client_tasks (client_id, title, description, due_date, priority, assigned_to) VALUES (?,?,?,?,?,?)')
+    .bind(id, b.title.trim().slice(0, 200), (b.description || '').slice(0, 2000) || null, (b.due_date || '').slice(0, 20) || null, ['low','normal','high','urgent'].includes(b.priority) ? b.priority : 'normal', (b.assigned_to || '').slice(0, 80) || null).run()
+  await logActivity(c.env as unknown as ClientOsEnv, id, 'task', `Task created: ${b.title.trim()}`, '', { actor: 'admin' })
+  return c.json({ ok: true, id: r.meta.last_row_id })
+})
+
+// POST /api/tasks/:id/status { status }
+api.post('/tasks/:id/status', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const id = parseInt(c.req.param('id'), 10)
+  let b: any; try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const allowed = ['open','in_progress','waiting_client','waiting_internal','done','cancelled']
+  if (!allowed.includes(b.status)) return c.json({ ok: false, error: `status must be one of: ${allowed.join(', ')}` }, 400)
+  const task = await c.env!.DB!.prepare('SELECT client_id, title FROM client_tasks WHERE id = ?').bind(id).first<any>()
+  if (!task) return c.json({ ok: false, error: 'Task not found' }, 404)
+  await c.env!.DB!.prepare(`UPDATE client_tasks SET status = ?, completed_at = ${b.status === 'done' ? 'CURRENT_TIMESTAMP' : 'NULL'} WHERE id = ?`).bind(b.status, id).run()
+  if (b.status === 'done') await logActivity(c.env as unknown as ClientOsEnv, task.client_id, 'task', `Task completed: ${task.title}`, '', { actor: 'admin' })
+  return c.json({ ok: true })
+})
+
+// ── Tickets ────────────────────────────────────────────────────
+api.get('/tickets', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const status = c.req.query('status')
+  const where = status ? 'WHERE t.status = ?' : "WHERE t.status NOT IN ('closed')"
+  const binds = status ? [status.slice(0, 30)] : []
+  const rows = await c.env.DB.prepare(`SELECT t.*, cl.first_name, cl.last_name, cl.email FROM tickets t LEFT JOIN clients cl ON cl.id = t.client_id ${where} ORDER BY CASE t.priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 WHEN 'normal' THEN 2 ELSE 3 END, t.id DESC LIMIT 200`).bind(...binds).all()
+  return c.json({ ok: true, tickets: rows.results })
+})
+
+api.post('/tickets', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  let b: any; try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  if (!b.subject?.trim()) return c.json({ ok: false, error: 'subject required' }, 400)
+  const r = await c.env!.DB!.prepare('INSERT INTO tickets (client_id, brand, category, priority, subject, description, assigned_to) VALUES (?,?,?,?,?,?,?)')
+    .bind(b.client_id ? parseInt(b.client_id, 10) : null, BRANDS[b.brand] ? b.brand : 'growthos', (b.category || 'general').slice(0, 40), ['low','normal','high','urgent'].includes(b.priority) ? b.priority : 'normal', b.subject.trim().slice(0, 200), (b.description || '').slice(0, 4000) || null, (b.assigned_to || '').slice(0, 80) || null).run()
+  if (b.client_id) await logActivity(c.env as unknown as ClientOsEnv, parseInt(b.client_id, 10), 'ticket', `Ticket opened: ${b.subject.trim()}`, '', { actor: 'admin' })
+  return c.json({ ok: true, id: r.meta.last_row_id })
+})
+
+api.post('/tickets/:id/status', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const id = parseInt(c.req.param('id'), 10)
+  let b: any; try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const allowed = ['new','assigned','investigating','waiting_client','waiting_internal','escalated','resolved','closed','reopened']
+  if (!allowed.includes(b.status)) return c.json({ ok: false, error: `status must be one of: ${allowed.join(', ')}` }, 400)
+  const t = await c.env!.DB!.prepare('SELECT client_id, subject FROM tickets WHERE id = ?').bind(id).first<any>()
+  if (!t) return c.json({ ok: false, error: 'Ticket not found' }, 404)
+  await c.env!.DB!.prepare('UPDATE tickets SET status = ?, resolution = COALESCE(?, resolution), satisfaction = COALESCE(?, satisfaction), updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+    .bind(b.status, (b.resolution || '').slice(0, 2000) || null, b.satisfaction ? parseInt(b.satisfaction, 10) : null, id).run()
+  if (t.client_id && (b.status === 'resolved' || b.status === 'closed')) await logActivity(c.env as unknown as ClientOsEnv, t.client_id, 'ticket', `Ticket ${b.status}: ${t.subject}`, b.resolution || '', { actor: 'admin' })
+  return c.json({ ok: true })
+})
+
+// ── Referrals ──────────────────────────────────────────────────
+api.get('/referrals', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const rows = await c.env.DB.prepare('SELECT * FROM referrals ORDER BY id DESC LIMIT 200').all()
+  return c.json({ ok: true, referrals: rows.results })
+})
+
+api.post('/referrals', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  let b: any; try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  if (!b.referrer_name?.trim() && !b.referrer_client_id) return c.json({ ok: false, error: 'referrer required' }, 400)
+  const r = await c.env!.DB!.prepare('INSERT INTO referrals (referrer_client_id, referrer_name, referred_client_id, referred_name, service, brand, disclosure_provided, client_consent, compensation, notes) VALUES (?,?,?,?,?,?,?,?,?,?)')
+    .bind(b.referrer_client_id ? parseInt(b.referrer_client_id, 10) : null, (b.referrer_name || '').slice(0, 120) || null, b.referred_client_id ? parseInt(b.referred_client_id, 10) : null, (b.referred_name || '').slice(0, 120) || null, (b.service || '').slice(0, 120) || null, BRANDS[b.brand] ? b.brand : 'growthos', b.disclosure_provided ? 1 : 0, b.client_consent ? 1 : 0, parseFloat(b.compensation || '0') || 0, (b.notes || '').slice(0, 1000) || null).run()
+  return c.json({ ok: true, id: r.meta.last_row_id })
+})
+
+api.post('/referrals/:id/status', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const id = parseInt(c.req.param('id'), 10)
+  let b: any; try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const allowed = ['new','contacted','converted','paid','declined']
+  if (!allowed.includes(b.status)) return c.json({ ok: false, error: `status must be one of: ${allowed.join(', ')}` }, 400)
+  await c.env!.DB!.prepare("UPDATE referrals SET status = ?, compensation_status = CASE WHEN ? = 'paid' THEN 'paid' ELSE compensation_status END WHERE id = ?").bind(b.status, b.status, id).run()
+  return c.json({ ok: true })
+})
+
+// ── Documents (vault metadata) ─────────────────────────────────
+api.post('/clients/:id/documents', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const id = parseInt(c.req.param('id'), 10)
+  let b: any; try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  if (!b.name?.trim()) return c.json({ ok: false, error: 'name required' }, 400)
+  const r = await c.env!.DB!.prepare('INSERT INTO client_documents (client_id, category, name, url, expiration_date, confidentiality) VALUES (?,?,?,?,?,?)')
+    .bind(id, (b.category || 'general').slice(0, 40), b.name.trim().slice(0, 200), (b.url || '').slice(0, 500) || null, (b.expiration_date || '').slice(0, 20) || null, ['public','internal','restricted'].includes(b.confidentiality) ? b.confidentiality : 'internal').run()
+  await logActivity(c.env as unknown as ClientOsEnv, id, 'document', `Document added: ${b.name.trim()}`, '', { actor: 'admin' })
+  return c.json({ ok: true, id: r.meta.last_row_id })
+})
+
+api.post('/documents/:id/verify', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const id = parseInt(c.req.param('id'), 10)
+  let b: any; try { b = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const allowed = ['unverified','verified','rejected','expired']
+  if (!allowed.includes(b.status)) return c.json({ ok: false, error: `status must be one of: ${allowed.join(', ')}` }, 400)
+  await c.env!.DB!.prepare('UPDATE client_documents SET verification_status = ?, verified_by = ? WHERE id = ?').bind(b.status, (b.verified_by || 'admin').slice(0, 80), id).run()
+  return c.json({ ok: true })
+})
+
+// GET /api/clientos/stats — executive dashboard numbers
+api.get('/clientos/stats', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+  const [clients, byBrand, byStage, opps, wonLost, tix, refs, tasks, expiring] = await Promise.all([
+    c.env.DB.prepare('SELECT COUNT(*) as n, AVG(health_score) as avg_health FROM clients').first<any>(),
+    c.env.DB.prepare('SELECT brand, COUNT(*) as n FROM clients GROUP BY brand ORDER BY n DESC').all(),
+    c.env.DB.prepare('SELECT lifecycle_stage, COUNT(*) as n FROM clients GROUP BY lifecycle_stage').all(),
+    c.env.DB.prepare("SELECT pipeline, COUNT(*) as n, SUM(value) as v FROM opportunities WHERE status = 'open' GROUP BY pipeline").all(),
+    c.env.DB.prepare("SELECT status, COUNT(*) as n, SUM(value) as v FROM opportunities WHERE status != 'open' GROUP BY status").all(),
+    c.env.DB.prepare("SELECT COUNT(*) as open FROM tickets WHERE status NOT IN ('resolved','closed')").first<any>(),
+    c.env.DB.prepare("SELECT COUNT(*) as n, SUM(CASE WHEN status = 'converted' THEN 1 ELSE 0 END) as converted FROM referrals").first<any>(),
+    c.env.DB.prepare("SELECT COUNT(*) as overdue FROM client_tasks WHERE status NOT IN ('done','cancelled') AND due_date IS NOT NULL AND due_date < date('now')").first<any>(),
+    c.env.DB.prepare("SELECT COUNT(*) as n FROM client_documents WHERE expiration_date IS NOT NULL AND expiration_date BETWEEN date('now') AND date('now','+30 day')").first<any>(),
+  ])
+  return c.json({ ok: true, clients: clients?.n || 0, avgHealth: Math.round(clients?.avg_health || 0), byBrand: byBrand.results, byLifecycle: byStage.results, openPipelines: opps.results, closed: wonLost.results, openTickets: tix?.open || 0, referrals: refs, overdueTasks: tasks?.overdue || 0, expiringDocs: expiring?.n || 0 })
+})
+
 // ── Health ─────────────────────────────────────────────────────
 api.get('/health', async (c) => {
   const mailConf = mailProvidersConfigured(c.env as MailEnv)
   const envAny = c.env as any
-  return c.json({ ok: true, version: '4.0.0', stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env), mail: { providers: mailConf, active: pickProvider(c.env as MailEnv) }, vault: !!c.env?.DB, cfDeploy: cfConfigured(c.env as CfEnv), changeAgent: aiConfigured(c.env), zoom: zoomConfigured(c.env as unknown as ZoomEnv), sms: !!(envAny?.TWILIO_ACCOUNT_SID && envAny?.TWILIO_AUTH_TOKEN && envAny?.TWILIO_FROM), slack: !!envAny?.SLACK_WEBHOOK_URL })
+  return c.json({ ok: true, version: '5.0.0', clientos: !!c.env?.DB, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env), mail: { providers: mailConf, active: pickProvider(c.env as MailEnv) }, vault: !!c.env?.DB, cfDeploy: cfConfigured(c.env as CfEnv), changeAgent: aiConfigured(c.env), zoom: zoomConfigured(c.env as unknown as ZoomEnv), sms: !!(envAny?.TWILIO_ACCOUNT_SID && envAny?.TWILIO_AUTH_TOKEN && envAny?.TWILIO_FROM), slack: !!envAny?.SLACK_WEBHOOK_URL })
 })

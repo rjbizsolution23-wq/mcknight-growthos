@@ -96,6 +96,7 @@ ${extraHead}
         ['/mailer', 'Mail Command', 'mailer'],
         ['/analytics', 'Analytics', 'analytics'],
         ['/webinars', 'Webinars', 'webinars'],
+        ['/clients', 'ClientOS', 'clients'],
         ['/deploy', 'CF Deploy', 'deploy'],
         ['/integrations', 'Integration Hub', 'integrations'],
         ['/brand', 'Brand Control Center', 'brand'],
@@ -136,6 +137,7 @@ ${content}
           <li><a href="/mailer" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-paper-plane mr-2 text-blue-500"></i>Mail Command</a></li>
           <li><a href="/analytics" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-chart-line mr-2 text-blue-500"></i>Funnel Analytics</a></li>
           <li><a href="/webinars" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-video mr-2 text-blue-500"></i>Webinar Command Center</a></li>
+          <li><a href="/clients" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-address-card mr-2 text-emerald-500"></i>ClientOS CRM</a></li>
           <li><a href="/deploy" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-cloud mr-2 text-blue-500"></i>Cloudflare Deploy</a></li>
           <li><a href="/integrations" class="hover:text-mk-cyan text-gray-400"><i class="fas fa-plug mr-2 text-blue-500"></i>Integration Hub</a></li>
         </ul>

@@ -247,6 +247,53 @@ GrowthOS is the front-end acquisition engine for the McKnight ecosystem (Contrac
 
 ---
 
+## v5.0 — McKnight ClientOS (CRM Layer)
+
+> **Every client. Every conversation. Every next step. Connected.**
+> GrowthOS captures the lead. ClientOS manages everything after that.
+
+### What shipped
+- **Client 360** (`/clients`) — one record per person or business: personal, business, relationship and consent fields, unified activity timeline, tasks, tickets, documents, referrals, and a transparent health score.
+- **8 brand-vertical pipelines** (blueprint-verbatim stages):
+  | Pipeline | Brand |
+  |---|---|
+  | General Consulting | McKnight GrowthOS |
+  | Government Contracting | Contracting Preacher OS |
+  | Capital Readiness | McKnight Capital Ready |
+  | Housing | McKnight Housing Initiative |
+  | Mortgage Technology | McKnight MortgageOS |
+  | Trucking | McKnight Freight Systems / DriverHub |
+  | Fleet Repair | McKnight FleetWorks |
+  | Childcare | McKnight Early Learning / LearningOS |
+- **Automatic lead → client conversion** — every `/api/lead` submission is upserted (matched by email, then phone) into a Client 360 record and an open opportunity in the correct pipeline, routed by funnel slug (e.g. `tax-lead` → Capital Readiness, `mortgage` → Mortgage Tech, `childcare` → Childcare). Fail-soft: conversion errors never break lead capture.
+- **21-stage controlled lifecycle** — visitor → lead → MQL → SQL → … → retained / referral partner / do-not-contact.
+- **Transparent health scores** — 8 weighted operational factors (onboarding, documents, engagement, appointments, payments, projects, support, renewal), each with a human-readable "why". Never uses protected demographics. Bands: Thriving / Healthy / Needs attention / At risk / Immediate intervention.
+- **Tickets** — 9-stage support flow (new → … → resolved → closed → reopened) with satisfaction tracking.
+- **Referrals** — disclosure-provided + client-consent tracked per record, compensation status, conflict flags (regulated-referral controls per blueprint).
+- **Document vault (metadata)** — categories, verification workflow (unverified/verified/rejected/expired), confidentiality levels, expiration alerts.
+- **Kanban board** — drag-free stage movement (← / →), won/lost closing (won bumps the client to Active and adds account value).
+
+### ClientOS API (admin key required except `/meta`)
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/clientos/meta` | Pipelines, brands, lifecycle stages, health factors |
+| `GET/POST /api/clients` | List/search + create/update clients |
+| `GET /api/clients/:id` | Full Client 360 (health, opps, timeline, tasks, tickets, docs, referrals) |
+| `POST /api/clients/:id/activity` | Log a timeline event |
+| `GET /api/opportunities?pipeline=` | Kanban board data |
+| `POST /api/opportunities/:id/move` | Move stage or close won/lost |
+| `POST /api/clients/:id/tasks` · `POST /api/tasks/:id/status` | Task management |
+| `GET/POST /api/tickets` · `POST /api/tickets/:id/status` | Support tickets |
+| `GET/POST /api/referrals` · `POST /api/referrals/:id/status` | Referral tracking |
+| `POST /api/clients/:id/documents` · `POST /api/documents/:id/verify` | Document vault |
+| `GET /api/clientos/stats` | Executive dashboard numbers |
+
+### Data model (migration 0005)
+`clients`, `opportunities`, `activities`, `client_tasks`, `tickets`, `referrals`, `client_documents`
+
+### Deferred to future releases (per blueprint Release 2–4 phasing)
+Client portal auth, e-signatures, billing/invoicing, appointment booking engine, form builder, workflow automation designer, AI client copilot.
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---
