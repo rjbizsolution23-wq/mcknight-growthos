@@ -4,10 +4,10 @@
 // GrowthOS; the package's own index.html hub is also available.
 import { shell } from './layout'
 
-type Doc = { file: string; title: string; desc: string; icon: string }
-type Group = { key: string; title: string; tag: string; tagColor: string; icon: string; docs: Doc[] }
+export type Doc = { file: string; title: string; desc: string; icon: string }
+export type Group = { key: string; title: string; tag: string; tagColor: string; icon: string; docs: Doc[] }
 
-const GROUPS: Group[] = [
+export const GROUPS: Group[] = [
   {
     key: 'p0', title: 'P0 Command Tools', tag: 'GATE — NOTHING PUBLISHES UNTIL CLOSED', tagColor: 'bg-red-900/60 text-red-300 border border-red-700/50', icon: 'fa-shield-halved',
     docs: [
@@ -66,7 +66,7 @@ const GROUPS: Group[] = [
   },
 ]
 
-const FLEET_BRANDS = [
+export const FLEET_BRANDS = [
   ['00', 'MOG — Opportunity Group', '#C9A961'], ['01', 'The Contracting Preacher', '#C9A961'],
   ['02', 'Housing Initiative', '#2F6B4A'], ['03', 'Capital Ready', '#9B7A2B'],
   ['04', 'MortgageOS', '#4A5FA5'], ['05', 'GrowthOS', '#8B1F1F'],
@@ -150,6 +150,37 @@ ${GROUPS.map((g) => `
     <a href="/static/fleet/tailwind.config.example.js" target="_blank" class="text-mk-gold hover:underline"><i class="fas fa-file-code mr-2"></i>tailwind.config.example.js — Tailwind theme extension</a>
     <a href="/static/fleet/deck_stage.js" target="_blank" class="text-mk-gold hover:underline"><i class="fas fa-file-code mr-2"></i>deck_stage.js — &lt;deck-stage&gt; web component (proposal deck engine)</a>
     <a href="/static/fleet/HANDOFF-README.md" target="_blank" class="text-mk-gold hover:underline"><i class="fas fa-file-lines mr-2"></i>HANDOFF-README.md — full 30-deliverable handoff spec</a>
+  </div>
+</section>
+
+<section id="fleet-agent-access" class="card p-6 mt-6">
+  <div class="flex items-center gap-3 mb-1">
+    <h2 class="text-lg font-bold text-white"><i class="fas fa-robot text-mk-gold mr-2"></i>Agent Access — Brand API + MCP Server</h2>
+    <span class="bg-emerald-900/40 text-emerald-300 border border-emerald-700/40 text-xs font-bold px-2 py-0.5 rounded-full">v6.7 NEW</span>
+  </div>
+  <p class="text-sm text-gray-400 mb-4">AI agents &amp; builders can pull the entire brand system — tokens, themes, logos, fonts, all 27 fleet docs — programmatically. Read-only, public, no auth key needed.</p>
+  <div class="grid md:grid-cols-2 gap-4">
+    <div class="bg-gray-900 border border-gray-700 rounded-lg p-4">
+      <p class="text-xs font-bold text-mk-gold uppercase tracking-wider mb-2"><i class="fas fa-plug mr-1"></i> REST API (JSON)</p>
+      <div class="space-y-1.5 text-sm font-mono">
+        <a href="/api/brand" target="_blank" class="block text-sky-300 hover:underline">GET /api/brand <span class="text-gray-500 font-sans">— manifest + usage</span></a>
+        <a href="/api/brand/tokens" target="_blank" class="block text-sky-300 hover:underline">GET /api/brand/tokens <span class="text-gray-500 font-sans">— design tokens JSON</span></a>
+        <a href="/api/brand/themes" target="_blank" class="block text-sky-300 hover:underline">GET /api/brand/themes <span class="text-gray-500 font-sans">— 10 brands, official + live hexes</span></a>
+        <a href="/api/brand/assets" target="_blank" class="block text-sky-300 hover:underline">GET /api/brand/assets <span class="text-gray-500 font-sans">— logo/shield PNG URLs</span></a>
+        <a href="/api/brand/docs" target="_blank" class="block text-sky-300 hover:underline">GET /api/brand/docs <span class="text-gray-500 font-sans">— 27 deliverables index</span></a>
+        <a href="/api/brand/fonts" target="_blank" class="block text-sky-300 hover:underline">GET /api/brand/fonts <span class="text-gray-500 font-sans">— stacks + Google Fonts import</span></a>
+        <a href="/llms.txt" target="_blank" class="block text-sky-300 hover:underline">GET /llms.txt <span class="text-gray-500 font-sans">— plain-text agent guide</span></a>
+      </div>
+    </div>
+    <div class="bg-gray-900 border border-gray-700 rounded-lg p-4">
+      <p class="text-xs font-bold text-mk-gold uppercase tracking-wider mb-2"><i class="fas fa-server mr-1"></i> MCP Server (Model Context Protocol)</p>
+      <p class="text-sm text-gray-300 mb-2">Endpoint: <a href="/mcp" target="_blank" class="text-sky-300 font-mono hover:underline">POST /mcp</a> <span class="text-gray-500">(JSON-RPC 2.0, streamable HTTP)</span></p>
+      <p class="text-xs text-gray-400 mb-1">7 tools: get_brand_manifest · get_brand_tokens · list_brand_themes · get_brand_theme · list_brand_assets · list_fleet_docs · get_fonts</p>
+      <p class="text-xs font-bold text-gray-400 mt-3 mb-1">Connect from Claude Code:</p>
+      <pre class="bg-black rounded p-2 text-xs text-emerald-300 overflow-x-auto">claude mcp add --transport http mcknight-brand https://mcknight-growthos.pages.dev/mcp</pre>
+      <p class="text-xs font-bold text-gray-400 mt-2 mb-1">Generic MCP config (Cursor / Windsurf / etc.):</p>
+      <pre class="bg-black rounded p-2 text-xs text-emerald-300 overflow-x-auto">{"mcpServers":{"mcknight-brand":{"url":"https://mcknight-growthos.pages.dev/mcp"}}}</pre>
+    </div>
   </div>
 </section>
 `)

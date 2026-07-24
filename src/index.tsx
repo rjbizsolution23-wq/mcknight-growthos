@@ -22,6 +22,7 @@ import { clientsPage } from './pages/clients'
 import { verifyPage } from './pages/verify'
 import { trafficPage } from './pages/traffic'
 import { fleetPage } from './pages/fleet'
+import { brandApi, mcp, llmsTxt } from './brandapi'
 import { FUNNEL_SLUGS } from './funnels'
 import { TEMPLATES } from './templateRegistry'
 import { getCopyOverrides, trackView, maybeRefreshFunnel } from './agents'
@@ -63,6 +64,11 @@ app.get('/fleet', (c) => html(fleetPage()))
 // ── API layer: Stripe checkout + lead capture + SEO pack ─────
 app.route('/api', api)
 
+// ── v6.7: Agent Access Layer — brand asset API + MCP server ──
+app.route('/api/brand', brandApi)
+app.route('/mcp', mcp)
+app.get('/llms.txt', (c) => c.text(llmsTxt(new URL(c.req.url).origin)))
+
 // ── v2.0: Live funnel templates — unified registry with per-funnel view
 // tracking, AI-agent copy overrides (SEO/SGE/AEO, weekly lazy refresh),
 // and zero-latency background work via executionCtx.waitUntil.
@@ -102,7 +108,7 @@ app.get('/f/:code', async (c) => {
 })
 
 // ── Health check ──────────────────────────────────────────────
-app.get('/health', (c) => c.json({ status: 'ok', app: 'mcknight-growthos', version: '6.5.0' }))
+app.get('/health', (c) => c.json({ status: 'ok', app: 'mcknight-growthos', version: '6.7.0' }))
 
 // ── v2.3: SEO infrastructure — sitemap.xml + robots.txt ───────
 const PAGES = ['/', '/events', '/tax', '/credit', '/emails', '/compliance', '/builder', '/leads', '/brand', '/seo', '/integrations', '/ecosystem', '/passport', '/agents', '/mailer', '/analytics', '/deploy', '/webinars', '/clients', '/verify', '/traffic', '/fleet', ...ECOSYSTEM_BRANDS.map((b) => `/ecosystem/${b.slug}`)]

@@ -466,6 +466,35 @@ Organized directory of the entire package, grouped exactly per the handoff spec:
 - 27/27 documents return 200 in production; brand assets, tokens, and deck engine all live.
 - Sitemap now 74 routes (incl. `/fleet`).
 
+## v6.7 — Agent Access Layer: Brand Asset API + MCP Server (NEW)
+
+AI agents & builders can now pull the entire McKnight brand system programmatically — read-only, public, no auth.
+
+### REST API (JSON)
+| Endpoint | Returns |
+|---|---|
+| `GET /api/brand` | Manifest: all endpoints, MCP info, usage snippets |
+| `GET /api/brand/tokens` | Design tokens JSON — colors (navy `#0A1628` / gold `#C9A961` system), typography (Playfair Display / Inter / IBM Plex Mono + scale), spacing, radius, shadows, motion, gradients |
+| `GET /api/brand/tokens.css` | 302 → `/static/fleet/design-tokens.css` (paste-ready CSS custom properties) |
+| `GET /api/brand/themes` | 10 official fleet accent hexes + 10 live funnel themes + funnel→brand map + 42 funnel slugs |
+| `GET /api/brand/themes/:key` | One theme (`mog growthos contracting capital mortgage housing freight fleetworks earlylearning learning`) with official fleet accent |
+| `GET /api/brand/assets` | 8 logo/shield/icon/OG PNGs with absolute URLs |
+| `GET /api/brand/docs` | All 27 fleet deliverables (grouped) + hub + dev files |
+| `GET /api/brand/fonts` | Font stacks + ready Google Fonts import URL |
+| `GET /llms.txt` | Plain-text agent guide (also at `/api/brand/llms.txt`) |
+
+### MCP Server — `POST /mcp` (JSON-RPC 2.0, streamable HTTP)
+- **7 tools**: `get_brand_manifest`, `get_brand_tokens`, `list_brand_themes`, `get_brand_theme`, `list_brand_assets`, `list_fleet_docs`, `get_fonts`
+- Handles `initialize` / `ping` / `tools/list` / `tools/call` / notifications (202) / batch requests
+- **Connect (Claude Code)**: `claude mcp add --transport http mcknight-brand https://mcknight-growthos.pages.dev/mcp`
+- **Generic config**: `{"mcpServers":{"mcknight-brand":{"url":"https://mcknight-growthos.pages.dev/mcp"}}}`
+- `GET /mcp` returns human/agent discovery info + connect instructions
+
+### Files
+- `src/brandapi.ts` — DESIGN_TOKENS (structured JSON of design-tokens.css), BRAND_ASSETS, brandApi router, MCP server, llms.txt generator
+- `/fleet` page — new "Agent Access" section with clickable endpoints + connect snippets
+- CORS enabled on both `/api/brand/*` and `/mcp`; 5-min cache headers on brand JSON
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---
