@@ -6,7 +6,7 @@
 
 - **Parent organization**: McKnight Opportunity Group
 - **Technology**: Powered by [RJ Business Solutions](https://rjbusinesssolutions.org)
-- **Version**: 1.0.0
+- **Version**: 4.0.0 — Business Command Center
 
 ---
 
@@ -216,6 +216,36 @@ npx wrangler pages secret put GHL_API_KEY --project-name mcknight-growthos
 GrowthOS is the front-end acquisition engine for the McKnight ecosystem (Contracting Preacher OS, Capital Ready OS, MortgageOS, DriverHub, FleetWorks ServiceHub, LearningOS). GrowthOS owns marketing, funnels, lead capture, follow-up, campaigns, conversion tracking, SEO, social content and white-label growth infrastructure; sibling platforms own service delivery.
 
 ## Platform Disclaimer
+
+## v4.0 — Business Command Center
+
+**The all-in-one webinar + VSL + SMS growth machine, native on Cloudflare.**
+
+### 🎥 Webinar Command Center (`/webinars`)
+- **Host Zoom webinars right from GrowthOS** — Server-to-Server OAuth (no user login flow); drop `ZOOM_ACCOUNT_ID` + `ZOOM_CLIENT_ID` + `ZOOM_CLIENT_SECRET` in the Key Vault (create the app at marketplace.zoom.us → Build App → Server-to-Server OAuth)
+- Create scheduled **webinars** (auto-registration, cloud recording, practice session, Q&A); accounts without a webinar license transparently **fall back to a registration-enabled meeting** — same workflow either way
+- Link an event to any funnel → **every lead auto-registers with Zoom and receives their unique `join_url` instantly** (shown on the page + stored in D1)
+- Events table: host Start link, Join link, Zoom registration page, registrant counts, cancel; Slack notification on every event created (if `SLACK_WEBHOOK_URL` set)
+- API: `GET /api/zoom/status`, `POST /api/zoom/webinars`, `GET /api/zoom/webinars/:id/registrants`, `DELETE /api/zoom/webinars/:id`
+
+### 🖥️ New funnel templates (32 total now)
+- **`/t/webinar-live`** — webinar registration funnel: countdown, 3-secrets hero, host section, lead form that auto-registers with the linked Zoom event (`?webinar=<id>`) and reveals the personal join link on the spot
+- **`/t/vsl`** — video sales letter funnel: `videoUrl` param auto-embeds **YouTube / Vimeo / Loom / Wistia / direct .mp4**, proof strip, strategy-call lead form, optional `gate=1` lead-gate
+- Both fully wired into Funnel Studio, Change Agent param schema, SEO agent, analytics, CF Deploy and sitemap
+
+### 📲 Twilio SMS Blast Engine (`/webinars`)
+- Blast lead **segments by funnel** (same segment logic as Mail Command), manual number lists, or a safe test send to `TWILIO_TO`
+- Batched sending (10-parallel), per-blast log in D1 `sms_log`, TCPA reminder built into the UI
+- API: `POST /api/sms/send` `{body, funnel?, to?, test?}`, `GET /api/sms/status`
+
+### 🔗 Lead pipeline upgrade
+- `/api/lead` now: GHL sync → D1 → fan-out (Slack/Discord/Telegram/Twilio/Zapier/Airtable) → **Zoom auto-registration** (via explicit `_webinar` field or funnel-linked event) → email — all fail-soft, leads never break
+- `/api/health` reports `zoom`, `sms`, `slack` readiness + platform `version`
+
+### Data (migration 0004)
+`webinars` (zoom_id, kind, topic, start_time, funnel, join/start/registration URLs, status) · `webinar_registrations` (per-lead unique join links) · `sms_log` (blast history)
+
+---
 
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 

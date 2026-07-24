@@ -17,6 +17,7 @@ import { cfConfigured, cfVerify, deployFunnel, deleteDeployment, listDeployments
 import { processChangeRequest, revertChangeRequest, listChangeRequests } from './changeagent'
 import { FUNNEL_PARAMS, COMMON_PARAMS } from './paramschema'
 import { TEMPLATES } from './templateRegistry'
+import { zoomConfigured, zoomVerify, createZoomEvent, registerLead, listRegistrants, deleteZoomEvent, listStoredWebinars, findWebinarForFunnel, type ZoomEnv } from './zoom'
 
 type Bindings = GhlEnv & AiEnv & HooksEnv & {
   STRIPE_SECRET_KEY?: string
@@ -125,6 +126,35 @@ api.post('/lead', async (c) => {
   // ── v3.3: permanent D1 storage → powers the /leads LeadFlow CRM CRM ──
   const db = await saveLeadToD1(c.env, clean, ghl.contactId)
 
+  // ── v4.0: Zoom auto-registration — if this funnel is linked to a webinar
+  // (explicit _webinar field from the page, or a D1 webinar row with this
+  // funnel slug), register the lead with Zoom and hand back their unique
+  // join link. Fail-soft: Zoom problems never break the lead.
+  let joinUrl: string | undefined
+  let webinarReg: { zoomId: string; ok: boolean; error?: string } | undefined
+  try {
+    if (zoomConfigured(c.env as unknown as ZoomEnv) && clean.email) {
+      let target: { zoom_id: string; kind: string } | null = null
+      if (clean._webinar) {
+        const row = await c.env?.DB?.prepare("SELECT zoom_id, kind FROM webinars WHERE zoom_id = ? AND status != 'deleted'").bind(clean._webinar.slice(0, 40)).first<any>()
+        if (row) target = row
+      }
+      if (!target) {
+        const funnel = (clean.funnel || funnelFromSource(clean._source) || '').slice(0, 60)
+        if (funnel) target = await findWebinarForFunnel(c.env as unknown as ZoomEnv, funnel)
+      }
+      if (target) {
+        const reg = await registerLead(c.env as unknown as ZoomEnv, target.zoom_id, target.kind || 'webinar', {
+          email: clean.email,
+          name: clean.name || [clean.firstName, clean.lastName].filter(Boolean).join(' ') || clean.email,
+          phone: clean.phone
+        })
+        webinarReg = { zoomId: target.zoom_id, ok: reg.ok, error: reg.error }
+        if (reg.ok && reg.joinUrl) joinUrl = reg.joinUrl
+      }
+    }
+  } catch { /* fail-soft — leads must never break */ }
+
   // ── v3.4: Integration fan-out (Zapier/Make webhook, Slack, Discord,
   // Telegram, Twilio SMS, Airtable) — all configured channels fire in
   // parallel; failures are reported but never break the lead.
@@ -139,7 +169,7 @@ api.post('/lead', async (c) => {
   if (!key) {
     // No email key configured — accept the lead so funnels never break,
     // flag that delivery is not wired yet.
-    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: ghl.ok ? 'Lead synced to GoHighLevel. Set RESEND_API_KEY to also enable email delivery.' : 'Lead accepted. Set RESEND_API_KEY and/or GHL_API_KEY to enable delivery (see /integrations).' })
+    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, joinUrl, webinar: webinarReg, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: ghl.ok ? 'Lead synced to GoHighLevel. Set RESEND_API_KEY to also enable email delivery.' : 'Lead accepted. Set RESEND_API_KEY and/or GHL_API_KEY to enable delivery (see /integrations).' })
   }
 
   const rows = Object.entries(clean)
@@ -162,9 +192,9 @@ api.post('/lead', async (c) => {
   })
   if (!res.ok) {
     const err = await res.text()
-    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: 'Lead accepted; email delivery failed', providerError: err.slice(0, 300) }, 200)
+    return c.json({ ok: true, delivered: false, stored: db.saved, leadId: db.id, joinUrl, webinar: webinarReg, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, error: ghl.error } : undefined, note: 'Lead accepted; email delivery failed', providerError: err.slice(0, 300) }, 200)
   }
-  return c.json({ ok: true, delivered: true, stored: db.saved, leadId: db.id, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, opportunity: ghl.opportunity, workflow: ghl.workflow, error: ghl.error } : undefined })
+  return c.json({ ok: true, delivered: true, stored: db.saved, leadId: db.id, joinUrl, webinar: webinarReg, hooks: hooksOut, ghl: ghl.attempted ? { synced: ghl.ok, contactId: ghl.contactId, opportunity: ghl.opportunity, workflow: ghl.workflow, error: ghl.error } : undefined })
 })
 
 // ── v3.4: GET /api/hooks/status — which fan-out channels are configured ──
@@ -670,8 +700,174 @@ api.post('/changes/:id/revert', async (c) => {
   return c.json(r, r.ok ? 200 : 422)
 })
 
+// ═══ v4.0: ZOOM WEBINAR COMMAND CENTER ═════════════════════════
+// Host webinars right from the platform. Server-to-Server OAuth app:
+// marketplace.zoom.us → Build App → Server-to-Server OAuth → drop
+// ZOOM_ACCOUNT_ID / ZOOM_CLIENT_ID / ZOOM_CLIENT_SECRET in the Key Vault.
+
+// GET /api/zoom/status — connection check + stored events + registration counts
+api.get('/zoom/status', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const env = c.env as unknown as ZoomEnv
+  const configured = zoomConfigured(env)
+  let verify: any = { ok: false }
+  if (configured) verify = await zoomVerify(env)
+  const events = await listStoredWebinars(env)
+  let regTotal = 0
+  const regByEvent: Record<string, number> = {}
+  try {
+    const rows = await c.env?.DB?.prepare('SELECT zoom_id, COUNT(*) as n FROM webinar_registrations GROUP BY zoom_id').all()
+    for (const r of (rows?.results as any[]) || []) { regByEvent[r.zoom_id] = r.n; regTotal += r.n }
+  } catch { /* table may not exist yet */ }
+  return c.json({
+    ok: true, configured, connected: verify.ok,
+    account: verify.ok ? { email: verify.user?.email, name: [verify.user?.first_name, verify.user?.last_name].filter(Boolean).join(' '), type: verify.user?.type, webinarLicense: verify.webinarLicense } : undefined,
+    error: configured && !verify.ok ? verify.error : undefined,
+    events: events.map((e: any) => ({ ...e, registrants: regByEvent[e.zoom_id] || 0 })),
+    registrationsTotal: regTotal
+  })
+})
+
+// POST /api/zoom/webinars { topic, startTime, duration?, timezone?, agenda?, funnel?, useMeeting? }
+api.post('/zoom/webinars', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const env = c.env as unknown as ZoomEnv
+  if (!zoomConfigured(env)) return c.json({ ok: false, error: 'Zoom not configured — add ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET in the Key Vault (/integrations).' }, 400)
+  let body: { topic?: string; startTime?: string; duration?: number; timezone?: string; agenda?: string; funnel?: string; useMeeting?: boolean }
+  try { body = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  if (!body.topic?.trim()) return c.json({ ok: false, error: 'topic required' }, 400)
+  if (!body.startTime?.trim()) return c.json({ ok: false, error: 'startTime required (ISO 8601, e.g. 2026-08-01T19:00:00)' }, 400)
+  if (body.funnel && !isFunnelSlug(body.funnel)) return c.json({ ok: false, error: `Unknown funnel slug '${body.funnel}'` }, 400)
+
+  const r = await createZoomEvent(env, {
+    topic: body.topic.trim().slice(0, 200),
+    startTime: body.startTime.trim(),
+    duration: Math.min(Math.max(body.duration || 60, 10), 720),
+    timezone: (body.timezone || 'America/Chicago').slice(0, 60),
+    agenda: (body.agenda || '').slice(0, 2000),
+    funnel: body.funnel || '',
+    useMeeting: !!body.useMeeting
+  })
+  if (!r.ok) return c.json({ ok: false, error: r.error }, 502)
+
+  // Slack notify (fail-soft) — owner sees new events in the team channel
+  const slack = (c.env as any)?.SLACK_WEBHOOK_URL
+  if (slack) {
+    try {
+      await fetch(slack, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+        text: `🎥 New ${r.kind} scheduled: *${body.topic.trim()}* — ${body.startTime}${body.funnel ? ` · funnel: /t/${body.funnel}` : ''}\nRegistration: ${r.event?.registration_url || r.event?.join_url || 'n/a'}`
+      }) })
+    } catch { /* never blocks */ }
+  }
+  return c.json({ ok: true, kind: r.kind, event: r.event })
+})
+
+// GET /api/zoom/webinars/:id/registrants — live from Zoom + D1 fallback
+api.get('/zoom/webinars/:id/registrants', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const env = c.env as unknown as ZoomEnv
+  const zoomId = c.req.param('id').slice(0, 40)
+  const row = await c.env?.DB?.prepare('SELECT kind FROM webinars WHERE zoom_id = ?').bind(zoomId).first<any>()
+  const kind = row?.kind || 'webinar'
+  let live: any[] = []
+  if (zoomConfigured(env)) {
+    const r = await listRegistrants(env, zoomId, kind)
+    if (r.ok) live = r.registrants || []
+  }
+  const stored = await c.env?.DB?.prepare('SELECT email, name, phone, join_url, created_at FROM webinar_registrations WHERE zoom_id = ? ORDER BY id DESC LIMIT 500').bind(zoomId).all()
+  return c.json({ ok: true, zoomId, kind, live, stored: (stored?.results as any[]) || [] })
+})
+
+// DELETE /api/zoom/webinars/:id — cancel in Zoom + soft-delete in D1
+api.delete('/zoom/webinars/:id', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const env = c.env as unknown as ZoomEnv
+  const zoomId = c.req.param('id').slice(0, 40)
+  const row = await c.env?.DB?.prepare('SELECT kind FROM webinars WHERE zoom_id = ?').bind(zoomId).first<any>()
+  const r = await deleteZoomEvent(env, zoomId, row?.kind || 'webinar')
+  return c.json(r, r.ok ? 200 : 502)
+})
+
+// ═══ v4.0: TWILIO SMS BLAST ENGINE ═════════════════════════════
+// POST /api/sms/send { body, funnel?, status?, to?, test? }
+// Same segment logic as /api/mail/send: funnel='' → all leads with a
+// phone; funnel='mortgage' → that segment only; to='+1...' → manual list.
+api.post('/sms/send', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const env = c.env as any
+  if (!env?.TWILIO_ACCOUNT_SID || !env?.TWILIO_AUTH_TOKEN || !env?.TWILIO_FROM) {
+    return c.json({ ok: false, error: 'Twilio not configured — add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM in the Key Vault (/integrations).' }, 400)
+  }
+  let body: { body?: string; funnel?: string; status?: string; to?: string; test?: boolean }
+  try { body = await c.req.json() } catch { return c.json({ ok: false, error: 'Invalid JSON' }, 400) }
+  const msg = (body.body || '').trim()
+  if (!msg) return c.json({ ok: false, error: 'body (message text) required' }, 400)
+  if (msg.length > 1600) return c.json({ ok: false, error: 'Message too long (1600 char max)' }, 400)
+
+  let recipients: string[] = []
+  if (body.test) {
+    const t = env?.TWILIO_TO
+    if (!t) return c.json({ ok: false, error: 'Set TWILIO_TO in the Key Vault to receive test sends' }, 400)
+    recipients = [t]
+  } else if (body.to?.trim()) {
+    recipients = body.to.split(/[,;\s]+/).filter((p) => /^\+?[\d\-().\s]{7,20}$/.test(p)).slice(0, 200)
+  } else {
+    if (!c.env?.DB) return c.json({ ok: false, error: 'D1 not bound' }, 503)
+    const conds: string[] = ["phone IS NOT NULL AND phone != ''"]
+    const binds: unknown[] = []
+    if (body.funnel?.trim()) { conds.push('funnel = ?'); binds.push(body.funnel.trim().slice(0, 60)) }
+    if (body.status?.trim()) { conds.push('status = ?'); binds.push(body.status.trim().slice(0, 20)) }
+    const rows = await c.env.DB.prepare(`SELECT DISTINCT phone FROM leads WHERE ${conds.join(' AND ')} LIMIT 200`).bind(...binds).all()
+    recipients = (rows.results as any[]).map((r) => r.phone)
+  }
+  if (!recipients.length) return c.json({ ok: false, error: 'No recipients with phone numbers match this segment' }, 400)
+
+  // Send sequentially in small parallel batches (Twilio rate-friendly)
+  const auth = 'Basic ' + btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)
+  const url = `https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`
+  let sent = 0
+  const errors: string[] = []
+  const batchSize = 10
+  for (let i = 0; i < recipients.length; i += batchSize) {
+    const batch = recipients.slice(i, i + batchSize)
+    const results = await Promise.allSettled(batch.map(async (to) => {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { Authorization: auth, 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ From: env.TWILIO_FROM, To: to, Body: msg }).toString()
+      })
+      if (!res.ok) { const e = await res.text(); throw new Error(e.slice(0, 150)) }
+      return true
+    }))
+    for (const r of results) { if (r.status === 'fulfilled') sent++; else if (errors.length < 5) errors.push(String(r.reason?.message || r.reason).slice(0, 150)) }
+  }
+
+  const ok = sent > 0
+  try { await c.env?.DB?.prepare('INSERT INTO sms_log (to_count, sent_count, body, funnel, ok, error) VALUES (?,?,?,?,?,?)').bind(recipients.length, sent, msg.slice(0, 500), body.funnel || (body.test ? '(test)' : body.to ? '(manual)' : ''), ok ? 1 : 0, errors.length ? errors.join(' | ').slice(0, 500) : null).run() } catch { /* log only */ }
+  return c.json({ ok, recipients: recipients.length, sent, failed: recipients.length - sent, test: !!body.test, errors: errors.length ? errors : undefined })
+})
+
+// GET /api/sms/status — Twilio config + segments + recent blasts
+api.get('/sms/status', async (c) => {
+  const deny = requireAdmin(c); if (deny) return deny
+  const env = c.env as any
+  const configured = !!(env?.TWILIO_ACCOUNT_SID && env?.TWILIO_AUTH_TOKEN && env?.TWILIO_FROM)
+  let segments: any[] = []
+  let log: any[] = []
+  try {
+    const seg = await c.env?.DB?.prepare("SELECT funnel, COUNT(DISTINCT phone) as n FROM leads WHERE phone IS NOT NULL AND phone != '' GROUP BY funnel ORDER BY n DESC").all()
+    segments = (seg?.results as any[]) || []
+  } catch { /* no leads table yet */ }
+  try {
+    const lg = await c.env?.DB?.prepare('SELECT * FROM sms_log ORDER BY id DESC LIMIT 20').all()
+    log = (lg?.results as any[]) || []
+  } catch { /* no sms_log yet */ }
+  return c.json({ ok: true, configured, from: env?.TWILIO_FROM || '', segments, log })
+})
+
 // ── Health ─────────────────────────────────────────────────────
 api.get('/health', async (c) => {
   const mailConf = mailProvidersConfigured(c.env as MailEnv)
-  return c.json({ ok: true, stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env), mail: { providers: mailConf, active: pickProvider(c.env as MailEnv) }, vault: !!c.env?.DB, cfDeploy: cfConfigured(c.env as CfEnv), changeAgent: aiConfigured(c.env) })
+  const envAny = c.env as any
+  return c.json({ ok: true, version: '4.0.0', stripe: !!c.env?.STRIPE_SECRET_KEY, email: !!c.env?.RESEND_API_KEY, ghl: ghlConfigured(c.env), d1: !!c.env?.DB, ai: aiConfigured(c.env), adminLock: !!c.env?.ADMIN_API_KEY, hooks: hooksConfigured(c.env), mail: { providers: mailConf, active: pickProvider(c.env as MailEnv) }, vault: !!c.env?.DB, cfDeploy: cfConfigured(c.env as CfEnv), changeAgent: aiConfigured(c.env), zoom: zoomConfigured(c.env as unknown as ZoomEnv), sms: !!(envAny?.TWILIO_ACCOUNT_SID && envAny?.TWILIO_AUTH_TOKEN && envAny?.TWILIO_FROM), slack: !!envAny?.SLACK_WEBHOOK_URL })
 })

@@ -6,6 +6,7 @@ export const FUNNEL_SLUGS = [
   'restaurant', 'dental', 'auto-services', 'salon', 'mortgage',
   'chiropractic', 'pet-care', 'landscaping', 'cleaning', 'childcare',
   'tutoring', 'accounting', 'photography', 'wedding-venue', 'moving',
+  'webinar-live', 'vsl',
 ] as const
 
 export type FunnelSlug = typeof FUNNEL_SLUGS[number]

@@ -20,6 +20,7 @@ export const KEY_GROUPS: Record<string, { icon: string; title: string; desc: str
   payments:  { icon: 'fa-credit-card',     title: 'Payments (Stripe)',   desc: 'Checkout sessions from funnels' },
   alerts:    { icon: 'fa-bell',            title: 'Alerts & Fan-out',    desc: 'Slack, Discord, Telegram, Twilio SMS, Zapier/Make webhook, Airtable' },
   cloudflare: { icon: 'fa-cloud',          title: 'Cloudflare Deploy',   desc: 'Deploy any funnel to your own Cloudflare account as a standalone Worker (one click)' },
+  zoom:      { icon: 'fa-video',           title: 'Zoom Webinars',       desc: 'Host webinars from the platform — Server-to-Server OAuth app at marketplace.zoom.us (Account ID + Client ID + Client Secret)' },
 }
 
 export const KNOWN_KEYS: KeyDef[] = [
@@ -59,6 +60,10 @@ export const KNOWN_KEYS: KeyDef[] = [
   // Cloudflare Deploy (user's own account)
   { name: 'CF_DEPLOY_API_TOKEN',  group: 'cloudflare', label: 'Cloudflare API Token', hint: 'Create at dash.cloudflare.com → My Profile → API Tokens → "Edit Cloudflare Workers" template' },
   { name: 'CF_DEPLOY_ACCOUNT_ID', group: 'cloudflare', label: 'Cloudflare Account ID', hint: 'dash.cloudflare.com → Workers & Pages → right sidebar', secret: false },
+
+  { name: 'ZOOM_ACCOUNT_ID',    group: 'zoom', label: 'Zoom Account ID', hint: 'marketplace.zoom.us → Build App → Server-to-Server OAuth → App Credentials', secret: false },
+  { name: 'ZOOM_CLIENT_ID',     group: 'zoom', label: 'Zoom Client ID', hint: 'From your S2S OAuth app credentials' },
+  { name: 'ZOOM_CLIENT_SECRET', group: 'zoom', label: 'Zoom Client Secret', hint: 'From your S2S OAuth app credentials' },
 ]
 
 const KNOWN = new Set(KNOWN_KEYS.map((k) => k.name))

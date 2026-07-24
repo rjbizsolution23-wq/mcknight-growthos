@@ -29,6 +29,8 @@ import { accountingTemplate } from './templates/accounting'
 import { photographyTemplate } from './templates/photography'
 import { weddingVenueTemplate } from './templates/weddingVenue'
 import { movingTemplate } from './templates/moving'
+import { webinarLiveTemplate } from './templates/webinarLive'
+import { vslTemplate } from './templates/vsl'
 
 export const TEMPLATES: Record<string, (q: Record<string, string | undefined>) => string> = {
   'event-landing': eventLandingTemplate, 'sponsor-deck': sponsorDeckTemplate, 'tax-lead': taxLeadTemplate,
@@ -42,4 +44,5 @@ export const TEMPLATES: Record<string, (q: Record<string, string | undefined>) =
   'cleaning': cleaningTemplate, 'childcare': childcareTemplate, 'tutoring': tutoringTemplate,
   'accounting': accountingTemplate, 'photography': photographyTemplate,
   'wedding-venue': weddingVenueTemplate, 'moving': movingTemplate,
+  'webinar-live': webinarLiveTemplate, 'vsl': vslTemplate,
 }
