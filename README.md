@@ -351,6 +351,18 @@ Verified per-brand: tax-lead→capital:Intake, mortgage→mortgage:Developer Lea
 
 **Deferred (per blueprint risk tier)**: real authenticated portals (Housing Impact, Capital Ready OS, DriverHub, ServiceHub, Family/Director/Teacher/Parent portals), live payments, mortgage API productization, childcare operations — require verified credentials/licenses before public activation.
 
+## v6.1 — Universal Brand Engine (one branding logic, all 42 funnels)
+
+Every funnel template now runs the **exact same branding pipeline** — no exceptions, no hardcoded off-brand colors:
+
+- **`accentRemapCss(color, color2, darkText)`** (helpers.ts) — a single generator that remaps *every* Tailwind accent family templates use (orange/amber/yellow/blue/cyan/sky/teal/indigo/violet/purple/pink/rose/emerald) across every design token: CTA buttons + hovers, text accents, borders, chip tints, gradient heroes (`from/to/via-*-950` dark tints via `color-mix`), pulse-glow keyframes, `::selection`, focus rings, aurora, gradient text, glow borders, scrollbar. Red preserved for urgency/error semantics; grays untouched.
+- **Same logic for both layers**: the funnel-brand layer (`brandThemeCss`) and the client white-label layer (`brandCss`, `?brandColor=`) both call `accentRemapCss` — white-label injected last, still wins.
+- **GrowthOS exception removed**: the flagship brand (cyan `#0ea5e9` / indigo) now goes through the identical remap — all 42 funnels, one code path.
+- **Brand favicon**: dynamic per-brand SVG favicon (brand color tile + brand initial), plus `theme-color` meta = brand hex (branded mobile browser chrome).
+- **White-label contrast**: dark-vs-light button text auto-computed from client color luminance (`hexLum`).
+
+Brand matrix (verified in production): tax-lead/credit-*/accounting → emerald, mortgage → fintech blue, real-estate → green, moving → steel blue, auto-services → safety orange, childcare/tutoring → violet, sponsor-deck → gold, all other local funnels → GrowthOS cyan, 10 flagship sites → own accents.
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---

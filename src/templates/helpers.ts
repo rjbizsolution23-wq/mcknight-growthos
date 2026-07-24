@@ -79,6 +79,48 @@ export const FUNNEL_BRAND: Record<string, string> = {
 export const brandThemeFor = (slug: string | undefined): BrandTheme =>
   BRAND_THEMES[(slug && FUNNEL_BRAND[slug]) || 'growthos']
 
+
+// ── v6.1 UNIVERSAL BRAND REMAP — one branding logic for EVERY funnel ──
+// Every Tailwind accent family any template uses (CTA buttons, text accents,
+// borders, hover states, gradient heroes, chips, focus rings, selection,
+// aurora, gradient text, glow borders, scrollbar) is remapped to the active
+// brand palette by a single generator. Used by BOTH the funnel-brand layer
+// and the client white-label layer, so the logic is identical everywhere.
+// Red is preserved (urgency/error semantics); grays are untouched.
+export const hexLum = (h: string): number => {
+  const n = parseInt(h.replace('#', ''), 16)
+  return (0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255
+}
+const ACCENT_FAMS = ['orange', 'amber', 'yellow', 'blue', 'cyan', 'sky', 'teal', 'indigo', 'violet', 'purple', 'pink', 'rose', 'emerald'] as const
+export const accentRemapCss = (c1: string, c2: string, darkText: boolean): string => {
+  const bt = darkText ? '#0a1628' : '#ffffff'
+  const sel = (fn: (f: string) => string) => ACCENT_FAMS.map(fn).join(',')
+  const heroTint = `color-mix(in srgb, ${c1} 26%, #050b16)`
+  const chipTint = `color-mix(in srgb, ${c1} 12%, #ffffff)`
+  return `
+  :root { --mk-brand:${c1}; --mk-brand-2:${c2}; }
+  .pulse-glow,${sel(f => `.bg-${f}-500`)} { background-color:${c1} !important; background-image:none !important; color:${bt} !important; }
+  ${sel(f => `.bg-${f}-600,.bg-${f}-700`)} { background-color:${c1} !important; color:${bt} !important; }
+  ${sel(f => `.hover\\:bg-${f}-600:hover,.hover\\:bg-${f}-700:hover`)} { background-color:${c2} !important; color:${bt} !important; }
+  ${sel(f => `.bg-${f}-50,.bg-${f}-100`)} { background-color:${chipTint} !important; }
+  ${sel(f => `.text-${f}-200,.text-${f}-300,.text-${f}-400`)} { color:${c2} !important; }
+  ${sel(f => `.text-${f}-500,.text-${f}-600,.text-${f}-700`)} { color:${c1} !important; }
+  ${sel(f => `.border-${f}-400,.border-${f}-500,.border-${f}-600`)} { border-color:${c1} !important; }
+  ${sel(f => `.from-${f}-400,.from-${f}-500,.from-${f}-600`)} { --tw-gradient-from:${c1} var(--tw-gradient-from-position) !important; }
+  ${sel(f => `.to-${f}-400,.to-${f}-500,.to-${f}-600`)} { --tw-gradient-to:${c2} var(--tw-gradient-to-position) !important; }
+  ${sel(f => `.from-${f}-950`)} { --tw-gradient-from:${heroTint} var(--tw-gradient-from-position) !important; }
+  ${sel(f => `.to-${f}-950`)} { --tw-gradient-to:${heroTint} var(--tw-gradient-to-position) !important; }
+  ${sel(f => `.via-${f}-950`)} { --tw-gradient-stops:var(--tw-gradient-from), ${heroTint} var(--tw-gradient-via-position), var(--tw-gradient-to) !important; }
+  @keyframes pulseglow { 0%,100% { box-shadow:0 0 0 0 ${c1}99; } 50% { box-shadow:0 0 0 12px transparent; } }
+  ::selection { background:${c1}; color:${bt}; }
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible { outline-color:${c1}; }
+  input:focus,select:focus,textarea:focus { border-color:${c1} !important; box-shadow:0 0 0 3px ${c1}2e !important; }
+  .rj-aurora { background:radial-gradient(38% 45% at 22% 28%,${c1}52 0%,transparent 70%),radial-gradient(32% 40% at 78% 20%,${c2}3d 0%,transparent 70%),radial-gradient(30% 42% at 60% 82%,rgba(30,58,138,.3) 0%,transparent 70%) !important; }
+  .rj-grad-text { background:linear-gradient(100deg,${c2} 10%,${c1} 45%,${c2} 90%); background-size:220% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .rj-glow-border::before { background:conic-gradient(from var(--rj-ang,0deg),${c1}00,${c1}d9,${c2}e6,rgba(30,58,138,.65),${c1}00) !important; }
+  ::-webkit-scrollbar-thumb { background:linear-gradient(${c1},${c2}); }`
+}
+
 export const param = (q: Record<string, string | undefined>, key: string, fallback: string) => {
   const v = q[key]
   return v && v.trim() ? esc(v.trim()) : fallback
@@ -140,16 +182,10 @@ export const funnelHead = (
   if (bizLogo) rjfCfg.bizLogo = bizLogo
   if (brandColor) rjfCfg.brandColor = brandColor
 
-  // Brand override CSS — remaps the funnel's orange/blue CTA system to client colors
+  // v6.1 White-label override — SAME universal remap logic, client colors.
+  // Injected last so it wins over the funnel-brand layer.
   const brandCss = brandColor ? `
-  :root { --rj-client:${brandColor}; --rj-client-2:${accentColor}; }
-  .pulse-glow, .bg-orange-500, [class*="bg-orange-5"] { background-color:${brandColor} !important; background-image:none !important; }
-  .bg-orange-600, .hover\\:bg-orange-600:hover { background-color:${accentColor} !important; }
-  .text-orange-400, .text-orange-500, .text-orange-300 { color:${brandColor} !important; }
-  @keyframes pulseglow { 0%,100% { box-shadow:0 0 0 0 ${brandColor}99; } 50% { box-shadow:0 0 0 12px transparent; } }
-  ::selection { background:${brandColor}; }
-  input:focus,select:focus,textarea:focus { border-color:${brandColor} !important; box-shadow:0 0 0 3px ${brandColor}2e; }
-  .rj-grad-text { background:linear-gradient(100deg,${brandColor} 10%,${accentColor} 50%,${brandColor} 90%); background-size:220% 100%; -webkit-background-clip:text; background-clip:text; }` : ''
+  :root { --rj-client:${brandColor}; --rj-client-2:${accentColor}; }${accentRemapCss(brandColor, accentColor || brandColor, hexLum(brandColor) > 0.62)}` : ''
 
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
@@ -199,21 +235,9 @@ export const funnelHead = (
   // ── v5.1 Brand theme CSS — remaps CTA/accent system to the funnel's brand
   // colors. Injected AFTER mcknightCss (so it wins over the flagship gold)
   // and BEFORE brandCss (so a client white-label brandColor still wins).
-  const btnText = theme.darkText ? '#0a1628' : '#ffffff'
-  const brandThemeCss = theme.key === 'growthos' ? '' : `
-  :root { --mk-brand:${theme.color}; --mk-brand-2:${theme.color2}; }
-  .pulse-glow, .bg-orange-500, [class*="bg-orange-5"] { background-color:${theme.color} !important; background-image:none !important; color:${btnText} !important; }
-  .bg-orange-600, .hover\\:bg-orange-600:hover, .hover\\:bg-orange-700:hover { background-color:${theme.color2} !important; color:${btnText} !important; }
-  .text-orange-400, .text-orange-500, .text-orange-300, .text-orange-600 { color:${theme.color2} !important; }
-  .border-orange-500, .border-orange-400 { border-color:${theme.color} !important; }
-  .text-amber-300, .text-amber-400, .text-amber-500, .bg-amber-500\\/20 { color:${theme.color2} !important; }
-  @keyframes pulseglow { 0%,100% { box-shadow:0 0 0 0 ${theme.color}99; } 50% { box-shadow:0 0 0 12px transparent; } }
-  ::selection { background:${theme.color}; color:${btnText}; }
-  input:focus,select:focus,textarea:focus { border-color:${theme.color} !important; box-shadow:0 0 0 3px ${theme.color}2e !important; }
-  .rj-aurora { background:radial-gradient(38% 45% at 22% 28%,${theme.color}52 0%,transparent 70%),radial-gradient(32% 40% at 78% 20%,${theme.color2}3d 0%,transparent 70%),radial-gradient(30% 42% at 60% 82%,rgba(30,58,138,.3) 0%,transparent 70%) !important; }
-  .rj-grad-text { background:linear-gradient(100deg,${theme.color2} 10%,${theme.color} 40%,#0ea5e9 65%,${theme.color2} 90%); background-size:220% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-  .rj-glow-border::before { background:conic-gradient(from var(--rj-ang,0deg),${theme.color}00,${theme.color}d9,${theme.color2}e6,rgba(30,58,138,.65),${theme.color}00) !important; }
-  ::-webkit-scrollbar-thumb { background:linear-gradient(${theme.color},${theme.color2}); }`
+  // v6.1: universal remap for EVERY funnel — growthos included (cyan/indigo),
+  // so all 42 funnels run the exact same branding logic.
+  const brandThemeCss = accentRemapCss(theme.color, theme.color2, theme.darkText)
 
   const darkCss = dark ? `
   html[data-theme=dark] body{background:#0f172a!important;color:#e2e8f0!important}
@@ -234,7 +258,7 @@ export const funnelHead = (
 <meta name="description" content="${desc}">
 ${keywords ? `<meta name="keywords" content="${keywords}">` : ''}
 <meta name="robots" content="${noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'}">
-<meta name="theme-color" content="${dark ? '#000B26' : '#003399'}">
+<meta name="theme-color" content="${theme.color}">
 <meta name="geo.region" content="${BRAND.region}">
 <meta name="geo.placename" content="${BRAND.placename}">
 <meta name="geo.position" content="${BRAND.geo}">
@@ -255,7 +279,7 @@ ${canonical ? `<meta property="og:url" content="${canonical}">` : ''}
 <meta name="twitter:site" content="@ricksolutions1">
 <script type="application/ld+json">${JSON.stringify(schema)}</script>
 ${faqSchema ? `<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>` : ''}
-<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='${theme.color}'/><text x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='bold' text-anchor='middle' fill='${theme.darkText ? '#0a1628' : '#ffffff'}'>${theme.name.replace(/^The /, '')[0]}</text></svg>`)}">
 <link rel="apple-touch-icon" href="${BRAND.logo}">
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
