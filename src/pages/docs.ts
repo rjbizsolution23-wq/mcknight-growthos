@@ -3,19 +3,27 @@
 // table of contents, search, and download button. Marked.js from CDN.
 import { shell } from './layout'
 
+const DOCS = [
+  { file: 'MASTER-DOCUMENTATION.md', label: 'Master Documentation', icon: 'fa-book', desc: 'Every page, endpoint, parameter, integration and runbook' },
+  { file: 'GTM-SALES-PLAN.md', label: 'GTM & Sales Plan', icon: 'fa-bullseye', desc: 'The complete plan to market and sell the GrowthOS model' },
+]
+
 export const docsPage = () => shell('Documentation', 'docs', `
 <section id="docs-hero" class="mb-6">
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div>
-      <p class="inline-block gold-bg text-black text-xs font-bold px-3 py-1.5 rounded-full mb-2 uppercase tracking-wider"><i class="fas fa-book mr-1"></i> Master Documentation</p>
+      <p class="inline-block gold-bg text-black text-xs font-bold px-3 py-1.5 rounded-full mb-2 uppercase tracking-wider"><i class="fas fa-book mr-1"></i> Documentation Center</p>
       <h1 class="text-4xl font-extrabold text-white leading-tight">Platform <span class="grad-text">Documentation</span></h1>
-      <p class="text-gray-400 mt-1 text-sm">Every page, endpoint, parameter, integration and runbook — v6.7.0</p>
+      <p id="docs-desc" class="text-gray-400 mt-1 text-sm">Every page, endpoint, parameter, integration and runbook — v6.7.0</p>
     </div>
     <div class="flex gap-2">
-      <a href="/static/docs/MASTER-DOCUMENTATION.md" download="MASTER-DOCUMENTATION.md" class="gold-bg text-black font-bold px-5 py-2.5 rounded-lg text-sm"><i class="fas fa-download mr-2"></i>Download .md</a>
-      <a href="/static/docs/MASTER-DOCUMENTATION.md" target="_blank" class="bg-gray-800 border border-gray-700 text-gray-300 font-semibold px-5 py-2.5 rounded-lg text-sm"><i class="fas fa-file-lines mr-2"></i>Raw</a>
+      <a id="docs-dl" href="/static/docs/MASTER-DOCUMENTATION.md" download="MASTER-DOCUMENTATION.md" class="gold-bg text-black font-bold px-5 py-2.5 rounded-lg text-sm"><i class="fas fa-download mr-2"></i>Download .md</a>
+      <a id="docs-raw" href="/static/docs/MASTER-DOCUMENTATION.md" target="_blank" class="bg-gray-800 border border-gray-700 text-gray-300 font-semibold px-5 py-2.5 rounded-lg text-sm"><i class="fas fa-file-lines mr-2"></i>Raw</a>
       <button onclick="window.print()" class="bg-gray-800 border border-gray-700 text-gray-300 font-semibold px-5 py-2.5 rounded-lg text-sm"><i class="fas fa-print mr-2"></i>Print / PDF</button>
     </div>
+  </div>
+  <div id="docs-tabs" class="flex gap-2 mt-5 flex-wrap">
+    ${DOCS.map((d, i) => `<button data-doc="${d.file}" data-desc="${d.desc}" class="docs-tab ${i === 0 ? 'docs-tab-active' : ''} px-4 py-2 rounded-lg text-sm font-semibold border transition"><i class="fas ${d.icon} mr-2"></i>${d.label}</button>`).join('')}
   </div>
 </section>
 
@@ -49,32 +57,60 @@ export const docsPage = () => shell('Documentation', 'docs', `
 .docs-md blockquote{border-left:3px solid #d4a72c;padding-left:1rem;color:#d1d5db;margin:.8rem 0;font-style:italic}
 #docs-toc-list a{display:block;padding:.35rem .6rem;border-radius:6px;color:#9ca3af}
 #docs-toc-list a:hover{background:#1f2937;color:#f4ce65}
+.docs-tab{background:#111827;border-color:#374151;color:#9ca3af}
+.docs-tab:hover{color:#fff;border-color:#6b7280}
+.docs-tab-active{background:linear-gradient(135deg,#d4a72c,#f4ce65);border-color:#d4a72c;color:#000}
+.docs-tab-active:hover{color:#000}
 @media print{#docs-toc,#docs-hero .flex.gap-2,aside,nav.sidebar{display:none!important}.docs-md{color:#000}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <script>
-(async () => {
+(() => {
   const el = document.getElementById('docs-content');
-  try {
-    const res = await fetch('/static/docs/MASTER-DOCUMENTATION.md');
-    const md = await res.text();
-    el.innerHTML = marked.parse(md, { mangle: false, headerIds: true });
-    // Build TOC from h2s
-    const toc = document.getElementById('docs-toc-list');
-    const links = [];
-    el.querySelectorAll('h2').forEach((h, i) => {
-      const id = h.id || ('sec-' + i); h.id = id;
-      const a = document.createElement('a');
-      a.href = '#' + id; a.textContent = h.textContent.replace(/^\\d+\\.\\s*/, '');
-      toc.appendChild(a); links.push(a);
-    });
-    document.getElementById('docs-search').addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase();
-      links.forEach((a) => { a.style.display = a.textContent.toLowerCase().includes(q) ? '' : 'none'; });
-    });
-  } catch (err) {
-    el.innerHTML = '<p class="text-red-400">Failed to load documentation: ' + err + '</p>';
+  const toc = document.getElementById('docs-toc-list');
+  const search = document.getElementById('docs-search');
+  let links = [];
+
+  async function loadDoc(file) {
+    el.innerHTML = '<p class="text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Loading\u2026</p>';
+    toc.innerHTML = ''; links = []; search.value = '';
+    document.getElementById('docs-dl').href = '/static/docs/' + file;
+    document.getElementById('docs-dl').setAttribute('download', file);
+    document.getElementById('docs-raw').href = '/static/docs/' + file;
+    try {
+      const res = await fetch('/static/docs/' + file);
+      const md = await res.text();
+      el.innerHTML = marked.parse(md, { mangle: false, headerIds: true });
+      el.querySelectorAll('h2').forEach((h, i) => {
+        const id = h.id || ('sec-' + i); h.id = id;
+        const a = document.createElement('a');
+        a.href = '#' + id; a.textContent = h.textContent.replace(/^\\d+\\.\\s*/, '');
+        toc.appendChild(a); links.push(a);
+      });
+      window.scrollTo(0, 0);
+    } catch (err) {
+      el.innerHTML = '<p class="text-red-400">Failed to load documentation: ' + err + '</p>';
+    }
   }
+
+  search.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
+    links.forEach((a) => { a.style.display = a.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+  });
+
+  document.querySelectorAll('.docs-tab').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.docs-tab').forEach((b) => b.classList.remove('docs-tab-active'));
+      btn.classList.add('docs-tab-active');
+      document.getElementById('docs-desc').textContent = btn.dataset.desc;
+      history.replaceState(null, '', '?doc=' + btn.dataset.doc);
+      loadDoc(btn.dataset.doc);
+    });
+  });
+
+  const initial = new URLSearchParams(location.search).get('doc');
+  const valid = initial && document.querySelector('.docs-tab[data-doc="' + initial + '"]');
+  if (valid) { valid.click(); } else { loadDoc('MASTER-DOCUMENTATION.md'); }
 })();
 </script>
 `)

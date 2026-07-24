@@ -501,6 +501,12 @@ AI agents & builders can now pull the entire McKnight brand system programmatica
 - **Source of truth**: `public/static/docs/MASTER-DOCUMENTATION.md` (raw at `/static/docs/MASTER-DOCUMENTATION.md`)
 - **18 sections**: platform overview, architecture, all 23 dashboard pages, 42 funnels, 31 URL params, Style & Effects Engine, Change Agent, Brand API + MCP, Fleet Command Center, full REST reference (70+ endpoints), integrations (38 vault keys), D1 schema (7 migrations), ClientOS, Traffic Engine, SEO/AEO, ops runbook, version history.
 
+## v6.7.2 — GTM & Sales Plan (NEW)
+
+- **`/docs?doc=GTM-SALES-PLAN.md`** — complete go-to-market & sales plan for selling the GrowthOS model: 15 sections (positioning, 3 ICPs, 4 productized offers A–D with pricing, sales system w/ personalized-demo motion, 6 marketing channels, 90-day launch plan, cold email/call/SMS scripts, objection handling, 15-min demo playbook, partnerships/licensing tiers, KPIs + 12-month revenue model, risks, asset inventory).
+- `/docs` upgraded to a **Documentation Center** with doc-switcher tabs (Master Documentation | GTM & Sales Plan), deep-linkable via `?doc=` param; download/raw buttons follow the active doc.
+- Source: `public/static/docs/GTM-SALES-PLAN.md`
+
 > McKnight GrowthOS provides marketing, workflow and decision-support technology. Templates, disclosures and compliance tools are provided for operational support and do not constitute legal, tax, financial or regulatory advice. Customers remain responsible for professional review, licensing, consent management, advertising approval and compliance with applicable laws.
 
 ---
